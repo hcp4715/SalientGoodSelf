@@ -1,0 +1,75 @@
+---
+title: "Results of experiments"
+author: "Chuanpeng Hu"
+date: "Thursday, Jan 28, 2016"
+output: html_document
+---
+
+This script was used to analyze the reaction time and Accuracy data
+from my behaviora experiments.
+
+```{r checkingLibraries, include=FALSE}
+# clean memory
+rm(list=ls(all=TRUE))
+options(contrasts=c("contr.sum","contr.poly"))
+pkgTest <- function(x){
+        if (!require(x,character.only = TRUE)){
+                install.packages(x,dep = TRUE)
+                if(!require(x,character.only = TRUE)) 
+                        stop("Package not found")
+  }
+}
+
+pkgNeeded <- (c("ez","plyr","ggplot2", "reshape2", "PoweR","MASS", "akima", "robustbase", 
+                "cobs", "robust", "mgcv", "scatterplot3d", "quantreg", "rrcov", 
+                "lars", "pwr", "trimcluster", "mc2d", "psych", "Rfit","MBESS", 
+                "BayesFactor","devtools","WRS", "rmarkdown","gmodels", "car", 
+                "gridExtra","bootES", "BEST"))
+
+lapply(pkgNeeded,pkgTest)
+```
+
+
+
+```{r loadingData,echo=FALSE,results='hide'}
+df <- read.csv("rawdata.csv", header = TRUE, sep = ",")
+
+#change the column names so that it does not contain "."
+colnames(df)[16] <- "RT"
+colnames(df)[15] <- "ACC"
+
+```
+
+Here is the status of this data set:
+```{r prepocessNcheck,echo=FALSE}
+# delete invalid data, this will be replaced by code
+df<- df[df$Subject !=4214,]
+
+# data excluded practices
+df_block <- df[complete.cases(df$BlockList),]
+
+# exclued rt data less than 200 ms, and inaccurate data
+df_rt <- df_block[df_block$ACC ==1 & df_block$RT > 200,]
+ezPrecis(df_rt)
+
+```{r ANOVA_RT,echo=FALSE,results='hide'}
+# repeated measured ANOVA for 3*2*2
+rt_anova1 <- ezANOVA(df_rt,dv = RT, wid = Subject, within=.(YesNoResp,morality,Identity),within_full=.(YesNoResp,morality,Identity), type=3)
+
+print(rt_anova1)
+
+```
+
+The effect of `r rt_anova1[[1]][1,1]`: F(`r rt_anova1[[1]][1,2]`, `r rt_anova1[[1]][1,3]`) = `r rt_anova1[[1]][1,4]`, p = `r rt_anova1[[1]][1,5]`, generalized eta squared = `r rt_anova1[[1]][1,7]`
+
+The effect of `r rt_anova1[[1]][2,1]`: F(`r rt_anova1[[1]][2,2]`, `r rt_anova1[[1]][2,3]`) = `r rt_anova1[[1]][2,4]`, p = `r rt_anova1[[1]][2,5]`, generalized eta squared = `r rt_anova1[[1]][2,7]`
+
+The effect of `r rt_anova1[[1]][3,1]`: F(`r rt_anova1[[1]][3,2]`, `r rt_anova1[[1]][3,3]`) = `r rt_anova1[[1]][3,4]`, p = `r rt_anova1[[1]][3,5]`, generalized eta squared = `r rt_anova1[[1]][3,7]`
+
+The interaction between  `r rt_anova1[[1]][4,1]`: F(`r rt_anova1[[1]][4,2]`, `r rt_anova1[[1]][4,3]`) = `r rt_anova1[[1]][4,4]`, p = `r rt_anova1[[1]][4,5]`, generalized eta squared = `r rt_anova1[[1]][3,7]`.
+
+The interaction between  `r rt_anova1[[1]][5,1]`: F(`r rt_anova1[[1]][5,2]`, `r rt_anova1[[1]][5,3]`) = `r rt_anova1[[1]][5,4]`, p = `r rt_anova1[[1]][5,5]`, generalized eta squared = `r rt_anova1[[1]][5,7]`.
+
+The interaction between  `r rt_anova1[[1]][6,1]`: F(`r rt_anova1[[1]][6,2]`, `r rt_anova1[[1]][6,3]`) = `r rt_anova1[[1]][6,4]`, p = `r rt_anova1[[1]][6,5]`, generalized eta squared = `r rt_anova1[[1]][6,7]`.
+
+The interaction between  `r rt_anova1[[1]][7,1]`: F(`r rt_anova1[[1]][7,2]`, `r rt_anova1[[1]][7,3]`) = `r rt_anova1[[1]][7,4]`, p = `r rt_anova1[[1]][7,5]`, generalized eta squared = `r rt_anova1[[1]][7,7]`.
