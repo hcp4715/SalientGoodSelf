@@ -1,4 +1,6 @@
-# raw data and analysis code for experimental 5 of moral saliency.
-This repository were used for store the raw data and analysis code for the experimental 5 of my Ph.D thesis research. 
+# raw data and analysis code for experiment 5 of moral saliency.
+This repository were used for store the raw data and analysis code for the experiments about moral salience. 
 
-This repo was public for enhancing the reproducibility of my own research.
+The code is public for enhancing the reproducibility of my own research.
+
+The data will be uploaded after I submit my paper
