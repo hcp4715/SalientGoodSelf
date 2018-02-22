@@ -157,7 +157,6 @@ write.csv(df2.V.sum_w,'exp2_behav_wide.csv',row.names = F)
 write.csv(df2.v.sum_rt_acc_l,'exp2_rt_acc_long.csv',row.names = F)
 write.csv(df2.V.dprime_l,'exp2_dprime_long.csv',row.names = F)
 
-
 ## plot d prime #### 
 df2.V.dprime.sum <- summarySE(df2.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality'))
 df2.V.dprime.sum$Morality <- factor(df2.V.dprime.sum$Morality, levels = c('Moral','Neutral','Immoral'))
