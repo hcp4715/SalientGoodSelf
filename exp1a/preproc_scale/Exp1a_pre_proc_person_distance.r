@@ -9,7 +9,7 @@ source('Initial.r')
 # load data
 # read the file name in this folder
 fpath  <- getwd()
-fNames <- list.files(path = fpath, pattern = '.csv')
+fNames <- list.files(path = fpath, pattern = '^exp1a_personalDistance_.*.csv')
 # fNames2 <- list.files(path = fpath, pattern = '.out')
 # read file and combine them into one datafrom
 #pdist <- do.call("rbind",lapply(fNames,FUN=function(files){read.table(files, header=TRUE, sep="\t")}))
@@ -19,7 +19,7 @@ for (file in fNames){
   dataset <- read.table(file, header=TRUE, sep= ",")
   dataset <- dataset[1:36,1:11]
   print(dim(dataset))
-  print(dataset[1,])
+  #print(dataset[1,])
 
 }
 
@@ -40,7 +40,6 @@ for (file in fNames){
     scoredata<-rbind(scoredata, temp_dataset)
     rm(temp_dataset)
   }
-  
 }
 
 # transfer to absolute value
@@ -71,22 +70,22 @@ scoredata_r.sum <- summarySEwithin(scoredata_r,measurevar = 'lengthDraw_r', with
 scoredata_r.sum_w <- dcast(scoredata_r.sum, SubjectID ~ distLabel ,value.var = "lengthDraw_r") 
 
 # normalize the personal distance
-scoredata_r.sum_w$totalDis <- rowSums(scoredata_r.sum_w[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
-scoredata_r.sum_w$SelfGood_r <- scoredata_r.sum_w$SelfGood/scoredata_r.sum_w$totalDis
+scoredata_r.sum_w$totalDis     <- rowSums(scoredata_r.sum_w[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
+scoredata_r.sum_w$SelfGood_r   <- scoredata_r.sum_w$SelfGood/scoredata_r.sum_w$totalDis
 scoredata_r.sum_w$SelfNormal_r <- scoredata_r.sum_w$SelfNormal/scoredata_r.sum_w$totalDis
-scoredata_r.sum_w$SelfBad_r <- scoredata_r.sum_w$SelfBad/scoredata_r.sum_w$totalDis
-scoredata_r.sum_w$GoodBad_r <- scoredata_r.sum_w$GoodBad/scoredata_r.sum_w$totalDis
+scoredata_r.sum_w$SelfBad_r    <- scoredata_r.sum_w$SelfBad/scoredata_r.sum_w$totalDis
+scoredata_r.sum_w$GoodBad_r    <- scoredata_r.sum_w$GoodBad/scoredata_r.sum_w$totalDis
 scoredata_r.sum_w$GoodNormal_r <- scoredata_r.sum_w$GoodNormal/scoredata_r.sum_w$totalDis
-scoredata_r.sum_w$BadNormal_r <- scoredata_r.sum_w$BadNormal/scoredata_r.sum_w$totalDis
+scoredata_r.sum_w$BadNormal_r  <- scoredata_r.sum_w$BadNormal/scoredata_r.sum_w$totalDis
 
 scoredata_r.sum_w_normalized <- scoredata_r.sum_w[,c("SubjectID","SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
-scoredata_r.sum_w_normalized$expID <- "exp1.0"
+scoredata_r.sum_w_normalized$expID <- "exp1a"
 scoredata_r.sum_w_normalized$session <- 1
 scoredata_r.sum_w_normalized <- scoredata_r.sum_w_normalized[,c("SubjectID","expID","session",
                                                                 "SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
 # save
-setwd("..")         # back to parent folder
-write.csv(scoredata_r.sum_w_normalized,'Data_exp1a_personaldistance_2014.csv',row.names = F)
+# setwd("..")         # back to parent folder
+# write.csv(scoredata_r.sum_w_normalized,'Data_exp1a_personaldistance_2014.csv',row.names = F)
 
 # read the normalized data from the first part of the data
 df1a_s1 <- scoredata_r.sum_w_normalized
@@ -113,14 +112,14 @@ df1a_s2_v <- df1a_s2[df1a_s2$PerDis4 < 50,]
 df1a_s2_perdis <- df1a_s2_v[,c("expID","subID","SessionID", "SelfGood","SelfNormal",
                          "SelfBad","GoodBad","GoodNormal","BadNormal")]
 
-df1a_s2_perdis$totalDis <- rowSums(df1a_s2_perdis[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
-df1a_s2_perdis$SelfGood_r <- df1a_s2_perdis$SelfGood/df1a_s2_perdis$totalDis
+df1a_s2_perdis$totalDis     <- rowSums(df1a_s2_perdis[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
+df1a_s2_perdis$SelfGood_r   <- df1a_s2_perdis$SelfGood/df1a_s2_perdis$totalDis
 df1a_s2_perdis$SelfNormal_r <- df1a_s2_perdis$SelfNormal/df1a_s2_perdis$totalDis
-df1a_s2_perdis$SelfBad_r <- df1a_s2_perdis$SelfBad/df1a_s2_perdis$totalDis
-df1a_s2_perdis$GoodBad_r <- df1a_s2_perdis$GoodBad/df1a_s2_perdis$totalDis
+df1a_s2_perdis$SelfBad_r    <- df1a_s2_perdis$SelfBad/df1a_s2_perdis$totalDis
+df1a_s2_perdis$GoodBad_r    <- df1a_s2_perdis$GoodBad/df1a_s2_perdis$totalDis
 df1a_s2_perdis$GoodNormal_r <- df1a_s2_perdis$GoodNormal/df1a_s2_perdis$totalDis
-df1a_s2_perdis$BadNormal_r <- df1a_s2_perdis$BadNormal/df1a_s2_perdis$totalDis
-df1a_s2_perdis_normalized <- df1a_s2_perdis[,c("expID","subID","SessionID",
+df1a_s2_perdis$BadNormal_r  <- df1a_s2_perdis$BadNormal/df1a_s2_perdis$totalDis
+df1a_s2_perdis_normalized   <- df1a_s2_perdis[,c("expID","subID","SessionID",
                                         "SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
 df1a_s1 <- df1a_s1[,c("expID","SubjectID","session",
                     "SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
@@ -129,5 +128,6 @@ colnames(df1a_s1) <- c("expID","subID","session",
 colnames(df1a_s2_perdis_normalized) <- c("expID","subID","session",
                       "SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")
 df1a_perdis <- rbind(df1a_s1,df1a_s2_perdis_normalized)
+df1a_perdis$expID <- "exp1a"
 
 write.csv(df1a_perdis,'exp1a_personaldistance.csv',row.names = F)

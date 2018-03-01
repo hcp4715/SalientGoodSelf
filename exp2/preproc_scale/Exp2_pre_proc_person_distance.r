@@ -1,30 +1,26 @@
 ##### Purpose ####
-# This script is for pre-processing the scale data for experiment 1a
+# This script is for pre-processing the scale data for experiment a
 # espeically for the psychological-distance data
 
 # initial
 source('Initial.r')
 
 # load data
-# set wd to sub-folder 'scale_preproc'
-setwd('./scale_preproc')
-
 # read the file name in this folder
 fpath  <- getwd()
-fNames <- list.files(path = fpath, pattern = '.csv')
-fNames2 <- list.files(path = fpath, pattern = '.out')
+fNames <- list.files(path = fpath, pattern = '^exp2_personalDistance_sub.*.csv')
+fNames2 <- list.files(path = fpath, pattern = '^personalDistanceMoral.*.out')
 # read file and combine them into one datafrom
 #pdist <- do.call("rbind",lapply(fNames,FUN=function(files){read.table(files, header=TRUE, sep="\t")}))
 
 # get the dimension for each file
-for (file in fNames){
-  dataset <- read.table(file, header=TRUE, sep= ",")
-  dataset <- dataset[1:36,1:11]
-  print(dim(dataset))
- # print(dataset[1,])
-
-}
-rm(dataset)
+# for (file in fNames){
+#  dataset <- read.table(file, header=TRUE, sep= ",")
+#  dataset <- dataset[1:36,1:11]
+#  print(dim(dataset))
+# # print(dataset[1,])
+#}
+# rm(dataset)
 
 # read and combine the data
 for (file in fNames){
@@ -72,6 +68,21 @@ dataset_r.sum <- summarySEwithin(dataset_r,measurevar = 'lengthDraw_r', withinva
 # from long to wide format
 dataset_r.sum_w <- dcast(dataset_r.sum, SubjectID ~ distLabel ,value.var = "lengthDraw_r") 
 
-# save
-write.csv(dataset_r.sum_w,'summaryData_exp2_personaldistance.csv',row.names = F)
+dataset_r.sum_w$totalDis <- rowSums(dataset_r.sum_w[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
+dataset_r.sum_w$SelfGood_r <- dataset_r.sum_w$SelfGood/dataset_r.sum_w$totalDis
+dataset_r.sum_w$SelfNormal_r <- dataset_r.sum_w$SelfNormal/dataset_r.sum_w$totalDis
+dataset_r.sum_w$SelfBad_r <- dataset_r.sum_w$SelfBad/dataset_r.sum_w$totalDis
+dataset_r.sum_w$GoodBad_r <- dataset_r.sum_w$GoodBad/dataset_r.sum_w$totalDis
+dataset_r.sum_w$GoodNormal_r <- dataset_r.sum_w$GoodNormal/dataset_r.sum_w$totalDis
+dataset_r.sum_w$BadNormal_r <- dataset_r.sum_w$BadNormal/dataset_r.sum_w$totalDis
 
+dataset_r.sum_w_normalized <- dataset_r.sum_w[,c("SubjectID","SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
+dataset_r.sum_w_normalized$expID <- "exp2"
+dataset_r.sum_w_normalized$session <- 1
+dataset_r.sum_w_normalized <- dataset_r.sum_w_normalized[,c("SubjectID","expID","session",
+                                                                "SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
+
+
+# save
+write.csv(dataset_r.sum_w_normalized,'exp2_personaldistance.csv',row.names = F)
+write.csv(dataset_r.sum_w,'exp2_personaldistance_more.csv',row.names = F)

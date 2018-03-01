@@ -175,3 +175,66 @@ colnames(df1a.v.sum_rt_acc_l) <- c("Subject","Matchness","Morality","Ntrials","c
 write.csv(df1a.V.sum_w,'exp1a_behav_wide.csv',row.names = F)
 write.csv(df1a.v.sum_rt_acc_l,'exp1a_rt_acc_long.csv',row.names = F)
 write.csv(df1a.V.dprime_l,'exp1a_dprime_long.csv',row.names = F)
+
+
+## plot the data
+df1a.V.SDT.sum <- summarySE(df1a.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality'))
+df1a.V.SDT.sum$Morality <- factor(df1a.V.SDT.sum$Morality,levels = c('Moral','Neutral','Immoral'))
+
+df1a.p_dprime <- ggplot(data = df1a.V.SDT.sum,aes(y = dprime, x = Morality, group = Morality,shape = Morality, fill = Morality)) +
+        geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
+        geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
+                      #geom_errorbar(aes(ymin = 1, ymax = 4),
+                      size = 1,
+                      width = 0.2,
+                      lwd = 1,
+                      position=position_dodge(.6)) +
+        labs(x = 'Moral valence',y = 'd prime') +
+        # ggtitle("d prime") +
+        coord_cartesian(ylim=c(1,3.5))+
+        scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
+        apatheme  +
+        # theme(plot.title = element_text(hjust = 0.5))+ 
+        theme(axis.text = element_text (size = 20, color = 'black')) + 
+        theme(axis.title = element_text (size = 20)) + 
+        theme(plot.title = element_text(size = 20)) +
+        theme(legend.text = element_text(size =20)) +
+        theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
+        theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
+        scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. "))+
+        theme(axis.line.x = element_line(color="black", size = 1),
+              axis.line.y = element_line(color="black", size = 1))
+
+## plot RT
+df1a.V.RT.grand <- summarySE(df1a.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality'),na.rm = TRUE)
+df1a.V.RT.grand.match <- df1a.V.RT.grand[df1a.V.RT.grand$Matchness == "Match",]
+
+df1a.p_rt <- ggplot(data = df1a.V.RT.grand.match, aes(x=Morality,y=RT,group=Morality,shape = Morality,fill = Morality)) +
+        geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
+        geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
+                      size = 1,
+                      width = .2,
+                      position=position_dodge(.6)) +
+        labs(y = 'Reaction times (ms)') +
+        coord_cartesian(ylim=c(500,800))+
+        scale_y_continuous(breaks = seq(500,800,50),expand = c(0, 0)) +
+        #scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter.
+        #ylim(0.3, 0.8) +
+        # ggtitle("RT for each condition") +
+        #scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
+        apatheme +
+        theme(axis.text = element_text (size = 20, color = 'black')) + 
+        theme(axis.title = element_text (size = 20)) + 
+        theme(plot.title = element_text(size = 20)) +
+        theme(legend.text = element_text(size =20)) +
+        theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
+        theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
+        scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. "))+
+        theme(axis.line.x = element_line(color="black", size = 1),
+              axis.line.y = element_line(color="black", size = 1))
+
+# ggsave('e1_RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
+
+tiff(filename = "fig_exp1a.tiff", width = 8, height = 6, units = 'in', res = 300)
+multiplot(df1a.p_dprime,df1a.p_rt,cols = 2)
+dev.off()
