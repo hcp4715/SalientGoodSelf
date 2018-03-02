@@ -32,20 +32,26 @@ df1b$SelfOther[df1b$SelfOther == 0] <- NA
 
 # remove participant that don't understand the instruction
 df1b_v <- df1b[df1b$PerDis4 < 50,]
+df1b_v <- df1b_v[!(df1b_v$GoodBad ==0),]
 
 # extract the relevant data
 df1b_perdis <- df1b_v[,c("expID","subID","SessionID", "SelfGood","SelfNormal",
                          "SelfBad","GoodBad","GoodNormal","BadNormal")]
 
-# wide to long format to get the summary data
-df1b_perdis_l <- melt(df1b_perdis, id.vars = c("expID","subID","SessionID"),variable.name = "distLabel",
-                      value.name = "distValue")
-
 # calculated the summary
-df1b_perdis.sum <- summarySEwithin(df1b_perdis_l,measurevar = 'distValue', withinvar = c('distLabel'), 
-                                 idvar = 'subID',na.rm = TRUE, .drop=FALSE)
+df1b_perdis$totalDis <- rowSums(df1b_perdis[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
+df1b_perdis$SelfGood_r <- df1b_perdis$SelfGood/df1b_perdis$totalDis
+df1b_perdis$SelfNormal_r <- df1b_perdis$SelfNormal/df1b_perdis$totalDis
+df1b_perdis$SelfBad_r <- df1b_perdis$SelfBad/df1b_perdis$totalDis
+df1b_perdis$GoodBad_r <- df1b_perdis$GoodBad/df1b_perdis$totalDis
+df1b_perdis$GoodNormal_r <- df1b_perdis$GoodNormal/df1b_perdis$totalDis
+df1b_perdis$BadNormal_r <- df1b_perdis$BadNormal/df1b_perdis$totalDis
 
+df1b_perdis$expID <- 'exp1b'
+df1b_perdis$SessionID[is.na(df1b_perdis$SessionID)] <- 1
+
+df1b_perdis_normalized <- df1b_perdis[,c("expID","subID","SessionID","SelfGood_r","SelfNormal_r","SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
 
 # save
-write.csv(df1b_perdis,'exp1b_sumData_personaldistance.csv',row.names = F)
-
+write.csv(df1b_perdis,'exp1b_personaldistance.csv',row.names = F)
+write.csv(df1b_perdis_normalized,'exp1b_personaldistance_r.csv',row.names = F)

@@ -28,10 +28,16 @@ df3$SelfOther[df3$SelfOther == 0] <- NA
 
 # remove participant that don't understand the instruction
 df3_v <- df3[df3$PerDis4 < 50,]
+df3_v <- df3_v[df3_v$GoodBad !=0,]
 
 # extract the relevant data
 df3_perdis <- df3_v[,c("expID","subID","SessionID", "SelfGood","SelfNormal",
                          "SelfBad","GoodBad","GoodNormal","BadNormal")]
+
+
+colnames(df3_perdis)[colnames(df3_perdis) == 'SessionID'] <- 'session'
+df3_perdis$session[is.na(df3_perdis$session)] <- 1
+
 df3_perdis$totalDis <- rowSums(df3_perdis[c("SelfGood","SelfNormal","SelfBad","GoodBad","GoodNormal","BadNormal")])
 df3_perdis$SelfGood_r <- df3_perdis$SelfGood/df3_perdis$totalDis
 df3_perdis$SelfNormal_r <- df3_perdis$SelfNormal/df3_perdis$totalDis
@@ -41,9 +47,9 @@ df3_perdis$GoodNormal_r <- df3_perdis$GoodNormal/df3_perdis$totalDis
 df3_perdis$BadNormal_r <- df3_perdis$BadNormal/df3_perdis$totalDis
 
 # wide to long format to get the summary data
-df3_perdis_r <- df3_perdis[,c("expID","subID","SessionID", "SelfGood_r","SelfNormal_r",
+df3_perdis_r <- df3_perdis[,c("expID","subID","session", "SelfGood_r","SelfNormal_r",
                     "SelfBad_r","GoodBad_r","GoodNormal_r","BadNormal_r")]
-df3_perdis_l <- melt(df3_perdis_r, id.vars = c("expID","subID","SessionID"),variable.name = "distLabel",
+df3_perdis_l <- melt(df3_perdis_r, id.vars = c("expID","subID","session"),variable.name = "distLabel",
                       value.name = "distValue")
 df3_perdis_l <- df3_perdis_l[order(df3_perdis_l$subID),]
 
@@ -54,8 +60,8 @@ df3_perdis.sum <- summarySEwithin(df3_perdis_l,measurevar = 'distValue', withinv
 
 
 # save
-
-write.csv(df3_perdis_r,'exp3_perDis_wide.csv',row.names = F)
+write.csv(df3_perdis,'exp3_perDis_wide.csv',row.names = F)
+write.csv(df3_perdis_r,'exp3_perDis_wide_r.csv',row.names = F)
 write.csv(df3_perdis_l,'exp3_perDis_long.csv',row.names = F)
 
 ## plot ####
