@@ -36,11 +36,6 @@ min(df1b.T.basic$Age) == 0
 df1b.ageT.mean   <- round(mean(df1b.T.basic$Age),2);
 df1b.ageT.std    <- round(sd(df1b.T.basic$Age),2);
 
-# data from foreign students were excluded because their may not familar with Chinese Character
-#foreignStdID <- c(24,29,30,33)
-#nforeign <- length(foreignStdID)
-#df1b <- df1b[!(df1b$Subject %in% foreignStdID),]
-
 df1b.P <- df1b[is.na(df1b$BlockList.Sample),]            # data from practice
 df1b.T <- df1b[complete.cases(df1b$BlockList.Sample),]   # data from test
 
@@ -124,6 +119,8 @@ for (i in 1:nrow(df1b.V.SDT_w)){
 df1b.V.SDT_w$dprime <- mapply(dprime,df1b.V.SDT_w$hitR,df1b.V.SDT_w$faR)
 df1b.V.SDT_ww   <- dcast(df1b.V.SDT_w, Subject + Sex + Age ~ Morality ,value.var = "dprime")
 
+df1b.V.SDT_l <- df1b.V.SDT_w[,c(1:4,11)]
+
 # rename the column number
 colnames(df1b.V.SDT_ww)[4:6] <- paste("d", colnames(df1b.V.SDT_ww[,4:6]), sep = "_")
 
@@ -140,14 +137,21 @@ colnames(df1b.V.RT.subj_w)[2:7] <- paste("RT", colnames(df1b.V.RT.subj_w[,2:7]),
 df1b.V.sum_w <- merge(df1b.acc_w,  df1b.V.SDT_ww,by = "Subject")
 df1b.V.sum_w <- merge(df1b.V.sum_w,df1b.V.RT.subj_w,by = 'Subject')
 
+# merge the RT and ACC data (long-format)
+df1b.v.sum_rt_acc_l <- merge(df1b.acc,df1b.V.RT.subj,by = c("Subject","Matchness","Morality"))
+df1b.v.sum_rt_acc_l <- df1b.v.sum_rt_acc_l[order(df1b.v.sum_rt_acc_l$Subject),]
+df1b.v.sum_rt_acc_l <- df1b.v.sum_rt_acc_l[,c("Subject","Matchness","Morality","N.x","countN","ACC","RT")]
+colnames(df1b.v.sum_rt_acc_l) <- c("Subject","Matchness","Morality","Ntrials","corrtrials","ACC","RT")
+
 # order the columns
 df1b.V.sum_w <- df1b.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Moral", "ACC_Match_Neutral", "ACC_Match_Immoral", "ACC_Mismatch_Moral",
                                 "ACC_Mismatch_Neutral", "ACC_Mismatch_Immoral", "d_Moral", "d_Neutral", "d_Immoral", "RT_Match_Moral",
                                 "RT_Match_Neutral", "RT_Match_Immoral", "RT_Mismatch_Moral", "RT_Mismatch_Neutral","RT_Mismatch_Immoral")]
 
 # write files
-write.csv(df1b.V.sum_w,'exp1a_behav_wide.csv',row.names = F)
-
+write.csv(df1b.V.sum_w,'exp1b_behav_wide.csv',row.names = F)
+write.csv(df1b.V.SDT_l,'exp1b_dprime_long.csv',row.names = F)
+write.csv(df1b.v.sum_rt_acc_l,'exp1b_rt_acc_long.csv',row.names = F)
 
 # plot ####
 df1b.V.RT.grand <- summarySE(df1b.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality'),na.rm = TRUE)

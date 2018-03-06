@@ -102,11 +102,20 @@ df4b.acc <-  ddply(df4b.V,.(Subject,Matchness, Morality,Identity), summarise,
                   countN = sum(ACC),
                   ACC = sum(ACC)/length(ACC))
 
+# ACC for the data without considering Idenity
+df4b.acc_moral <-  ddply(df4b.V,.(Subject,Matchness, Morality), summarise,
+                         N = length(ACC),
+                         countN = sum(ACC),
+                         ACC = sum(ACC)/length(ACC))
+
+
 # to wide-formate
 df4b.acc_w <- dcast(df4b.acc, Subject ~ Matchness + Morality + Identity,value.var = "ACC")
+df4b.acc_moral_w <- dcast(df4b.acc_moral, Subject ~ Matchness + Morality,value.var = "ACC")
 
 # rename the column number
 colnames(df4b.acc_w)[2:13] <- paste("ACC", colnames(df4b.acc_w[,2:13]), sep = "_")
+colnames(df4b.acc_moral_w)[2:7] <- paste("ACC", colnames(df4b.acc_moral_w[,2:7]), sep = "_")
 
 ## d prime ####
 df4b.V$sdt <- NA
@@ -155,8 +164,40 @@ df4b.V.dprime$dprime <- mapply(dprime,df4b.V.dprime$hitR,df4b.V.dprime$faR)
 df4b.V.dprime_l <- df4b.V.dprime[,c('Subject','Morality','Identity','dprime')]
 df4b.V.dprime_w <- dcast(df4b.V.dprime, Location + Subject + Age + Sex ~ Identity + Morality ,value.var = "dprime")
 
+####### calculate the number of each for each condition ########
+# this is the same procedure to calculate the d prime, only consider the moral valence 
+df4b.V.d_moral_calc <-  ddply(df4b.V,.(Location,Subject,Age, Sex,Morality,sdt), summarise, N = length(sdt))
+
+# long format to wide
+df4b.V.d_moral_calc <- dcast(df4b.V.d_moral_calc, Location + Subject + Age + Sex + Morality ~ sdt,value.var = "N")
+df4b.V.d_moral_calc$miss[is.na(df4b.V.d_moral_calc$miss)] <- 0
+df4b.V.d_moral_calc$FA[is.na(df4b.V.d_moral_calc$FA)] <- 0
+df4b.V.d_moral_calc$hitR <- df4b.V.d_moral_calc$hit/(df4b.V.d_moral_calc$hit + df4b.V.d_moral_calc$miss)
+df4b.V.d_moral_calc$faR <- df4b.V.d_moral_calc$FA/(df4b.V.d_moral_calc$FA + df4b.V.d_moral_calc$CR)
+
+# standardized way to deal with the extreme values
+for (i in 1:nrow(df4b.V.d_moral_calc)){
+  if (df4b.V.d_moral_calc$hitR[i] == 1){
+    df4b.V.d_moral_calc$hitR[i] <- 1 - 1/(2*(df4b.V.d_moral_calc$hit[i] + df4b.V.d_moral_calc$miss[i]))
+  }
+}
+
+for (i in 1:nrow(df4b.V.d_moral_calc)){
+  if (df4b.V.d_moral_calc$faR[i] == 0){
+    df4b.V.d_moral_calc$faR[i] <- 1/(2*(df4b.V.d_moral_calc$FA[i] + df4b.V.d_moral_calc$CR[i]))
+  }
+}
+
+# calculate the d prime for each condition
+df4b.V.d_moral_calc$dprime <- mapply(dprime,df4b.V.d_moral_calc$hitR,df4b.V.d_moral_calc$faR)
+df4b.V.d_moral_w <- dcast(df4b.V.d_moral_calc, Location + Subject + Age + Sex ~ Morality ,value.var = "dprime")
+df4b.V.d_moral_l     <- df4b.V.d_moral_calc[,c("Location","Subject", "Age","Sex","Morality","dprime")]
+
+##################
+
 # rename the column number
 colnames(df4b.V.dprime_w)[5:10] <- paste("d", colnames(df4b.V.dprime_w[,5:10]), sep = "_")
+colnames(df4b.V.d_moral_w)[5:7] <- paste("d", colnames(df4b.V.d_moral_w[,5:7]), sep = "_")
 
 ## doing the analysis for RT ####
 ## plot density of each subject's RT and save them individually
@@ -166,28 +207,47 @@ subNo <- unique(df4b.V$Subject)
 df4b.V.RT                 <- df4b.V[df4b.V$ACC ==1,]  # exclued rt data less than 200 ms, and inaccurate data
 df4b.V.RT.subj            <- summarySEwithin(df4b.V.RT,measurevar = 'RT', withinvar = c('Subject','Matchness','Morality','Identity'),
                                              idvar = 'Subject', na.rm = TRUE)
+df4b.V.RT.subj_moral <- summarySEwithin(df4b.V.RT,measurevar = 'RT', withinvar = c('Subject','Matchness','Morality'),idvar = 'Subject', na.rm = TRUE)
+
+# long to wide
 df4b.V.RT.subj_w <- dcast(df4b.V.RT.subj, Subject ~ Matchness + Identity + Morality ,value.var = "RT") 
+df4b.V.RT.subj_moral_w <- dcast(df4b.V.RT.subj_moral, Subject ~ Matchness + Morality ,value.var = "RT") 
 
 # rename the columns of RT data
 colnames(df4b.V.RT.subj_w)[2:13] <- paste("RT", colnames(df4b.V.RT.subj_w[,2:13]), sep = "_")
+colnames(df4b.V.RT.subj_moral_w)[2:7] <- paste("RT", colnames(df4b.V.RT.subj_moral_w[,2:7]), sep = "_")
 
 # merge files####
 # the dprime and RT data and save
 df4b.V.sum_w <- merge(df4b.acc_w,df4b.V.dprime_w,by = "Subject")
 df4b.V.sum_w <- merge(df4b.V.sum_w,df4b.V.RT.subj_w,by = 'Subject')
+
+df4b.V.sum_moral_w <- merge(df4b.acc_moral_w,df4b.V.d_moral_w,by = "Subject")
+df4b.V.sum_moral_w <- merge(df4b.V.sum_moral_w,df4b.V.RT.subj_moral_w,by = 'Subject')
+
 # order the columns
-df4b.V.sum_w <- df4b.V.sum_w[,c(colnames(df4b.V.dprime_w)[1:4],colnames(df4b.acc_w)[2:13],colnames(df4b.V.dprime_w)[5:10],colnames(df4b.V.RT.subj_w)[2:13])]
+df4b.V.sum_w <- df4b.V.sum_w[,c(colnames(df4b.V.sum_w)[c(1,14:16,2:13,17:34)])]
+df4b.V.sum_moral_w <- df4b.V.sum_moral_w[,c(colnames(df4b.V.sum_moral_w)[c(1,8:10,2:7,11:19)])]
 
 df4b.v.sum_rt_acc_l <- merge(df4b.acc,df4b.V.RT.subj,by = c("Subject","Matchness","Morality",'Identity'))
 df4b.v.sum_rt_acc_l <- df4b.v.sum_rt_acc_l[order(df4b.v.sum_rt_acc_l$Subject),]
 df4b.v.sum_rt_acc_l <- df4b.v.sum_rt_acc_l[,c("Subject","Matchness","Morality",'Identity',"N.x","countN","ACC","RT")]
 colnames(df4b.v.sum_rt_acc_l) <- c("Subject","Matchness","Morality",'Identity',"Ntrials","corrtrials","ACC","RT")
 
+df4b.v.sum_rt_acc_moral_l <- merge(df4b.acc_moral,df4b.V.RT.subj_moral,by = c("Subject","Matchness","Morality"))
+df4b.v.sum_rt_acc_moral_l <- df4b.v.sum_rt_acc_moral_l[order(df4b.v.sum_rt_acc_moral_l$Subject),]
+df4b.v.sum_rt_acc_moral_l <- df4b.v.sum_rt_acc_moral_l[,c("Subject","Matchness","Morality","N.x","countN","ACC","RT")]
+colnames(df4b.v.sum_rt_acc_moral_l) <- c("Subject","Matchness","Morality","Ntrials","corrtrials","ACC","RT")
+
 ## write files ####
 # write the wide-format data
 write.csv(df4b.V.sum_w,'exp4b_behav_wide.csv',row.names = F)
 write.csv(df4b.v.sum_rt_acc_l,'exp4b_rt_acc_long.csv',row.names = F)
 write.csv(df4b.V.dprime_l,'exp4b_dprime_long.csv',row.names = F)
+
+write.csv(df4b.V.sum_moral_w,'exp4b_behav_moral_wide.csv',row.names = F)
+write.csv(df4b.v.sum_rt_acc_moral_l,'exp4b_rt_acc_moral_long.csv',row.names = F)
+write.csv(df4b.V.d_moral_l,'exp4b_dprime_moral_long.csv',row.names = F)
 
 
 ## plot ####
