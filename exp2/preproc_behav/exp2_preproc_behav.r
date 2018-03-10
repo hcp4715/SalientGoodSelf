@@ -21,11 +21,12 @@ df2$Morality[df2$Morality == "Bad"]    <- "Immoral"
 df2$Morality <- factor(df2$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
 
 df2$Matchness[df2$Matchness == "Yes"] <- "Match"
-df2$Matchness[df2$Matchness == "No"] <- "Mismatch"
+df2$Matchness[df2$Matchness == "No"]  <- "Mismatch"
 df2$Matchness <- factor(df2$Matchness, levels=c("Match", "Mismatch"))
 
 ## Basic information of the data ####
 df2.T.basic    <- df2[!duplicated(df2$Subject), 1:4]
+df2.T.basic     <- df2.T.basic[order(df2.T.basic$Subject),]
 df2.num.subj    <- nrow(df2.T.basic)
 df2.numT.female <- sum(df2.T.basic$Sex == 'female');
 df2.numT.male   <- sum(df2.T.basic$Sex == 'male');
@@ -169,25 +170,13 @@ df2.p_dprime <- ggplot(data = df2.V.dprime.sum,aes(y = dprime, x = Morality, gro
                 lwd = 1,
                 position=position_dodge(.6)) +
   labs(x = 'Moral valence',y = 'd prime') +
-  #ylab(" Reaction times") + 
-  #ylim(1, 4) +
-  ggtitle("d prime for each condition") +
+  ggtitle("d prime") +
   coord_cartesian(ylim=c(1,3.5))+
   scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  #scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter. 
-  #theme_classic()
-  apatheme  +
-  theme(axis.text = element_text (size = 20, color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neutral  ',"Immoral"))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1))
+  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.  ',"Imm. "))+
+  apatheme
 
-ggsave("df2_2.p_dprime.pdf", df2.p_dprime, scale = 1,height = 6, width = 4, dpi = 300, family = "Times")
+# ggsave("df2_2.p_dprime.pdf", df2.p_dprime, scale = 1,height = 6, width = 4, dpi = 300, family = "Times")
 
 # plot RT ####
 df2.V.RT.sum <- summarySE(df2.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality'),na.rm = TRUE)
@@ -200,22 +189,16 @@ df2.p_rt <- ggplot(data = df2.V.RT.sum.match, aes(x=Morality,y=RT,group=Morality
                 size = 1,
                 width = .2,
                 position=position_dodge(.6)) +
-  labs(y = 'Reaction times (ms)') +
+  labs(x = 'Moral valence', y = 'Reaction times (ms)') +
   coord_cartesian(ylim=c(500,800))+
   scale_y_continuous(breaks = seq(500,800,50),expand = c(0, 0)) +
-  #scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter.
-  #ylim(0.3, 0.8) +
+  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. "))+
   ggtitle("RT for each condition") +
-  #scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
-  apatheme +
-  theme(axis.text = element_text (size = 20,color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral  ",'Neutral  ',"Immoral"))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1)) 
+  apatheme
 
 ggsave("df2_2.p_RT.pdf", df2.p_rt, scale = 1,height = 6, width = 4, dpi = 300, family = "Times")
+
+
+tiff(filename = "fig_exp2.tiff", width = 8, height = 6, units = 'in', res = 300)
+multiplot(df2.p_dprime,df2.p_rt,cols = 2)
+dev.off()

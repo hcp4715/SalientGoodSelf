@@ -248,16 +248,8 @@ e3.p_dprime1 <- ggplot(data = df3.V.dprime.sum, aes(x = Identity, y = dprime, gr
   ggtitle("d prime for each condition") +
   coord_cartesian(ylim=c(1,3.5))+
   scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  apatheme +
-  theme(axis.text = element_text (size = 20, color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
   scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ','Imm. '))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1))
+  apatheme
 
 # plot the results of dprime, way 2
 e3.p_dprime2 <- ggplot(data = df3.V.dprime.sum,aes(y = dprime, x = Morality, group = Identity,shape = Identity, fill = Identity)) +
@@ -271,16 +263,8 @@ e3.p_dprime2 <- ggplot(data = df3.V.dprime.sum,aes(y = dprime, x = Morality, gro
   ggtitle("d prime for each condition") +
   coord_cartesian(ylim=c(1,3.5))+
   scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  apatheme+
-  theme(axis.text = element_text (size = 20, color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
   scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1))
+  apatheme
 
 ## plot RT
 df3.V.RT.grand <- summarySE(df3.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality','Identity'),na.rm = TRUE)
@@ -300,17 +284,9 @@ e3.p_rt1 <- ggplot(data = df3.V.RT.grand.match, aes(x=Identity,y=RT,group=Morali
   ylab(" Reaction times (ms)") + 
   coord_cartesian(ylim=c(500,800)) +
   scale_y_continuous(breaks=seq(500,800,50),expand = c(0, 0)) +
-  ggtitle("RT for each condition") +
-  apatheme +  
-  theme(axis.text = element_text (size = 20, color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
   scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ','Imm.'))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1))
+  ggtitle("RT for each condition") +
+  apatheme
 
 e3.p_rt2 <- ggplot(data = df3.V.RT.grand.match, aes(x=Morality,y=RT,group=Identity,shape = Identity,fill = Identity)) +
   geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
@@ -323,16 +299,9 @@ e3.p_rt2 <- ggplot(data = df3.V.RT.grand.match, aes(x=Morality,y=RT,group=Identi
   coord_cartesian(ylim=c(500,800))+
   ggtitle("RT for each condition") +
   scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
-  apatheme +
-  theme(axis.text = element_text (size = 20, color = 'black')) + 
-  theme(axis.title = element_text (size = 20)) + 
-  theme(plot.title = element_text(size = 20)) +
-  theme(legend.text = element_text(size =20)) +
-  theme(axis.title.y = element_text(margin=margin(0,20,0,0))) +  # increase the space between title and y axis
-  theme(axis.title.x = element_text(margin=margin(20,0,0,0))) +   # increase the sapce betwen title and x axis
   scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  theme(axis.line.x = element_line(color="black", size = 1),
-        axis.line.y = element_line(color="black", size = 1))
+  apatheme
+
 # ggsave('RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
 
 # save the plot together
