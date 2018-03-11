@@ -31,9 +31,15 @@ apatheme=theme_bw()+
               panel.border = element_blank(),
               text=element_text(family='Times'),
               legend.title=element_blank(),
+              legend.text = element_text(size =20),
               legend.position='top',
-              axis.line.x = element_line(color='black'),
-              axis.line.y = element_line(color='black'))
+              plot.title = element_text(size = 20),
+              axis.text = element_text (size = 20, color = 'black'),
+              axis.title = element_text (size = 20),
+              axis.title.y = element_text(margin=margin(0,20,0,0)),  # increase the space between title and y axis
+              axis.title.x = element_text(margin=margin(20,0,0,0)),  # increase the sapce betwen title and x axis
+              axis.line.x = element_line(color='black', size = 1),   # increase the size of font
+              axis.line.y = element_line(color='black', size = 1))   # increase the size of font
 
 # define the d prime function
 dprime <- function(hit,fa) {

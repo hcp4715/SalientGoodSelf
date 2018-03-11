@@ -244,7 +244,7 @@ e3.p_dprime1 <- ggplot(data = df3.V.dprime.sum, aes(x = Identity, y = dprime, gr
                 size = 1,
                 width = .2,
                 position=position_dodge(.6)) +
-  labs(x = 'self-referential',y = 'd prime') +
+  labs(x = 'Self-referential',y = 'd prime') +
   ggtitle("d prime for each condition") +
   coord_cartesian(ylim=c(1,3.5))+
   scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
