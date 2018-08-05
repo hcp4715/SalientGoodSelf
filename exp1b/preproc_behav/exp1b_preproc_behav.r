@@ -17,11 +17,11 @@ colnames(df1b)[colnames(df1b)=="Target.RT"]  <- "RT"
 colnames(df1b)[colnames(df1b)=="YesNoResp"]  <- "Matchness"
 colnames(df1b)[colnames(df1b)=="Shape"]      <- "Morality"
 
-# renames independent variables
-df1b$Morality[df1b$Morality == "Good"]   <- "Moral"
+# renames independent variables (good, neutral, bad)
+# df1b$Morality[df1b$Morality == "Good"]   <- "Moral"
 df1b$Morality[df1b$Morality == "Normal"] <- "Neutral"
-df1b$Morality[df1b$Morality == "Bad"]    <- "Immoral"
-df1b$Morality <- factor(df1b$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
+# df1b$Morality[df1b$Morality == "Bad"]    <- "Immoral"
+df1b$Morality <- factor(df1b$Morality, levels=c("Good", "Neutral","Bad")) # make the variables in a specified order
 
 df1b$Matchness[df1b$Matchness == "Yes"] <- "Match"
 df1b$Matchness[df1b$Matchness == "No"] <- "Mismatch"
