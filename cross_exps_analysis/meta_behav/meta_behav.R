@@ -105,38 +105,71 @@ df2.d.es.neut_imm$cond <- 'neut_imm'
 
 df2.d.es <- rbind(df2.d.es.mrl_neut,df2.d.es.mrl_imm,df2.d.es.neut_imm)
 
-## exp3 ####
-df3_d <- read.csv('exp3_dprime_long.csv',header = T, sep = ',',
+## exp3a ####
+df3a_d <- read.csv('exp3a_dprime_long.csv',header = T, sep = ',',
                   stringsAsFactors=FALSE,na.strings=c("","NA"))
-df3.d.sum <- summarySE(df3_d,measurevar = 'dprime',groupvars = c('Morality'))
-df3.d.sum$Exp <- 'exp3'
+df3a.d.sum <- summarySE(df3a_d,measurevar = 'dprime',groupvars = c('Morality'))
+df3a.d.sum$Exp <- 'exp3a'
 
 # effect size and variance
-df3.cor.mrl_imm <- cor(x = df3_d$dprime[df3_d$Morality == "Moral"],df3_d$dprime[df3_d$Morality == "Immoral"])
-df3.d.es.mrl_imm <- data.frame(d.sgpp(m.1 = df3.d.sum$dprime[2], m.2  = df3.d.sum$dprime[1], 
-                                       sd.1 = df3.d.sum$sd[2],     sd.2 = df3.d.sum$sd[1], 
-                                       n    = df3.d.sum$N[1],
-                                       r    = df3.cor.mrl_imm))
-df3.d.es.mrl_imm$Exp <- 'exp3'
-df3.d.es.mrl_imm$cond <- 'mrl_imm'
+df3a.cor.mrl_imm <- cor(x = df3a_d$dprime[df3a_d$Morality == "Moral"],df3a_d$dprime[df3a_d$Morality == "Immoral"])
+df3a.d.es.mrl_imm <- data.frame(d.sgpp(m.1 = df3a.d.sum$dprime[2], m.2  = df3a.d.sum$dprime[1], 
+                                       sd.1 = df3a.d.sum$sd[2],     sd.2 = df3a.d.sum$sd[1], 
+                                       n    = df3a.d.sum$N[1],
+                                       r    = df3a.cor.mrl_imm))
+df3a.d.es.mrl_imm$Exp <- 'exp3a'
+df3a.d.es.mrl_imm$cond <- 'mrl_imm'
 
-df3.cor.mrl_neut <- cor(x = df3_d$dprime[df3_d$Morality == "Moral"],df3_d$dprime[df3_d$Morality == "Neutral"])
-df3.d.es.mrl_neut <- data.frame(d.sgpp(m.1 = df3.d.sum$dprime[2], m.2  = df3.d.sum$dprime[3], 
-                                        sd.1 = df3.d.sum$sd[2],     sd.2 = df3.d.sum$sd[3], 
-                                        n    = df3.d.sum$N[1],
-                                        r    = df3.cor.mrl_neut))
-df3.d.es.mrl_neut$Exp <- 'exp3'
-df3.d.es.mrl_neut$cond <- 'mrl_neut'
+df3a.cor.mrl_neut <- cor(x = df3a_d$dprime[df3a_d$Morality == "Moral"],df3a_d$dprime[df3a_d$Morality == "Neutral"])
+df3a.d.es.mrl_neut <- data.frame(d.sgpp(m.1 = df3a.d.sum$dprime[2], m.2  = df3a.d.sum$dprime[3], 
+                                        sd.1 = df3a.d.sum$sd[2],     sd.2 = df3a.d.sum$sd[3], 
+                                        n    = df3a.d.sum$N[1],
+                                        r    = df3a.cor.mrl_neut))
+df3a.d.es.mrl_neut$Exp <- 'exp3a'
+df3a.d.es.mrl_neut$cond <- 'mrl_neut'
 
-df3.cor.neut_imm <- cor(x = df3_d$dprime[df3_d$Morality == "Neutral"],df3_d$dprime[df3_d$Morality == "Immoral"])
-df3.d.es.neut_imm <- data.frame(d.sgpp(m.1 = df3.d.sum$dprime[3], m.2  = df3.d.sum$dprime[1], 
-                                        sd.1 = df3.d.sum$sd[3],    sd.2 = df3.d.sum$sd[1], 
-                                        n    = df3.d.sum$N[1],
-                                        r    = df3.cor.neut_imm))
-df3.d.es.neut_imm$Exp <- 'exp3'
-df3.d.es.neut_imm$cond <- 'neut_imm'
+df3a.cor.neut_imm <- cor(x = df3a_d$dprime[df3a_d$Morality == "Neutral"],df3a_d$dprime[df3a_d$Morality == "Immoral"])
+df3a.d.es.neut_imm <- data.frame(d.sgpp(m.1 = df3a.d.sum$dprime[3], m.2  = df3a.d.sum$dprime[1], 
+                                        sd.1 = df3a.d.sum$sd[3],    sd.2 = df3a.d.sum$sd[1], 
+                                        n    = df3a.d.sum$N[1],
+                                        r    = df3a.cor.neut_imm))
+df3a.d.es.neut_imm$Exp <- 'exp3a'
+df3a.d.es.neut_imm$cond <- 'neut_imm'
 
-df3.d.es <- rbind(df3.d.es.mrl_neut,df3.d.es.mrl_imm,df3.d.es.neut_imm)
+df3a.d.es <- rbind(df3a.d.es.mrl_neut,df3a.d.es.mrl_imm,df3a.d.es.neut_imm)
+
+## exp3b ####
+df3b_d <- read.csv('exp3b_dprime_long.csv',header = T, sep = ',',
+                  stringsAsFactors=FALSE,na.strings=c("","NA"))
+df3b.d.sum <- summarySE(df3b_d,measurevar = 'dprime',groupvars = c('Morality'))
+df3b.d.sum$Exp <- 'exp3b'
+
+# effect size and variance
+df3b.cor.mrl_imm <- cor(x = df3b_d$dprime[df3b_d$Morality == "Good"],df3b_d$dprime[df3b_d$Morality == "Bad"])
+df3b.d.es.mrl_imm <- data.frame(d.sgpp(m.1 = df3b.d.sum$dprime[2], m.2  = df3b.d.sum$dprime[1], 
+                                      sd.1 = df3b.d.sum$sd[2],     sd.2 = df3b.d.sum$sd[1], 
+                                      n    = df3b.d.sum$N[1],
+                                      r    = df3b.cor.mrl_imm))
+df3b.d.es.mrl_imm$Exp <- 'exp3b'
+df3b.d.es.mrl_imm$cond <- 'mrl_imm'
+
+df3b.cor.mrl_neut <- cor(x = df3b_d$dprime[df3b_d$Morality == "Good"],df3b_d$dprime[df3b_d$Morality == "Neutral"])
+df3b.d.es.mrl_neut <- data.frame(d.sgpp(m.1 = df3b.d.sum$dprime[2], m.2  = df3b.d.sum$dprime[3], 
+                                       sd.1 = df3b.d.sum$sd[2],     sd.2 = df3b.d.sum$sd[3], 
+                                       n    = df3b.d.sum$N[1],
+                                       r    = df3b.cor.mrl_neut))
+df3b.d.es.mrl_neut$Exp <- 'exp3b'
+df3b.d.es.mrl_neut$cond <- 'mrl_neut'
+
+df3b.cor.neut_imm <- cor(x = df3b_d$dprime[df3b_d$Morality == "Neutral"],df3b_d$dprime[df3b_d$Morality == "Bad"])
+df3b.d.es.neut_imm <- data.frame(d.sgpp(m.1 = df3b.d.sum$dprime[3], m.2  = df3b.d.sum$dprime[1], 
+                                       sd.1 = df3b.d.sum$sd[3],    sd.2 = df3b.d.sum$sd[1], 
+                                       n    = df3b.d.sum$N[1],
+                                       r    = df3b.cor.neut_imm))
+df3b.d.es.neut_imm$Exp <- 'exp3b'
+df3b.d.es.neut_imm$cond <- 'neut_imm'
+
+df3b.d.es <- rbind(df3b.d.es.mrl_neut,df3b.d.es.mrl_imm,df3b.d.es.neut_imm)
 
 
 ## exp 4a ####

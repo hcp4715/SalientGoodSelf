@@ -10,6 +10,7 @@ length(unique(df1b_1$Subject))
 df1b_2 <- read.csv("rawdata_behav_exp1b_201705.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 length(unique(df1b_2$Subject))
 df1b   <- rbind(df1b_1,df1b_2)
+rm(df1b_1,df1b_2)
 
 # rename colnames
 colnames(df1b)[colnames(df1b)=="Target.ACC"] <- "ACC"
@@ -144,9 +145,9 @@ df1b.v.sum_rt_acc_l <- df1b.v.sum_rt_acc_l[,c("Subject","Matchness","Morality","
 colnames(df1b.v.sum_rt_acc_l) <- c("Subject","Matchness","Morality","Ntrials","corrtrials","ACC","RT")
 
 # order the columns
-df1b.V.sum_w <- df1b.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Moral", "ACC_Match_Neutral", "ACC_Match_Immoral", "ACC_Mismatch_Moral",
-                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Immoral", "d_Moral", "d_Neutral", "d_Immoral", "RT_Match_Moral",
-                                "RT_Match_Neutral", "RT_Match_Immoral", "RT_Mismatch_Moral", "RT_Mismatch_Neutral","RT_Mismatch_Immoral")]
+df1b.V.sum_w <- df1b.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Good", "ACC_Match_Neutral", "ACC_Match_Bad", "ACC_Mismatch_Good",
+                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Bad", "d_Good", "d_Neutral", "d_Bad", "RT_Match_Good",
+                                "RT_Match_Neutral", "RT_Match_Bad", "RT_Mismatch_Good", "RT_Mismatch_Neutral","RT_Mismatch_Bad")]
 
 # write files
 write.csv(df1b.V.sum_w,'exp1b_behav_wide.csv',row.names = F)
@@ -188,3 +189,35 @@ df1b.p_rt <- ggplot(data = df1b.V.RT.grand.match, aes(x=Morality,y=RT,group=Mora
 tiff(filename = "fig_exp1b.tiff", width = 8, height = 6, units = 'in', res = 300)
 multiplot(df1b.p_dprime,df1b.p_rt,cols = 2)
 dev.off()
+
+# plot the raincloud plot
+Ddata1 <- df1b.V.SDT_l %>%
+  select(Subject,Morality,dprime) # %>% 
+#filter(Morality == "Good")
+Ddata1$Morality <- factor(Ddata1$Morality,levels = c("Good","Neutral","Bad"))
+p1 <- ggplot(data = Ddata1, aes(y = dprime, x = Morality,fill = Morality)) +
+  geom_flat_violin(position = position_nudge(x = .15, y = 0)) +
+  geom_point(aes(y = dprime,color = Morality), position = position_jitter(width = .1), size = 2.5) +
+  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
+  guides(fill = FALSE) +guides(color = FALSE)+
+  #theme_bw() +
+  raincloud_theme+scale_y_continuous(breaks = seq(-1,6,1),limits = c(-1,6))+
+  labs(x = '',y = "d prime")
+Ddata2 <- df1b.V.RT.subj %>%
+  select(Subject,Morality,Matchness,RT) %>% 
+  filter(Matchness == "Match")
+Ddata2$Morality <- factor(Ddata2$Morality,levels = c("Good","Neutral","Bad"))
+p2 <- ggplot(data = Ddata2, aes(y = RT, x = Morality,fill = Morality)) +
+  geom_flat_violin(position = position_nudge(x = .15, y = 0)) +
+  geom_point(aes(y = RT,color = Morality), position = position_jitter(width = .1), size = 2.5) +
+  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
+  guides(fill = FALSE) + guides(color = FALSE)+
+  #theme_bw() +
+  raincloud_theme+scale_y_continuous(breaks = seq(400,900,100),limits = c(400,900))+
+  labs(x = '',y = "Reaction times (ms)")
+
+
+tiff(filename = 'fig_exp1b.tiff', width = 8, height = 6, units = 'in', res = 300)
+p_exp1a <- multiplot(p1,p2,cols = 2)
+dev.off()
+

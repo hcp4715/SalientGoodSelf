@@ -34,3 +34,26 @@ df_perdis_long <- df_perdis_long[order(df_perdis_long$condition),]
 # write csv
 write.csv(df_perdis, "exp1a_4b_df_perdis.csv",row.names = F)
 write.csv(df_perdis_long, "exp1a_4b_df_perdis_long.csv",row.names = F)
+
+## plot distance ####
+df_perdis_long <- read.csv('exp1a_4b_df_perdis_long.csv',header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
+df_perdis_long$condition[df_perdis_long$condition == 'SelfGood_r'] <- 'Self-Good'
+df_perdis_long$condition[df_perdis_long$condition == 'SelfNormal_r'] <- 'Self-Ord'
+df_perdis_long$condition[df_perdis_long$condition == 'SelfBad_r'] <- 'Self-Bad'
+df_perdis_long$condition[df_perdis_long$condition == 'GoodBad_r'] <- 'Good-Bad'
+df_perdis_long$condition[df_perdis_long$condition == 'GoodNormal_r'] <- 'Good-Ord'
+df_perdis_long$condition[df_perdis_long$condition == 'BadNormal_r'] <- 'Bad-Ord'
+
+df_perdis_long$condition <- factor(df_perdis_long$condition, 
+                                   levels = c('Self-Ord', 'Self-Good', 'Good-Ord', 'Bad-Ord',  'Good-Bad','Self-Bad'))
+p1 <- ggplot(data = df_perdis_long, aes(y = distance, x = condition,fill = condition)) +
+  geom_flat_violin(position = position_nudge(x = .1, y = 0)) +
+  geom_point(aes(y = distance,color = condition), position = position_jitter(width = .1), size = 1.5) +
+  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
+  guides(fill = FALSE) + guides(color = FALSE)+
+  #theme_bw() +
+  raincloud_theme+scale_y_continuous(breaks = seq(0,0.6,0.1),limits = c(0,0.6))+labs(x = "Conditions",y = "Normalized personal distance")
+
+tiff('exp_all_perdis.tiff', width = 9, height = 6, units = 'in', res = 300)
+p1
+dev.off()

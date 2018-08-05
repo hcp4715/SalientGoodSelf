@@ -32,6 +32,8 @@ df1b.fam_w_sum <- summarySEwithin(df1b.fam_w,measurevar = 'rating', withinvar = 
 df1b.fam_w_sum$dim <- factor(df1b.fam_w_sum$dim, levels = c("Faml","Freq","Conc"))
 df1b.fam_w_sum$label <- factor(df1b.fam_w_sum$label, levels = c("ChangRen","ERen","ShanRen","HaoRen","HuaiRen","FanRen","Junzi","LiuMang"))
 
+write.csv(df1b.fam_w_sum,'df1b.fam_w_sum.csv',row.names = F)
+
 df1b_fam_p <- ggplot(data = df1b.fam_w_sum,aes(y = rating, x = label, group = dim,shape = dim, fill = dim)) +
   geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3,width = .6) +    # Thinner lines
   geom_errorbar(aes(ymin = rating - se, ymax = rating + se),
