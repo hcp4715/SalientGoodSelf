@@ -17,8 +17,8 @@ colnames(df3)[colnames(df3)=="Morality"]   <- "Morality"
 df3$Morality[df3$Morality == "moral"]   <- "Moral"
 df3$Morality[df3$Morality == "normal"]  <- "Neutral"
 df3$Morality[df3$Morality == "immoral"] <- "Immoral"
-df3$Matchness[df3$Matchness == "Yes"] <- "Match"
-df3$Matchness[df3$Matchness == "No"]  <- "Mismatch"
+df3$Matchness[df3$Matchness == "Yes"]   <- "Match"
+df3$Matchness[df3$Matchness == "No"]    <- "Mismatch"
 #df3$Matchness <- factor(df3$Matchness, levels=c("match", "nonmatch")) # not factor before calculating the d-prime
 
 # there recode are important for real trials (not for practice trials)

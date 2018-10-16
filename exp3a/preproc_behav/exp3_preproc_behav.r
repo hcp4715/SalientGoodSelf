@@ -8,6 +8,7 @@
 ## initializing ####
 source('Initial.r')
 
+curDir <- getwd()
 ## load data and edite data
 df3 <- read.csv("rawdata_behav_exp3_2018.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 
@@ -231,6 +232,7 @@ write.csv(df3.v.sum_rt_acc_moral_l,'exp3_rt_acc_moral_long.csv',row.names = F)
 write.csv(df3.V.d_moral_l,'exp3_dprime_moral_long.csv',row.names = F)
 
 ## plot ####
+Mplots(saveDir = curDir, curDir = curDir, expName = 'exp3a', df3.V.dprime_l,df3.v.sum_rt_acc_l)
 
 ## plot and save the results of d'
 df3.V.dprime.sum <- summarySE(df3.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality','Identity'))
