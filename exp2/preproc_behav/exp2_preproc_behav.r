@@ -1,10 +1,13 @@
 ## this code is to preprocess the data for exp2
 
-
 ## initializing####
 source('Initial.r')
 
 ## load and edite data ####
+curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp2/preproc_behav"
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp2"
+
+setwd(curDir)
 df2 <- read.csv("rawdata_behav_exp2.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 length(unique(df2$Subject))
 
@@ -159,6 +162,8 @@ write.csv(df2.v.sum_rt_acc_l,'exp2_rt_acc_long.csv',row.names = F)
 write.csv(df2.V.dprime_l,'exp2_dprime_long.csv',row.names = F)
 
 ## plot d prime #### 
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp2', dData,rtData)
+  
 df2.V.dprime.sum <- summarySE(df2.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality'))
 df2.V.dprime.sum$Morality <- factor(df2.V.dprime.sum$Morality, levels = c('Moral','Neutral','Immoral'))
 df2.p_dprime <- ggplot(data = df2.V.dprime.sum,aes(y = dprime, x = Morality, group = Morality,shape = Morality, fill = Morality)) +
