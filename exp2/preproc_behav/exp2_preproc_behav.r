@@ -161,49 +161,5 @@ write.csv(df2.V.sum_w,'exp2_behav_wide.csv',row.names = F)
 write.csv(df2.v.sum_rt_acc_l,'exp2_rt_acc_long.csv',row.names = F)
 write.csv(df2.V.dprime_l,'exp2_dprime_long.csv',row.names = F)
 
-## plot d prime #### 
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp2', dData,rtData)
-  
-df2.V.dprime.sum <- summarySE(df2.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality'))
-df2.V.dprime.sum$Morality <- factor(df2.V.dprime.sum$Morality, levels = c('Moral','Neutral','Immoral'))
-df2.p_dprime <- ggplot(data = df2.V.dprime.sum,aes(y = dprime, x = Morality, group = Morality,shape = Morality, fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = 0.2,
-                lwd = 1,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'd prime') +
-  ggtitle("d prime") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.  ',"Imm. "))+
-  apatheme
-
-# ggsave("df2_2.p_dprime.pdf", df2.p_dprime, scale = 1,height = 6, width = 4, dpi = 300, family = "Times")
-
-# plot RT ####
-df2.V.RT.sum <- summarySE(df2.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality'),na.rm = TRUE)
-df2.V.RT.sum.match <- df2.V.RT.sum[df2.V.RT.sum$Matchness == "Match",]
-df2.V.RT.sum.match$Morality <- factor(df2.V.RT.sum.match$Morality, levels = c('Moral','Neutral','Immoral'))
-
-df2.p_rt <- ggplot(data = df2.V.RT.sum.match, aes(x=Morality,y=RT,group=Morality,shape = Morality,fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence', y = 'Reaction times (ms)') +
-  coord_cartesian(ylim=c(500,800))+
-  scale_y_continuous(breaks = seq(500,800,50),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. "))+
-  ggtitle("RT for each condition") +
-  apatheme
-
-ggsave("df2_2.p_RT.pdf", df2.p_rt, scale = 1,height = 6, width = 4, dpi = 300, family = "Times")
-
-
-tiff(filename = "fig_exp2.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df2.p_dprime,df2.p_rt,cols = 2)
-dev.off()
+## plot d prime and RT #### 
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp2', df2.V.dprime_l,df2.v.sum_rt_acc_l)

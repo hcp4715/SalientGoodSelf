@@ -6,9 +6,12 @@
 
 
 ## initializing #### 
-source('Initial.r')
+source('Initial_exp1a.r')
 
 ## load data ####
+curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1a/preproc_behav"
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1a"
+
 df1a_1 <- read.csv("rawdata_behav_exp1a_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 length(unique(df1a_1$Subject))
 
@@ -34,7 +37,7 @@ colnames(df1a)[colnames(df1a)=="Shape"]      <- "Morality"
 # renames independent variables
 #df1a$Morality[df1a$Morality == "Good"]   <- "Moral"
 df1a$Morality[df1a$Morality == "Normal"] <- "Neutral"
-#df1a$Morality[df1a$Morality == "Bad"]    <- "Immoral"
+# df1a$Morality[df1a$Morality == "Bad"]    <- "Immoral"
 df1a$Match[df1a$Match == "Yes"]  <- "Match"
 df1a$Match[df1a$Match == "No"]   <- "Mismatch"
 
@@ -184,6 +187,8 @@ write.csv(df1a.V.dprime_l,'exp1a_dprime_long.csv',row.names = F)
 
 
 ## plot the data
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1a', df1a.V.dprime_l,df1a.v.sum_rt_acc_l)
+
 df1a.V.SDT.sum <- summarySE(df1a.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality'))
 df1a.V.SDT.sum$Morality <- factor(df1a.V.SDT.sum$Morality,levels = c('Good','Neutral','Bad'))
 
