@@ -1,13 +1,9 @@
 # initializing
-source('Initial.r')
+source('Initial_exp3b.r')
 
-# packages
-#pkgNeeded <- (c("data.table","plyr","ggplot2", "reshape", 'dplyr','ggthemes','gridExtra',"MBESS", "bootES","metafor","compute.es",'psych','ez'))
-
-#lapply(pkgNeeded,pkgTest)
-#rm('pkgNeeded') # remove the variable 'pkgNeeded';
-
-
+curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3b/preproc_behav"
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3b"
+setwd(curDir)
 # Preprocessing the behavioral data for experiment 3b
 df3b <- read.csv("rawdata_exp3_1.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 
@@ -182,57 +178,5 @@ write.csv(df3b.v.sum_rt_acc_l,'exp3b_rt_acc_long.csv',row.names = F)
 
 
 ## plot d prime ####
-Ddata1 <- df3b.V.SDT_l %>%
-  select(Subject,Morality,Identity,dprime) %>% 
-  filter(Identity == "Self")
-Ddata1$Morality <- factor(Ddata1$Morality,levels = c("Good","Neutral","Bad"))
-p1 <- ggplot(data = Ddata1, aes(y = dprime, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .1, y = 0)) +
-  geom_point(aes(y = dprime,color = Morality), position = position_jitter(width = .1), size = 1.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) +guides(color = FALSE)+
-  #theme_bw() +
-  raincloud_theme+scale_y_continuous(breaks = seq(-1,5,1),limits = c(-1,5))+labs(x = "Self-referential",y = "dprime")
-Ddata2 <- df3b.V.SDT_l %>%
-  select(Subject,Morality,Identity,dprime) %>% 
-  filter(Identity == "Other")
-Ddata2$Morality <- factor(Ddata2$Morality,levels = c("Good","Neutral","Bad"))
-p2 <- ggplot(data = Ddata2, aes(y = dprime, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .1, y = 0)) +
-  geom_point(aes(y = dprime,color = Morality), position = position_jitter(width = .1), size = 1.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) +guides(color = FALSE)+
-  # theme_bw() +
-  raincloud_theme+scale_y_continuous(limits = c(-1,5),breaks = NULL)+labs(x = "Other-referential",y = "")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp3b', df3b.V.SDT_l,df3b.v.sum_rt_acc_l)
 
-tiff('exp3b_dprime.tiff', width = 9, height = 6, units = 'in', res = 300)
-p_dprime_match <- multiplot(p1,p2,cols = 2)
-dev.off()
-
-## plot RT ####
-RTdata1 <- df3b.v.sum_rt_acc_l %>%
-  select(Subject,Matchness,Morality,Identity,RT) %>% 
-  filter(Identity == "Self" & Matchness == 'Match')
-RTdata1$Morality <- factor(RTdata1$Morality,levels = c("Good","Neutral","Bad"))
-p1_rt <- ggplot(data = RTdata1, aes(y = RT, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .1, y = 0)) +
-  geom_point(aes(y = RT,color = Morality), position = position_jitter(width = .1), size = 1.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) +guides(color = FALSE)+
-  #theme_bw() +
-  raincloud_theme+scale_y_continuous(breaks = seq(300,1300,100),limits = c(300,1300))+labs(x = "Self-referential",y = "Reaction times (ms)")
-RTdata2 <- df3b.v.sum_rt_acc_l %>%
-  select(Subject,Matchness,Morality,Identity,RT) %>% 
-  filter(Identity == "Other" & Matchness == 'Match')
-RTdata2$Morality <- factor(RTdata2$Morality,levels = c("Good","Neutral","Bad"))
-p2_rt <- ggplot(data = RTdata2, aes(y = RT, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .1, y = 0)) +
-  geom_point(aes(y = RT,color = Morality), position = position_jitter(width = .1), size = 1.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) +guides(color = FALSE)+
-  # theme_bw() +
-  raincloud_theme+scale_y_continuous(limits = c(300,1300),breaks = NULL)+labs(x = "Other-referential",y = "")
-
-tiff('exp3b_RT.tiff', width = 9, height = 6, units = 'in', res = 300)
-p_RT_match <- multiplot(p1_rt,p2_rt,cols = 2)
-dev.off()

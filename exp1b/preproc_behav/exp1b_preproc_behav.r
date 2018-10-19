@@ -2,7 +2,10 @@
 ## included these data were colleted at Wenzhou U in 201704
 
 ## initializing  #### 
-source('Initial.r')
+source('Initial_exp1b.r')
+curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1b/preproc_behav"
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1b"
+
 
 ## load data and edite data
 df1b_1 <- read.csv("rawdata_behav_exp1b_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
@@ -155,69 +158,5 @@ write.csv(df1b.V.SDT_l,'exp1b_dprime_long.csv',row.names = F)
 write.csv(df1b.v.sum_rt_acc_l,'exp1b_rt_acc_long.csv',row.names = F)
 
 ## plot the data
-df1b.V.SDT.sum <- summarySE(df1b.V.SDT_l,measurevar = 'dprime',groupvars = c('Morality'))
-df1b.V.SDT.sum$Morality <- factor(df1b.V.SDT.sum$Morality,levels = c('Moral','Neutral','Immoral'))
-
-df1b.p_dprime <- ggplot(data = df1b.V.SDT.sum,aes(y = dprime, x = Morality, group = Morality,shape = Morality, fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                size = 1, width = 0.2, lwd = 1,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'd prime')    +
-  coord_cartesian(ylim=c(1,3.5))             +
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. ")) +
-  apatheme
-
-## plot RT
-df1b.V.RT.grand <- summarySE(df1b.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality'),na.rm = TRUE)
-df1b.V.RT.grand.match <- df1b.V.RT.grand[df1b.V.RT.grand$Matchness == "Match",]
-df1b.V.RT.grand.match$Morality <- factor(df1b.V.RT.grand.match$Morality,levels = c('Moral','Neutral','Immoral'))
-df1b.p_rt <- ggplot(data = df1b.V.RT.grand.match, aes(x=Morality,y=RT,group=Morality,shape = Morality,fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = 0.6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'Reaction times (ms)') +
-  coord_cartesian(ylim=c(500,800))+
-  scale_y_continuous(breaks = seq(500,800,50),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ',"Imm. ")) +
-  apatheme
-# ggsave('e1_RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
-
-tiff(filename = "fig_exp1b.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df1b.p_dprime,df1b.p_rt,cols = 2)
-dev.off()
-
-# plot the raincloud plot
-Ddata1 <- df1b.V.SDT_l %>%
-  select(Subject,Morality,dprime) # %>% 
-#filter(Morality == "Good")
-Ddata1$Morality <- factor(Ddata1$Morality,levels = c("Good","Neutral","Bad"))
-p1 <- ggplot(data = Ddata1, aes(y = dprime, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .15, y = 0)) +
-  geom_point(aes(y = dprime,color = Morality), position = position_jitter(width = .1), size = 2.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) +guides(color = FALSE)+
-  #theme_bw() +
-  raincloud_theme+scale_y_continuous(breaks = seq(-1,6,1),limits = c(-1,6))+
-  labs(x = '',y = "d prime")
-Ddata2 <- df1b.V.RT.subj %>%
-  select(Subject,Morality,Matchness,RT) %>% 
-  filter(Matchness == "Match")
-Ddata2$Morality <- factor(Ddata2$Morality,levels = c("Good","Neutral","Bad"))
-p2 <- ggplot(data = Ddata2, aes(y = RT, x = Morality,fill = Morality)) +
-  geom_flat_violin(position = position_nudge(x = .15, y = 0)) +
-  geom_point(aes(y = RT,color = Morality), position = position_jitter(width = .1), size = 2.5) +
-  geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
-  guides(fill = FALSE) + guides(color = FALSE)+
-  #theme_bw() +
-  raincloud_theme+scale_y_continuous(breaks = seq(400,900,100),limits = c(400,900))+
-  labs(x = '',y = "Reaction times (ms)")
-
-
-tiff(filename = 'fig_exp1b.tiff', width = 8, height = 6, units = 'in', res = 300)
-p_exp1a <- multiplot(p1,p2,cols = 2)
-dev.off()
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1b', df1b.V.SDT_l,df1b.v.sum_rt_acc_l)
 

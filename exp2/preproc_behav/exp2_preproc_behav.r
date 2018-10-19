@@ -1,7 +1,7 @@
 ## this code is to preprocess the data for exp2
 
 ## initializing####
-source('Initial.r')
+source('Initial_exp2.r')
 
 ## load and edite data ####
 curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp2/preproc_behav"
@@ -18,10 +18,10 @@ colnames(df2)[colnames(df2)=="YesNoResp"]  <- "Matchness"
 colnames(df2)[colnames(df2)=="Shape"]      <- "Morality"
 
 # renames independent variables
-df2$Morality[df2$Morality == "Good"]   <- "Moral"
+#df2$Morality[df2$Morality == "Good"]   <- "Moral"
 df2$Morality[df2$Morality == "Normal"] <- "Neutral"
-df2$Morality[df2$Morality == "Bad"]    <- "Immoral"
-df2$Morality <- factor(df2$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
+#df2$Morality[df2$Morality == "Bad"]    <- "Immoral"
+#df2$Morality <- factor(df2$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
 
 df2$Matchness[df2$Matchness == "Yes"] <- "Match"
 df2$Matchness[df2$Matchness == "No"]  <- "Mismatch"
@@ -146,9 +146,9 @@ colnames(df2.V.RT.subj_w)[2:7] <- paste("RT", colnames(df2.V.RT.subj_w[,2:7]), s
 df2.V.sum_w <- merge(df2.acc_w,df2.V.dprime_w,by = "Subject")
 df2.V.sum_w <- merge(df2.V.sum_w,df2.V.RT.subj_w,by = 'Subject')
 # order the columns
-df2.V.sum_w <- df2.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Moral", "ACC_Match_Neutral", "ACC_Match_Immoral", "ACC_Mismatch_Moral",
-                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Immoral", "d_Moral", "d_Neutral", "d_Immoral", "RT_Match_Moral",
-                                "RT_Match_Neutral", "RT_Match_Immoral", "RT_Mismatch_Moral", "RT_Mismatch_Neutral","RT_Mismatch_Immoral")]
+df2.V.sum_w <- df2.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Good", "ACC_Match_Neutral", "ACC_Match_Bad", "ACC_Mismatch_Good",
+                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Bad", "d_Good", "d_Neutral", "d_Bad", "RT_Match_Good",
+                                "RT_Match_Neutral", "RT_Match_Bad", "RT_Mismatch_Good", "RT_Mismatch_Neutral","RT_Mismatch_Bad")]
 
 df2.v.sum_rt_acc_l <- merge(df2.acc,df2.V.RT.subj,by = c("Subject","Matchness","Morality"))
 df2.v.sum_rt_acc_l <- df2.v.sum_rt_acc_l[order(df2.v.sum_rt_acc_l$Subject),]

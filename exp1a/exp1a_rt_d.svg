@@ -42,11 +42,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="343.2408"
-     inkscape:cy="286.70456"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="546.81223"
+     inkscape:cy="400.99027"
      inkscape:document-units="mm"
-     inkscape:current-layer="g6940"
+     inkscape:current-layer="g5940"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -94,7 +94,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -3153,12 +3153,14 @@
         <text
            id="text5944"
            style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Times New Roman';-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           transform="matrix(0,1,1,0,16.07,186.5)">
+           transform="matrix(0,1,1,0,0,0)"
+           x="182"
+           y="22.07">
           <tspan
              id="tspan5942"
              sodipodi:role="line"
-             y="0"
-             x="0 10.672 17.775999 24.879999 31.983999 36.431999 40.880001 48.880001 56.880001 60.880001 70.096001 74.543999 86.991997 94.096001">Reaction Times</tspan>
+             y="22.07"
+             x="182 192.672 199.776 206.88 213.98399 218.43199 222.88 230.88 238.88 242.88 252.09599 256.54401 268.992 276.09601">Reaction Times (ms)</tspan>
         </text>
       </g>
       <g
@@ -4937,7 +4939,8 @@
       <g
          id="g7740" />
       <g
-         id="g7742">
+         id="g7742"
+         transform="translate(-6)">
         <text
            id="text7746"
            style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Times New Roman';-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -4946,7 +4949,10 @@
              id="tspan7744"
              sodipodi:role="line"
              y="0"
-             x="0 8 12 20 25.327999 29.775999 42.223999">d prime</tspan>
+             x="0 8 12 20 25.327999 29.775999 42.223999"><tspan
+   style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
+   id="tspan2069">d</tspan>
+ prime</tspan>
         </text>
       </g>
       <g
