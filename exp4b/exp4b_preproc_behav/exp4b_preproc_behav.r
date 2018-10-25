@@ -1,7 +1,12 @@
 ## this code is to analyze the data for exp4b, included these data were colleted at Wenzhou U in 2017
 
-## initializing ####
-source('Initial.r')
+## initializing
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
+source('Initial_exp4b.r')
+
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp4b"
 
 ## load data####
 df4b_1 <- read.csv("rawdata_behav_exp4_2_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
@@ -20,16 +25,16 @@ colnames(df4b)[colnames(df4b)=="YesNoResp"]  <- "Matchness"
 colnames(df4b)[colnames(df4b)=="morality"]   <- "Morality"
 
 # renames independent variables
-df4b$Morality[df4b$Morality == "Good"]  <- "Moral"
+#df4b$Morality[df4b$Morality == "Good"]  <- "Moral"
 df4b$Morality[df4b$Morality == "Ord"]   <- "Neutral"
-df4b$Morality[df4b$Morality == "Bad"]   <- "Immoral"
+#df4b$Morality[df4b$Morality == "Bad"]   <- "Immoral"
 df4b$Matchness[df4b$Matchness == "Yes"] <- "Match"
 df4b$Matchness[df4b$Matchness == "No"]  <- "Mismatch"
 df4b$Identity[df4b$Identity == 'self']  <- 'Self'
 df4b$Identity[df4b$Identity == 'other'] <- 'Other'
 
 # df4b$Matchness <- factor(df4b$Matchness, levels=c("Match", "Mismatch")) # not factor before calculating the d-prime
-df4b$Morality  <- factor(df4b$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
+df4b$Morality  <- factor(df4b$Morality, levels=c("Good", "Neutral","Bad")) # make the variables in a specified order
 df4b$Identity  <- factor(df4b$Identity, levels=c("Self", "Other"))
 
 # there recode are important for real trials (not for practice trials)
@@ -251,85 +256,4 @@ write.csv(df4b.V.d_moral_l,'exp4b_dprime_moral_long.csv',row.names = F)
 
 
 ## plot ####
-df4b.V.dprime.sum <- summarySE(df4b.V.dprime,measurevar = 'dprime',groupvars = c('Morality','Identity'))
-df4b.V.dprime.sum$Morality  <- factor(df4b.V.dprime.sum$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
-df4b.V.dprime.sum$Identity  <- factor(df4b.V.dprime.sum$Identity, levels=c("Self", "Other"))
-
-# plot the results of dprime, way 1
-df4b.p_dprime1 <- ggplot(data = df4b.V.dprime.sum,aes(y = dprime, x = Identity, group = Morality,shape = Morality, fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Identity',y = 'd prime') +
-  #ylab(" Reaction times") + 
-  #ylim(1, 4) +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.','Imm. '))+
-  apatheme
-  
-# plot the results of dprime, way 2
-df4b.p_dprime2 <- ggplot(data = df4b.V.dprime.sum,aes(y = dprime, x = Morality, group = Identity,shape = Identity, fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'd prime') +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  apatheme
-
-# ggsave('dprime_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
-
-## plot RT ####
-df4b.V.RT.grand           <- summarySE(df4b.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality','Identity'),na.rm = TRUE)
-df4b.V.RT.grand.Match     <- df4b.V.RT.grand[df4b.V.RT.grand$Matchness == "Match",]
-df4b.V.RT.grand.Match$Morality  <- factor(df4b.V.RT.grand.Match$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
-df4b.V.RT.grand.Match$Identity  <- factor(df4b.V.RT.grand.Match$Identity, levels=c("Self", "Other"))
-
-df4b.p_rt1 <- ggplot(data = df4b.V.RT.grand.Match, aes(x=Identity,y=RT,group=Morality,shape = Morality,fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Identity") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800)) +
-  scale_y_continuous(breaks=seq(500,800,50),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.','Imm. '))+
-  ggtitle("RT for each condition") +
-  apatheme
-
-df4b.p_rt2 <- ggplot(data = df4b.V.RT.grand.Match, aes(x=Morality,y=RT,group=Identity,shape = Identity,fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Moral valence") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800))+
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  ggtitle("RT for each condition") +
-  scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
-  apatheme +
-  
-# ggsave('RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
-
-
-tiff(filename = "Fig_d_prime_and_RTs_exp4b_1.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df4b.p_dprime1,df4b.p_rt1,cols = 2)
-dev.off()
-
-tiff(filename = "Fig_d_prime_and_RTs_exp4b_2.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df4b.p_dprime2,df4b.p_rt2,cols = 2)
-dev.off()
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp4b', df4b.V.dprime_l,df4b.v.sum_rt_acc_l)

@@ -2,10 +2,11 @@
 ## included these data were colleted at Wenzhou U in 201704
 
 ## initializing  #### 
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
 source('Initial_exp1b.r')
-curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1b/preproc_behav"
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1b"
-
 
 ## load data and edite data
 df1b_1 <- read.csv("rawdata_behav_exp1b_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
@@ -158,5 +159,6 @@ write.csv(df1b.V.SDT_l,'exp1b_dprime_long.csv',row.names = F)
 write.csv(df1b.v.sum_rt_acc_l,'exp1b_rt_acc_long.csv',row.names = F)
 
 ## plot the data
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1b', df1b.V.SDT_l,df1b.v.sum_rt_acc_l)
+rtdata <- subset(df1b.v.sum_rt_acc_l,Matchness == "Match")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1b', df1b.V.SDT_l,rtdata)
 

@@ -329,7 +329,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                 geom_flat_violin(aes(fill = Morality),position = position_nudge(x = 0.1, y = 0),
                                  adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
                 geom_dotplot(aes(x = Identity,y = dprime, color = Morality), 
-                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 7,
+                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 6,
                              position = position_dodge(0.2)) +
                 geom_boxplot(aes(x = Identity,  y = dprime,fill = Morality),outlier.shape = NA,
                              alpha = 0.5, width = 0.1,  color = "black",
@@ -348,7 +348,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                 #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
                 #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
                 geom_dotplot(aes(x = Identity,y = RT, color = Morality), 
-                             binaxis='y', binwidth = 0.4, stackdir='center', dotsize= 16,position = position_dodge(0.2)) + 
+                             binaxis='y', binwidth = 0.4, stackdir='center', dotsize= 17,position = position_dodge(0.2)) + 
                 geom_boxplot(aes(x = Identity,  y = RT,fill = Morality),outlier.shape = NA,
                              alpha = 0.5, width = 0.1,  color = "black",
                              position = position_dodge(0.2))+ 
@@ -360,14 +360,14 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                 apatheme
           # save the d-prime plot
           fileName = paste0('p_',expName,'_match_dprime','.pdf')
-          ggsave(fileName, P.dprime, scale = 1,height = 6, width = 8, dpi = 300, family = "Times",path = saveDir)
+          ggsave(fileName, P.dprime, scale = 1,height = 6, width = 6, dpi = 300, family = "Times",path = saveDir)
           # save the RT plot
           fileName = paste0('p_',expName,'_match_RT','.pdf')
-          ggsave(fileName, P.rt, scale = 1,height = 6, width = 8, dpi = 300, family = "Times",path = saveDir)
+          ggsave(fileName, P.rt, scale = 1,height = 6, width = 6, dpi = 300, family = "Times",path = saveDir)
           # save the both      
           fileName = paste0('p_',expName,'_match_','.tiff')
           setwd(saveDir)
-          tiff(fileName, height = 12, width = 16,  units = 'in', res = 300)
+          tiff(fileName, height = 12, width = 12,  units = 'in', res = 300)
           p_dprime_match <- multiplot(P.rt,P.dprime,cols = 2)
           dev.off()
           setwd(curDir)

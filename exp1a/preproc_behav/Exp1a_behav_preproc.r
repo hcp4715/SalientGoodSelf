@@ -6,10 +6,12 @@
 
 
 ## initializing #### 
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
 source('Initial_exp1a.r')
 
 ## load data ####
-curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1a/preproc_behav"
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1a"
 
 df1a_1 <- read.csv("rawdata_behav_exp1a_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
@@ -187,4 +189,5 @@ write.csv(df1a.V.dprime_l,'exp1a_dprime_long.csv',row.names = F)
 
 
 ## plot the data
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1a', df1a.V.dprime_l,df1a.v.sum_rt_acc_l)
+rtdata <- subset(df1a.v.sum_rt_acc_l,Match == "Match")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1a', df1a.V.dprime_l,rtdata)

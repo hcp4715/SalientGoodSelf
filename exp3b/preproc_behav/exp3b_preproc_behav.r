@@ -1,9 +1,12 @@
 # initializing
+
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
 source('Initial_exp3b.r')
 
-curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3b/preproc_behav"
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3b"
-setwd(curDir)
+
 # Preprocessing the behavioral data for experiment 3b
 df3b <- read.csv("rawdata_exp3_1.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 
@@ -178,5 +181,5 @@ write.csv(df3b.v.sum_rt_acc_l,'exp3b_rt_acc_long.csv',row.names = F)
 
 
 ## plot d prime ####
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp3b', df3b.V.SDT_l,df3b.v.sum_rt_acc_l)
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp3b', df3b.V.SDT_l,df3b.v.sum_rt_acc_l[df3b.v.sum_rt_acc_l$Matchness == 'Match',])
 

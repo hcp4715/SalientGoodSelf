@@ -381,7 +381,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                   geom_flat_violin(aes(fill = Morality),position = position_nudge(x = 0.1, y = 0),
                                    adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
                   geom_dotplot(aes(x = Identity,y = dprime, color = Morality), 
-                               binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 7,
+                               binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 8,
                                position = position_dodge(0.2)) +
                   geom_boxplot(aes(x = Identity,  y = dprime,fill = Morality),outlier.shape = NA,
                                alpha = 0.5, width = 0.1,  color = "black",
@@ -391,7 +391,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                   xlab("Morality")+
                   ylab("d prime") +
                   # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                  scale_y_continuous(expand = c(0, 0), limits = c(-1,6)) +
+                  scale_y_continuous(expand = c(0, 0), limits = c(-2,6)) +
                   apatheme
                 
               P.rt <- ggplot(rtData,aes(x = Identity , y = RT, fill = Morality))+
@@ -409,7 +409,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                   ylab("Reaction Times")+
                   #scale_x_discrete(breaks = 'Morality',label = 'Morality') +
                   xlab("Morality") +
-                  scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
+                  scale_y_continuous(expand = c(0, 0),limits = c(400,1000))+
                   #theme(axis.ticks.x=element_blank())+
                   apatheme 
               # save the d-prime plot

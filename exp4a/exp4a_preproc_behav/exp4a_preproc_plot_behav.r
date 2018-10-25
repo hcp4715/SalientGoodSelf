@@ -6,7 +6,13 @@
 # Third, plot the results (d prime and RT)
 
 ## initializing
-source('Initial.r')
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
+source('Initial_exp4a.r')
+
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp4a"
+
 
 ## load data and edite data
 df4a_1 <- read.csv("rawdata_behav_exp4a_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
@@ -26,14 +32,14 @@ colnames(df4a)[colnames(df4a)=="Target.RT"]  <- "RT"
 colnames(df4a)[colnames(df4a)=="YesNoResp"]  <- "Matchness"
 
 # renames independent variables
-df4a$Morality[df4a$Morality == "Good"]    <- "Moral"
+#df4a$Morality[df4a$Morality == "Good"]    <- "Moral"
 df4a$Morality[df4a$Morality == "Normal"]  <- "Neutral"
-df4a$Morality[df4a$Morality == "Bad"]     <- "Immoral"
+#df4a$Morality[df4a$Morality == "Bad"]     <- "Immoral"
 df4a$Matchness[df4a$Matchness == "Yes"]   <- "Match"
 df4a$Matchness[df4a$Matchness == "No"]    <- "Mismatch"
 df4a$Identity[df4a$Identity == 'self']    <- 'Self'
 df4a$Identity[df4a$Identity == 'other']   <- 'Other'
-df4a$Morality  <- factor(df4a$Morality, levels=c("Moral", "Neutral","Immoral")) # make the variables in a specified order
+df4a$Morality  <- factor(df4a$Morality, levels=c("Good", "Neutral","Bad")) # make the variables in a specified order
 df4a$Identity  <- factor(df4a$Identity, levels=c("Self", "Other"))
 df4a$Matchness  <- factor(df4a$Matchness, levels=c("Match", "Mismatch"))
 # there recode are important for real trials (not for practice trials)
@@ -241,121 +247,4 @@ write.csv(df4a.V.d_moral_l,'exp4a_dprime_moral_long.csv',row.names = F)
 
 
 ### plot ####
-
-## check the effect of site
-df4a.rt_anova_site <- ezANOVA(df4a.V.RT,dv = RT, wid = Subject, within=.(Matchness,Morality,Identity),within_full=.(Matchness,Identity,Morality),
-                                    between = .(Location), type=3)
-
-## plot and save the results of d'
-df4a.V.dprime.sum <- summarySE(df4a.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality','Identity'))
-df4a.V.dprime.sum$Morality <- factor(df4a.V.dprime.sum$Morality, levels = c('Moral','Neutral','Immoral'))
-df4a.V.dprime.sum$Identity <- factor(df4a.V.dprime.sum$Identity, levels = c('Self','Other'))
-
-# plot the results of dprime, way 1
-df4a.p_dprime1 <- ggplot(data = df4a.V.dprime.sum,aes(y = dprime, x = Identity, group = Morality,shape = Morality, fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Identity',y = 'd prime') +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.','Imm. '))+
-  apatheme
-
-# plot the results of dprime, way 2
-df4a.p_dprime2 <- ggplot(data = df4a.V.dprime.sum,aes(y = dprime, x = Morality, group = Identity,shape = Identity, fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'd prime') +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50'),labels=c("Self  ",'Other'))+
-  apatheme 
-
-## plot RT
-
-df4a.V.RT.grand <- summarySE(df4a.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality','Identity'),na.rm = TRUE)
-df4a.V.RT.grand.Match <- df4a.V.RT.grand[df4a.V.RT.grand$Matchness == 'Match',]
-
-
-df4a.V.RT.grand.Match$Morality <- factor(df4a.V.RT.grand.Match$Morality, levels = c('Moral','Neutral','Immoral'))
-df4a.V.RT.grand.Match$Identity <- factor(df4a.V.RT.grand.Match$Identity, levels = c('Self','Other'))
-
-
-df4a.p_rt1 <- ggplot(data = df4a.V.RT.grand.Match, aes(x=Identity,y=RT,group=Morality,shape = Morality,fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Identity") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800)) +
-  scale_y_continuous(breaks=seq(500,800,50),expand = c(0, 0)) +
-  ggtitle("RT for each condition") +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut.','Imm. '))+
-  apatheme
-
-df4a.p_rt2 <- ggplot(data = df4a.V.RT.grand.Match, aes(x=Morality,y=RT,group=Identity,shape = Identity,fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Moral valence") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800))+
-  #scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter.
-  #ylim(0.3, 0.8) +
-  ggtitle("RT for each condition") +
-  scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
-  scale_fill_manual(values=c("grey20",'grey50'),labels=c("Self  ",'Other'))+
-  apatheme
-# ggsave('RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
-
-
-tiff(filename = "Figure_exp4a_d_prime_RTs_1.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df4a.p_dprime1,df4a.p_rt1,cols = 2)
-dev.off()
-
-tiff(filename = "Figure_exp4a_d_prime_RTs_2.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(df4a.p_dprime2,df4a.p_rt2,cols = 2)
-dev.off()
-
-
-# try new ways to plot
-set.seed(100)
-randSub <- sample(unique(df4a.V.dprime_l$Subject),10)
-df_test <- df4a.V.dprime_l[df4a.V.dprime_l$Subject %in% randSub,5:7]
-
-colnames(df_test) <- c('IV_1','IV_2','DV')
-df_test$IV_1 <- as.character(df_test$IV_1)
-df_test$IV_2 <- as.character(df_test$IV_2)
-df_test$IV_1[df_test$IV_1 == 'Moral']   <- "A1"
-df_test$IV_1[df_test$IV_1 == 'Neutral'] <- "A2"
-df_test$IV_1[df_test$IV_1 == 'Immoral'] <- "A3"
-df_test$IV_2[df_test$IV_2 == 'Self'] <- "B1"
-df_test$IV_2[df_test$IV_2 == 'Other'] <- "B2"
-
-write.csv(df_test,'df_test.csv',row.names = F)
-
-library(ggpirate)
-theme_set(theme_bw())
-df4a.p_dprime1 <- 
-  ggplot(data = df_test,aes(y = DV, x = IV_1,fill = IV_2,position = 'dodge')) +
-  geom_pirate(aes(color = IV_1))
-
-exp4a_d_piravteplot <- pirateplot(formula = dprime ~ Morality + Identity,
-                                  data = df4a.V.dprime_l,
-                                  theme = 1,
-                                  main = "D prime")
-
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp4a', df4a.V.dprime_l,df4a.v.sum_rt_acc_l)

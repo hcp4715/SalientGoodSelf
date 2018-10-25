@@ -6,9 +6,15 @@
 # Third, plot the results (d prime and RT)
 
 ## initializing ####
+# Get the directory of the current R script
+# Set the working directory to the directory where this script is 
+
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+setwd(curDir)
 source('Initial_exp3a.r')
 
-curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3a/preproc_behav"
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3a"
 
 ## load data and edite data
@@ -235,92 +241,4 @@ write.csv(df3a.v.sum_rt_acc_moral_l,'exp3_rt_acc_moral_long.csv',row.names = F)
 write.csv(df3a.V.d_moral_l,'exp3_dprime_moral_long.csv',row.names = F)
 setwd(curDir)
 ## plot ####
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp3a', df3a.V.dprime_l,df3a.v.sum_rt_acc_l)
-
-## plot and save the results of d'
-df3a.V.dprime.sum <- summarySE(df3a.V.dprime_l,measurevar = 'dprime',groupvars = c('Morality','Identity'))
-df3a.V.dprime.sum$Morality <- factor(df3a.V.dprime.sum$Morality, levels = c('Good','Neutral','Bad'))
-df3a.V.dprime.sum$Identity <- factor(df3a.V.dprime.sum$Identity, levels = c('Self','Other'))
-
-# plot the results of dprime, way 1
-e3.p_dprime1 <- ggplot(data = df3a.V.dprime.sum, aes(x = Identity, y = dprime, group = Morality,shape = Morality, fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Self-referential',y = 'd prime') +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ','Imm. '))+
-  apatheme
-
-# plot the results of dprime, way 2
-e3.p_dprime2 <- ggplot(data = df3a.V.dprime.sum,aes(y = dprime, x = Morality, group = Identity,shape = Identity, fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
-                #geom_errorbar(aes(ymin = 1, ymax = 4),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  labs(x = 'Moral valence',y = 'd prime') +
-  ggtitle("d prime for each condition") +
-  coord_cartesian(ylim=c(1,3.5))+
-  scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  apatheme
-
-## plot RT
-df3a.V.RT.grand <- summarySE(df3a.V.RT.subj,measurevar = 'RT', groupvar = c('Matchness','Morality','Identity'),na.rm = TRUE)
-df3a.V.RT.grand.match <- df3a.V.RT.grand[df3a.V.RT.grand$Matchness == "Match",]
-
-df3a.V.RT.grand.match$Morality <- factor(df3a.V.RT.grand.match$Morality, levels = c('Moral','Neutral','Bad'))
-df3a.V.RT.grand.match$Identity <- factor(df3a.V.RT.grand.match$Identity, levels = c('Self','Other'))
-
-
-e3.p_rt1 <- ggplot(data = df3a.V.RT.grand.match, aes(x=Identity,y=RT,group=Morality,shape = Morality,fill = Morality)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Self-referential") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800)) +
-  scale_y_continuous(breaks=seq(500,800,50),expand = c(0, 0)) +
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Moral ",'Neut. ','Imm.'))+
-  ggtitle("RT for each condition") +
-  apatheme
-
-e3.p_rt2 <- ggplot(data = df3a.V.RT.grand.match, aes(x=Morality,y=RT,group=Identity,shape = Identity,fill = Identity)) +
-  geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3, width = .6) +         # Thinner lines
-  geom_errorbar(aes(ymin = RT-se, ymax = RT + se),
-                size = 1,
-                width = .2,
-                position=position_dodge(.6)) +
-  xlab("Moral valence") +
-  ylab(" Reaction times (ms)") + 
-  coord_cartesian(ylim=c(500,800))+
-  ggtitle("RT for each condition") +
-  scale_y_continuous("Reation Times  (ms)",expand = c(0, 0)) + 
-  scale_fill_manual(values=c("grey20",'grey50', "grey80"),labels=c("Self  ",'Other'))+
-  apatheme
-
-# ggsave('RT_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
-
-# save the plot together
-tiff(filename = "Figure_exp3_d_RT_1.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(e3.p_dprime1,e3.p_rt1,cols = 2)
-dev.off()
-
-tiff(filename = "Figure_exp3_d_RT_2.tiff", width = 8, height = 6, units = 'in', res = 300)
-multiplot(e3.p_dprime2,e3.p_rt2,cols = 2)
-dev.off()
-
-
-## try the other plot
-library(yarrr)
-devtools::install_github("mikabr/ggpirate")
-pirateplot(formula = dprime ~ Morality + Identity,
-           data = df3a.V.dprime_l)
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp3a', df3a.V.dprime_l,df3a.v.sum_rt_acc_l[df3a.v.sum_rt_acc_l$Matchness == 'Match',])
