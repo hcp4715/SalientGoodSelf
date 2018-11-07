@@ -1,10 +1,13 @@
 ## this code is to preprocess the data for exp2
 
 ## initializing####
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(curDir)
+
 source('Initial_exp2.r')
 
 ## load and edite data ####
-curDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp2/preproc_behav"
+curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp2"
 
 setwd(curDir)
@@ -162,4 +165,5 @@ write.csv(df2.v.sum_rt_acc_l,'exp2_rt_acc_long.csv',row.names = F)
 write.csv(df2.V.dprime_l,'exp2_dprime_long.csv',row.names = F)
 
 ## plot d prime and RT #### 
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp2', df2.V.dprime_l,df2.v.sum_rt_acc_l)
+rtdata <- subset(df2.v.sum_rt_acc_l,Matchness == "Match")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp2', df2.V.dprime_l,rtdata)

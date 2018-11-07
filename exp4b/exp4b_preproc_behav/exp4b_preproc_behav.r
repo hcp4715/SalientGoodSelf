@@ -256,4 +256,5 @@ write.csv(df4b.V.d_moral_l,'exp4b_dprime_moral_long.csv',row.names = F)
 
 
 ## plot ####
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp4b', df4b.V.dprime_l,df4b.v.sum_rt_acc_l)
+rtdata <- subset(df4b.v.sum_rt_acc_l, Matchness == "Match")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp4b', df4b.V.dprime_l,rtdata)

@@ -336,7 +336,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7',dData, rt
         scale_fill_brewer(palette = "Dark2") +
         ylab("d prime") +
         # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-        scale_y_continuous(expand = c(0, 0), limits = c(-1, 6)) +
+        scale_y_continuous(expand = c(0, 0), limits = c(-2, 6)) +
         apatheme
       
       P.rt <- ggplot(rtData, aes(x = Identity , y = RT, fill = Morality)) +
@@ -352,7 +352,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7',dData, rt
         scale_fill_brewer(palette = "Dark2") +
         ylab("Reaction Times (ms)") +
         #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-        scale_y_continuous(expand = c(0, 0), limits = c(300, 1200)) +
+        scale_y_continuous(expand = c(0, 0), limits = c(400, 1000)) +
         apatheme
       # save the d-prime plot
       fileName = paste0('p_', expName, '_match_dprime', '.pdf')

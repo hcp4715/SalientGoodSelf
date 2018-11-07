@@ -338,7 +338,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                 scale_fill_brewer(palette = "Dark2") +
                 ylab("d prime") +
                # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                scale_y_continuous(expand = c(0, 0), limits = c(-1,6)) +
+                scale_y_continuous(expand = c(0, 0), limits = c(-2,6)) +
                 apatheme
           
           
@@ -356,7 +356,7 @@ Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', dData,rt
                 scale_fill_brewer(palette = "Dark2")+
                 ylab("Reaction Times (ms)")+
                 #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                scale_y_continuous(expand = c(0, 0),limits = c(300,1200))+
+                scale_y_continuous(expand = c(0, 0),limits = c(300,1300),breaks = c(300,500,700,900,1100,1300))+
                 apatheme
           # save the d-prime plot
           fileName = paste0('p_',expName,'_match_dprime','.pdf')

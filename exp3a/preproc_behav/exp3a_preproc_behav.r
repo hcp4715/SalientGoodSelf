@@ -10,7 +10,6 @@
 # Set the working directory to the directory where this script is 
 
 curDir = dirname(rstudioapi::getSourceEditorContext()$path)
-
 setwd(curDir)
 source('Initial_exp3a.r')
 
@@ -43,7 +42,7 @@ df3a$Identity[df3a$Shape == 'Goodother'| df3a$Shape == 'Badother'| df3a$Shape ==
 df3a$Morality  <- factor(df3a$Morality, levels=c("Good", "Neutral","Bad")) # make the variables in a specified order
 df3a$Identity  <- factor(df3a$Identity, levels=c("Self", "Other"))
 
-df3a <- df3a[,-which(names(df3a) %in% "Shape")]  # delete column "shape"
+df3a <- df3a[,-which(names(df3a) %in% c("Shape","morality"))]  # delete column "Shape", "morality"
 
 df3a.P <- df3a[is.na(df3a$BlockList.Sample),]       # data from practice
 df3a.T <- df3a[!(is.na(df3a$BlockList.Sample)),]    # data from test
@@ -51,19 +50,53 @@ df3a.T <- df3a[!(is.na(df3a$BlockList.Sample)),]    # data from test
 # number of participant who didn't finished the experiment
 nQuit <- length(unique(df3a.P$Subject)) - length(unique(df3a.T$Subject))
 
+### good self is at high level of accuracy at the very beginning of the experiment. other conditions not.
+
 # trials that should be excluded from analysis because of less than 200 ms
 # note that this should be reconsidered when doinng DDM analysis
 # and also the trials without response
 excld.trials <- df3a.T[df3a.T$RT <= 200 & df3a.T$ACC == 1,]
 ratio.excld.trials <- nrow(excld.trials)/nrow(df3a.T) # ratio of excluded trials in all triasl.
 # caculate the overall accuracy for each subject
-df3a.acc.g <-  ddply(df3a.T,.(Subject), summarise,
+subj <- group_by(df3a.T,Subject)
+df3a.acc.g <-  plyr::ddply(df3a.T,.(Subject), summarise,
                     N = length(ACC),
                     countN = sum(ACC),
                     ACC = sum(ACC)/length(ACC))
 excld.sub <- df3a.acc.g$Subject[df3a.acc.g$ACC < 0.6]  # find participants whose overall ACC is less than 60%
 df3a.valid <- df3a.T[!(df3a.T$Subject %in% excld.sub),] # exclude the invalid participants
 
+
+### 
+### Get the ACC and RT for each bin (10 trials of the same condition)
+df3a.T.v <- df3a.T[!(df3a.T$Subject %in% excld.sub),]
+learnCurve <- df3a.T.v %>%
+  select(Subject,                          # select the columns
+         BlockList.Sample,
+         Matchness,
+         Identity,
+         Morality,
+         ACC,
+         RT) %>%
+  group_by(Subject,Matchness,Identity,Morality,BlockList.Sample)  %>%  # separate by subj, Conds and blocks
+  dplyr::summarise(N = length(RT),  
+                   RT_m = mean(RT, na.rm = T),  
+                   RT_sd = sd(RT, na.rm = T),
+                   ACC_m = sum(ACC) / length(ACC)) %>%
+  group_by(Matchness,Identity,Morality,BlockList.Sample) %>%
+  dplyr::summarise(N = length(RT_m),                              # sample size for each condition
+                   RT_m_g  = mean(RT_m, na.rm = T),               # mean RT for group
+                   RT_sd_g = sd(RT_m, na.rm = T),                 # sd of RT for group
+                   ACC_m_g = mean(ACC_m),                         # mean ACC of gorup
+                   ACC_sd_g = sd(ACC_m))                          # sd ACC of gorup
+
+### plot
+learnCurve$cond <- paste(learnCurve$Morality,learnCurve$Identity,sep = '')
+pd <- position_dodge(0.1) # move them .05 to the left and right
+ggplot(learnCurve[learnCurve$Matchness == 'Match',], aes(x=BlockList.Sample, y=ACC_m_g, colour=cond)) + 
+#  geom_errorbar(aes(ymin=len-se, ymax=len+se), width=.1, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd)
 
 # Check the accuracy of the participants number
 length(unique(df3a.valid$Subject)) + length(excld.sub) + nQuit == length(unique(df3a$Subject))
