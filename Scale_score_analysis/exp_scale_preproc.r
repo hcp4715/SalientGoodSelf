@@ -139,6 +139,22 @@ df7.t1 <- df.7.v %>%
 df7.t2 <- df.7.v %>%
   dplyr::filter(session == 2)
 
+# check duplicated participants
+dupsubj1 <-df1.t1$subjID[duplicated(df1.t1$subjID)]
+dupsubj2 <-df2.t1$subjID[duplicated(df2.t1$subjID)]
+dupsubj3 <-df3.t1$subjID[duplicated(df3.t1$subjID)]
+dupsubj4 <-df4.t1$subjID[duplicated(df4.t1$subjID)]
+dupsubj5 <-df5.t1$subjID[duplicated(df5.t1$subjID)]
+dupsubj6 <-df6.t1$subjID[duplicated(df6.t1$subjID)]
+dupsubj7 <-df7.t1$subjID[duplicated(df7.t1$subjID)]
+
+
+dupsubj2 <-df2.t2$subjID[duplicated(df2.t2$subjID)]
+dupsubj4 <-df4.t2$subjID[duplicated(df4.t2$subjID)]
+dupsubj5 <-df5.t2$subjID[duplicated(df5.t2$subjID)]
+dupsubj6 <-df6.t2$subjID[duplicated(df6.t2$subjID)]
+dupsubj7 <-df7.t2$subjID[duplicated(df7.t2$subjID)]
+
 ### check the subject intersection between df.1 & df.2
 intersect(df1.t1$subjID,df2.t1$subjID)     # 0, then combine all the columns
 dft1.21 <- dplyr::full_join(x = df2.t1, y = df1.t1, by = intersect(colnames(df1.t1),colnames(df2.t1)))
@@ -156,24 +172,30 @@ intersect(colnames(dft1.213),colnames(df4.t1))       # only three ID columns are
 dft1.4213 <- dplyr::full_join(x = dft1.213, y = df4.t1, by = intersect(colnames(dft1.213),colnames(df4.t1)))
 
 ### merge df.5
-intersect(colnames(df.4213),colnames(df.5))
-df.4213$session <- as.numeric(df.4213$session)
-df.11 <- dplyr::full_join(x = df.4213, y = df.5, by = IdNames)
-tmp1 <- df.11[,paste(personDist,'x',sep = '.')]
-colnames(tmp1) <- personDist
-tmp2 <- df.11[,paste(personDist,'y',sep = '.')]
-colnames(tmp2) <- personDist
 
-tmp3 <- setNames(data.frame(matrix(ncol = ncol(tmp1), nrow = nrow(tmp1))), personDist)
-for (i in personDist){
+length(intersect(dft1.4213$subjID,df5.t1$subjID))    # 475 row, 316 row, 310 row overlap
+
+colnames(df5.t1)[colnames(df5.t1) == "prac_1_GoodBad"] <- 'dist_prac1'
+colnames(df5.t1)[colnames(df5.t1) == "prac_2_SelfBad"] <- 'dist_prac2'
+cmName <- intersect(colnames(dft1.4213 ),colnames(df5.t1))   # common names
+cmName <- cmName[4:34]
+# df.4213$session <- as.numeric(df.4213$session)
+dft1.54321 <- dplyr::full_join(x = dft1.4213, y = df5.t1, by = IdNames)
+
+tmp1 <- dft1.54321[,paste(cmName,'x',sep = '.')]
+colnames(tmp1) <- cmName
+tmp2 <- dft1.54321[,paste(cmName,'y',sep = '.')]
+colnames(tmp2) <- cmName
+
+tmp3 <- setNames(data.frame(matrix(ncol = ncol(tmp1), nrow = nrow(tmp1))), cmName)
+for (i in cmName){
       tmp3[[i]] <- dplyr::coalesce(tmp1[[i]],tmp2[[i]])
 }
-df.11 <- cbind(df.11,tmp3)
-#df.11 <- subset(df.11, select=-c(paste(personDist,'x',sep = '.'),paste(personDist,'y', sep = '.')))
-df.11 <- df.11[,-which(names(df.11) %in% c(paste(personDist,'x',sep = '.'),paste(personDist,'y', sep = '.')))]
 
-colnames(df.11)[colnames(df.11) == 'seq'] <- 'seq_q3'
-colnames(df.11)[colnames(df.11) == 'name'] <- 'name_q3'
+dft1.54321 <- cbind(dft1.54321,tmp3)
+#df.11 <- subset(df.11, select=-c(paste(personDist,'x',sep = '.'),paste(personDist,'y', sep = '.')))
+dft1.54321 <- dft1.54321[,-which(names(dft1.54321) %in% c(paste(cmName,'x',sep = '.'),paste(cmName,'y', sep = '.')))]
+
 #colnames(df.4213)[colnames(df.4213) == c('seq','session','duration','finishTime','name')] <- 
 #      c(paste(c('seq','session','duration','finishTime','name'),'q2',sep = '_'))
 
@@ -196,37 +218,43 @@ colnames(df.11)[colnames(df.11) == 'name'] <- 'name_q3'
 #df.11[,personDist][df.4213$expID ==df.5$expID & df.4213$subjID == df.5$subjID] <- 
 #      df.5[,personDist][df.4213$expID ==df.5$expID & df.4213$subjID == df.5$subjID]
 
+# merge df 6
+length(intersect(dft1.54321$subjID,df6.t1$subjID))     # 482 row, 378 row, 340 row overlap
+intersect(colnames(dft1.54321),colnames(df6.t1))       # only three ID columns are overlap
 
-df.21 <- dplyr::full_join(x = df.11, y = df.6, by = c('expID','subjID','session'))
+dft1.654321 <- dplyr::full_join(x = dft1.54321, y = df6.t1, by = c('expID','subjID','session'))
 
-tmp1 <- df.21[,paste(SlfEstNames,'x',sep = '.')]
+tmp1 <- dft1.654321[,paste(SlfEstNames,'x',sep = '.')]
 colnames(tmp1) <- SlfEstNames
-tmp2 <- df.21[,paste(SlfEstNames,'y',sep = '.')]
+tmp2 <- dft1.654321[,paste(SlfEstNames,'y',sep = '.')]
 colnames(tmp2) <- SlfEstNames
 
 for (i in SlfEstNames){
-      df.21[[i]] <- dplyr::coalesce(tmp1[[i]],tmp2[[i]])
+  dft1.654321[[i]] <- dplyr::coalesce(tmp1[[i]],tmp2[[i]])
 }
 
-df.21 <- df.21[,-which(names(df.21) %in% c(paste(SlfEstNames,'x',sep = '.'),paste(SlfEstNames,'y', sep = '.')))]
+dft1.654321 <- dft1.654321[,-which(names(dft1.654321) %in% c(paste(SlfEstNames,'x',sep = '.'),paste(SlfEstNames,'y', sep = '.')))]
 
-### Get colnames of df.7
-colnames(df.7)
-mrlIdNames
-mrlSlfImgNames <- c(paste('morSlfImg',1:9,sep = '_'))
+### merge df.7
+length(intersect(dft1.654321$subjID,df7.t1$subjID))     # 520 row, 235 row, 229 row overlap
+intersect(colnames(dft1.654321),colnames(df7.t1))       # Moral identity
 
-df.21 <- df.21[,-which(names(df.21) %in% c('seq','status','finishTime'))]
-df.7 <- df.7[,-which(names(df.7) %in% c('seq','status','finishTime'))]
+dft1.7654321 <- dplyr::full_join(x = dft1.654321, y = df7.t1, by = c('expID','subjID','session'))
 
-df.13 <- dplyr::full_join(x = df.21, y = df.7, by = c('expID','subjID','session'))
-
-tmp1 <- df.13[,paste(mrlIdNames,'x',sep = '.')]
+tmp1 <- dft1.7654321[,paste(mrlIdNames,'x',sep = '.')]
 colnames(tmp1) <- mrlIdNames
-tmp2 <- df.13[,paste(mrlIdNames,'y',sep = '.')]
+tmp2 <- dft1.7654321[,paste(mrlIdNames,'y',sep = '.')]
 colnames(tmp2) <- mrlIdNames
 
 for (i in mrlIdNames){
-      df.13[[i]] <- dplyr::coalesce(tmp1[[i]],tmp2[[i]])
+  dft1.7654321[[i]] <- dplyr::coalesce(tmp1[[i]],tmp2[[i]])
 }
 
-df.13 <- df.13[,-which(names(df.13) %in% c(paste(mrlIdNames,'x',sep = '.'),paste(mrlIdNames,'y', sep = '.')))]
+dft1.7654321 <- dft1.7654321[,-which(names(dft1.7654321) %in% c(paste(mrlIdNames,'x',sep = '.'),paste(mrlIdNames,'y', sep = '.')))]
+
+# check the data
+dupsubj <-dft1.7654321$subjID[duplicated(dft1.7654321$subjID)]
+dupsubjdata <-dft1.7654321[which(dft1.7654321$subjID %in% dupsubj),c('expID','subjID','session')]
+
+
+
