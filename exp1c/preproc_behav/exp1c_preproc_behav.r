@@ -23,7 +23,8 @@ df1c <- df1c_1 %>%
                  Target1.ACC,Target1.RESP, Target1.RT) %>%
   dplyr::rename(Subject = ï..Subject, ACC = Target1.ACC,          # rename columns
                 RT = Target1.RT, Matchness = YesNoResp, Morality = Shape)
-  
+
+# test  
 # renames independent variables (good, neutral, bad)
 # df1c$Morality[df1c$Morality == "Good"]   <- "Moral"
 df1c$Morality[df1c$Morality == "Normal"] <- "Neutral"
