@@ -65,11 +65,6 @@ apatheme = theme_bw()+
 #      axis.line.x = element_line(colour = 'black', size=0.5, linetype='solid'),
 #      axis.line.y = element_line(colour = 'black', size=0.5, linetype='solid'))
 
-# define the d prime function
-dprime <- function(hit,fa) {
-        qnorm(hit) - qnorm(fa)
-}
-
 ## below is the code from blog, and adapted from A C Del Re from email
 d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5)
 {

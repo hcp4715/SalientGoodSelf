@@ -34,7 +34,6 @@ length(unique(df1c$Subject))
 #df1c.P <- df1c[is.na(df1c$BlockList.Sample),]            # data from practice
 #df1c.T <- df1c[complete.cases(df1c$BlockList.Sample),]   # data from test
 
-
 # test  
 # renames independent variables (good, neutral, bad)
 # df1c$Morality[df1c$Morality == "Good"]   <- "Moral"
@@ -120,29 +119,43 @@ df1c.acc_w <- df1c.acc %>%
   dplyr::mutate(cond = paste0(Matchness, "_", Morality)) %>% # paste to create a new column for conversion
   dplyr::select(Subject, cond, ACC) %>%                      # only select key columns
   tidyr::spread(key = cond, value = ACC) %>%                 # from long to wide
-  rename_at(vars(-Subject), ~ paste0("ACC_",.))              # add prefix to all ACC
+  dplyr::rename_at(vars(-Subject), ~ paste0("ACC_",.))              # add prefix to all ACC
   
 #dcast(df1c.acc, Subject ~ Matchness + Morality,value.var = "ACC")
 
 # rename the column number
 #colnames(df1c.acc_w)[2:7] <- paste("ACC", colnames(df1c.acc_w[,2:7]), sep = "_")
 
-### d prime #### 
+####################
+####  d prime   #### 
+####################
 
+### calculate the hit/FA
 library(mosaic)  # using this library for its derivedFactor function
-tmp <- df1c.V %>%
-  dplyr::mutate(sdt = derivedFactor("hit" = (ACC == 1 & Matchness == "Match"),
-                                    "CR" = (ACC == 1 & Matchness == "Mismatch"),
-                                    "miss" = (ACC == 0 & Matchness == "Match"),
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),
-                                    method ="first", .default = NA)) %>%
-  dplyr::mutate(sdt = as.character(sdt)) %>%
-  dplyr::group_by(Subject,Age, Sex, Morality, sdt) %>%  # group according to conditions
-  dplyr::summarise(N = length(sdt)) %>%                 # calculate the N
-  dplyr::ungroup() %>%                                  # ungroup
-  tidyr::spread(key = sdt, value = N) %>%               # wide to long
-  tidyr::replace_na(list(FA = 0,miss = 0))
-  
+df1c.V.SDT <- df1c.V %>%
+        dplyr::mutate(sdt = derivedFactor("hit" = (ACC == 1 & Matchness == "Match"),
+                                          "CR" = (ACC == 1 & Matchness == "Mismatch"),
+                                          "miss" = (ACC == 0 & Matchness == "Match"),
+                                          "FA" = (ACC == 0 & Matchness == "Mismatch"),
+                                          method ="first", .default = NA)) %>%
+        dplyr::mutate(sdt = as.character(sdt)) %>%
+        dplyr::group_by(Subject,Age, Sex, Morality, sdt) %>%                 # group according to conditions
+        dplyr::summarise(N = length(sdt)) %>%                                # calculate the N
+        dplyr::ungroup() %>%                                                 # ungroup
+        tidyr::spread(key = sdt, value = N) %>%                              # wide to long
+        tidyr::replace_na(list(FA = 0,miss = 0)) %>%
+        dplyr::mutate(hitR = hit/(hit + miss), faR = FA/(FA + CR)) %>%       # calculate false alarm rate and hit rate
+        dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit+ miss)), hitR), # if hit rate is 1, change
+                      faR  = ifelse(faR  == 0, 1/(2*(FA + CR)), faR)) %>%    # if false alarm rate is 0, change
+        dplyr::mutate(dprime = qnorm(hitR) - qnorm(faR))                     # calculate d prime
+
+df1c.V.SDT_l <- df1c.V.SDT %>%                            
+  dplyr::select(Subject, Age, Sex, Morality,dprime)                          # select columns for saveing
+
+df1c.V.SDT_w <- df1c.V.SDT_l %>%
+  tidyr::spread(key = Morality, value = dprime) %>%                          # from long to wide
+  dplyr::rename_at(vars(-Subject,-Age, -Sex), ~ paste0("d_",.))              # add prefix to all dprime
+
 
 #df1c.V$sdt <- NA
 #for (i in 1:nrow(df1c.V)){
@@ -166,43 +179,60 @@ tmp <- df1c.V %>%
 #df1c.V.SDT_w <- dcast(df1c.V.SDT, Subject + Age + Sex+ Morality  ~ sdt,value.var = "N")
 #df1c.V.SDT_w$miss[is.na(df1c.V.SDT_w$miss)] <- 0
 #df1c.V.SDT_w$FA[is.na(df1c.V.SDT_w$FA)] <- 0
-df1c.V.SDT_w$hitR <- df1c.V.SDT_w$hit/(df1c.V.SDT_w$hit + df1c.V.SDT_w$miss)
-df1c.V.SDT_w$faR <- df1c.V.SDT_w$FA/(df1c.V.SDT_w$FA + df1c.V.SDT_w$CR)
+#df1c.V.SDT_w$hitR <- df1c.V.SDT_w$hit/(df1c.V.SDT_w$hit + df1c.V.SDT_w$miss)
+#df1c.V.SDT_w$faR <- df1c.V.SDT_w$FA/(df1c.V.SDT_w$FA + df1c.V.SDT_w$CR)
 
 # standardized way to deal with the extreme values
-for (i in 1:nrow(df1c.V.SDT_w)){
-        if (df1c.V.SDT_w$hitR[i] == 1){
-                df1c.V.SDT_w$hitR[i] <- 1 - 1/(2*(df1c.V.SDT_w$hit[i] + df1c.V.SDT_w$miss[i]))
-        }
-}
+#for (i in 1:nrow(df1c.V.SDT_w)){
+#        if (df1c.V.SDT_w$hitR[i] == 1){
+#                df1c.V.SDT_w$hitR[i] <- 1 - 1/(2*(df1c.V.SDT_w$hit[i] + df1c.V.SDT_w$miss[i]))
+#        }
+#}
 
-for (i in 1:nrow(df1c.V.SDT_w)){
-        if (df1c.V.SDT_w$faR[i] == 0){
-                df1c.V.SDT_w$faR[i] <- 1/(2*(df1c.V.SDT_w$FA[i] + df1c.V.SDT_w$CR[i]))
-        }
-}
+#for (i in 1:nrow(df1c.V.SDT_w)){
+#        if (df1c.V.SDT_w$faR[i] == 0){
+#                df1c.V.SDT_w$faR[i] <- 1/(2*(df1c.V.SDT_w$FA[i] + df1c.V.SDT_w$CR[i]))
+#        }
+#}
 
 # calculate the d prime for each condition
-df1c.V.SDT_w$dprime <- mapply(dprime,df1c.V.SDT_w$hitR,df1c.V.SDT_w$faR)
-df1c.V.SDT_ww   <- dcast(df1c.V.SDT_w, Subject + Sex + Age ~ Morality ,value.var = "dprime")
+# df1c.V.SDT_w$dprime <- mapply(dprime,df1c.V.SDT_w$hitR,df1c.V.SDT_w$faR)
+# df1c.V.SDT_ww   <- dcast(df1c.V.SDT_w, Subject + Sex + Age ~ Morality ,value.var = "dprime")
 
-df1c.V.SDT_l <- df1c.V.SDT_w[,c(1:4,11)]
+#df1c.V.SDT_l <- df1c.V.SDT_w[,c(1:4,11)]
 
 # rename the column number
-colnames(df1c.V.SDT_ww)[4:6] <- paste("d", colnames(df1c.V.SDT_ww[,4:6]), sep = "_")
+#colnames(df1c.V.SDT_ww)[4:6] <- paste("d", colnames(df1c.V.SDT_ww[,4:6]), sep = "_")
 
-## doing the analysis for RT ####
-df1c.V.RT <- df1c.V[df1c.V$ACC ==1,]  # exclued rt data less than 200 ms, and inaccurate data
-df1c.V.RT.subj <- summarySEwithin(df1c.V.RT,measurevar = 'RT', withinvar = c('Subject','Matchness','Morality'), idvar = 'Subject',na.rm = TRUE)
-df1c.V.RT.subj_w <- dcast(df1c.V.RT.subj, Subject ~ Matchness + Morality ,value.var = "RT") 
+##################################
+###       analysis for RT     ####
+##################################
+df1c.V.RT <- df1c.V %>%
+  dplyr::filter(ACC ==1)                                             # exclued rt data less than 200 ms, and inaccurate data
+  
+df1c.V.RT.subj <- summarySEwithin(df1c.V.RT,measurevar = 'RT',            # summary of RT for each condition of each subject
+                                  withinvar = c('Subject','Matchness','Morality'), 
+                                  idvar = 'Subject',na.rm = TRUE)
+
+df1c.V.RT.subj_w <- df1c.V.RT.subj %>% #  dcast(df1c.V.RT.subj, Subject ~ Matchness + Morality ,value.var = "RT") 
+  dplyr::mutate(cond = paste0(Matchness, "_", Morality)) %>%  # paste to create a new column for conversion
+  dplyr::select(Subject, cond, RT) %>%                        # only select key columns
+  tidyr::spread(key = cond, value = RT) %>%                   # from long to wide
+  dplyr::rename_at(vars(-Subject), ~ paste0("RT_",.))         # rename by add prefix to all ACC
+
 
 # rename the columns of RT data
-colnames(df1c.V.RT.subj_w)[2:7] <- paste("RT", colnames(df1c.V.RT.subj_w[,2:7]), sep = "_")
+#colnames(df1c.V.RT.subj_w)[2:7] <- paste("RT", colnames(df1c.V.RT.subj_w[,2:7]), sep = "_")
 
 ## saving data ####
 # merge the dprime and RT data and save
-df1c.V.sum_w <- merge(df1c.acc_w,  df1c.V.SDT_ww,by = "Subject")
+df1c.V.sum_w <- merge(df1c.acc_w,  df1c.V.SDT_w,by = "Subject")
 df1c.V.sum_w <- merge(df1c.V.sum_w,df1c.V.RT.subj_w,by = 'Subject')
+# order the columns
+df1c.V.sum_w <- df1c.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Good", "ACC_Match_Neutral", "ACC_Match_Bad", "ACC_Mismatch_Good",
+                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Bad", "d_Good", "d_Neutral", "d_Bad", "RT_Match_Good",
+                                "RT_Match_Neutral", "RT_Match_Bad", "RT_Mismatch_Good", "RT_Mismatch_Neutral","RT_Mismatch_Bad")]
+
 
 # merge the RT and ACC data (long-format)
 df1c.v.sum_rt_acc_l <- merge(df1c.acc,df1c.V.RT.subj,by = c("Subject","Matchness","Morality"))
@@ -210,17 +240,13 @@ df1c.v.sum_rt_acc_l <- df1c.v.sum_rt_acc_l[order(df1c.v.sum_rt_acc_l$Subject),]
 df1c.v.sum_rt_acc_l <- df1c.v.sum_rt_acc_l[,c("Subject","Matchness","Morality","N.x","countN","ACC","RT")]
 colnames(df1c.v.sum_rt_acc_l) <- c("Subject","Matchness","Morality","Ntrials","corrtrials","ACC","RT")
 
-# order the columns
-df1c.V.sum_w <- df1c.V.sum_w[,c("Subject", "Sex","Age", "ACC_Match_Good", "ACC_Match_Neutral", "ACC_Match_Bad", "ACC_Mismatch_Good",
-                                "ACC_Mismatch_Neutral", "ACC_Mismatch_Bad", "d_Good", "d_Neutral", "d_Bad", "RT_Match_Good",
-                                "RT_Match_Neutral", "RT_Match_Bad", "RT_Mismatch_Good", "RT_Mismatch_Neutral","RT_Mismatch_Bad")]
 
 # write files
-write.csv(df1c.V.sum_w,'exp1b_behav_wide.csv',row.names = F)
-write.csv(df1c.V.SDT_l,'exp1b_dprime_long.csv',row.names = F)
-write.csv(df1c.v.sum_rt_acc_l,'exp1b_rt_acc_long.csv',row.names = F)
+write.csv(df1c.V.sum_w,'exp1c_behav_wide.csv',row.names = F)
+write.csv(df1c.V.SDT,'exp1c_dprime_long.csv',row.names = F)
+write.csv(df1c.v.sum_rt_acc_l,'exp1c_rt_acc_long.csv',row.names = F)
 
 ## plot the data
 rtdata <- subset(df1c.v.sum_rt_acc_l,Matchness == "Match")
-Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1b', df1c.V.SDT_l,rtdata)
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp1c', df1c.V.SDT,rtdata)
 
