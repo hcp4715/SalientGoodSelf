@@ -16,7 +16,7 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c("ez","plyr","ggplot2", "reshape2", "MBESS", "bootES","metafor","compute.es"))
+pkgNeeded <- (c("ez","plyr","ggplot2", "reshape2", "MBESS", "bootES","metafor","compute.es","tidyverse"))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';

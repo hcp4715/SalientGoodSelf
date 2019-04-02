@@ -6,6 +6,8 @@
 *.edat2
 *.rar
 *.eps
+*.pdf
+*.tiff
 *.RData
 *.Rhistory
 *.Rproj.user/
