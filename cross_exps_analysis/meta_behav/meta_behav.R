@@ -5,9 +5,26 @@
 # ==========   ===============    =======================
 # hcp          2019-04-02         tidyverse, for loop, unsolved: N for exp3 & 4
 
-# initiazling
-source('initial.r')
+#############################################################################################################
+Sys.setlocale("LC_ALL", "English")   # set local encoding to English
+Sys.setenv(LANG = "en")              # set the feedback language to English
+options(scipen = 999)                # force R to output in decimal instead of scientifc notion
+options(digits=5)                    # limit the number of reporting
+rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 
+pkgTest <- function(x){
+  if (!require(x,character.only = TRUE)){
+    install.packages(x,dep = TRUE)
+    if(!require(x,character.only = TRUE)) stop("Package not found")
+  }
+}
+
+pkgNeeded <- (c("ggplot2", "reshape2", "MBESS", "bootES","metafor","compute.es","tidyverse"))
+
+lapply(pkgNeeded,pkgTest)
+rm('pkgNeeded') # remove the variable 'pkgNeeded';
+
+#############################################################################################################
 ########## calculate the effect size and standard error of effect size ####
 ## load data
 fileNames <- c('exp1a_dprime_long.csv',
@@ -62,102 +79,12 @@ for (i in 1:length(fileNames)) {
   }
 }
 
-#df1a_d_1 <- read.csv('exp1a_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp1a')
-
-#df1a_d_1 <- df1a_d[,c('Subject','Morality','dprime')]
-#df1a_d_1$exp <- 'exp1a'
-
-#df1b_d_1 <- read.csv('exp1b_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp1b')
-#df1b_d_1 <- df1b_d[,c('Subject','Morality','dprime')]
-#df1b_d_1$exp <- 'exp1b'
-
-#df1c_d_1 <- read.csv('exp1c_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp1c')
-#df1c_d_1 <- df1c_d[,c('Subject','Morality','dprime')]
-#df1c_d_1$exp <- 'exp1c'
-
-#df2_d_1  <- read.csv('exp2_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp2')
-#df2_d_1 <- df2_d[,c('Subject','Morality','dprime')]
-#df2_d_1$exp <- 'exp2'
-
-#df3a_d_1 <- read.csv('exp3a_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp3a')
-#df3a_d_1 <- df3a_d[,c('Subject','Morality','dprime')]
-#df3a_d_1$exp <- 'exp3a'
-#df3a_d_2 <- read.csv('exp3a_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject, Identity, Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp3a')
-#df3a_d[,c('Subject','Identity','Morality','dprime')]
-#df3a_d_2$exp <- 'exp3a'
-
-#df3b_d_1 <- read.csv('exp3b_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp3b')
-
-#df3b_d_1 <- df3b_d[,c('Subject','Morality','dprime')]
-#df3b_d_1$exp <- 'exp3b'
-#df3b_d_2 <- read.csv('exp3b_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject, Identity, Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp3b')
-
-#df3b_d[,c('Subject','Identity','Morality','dprime')]
-#df3b_d_2$exp <- 'exp3b'
-
-#df4a_d_1 <- read.csv('exp4a_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp4a')
-
-#df4a_d_1 <- df4a_d[,c('Subject','Morality','dprime')]
-#df4a_d_1$exp <- 'exp4a'
-#df4a_d_2 <- read.csv('exp4a_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject, Identity, Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp4a')
-
-#  df4a_d[,c('Subject','Identity','Morality','dprime')]
-#df4a_d_2$exp <- 'exp4a'
-
-#df4b_d_1 <- read.csv('exp4b_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject,Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp4b')
-
-#df4b_d_1 <- df4b_d[,c('Subject','Morality','dprime')]
-#df4b_d_1$exp <- 'exp4b'
-
-#df4b_d_2 <- read.csv('exp4b_dprime_long.csv',header = T, sep = ',', stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#  dplyr::select(Subject, Identity, Morality,dprime) %>%
-#  dplyr::mutate(exp = 'exp4b') 
-
-#df4b_d[,c('Subject','Identity','Morality','dprime')]
-#df4b_d_2$exp <- 'exp4b'
-
-# combine dataset
-#df.d_1 <- rbind(df1a_d_1,df1b_d_1,df1c_d_1,df2_d_1,df3a_d_1,df3b_d_1,df4a_d_1,df4b_d_1) %>% # main effect of moral valence
-#  dplyr::mutate(Morality = recode(Morality, Moral = "Good", Immoral = "Bad"))
-
-#df.d_1$Morality[df.d_1$Morality == 'Moral'] <- 'Good'
-#df.d_1$Morality[df.d_1$Morality == 'Immoral']  <- 'Bad'
-
-#df.d_2 <- rbind(df3a_d_2,df3b_d_2,df4a_d_2,df4b_d_2) %>%                        # both effect of valence and id
-#  dplyr::mutate(Morality = recode(Morality, Moral = "Good", Immoral = "Bad"))
-#df.d_2$Morality[df.d_2$Morality == 'Moral'] <- 'Good'
-#df.d_2$Morality[df.d_2$Morality == 'Immoral']  <- 'Bad'
-
-#rm(df1a_d,df1a_d_1,df1b_d,df1b_d_1,df2_d,df2_d_1,df3a_d,df3a_d_1,df3a_d_2,df3b_d,df3b_d_1,df3b_d_2,df4a_d,df4a_d_1,df4a_d_2,
-#   df4b_d,df4b_d_1,df4b_d_2)
 
 ##### calculate the mean and sd for each condition ####
 ## for main effect of moral valence:
 df.d_1.sum <- df.d_1 %>%
   dplyr::group_by(exp, Morality) %>%
-  dplyr::summarise(N = length(dprime),
+  dplyr::summarise(N    = length(unique(Subject)),          # using the subject ID as the index of N
                    mean = mean(dprime),
                    sd   = sd(dprime),
                    se   = sd(dprime)/sqrt(length(dprime)-1))
@@ -166,7 +93,8 @@ df.d_1.sum <- df.d_1 %>%
 ## separate the self vs. other conditions
 df.d_2.sum <- df.d_2 %>%
   dplyr::group_by(exp, Identity, Morality) %>%
-  dplyr::summarise(mean = mean(dprime),
+  dplyr::summarise(N    = length(unique(Subject)),
+                   mean = mean(dprime),
                    sd   = sd(dprime),
                    se   = sd(dprime)/sqrt(length(dprime)-1))
   
@@ -194,8 +122,9 @@ for (expName in unique(df.d_1$exp)){
     tmp.df   <- subset(df.d_1,exp == expName)
     moralVal <- c("Bad", "Good", "Neutral") # order: immoral, moral, neutral
     tmp.cor  <- sapply(1:length(moralVal),function(i)
-      sapply(1:length(moralVal),function(j)
-        cor(x = tmp.df$dprime[tmp.df$Morality == moralVal[i]], y = tmp.df$dprime[tmp.df$Morality == moralVal[j]])))
+                    sapply(1:length(moralVal),function(j)
+                          cor(x = tmp.df$dprime[tmp.df$Morality == moralVal[i]], 
+                              y = tmp.df$dprime[tmp.df$Morality == moralVal[j]])))
     
     df.d_1.es$r[df.d_1.es$exp == expName & df.d_1.es$condition == 'Good-Bad']  <- tmp.cor[2,1] # row two (moral) column one (immoral)
     df.d_1.es$r[df.d_1.es$exp == expName & df.d_1.es$condition == 'Good-Neut'] <- tmp.cor[3,2] # row three (neutral) column two (moral)
@@ -204,7 +133,7 @@ for (expName in unique(df.d_1$exp)){
   
   # if the correlation dataset  does exist, append to it
   else if (exists("df.d_1.es")){
-    tmp <-setNames(data.frame(matrix(ncol = 3, nrow = 3)), c("exp", "condition",'r'))
+    tmp     <-setNames(data.frame(matrix(ncol = 3, nrow = 3)), c("exp", "condition",'r'))
     tmp$exp <- expName
     tmp$condition <- c('Good-Bad','Good-Neut','Neut-Bad')
     df.d_1.es <- rbind(df.d_1.es,tmp)
@@ -340,13 +269,13 @@ for (expName in unique(df.d_2$exp)){
           df.d_2.sum$N[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$m.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$sd.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$m.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
         
         df.d_2.es$sd.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
@@ -355,13 +284,13 @@ for (expName in unique(df.d_2$exp)){
           df.d_2.sum$N[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$m.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$sd.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Good']
         
         df.d_2.es$m.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
         
         df.d_2.es$sd.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
@@ -370,13 +299,13 @@ for (expName in unique(df.d_2$exp)){
           df.d_2.sum$N[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
         
         df.d_2.es$m.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
         
         df.d_2.es$sd.1[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Neutral']
         
         df.d_2.es$m.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
-          df.d_2.sum$dprime[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
+          df.d_2.sum$mean[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
         
         df.d_2.es$sd.2[df.d_2.es$exp == expName & df.d_2.es$Identity == id & df.d_2.es$condition == cond] <- 
           df.d_2.sum$sd[df.d_2.sum$exp == expName & df.d_2.sum$Identity == id & df.d_2.sum$Morality =='Bad']
