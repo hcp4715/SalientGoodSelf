@@ -261,8 +261,8 @@ colnames(df5b_d1.v.sum_rt_acc_l) <- c("Subject","Match","Identity","Morality","N
 ## write files ####
 # write the wide-format data
 write.csv(df5b_d1.V.sum_w,'exp5b_d1_behav_wide.csv',row.names = F)
-#write.csv(df5b_d1.v.sum_rt_acc_l,'exp5b_d1_rt_acc_long.csv',row.names = F)
-#write.csv(df5b_d1.V.dprime_l,'exp5b_d1_dprime_long.csv',row.names = F)
+write.csv(df5b_d1.v.sum_rt_acc_l,'exp5b_d1_rt_acc_long.csv',row.names = F)
+write.csv(df5b_d1.V.dprime_l,'exp5b_d1_dprime_long.csv',row.names = F)
 
 
 ## plot the data
@@ -348,8 +348,10 @@ colnames(df5b_d2.v.sum_rt_acc_l) <- c("Subject","Match","Identity","Morality","N
 ## write files ####
 # write the wide-format data
 write.csv(df5b_d2.V.sum_w,'exp5b_d2_behav_wide.csv',row.names = F)
-#write.csv(df5b_d2.v.sum_rt_acc_l,'exp5b_d1_rt_acc_long.csv',row.names = F)
-#write.csv(df5b_d2.V.dprime_l,'exp5b_d1_dprime_long.csv',row.names = F)
+
+# write the long-format data
+write.csv(df5b_d2.v.sum_rt_acc_l,'exp5b_d2_rt_acc_long.csv',row.names = F)
+write.csv(df5b_d2.V.dprime_l,'exp5b_d2_dprime_long.csv',row.names = F)
 
 
 ## plot the data
