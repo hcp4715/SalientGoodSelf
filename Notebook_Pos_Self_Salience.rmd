@@ -32,8 +32,7 @@ pre { /* Code block */
 }
 </style>
 
-note: |
-  *(Unpublished manuscript, `r format(Sys.time(), "%Y-%m-%d")`)*.
+Note:  *(Unpublished Notebook, `r format(Sys.time(), "%Y-%m-%d")`)*.
   
 # General method
 ## Participants.
@@ -58,195 +57,8 @@ We reported the effect size of repeated measures ANOVA (ω²) (Bakeman, 2005; La
 To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt & Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
 
-```{r Initializing, include=FALSE}
-Sys.setlocale("LC_ALL", "English")  # set local encoding to English
-Sys.setenv(LANG = "en") # set the feedback language to English
-options(scipen = 999)   # force R to output in decimal instead of scientifc notion
-options(digits=5)       # limit the number of reporting
-rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
-
-pkgTest <- function(x)
- {
-   if (!require(x,character.only = TRUE))
-  {
-    install.packages(x,dep = TRUE)
-   if(!require(x,character.only = TRUE)) stop("Package not found")
-  }
-}
-
-pkgNeeded <- (c("ez","plyr","ggplot2", "reshape2", "MBESS", "bootES"))
-
-lapply(pkgNeeded,pkgTest)
-
-## using APA style plot ####
-# Save some time and stor APA format-related code in an object so you can easily
-# use it in multiple plots
-windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
-apatheme=theme_bw()+
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_blank(),
-              text=element_text(family='Times'),
-              legend.title=element_blank(),
-              legend.position='top',
-              axis.line.x = element_line(color='black'),
-              axis.line.y = element_line(color='black'))
-
-# define the d prime function
-dprime <- function(hit,fa) {
-        qnorm(hit) - qnorm(fa)
-}
-
-## code for calculate the summary with sE, adopted from cook book for R
-summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
-                      conf.interval=.95, .drop=TRUE) {
-        library(plyr)
-        
-        # New version of length which can handle NA's : if na.rm == T, don't count the
-        length2 <- function(x, na.rm=FALSE){
-                if(na.rm) sum(!is.na(x))
-                else      length(x)
-        }
-        
-        # this does the summary. For each group's data frame, return a vector with
-        # N, mean, and sd
-        datac <- ddply(data,groupvars, .drop=.drop,
-                       .fun = function(xx,col){
-                        c(N    = length2(xx[[col]],na.rm=na.rm),
-                          mean = mean(xx[[col]],na.rm=na.rm),
-                          sd   = sd  (xx[[col]],na.rm=na.rm)
-                           )
-                       },
-                       measurevar
-                       )
-        # Rename the "mean" column
-        
-        datac <- rename(datac,c("mean" = measurevar))
-        
-        datac$se <- datac$sd /sqrt(datac$N)   # calculate standard error of the mean
-        
-        # Confidence interval mltiplier for standard error
-        # calculate t-statistic for confidence interval:
-        # e.g., if conf.interval is .95, use .975 (above/below), and use df5 = N-1
-        ciMult <- qt(conf.interval/2 + .5, datac$N-1)
-        datac$ci <- datac$se * ciMult
-        
-        return (datac)
-}
-
-## code for calculate the summary with sE for within subject data, adopted from cook book for R
-summarySEwithin <- function(data=NULL, measurevar, betweenvars=NULL, withinvars=NULL,idvar=NULL, na.rm=FALSE, conf.interval=.95, .drop=TRUE) {
-        
-        # Ensure that the betweenvars and withinvars are factors
-        factorvars <- vapply(data[, c(betweenvars, withinvars), drop=FALSE],
-                             FUN=is.factor, FUN.VALUE=logical(1))
-        
-        if (!all(factorvars)) {
-                nonfactorvars <- names(factorvars)[!factorvars]
-                message("Automatically converting the following non-factors to factors: ",
-                        paste(nonfactorvars, collapse = ", "))
-                data[nonfactorvars] <- lapply(data[nonfactorvars], factor)
-        }
-        
-        # Get the means from the un-normed data
-        datac <- summarySE(data, measurevar, groupvars=c(betweenvars, withinvars),
-                           na.rm=na.rm, conf.interval=conf.interval, .drop=.drop)
-        
-        # Drop all the unused columns (these will be calculated with normed data)
-        datac$sd <- NULL
-        datac$se <- NULL
-        datac$ci <- NULL
-        
-        # Norm each subject's data
-        ndata <- normDataWithin(data, idvar, measurevar, betweenvars, na.rm, .drop=.drop)
-        
-        # This is the name of the new column
-        measurevar_n <- paste(measurevar, "_norm", sep="")
-        
-        # Collapse the normed data - now we can treat between and within vars the same
-        ndatac <- summarySE(ndata, measurevar_n, groupvars=c(betweenvars, withinvars),
-                            na.rm=na.rm, conf.interval=conf.interval, .drop=.drop)
-        
-        # Apply correction from Morey (2008) to the standard error and confidence interval
-        #  Get the product of the number of conditions of within-S variables
-        nWithinGroups    <- prod(vapply(ndatac[,withinvars, drop=FALSE], FUN=nlevels,
-                                        FUN.VALUE=numeric(1)))
-        correctionFactor <- sqrt( nWithinGroups / (nWithinGroups-1) )
-        
-        # Apply the correction factor
-        ndatac$sd <- ndatac$sd * correctionFactor
-        ndatac$se <- ndatac$se * correctionFactor
-        ndatac$ci <- ndatac$ci * correctionFactor
-        
-        # Combine the un-normed means with the normed results
-        merge(datac, ndatac)
-}
-
-### code for normalizing the SE
-normDataWithin <- function(data=NULL, idvar, measurevar, betweenvars=NULL,
-                           na.rm=FALSE, .drop=TRUE) {
-        library(plyr)
-        
-        # Measure var on left, idvar + between vars on right of formula.
-        data.subjMean <- ddply(data, c(idvar, betweenvars), .drop=.drop,
-                               .fun = function(xx, col, na.rm) {
-                                       c(subjMean = mean(xx[,col], na.rm=na.rm))
-                               },
-                               measurevar,
-                               na.rm
-        )
-        
-        # Put the subject means with original data
-        data <- merge(data, data.subjMean)
-        
-        # Get the normalized data in a new column
-        measureNormedVar <- paste(measurevar, "_norm", sep="")
-        data[,measureNormedVar] <- data[,measurevar] - data[,"subjMean"] +
-                mean(data[,measurevar], na.rm=na.rm)
-        
-        # Remove this subject mean column
-        data$subjMean <- NULL
-        
-        return(data)
-}
-
-#
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-        library(grid)
-        
-        # Make a list from the ... arguments and plotlist
-        plots <- c(list(...), plotlist)
-        
-        numPlots = length(plots)
-        
-        # If layout is NULL, then use 'cols' to determine layout
-        if (is.null(layout)) {
-                # Make the panel
-                # ncol: Number of columns of plots
-                # nrow: Number of rows needed, calculated from # of cols
-                layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                                 ncol = cols, nrow = ceiling(numPlots/cols))
-        }
-        
-        if (numPlots==1) {
-                print(plots[[1]])
-                
-        } else {
-                # Set up the page
-                grid.newpage()
-                pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-                
-                # Make each plot, in the correct location
-                for (i in 1:numPlots) {
-                        # Get the i,j matrix positions of the regions that contain this subplot
-                        matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-                        
-                        print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                                        layout.pos.col = matchidx$col))
-                }
-        }
-}
+```{r Initializing, include=FALSE,echo=FALSE,results='hide'}
+source('Initial.r')
 
 ```
 
@@ -375,8 +187,8 @@ df5.V.SDT_ww <- dcast(df5.V.SDT_w, Subject ~ Identity + Morality ,value.var = "d
 
 # t-test
 # moral self vs immoral self
-e5.d.t.mrl_imm_slf <- t.test(df5.V.SDT_ww$self_moral,df5.V.SDT_ww$self_immoral,paired = TRUE)
-df5.V.SDT_ww$mrl_imm_slf <- df5.V.SDT_ww$self_moral - df5.V.SDT_ww$self_immoral
+e5.d.t.mrl_imm_slf <- t.test(df5.V.SDT_ww$Self_Good,df5.V.SDT_ww$self_immoral,paired = TRUE)
+df5.V.SDT_ww$mrl_imm_slf <- df5.V.SDT_ww$Self_Good - df5.V.SDT_ww$self_immoral
 e5.d.t.mrl_imm_slf.CI <- bootES(df5.V.SDT_ww$mrl_imm_slf,R = 20000, effect.type = "cohens.d")
 
 e5.d.tvalue.mrl_imm_slf <- round(as.numeric(e5.d.t.mrl_imm_slf[[1]]),3)
@@ -387,8 +199,8 @@ e5.d.CI.L.mrl_imm_slf <- round(e5.d.t.mrl_imm_slf.CI[[12]][1],4)
 e5.d.CI.H.mrl_imm_slf <- round(e5.d.t.mrl_imm_slf.CI[[12]][2],4)
 
 # moral self vs Average self
-e5.d.t.mrl_ave_slf <- t.test(df5.V.SDT_ww$self_moral,df5.V.SDT_ww$self_average,paired = TRUE)
-df5.V.SDT_ww$mrl_ave_slf <- df5.V.SDT_ww$self_moral - df5.V.SDT_ww$self_average
+e5.d.t.mrl_ave_slf <- t.test(df5.V.SDT_ww$Self_Good,df5.V.SDT_ww$self_average,paired = TRUE)
+df5.V.SDT_ww$mrl_ave_slf <- df5.V.SDT_ww$Self_Good - df5.V.SDT_ww$self_average
 e5.d.t.mrl_ave_slf.CI <- bootES(df5.V.SDT_ww$mrl_ave_slf,R = 20000, effect.type = "cohens.d")
 
 e5.d.tvalue.mrl_ave_slf  <- round(as.numeric(e5.d.t.mrl_ave_slf[[1]]),3)
@@ -447,8 +259,8 @@ e5.d.CI.L.imm_ave_oth <- round(e5.d.t.imm_ave_oth.CI[[12]][1],4)
 e5.d.CI.H.imm_ave_oth <- round(e5.d.t.imm_ave_oth.CI[[12]][2],4)
 
 # moral self vs moral other
-e5.d.t.slf_oth_mrl <- t.test(df5.V.SDT_ww$self_moral,df5.V.SDT_ww$other_moral,paired = TRUE)
-df5.V.SDT_ww$slf_oth_mrl <- df5.V.SDT_ww$self_moral - df5.V.SDT_ww$other_moral
+e5.d.t.slf_oth_mrl <- t.test(df5.V.SDT_ww$Self_Good,df5.V.SDT_ww$other_moral,paired = TRUE)
+df5.V.SDT_ww$slf_oth_mrl <- df5.V.SDT_ww$Self_Good - df5.V.SDT_ww$other_moral
 e5.d.t.slf_oth_mrl.CI <- bootES(df5.V.SDT_ww$slf_oth_mrl,R = 20000, effect.type = "cohens.d")
 
 e5.d.tvalue.slf_oth_mrl  <- round(as.numeric(e5.d.t.slf_oth_mrl[[1]]),3)
@@ -640,8 +452,8 @@ e5.rt_anova.match.other <- ezANOVA(df5.V.RT_match.other,dv = RT, wid = Subject, 
 ## t-test 
 df5.V.RT.subj_w <- dcast(df5.V.RT.subj, Subject ~ Matchness + Identity + Morality ,value.var = "RT") 
 
-e5.rt.t.m.mrl_imm_slf <- t.test(df5.V.RT.subj_w$match_self_moral,df5.V.RT.subj_w$match_self_immoral,paired = TRUE)
-df5.V.RT.subj_w$m.mrl_imm_slf <- df5.V.RT.subj_w$match_self_moral - df5.V.RT.subj_w$match_self_immoral
+e5.rt.t.m.mrl_imm_slf <- t.test(df5.V.RT.subj_w$match_Self_Good,df5.V.RT.subj_w$match_self_immoral,paired = TRUE)
+df5.V.RT.subj_w$m.mrl_imm_slf <- df5.V.RT.subj_w$match_Self_Good - df5.V.RT.subj_w$match_self_immoral
 e5.rt.t.m.mrl_imm_slf.CI <- bootES(df5.V.RT.subj_w$m.mrl_imm_slf, R = 5000,effect.type = "cohens.d")
 
 e5.rt.tvalue.mrl_imm_slf  <- round(as.numeric(e5.rt.t.m.mrl_imm_slf [[1]]),3)
@@ -652,8 +464,8 @@ e5.rt.CI.L.mrl_imm_slf <- round(e5.rt.t.m.mrl_imm_slf.CI[[12]][1],4)
 e5.rt.CI.H.mrl_imm_slf <- round(e5.rt.t.m.mrl_imm_slf.CI[[12]][2],4)
 
 
-e5.rt.t.m.mrl_ave_slf <- t.test(df5.V.RT.subj_w$match_self_moral,df5.V.RT.subj_w$match_self_average,paired = TRUE)
-df5.V.RT.subj_w$m.mrl_ave_slf <- df5.V.RT.subj_w$match_self_moral - df5.V.RT.subj_w$match_self_average
+e5.rt.t.m.mrl_ave_slf <- t.test(df5.V.RT.subj_w$match_Self_Good,df5.V.RT.subj_w$match_self_average,paired = TRUE)
+df5.V.RT.subj_w$m.mrl_ave_slf <- df5.V.RT.subj_w$match_Self_Good - df5.V.RT.subj_w$match_self_average
 e5.rt.t.m.mrl_ave_slf.CI <- bootES(df5.V.RT.subj_w$m.mrl_ave_slf, R = 5000,effect.type = "cohens.d")
 
 e5.rt.tvalue.mrl_ave_slf  <- round(as.numeric(e5.rt.t.m.mrl_ave_slf [[1]]),3)
@@ -675,8 +487,8 @@ e5.rt.cohens.imm_ave_slf <- round(e5.rt.t.m.imm_ave_slf.CI [[1]],4)
 e5.rt.CI.L.imm_ave_slf <- round(e5.rt.t.m.imm_ave_slf.CI[[12]][1],4)
 e5.rt.CI.H.imm_ave_slf <- round(e5.rt.t.m.imm_ave_slf.CI[[12]][2],4)
 
-e5.rt.t.m.mrl_imm_oth <- t.test(df5.V.RT.subj_w$match_self_moral,df5.V.RT.subj_w$match_self_immoral,paired = TRUE)
-df5.V.RT.subj_w$m.mrl_imm_oth <- df5.V.RT.subj_w$match_self_moral - df5.V.RT.subj_w$match_self_immoral
+e5.rt.t.m.mrl_imm_oth <- t.test(df5.V.RT.subj_w$match_Self_Good,df5.V.RT.subj_w$match_self_immoral,paired = TRUE)
+df5.V.RT.subj_w$m.mrl_imm_oth <- df5.V.RT.subj_w$match_Self_Good - df5.V.RT.subj_w$match_self_immoral
 e5.rt.t.m.mrl_imm_oth.CI <- bootES(df5.V.RT.subj_w$m.mrl_imm_oth, R = 5000,effect.type = "cohens.d")
 
 e5.rt.tvalue.mrl_imm_oth  <- round(as.numeric(e5.rt.t.m.mrl_imm_oth [[1]]),3)
@@ -687,8 +499,8 @@ e5.rt.CI.L.mrl_imm_oth <- round(e5.rt.t.m.mrl_imm_oth.CI [[12]][1],4)
 e5.rt.CI.H.mrl_imm_oth <- round(e5.rt.t.m.mrl_imm_oth.CI [[12]][2],4)
 
 
-e5.rt.t.m.mrl_ave_oth <- t.test(df5.V.RT.subj_w$match_self_moral,df5.V.RT.subj_w$match_self_average,paired = TRUE)
-df5.V.RT.subj_w$m.mrl_ave_oth <- df5.V.RT.subj_w$match_self_moral - df5.V.RT.subj_w$match_self_average
+e5.rt.t.m.mrl_ave_oth <- t.test(df5.V.RT.subj_w$match_Self_Good,df5.V.RT.subj_w$match_self_average,paired = TRUE)
+df5.V.RT.subj_w$m.mrl_ave_oth <- df5.V.RT.subj_w$match_Self_Good - df5.V.RT.subj_w$match_self_average
 e5.rt.t.m.mrl_ave_oth.CI <- bootES(df5.V.RT.subj_w$m.mrl_ave_oth, R = 5000,effect.type = "cohens.d")
 
 e5.rt.tvalue.mrl_ave_oth  <- round(as.numeric(e5.rt.t.m.mrl_ave_oth [[1]]),3)
@@ -711,8 +523,8 @@ e5.rt.CI.L.imm_ave_oth <- round(e5.rt.t.m.imm_ave_oth.CI[[12]][1],4)
 e5.rt.CI.H.imm_ave_oth <- round(e5.rt.t.m.imm_ave_oth.CI[[12]][2],4)
 
 
-e5.rt.t.m.slf_oth_mrl <- t.test(df5.V.RT.subj_w$match_self_moral,df5.V.RT.subj_w$match_other_moral,paired = TRUE)
-df5.V.RT.subj_w$m.slf_oth_mrl <- df5.V.RT.subj_w$match_self_moral - df5.V.RT.subj_w$match_other_moral
+e5.rt.t.m.slf_oth_mrl <- t.test(df5.V.RT.subj_w$match_Self_Good,df5.V.RT.subj_w$match_other_moral,paired = TRUE)
+df5.V.RT.subj_w$m.slf_oth_mrl <- df5.V.RT.subj_w$match_Self_Good - df5.V.RT.subj_w$match_other_moral
 e5.rt.t.m.slf_oth_mrl.CI <- bootES(df5.V.RT.subj_w$m.slf_oth_mrl, R = 5000,effect.type = "cohens.d")
 
 e5.rt.tvalue.slf_oth_mrl  <- round(as.numeric(e5.rt.t.m.slf_oth_mrl[[1]]),3)
@@ -895,3 +707,159 @@ ggplot(data = df5.V.RT.grand.match, aes(x=Morality,y=RT,group=Identity,shape = I
 ```
 
 The above is another way to plot.
+
+
+##Results (of 5b)
+###Analaysis of d prime
+```{r analyzing for d prime_e5b, echo=FALSE, results='hide',warning=FALSE, message=FALSE}
+df5b_d1.V.dprime_l <- read.csv('.\\exp5b_erp2\\exp5b_d1_dprime_long.csv')
+
+# anova for d prime with 2*2 design
+df5b_d1.V.dprime_l_anova <- ez::ezANOVA(df5b_d1.V.dprime_l,dv = dprime, wid = Subject, within=.(Morality,Identity), type=3)
+#print(df5b_d1.V.dprime_l_anova)
+df5b_d1.V.dprime_l <- df5b_d1.V.dprime_l %>% tidyr::unite(Cond, c("Identity","Morality"),,sep = "_", remove = F)
+
+df5b_d1.V.dprime_w <- df5b_d1.V.dprime_l %>%
+  tidyr::unite(col = "Cond",c("Identity", "Morality"),sep = "_", remove = T) %>%  # combine two factors to condition
+  tidyr::spread(key = Cond, value = dprime)
+
+# how to do the pair-wise t- test more efficiently?
+# generate combinations:
+t_matrix <- data.frame(t(data.frame(combn(unique(df5b_d1.V.dprime_l$Cond),2))))
+t_matrix$t_val <- NA
+t_matrix$df <- NA
+t_matrix$p_val <- NA
+t_matrix$cohens_d <- NA
+t_matrix$CI_lower <- NA
+t_matrix$CI_upper <- NA
+
+for (ii in 1:nrow(t_matrix)){
+  var1    <- as.character(t_matrix[ii,1])
+  var2    <- as.character(t_matrix[ii,2])
+  dat_tmp <-  df5b_d1.V.dprime_w[,c(var1,var2)]
+  t_tmp   <-  t.test(dat_tmp[,1], dat_tmp[,2],paired = TRUE)
+  CI_tmp  <- bootES::bootES(dat_tmp[,1] - dat_tmp[,2],R = 20000, effect.type = "cohens.d")
+  t_matrix[ii,'t_val']    <- round(t_tmp$statistic,3)
+  t_matrix[ii,'df']       <- t_tmp$parameter
+  t_matrix[ii,'p_val']    <- round(t_tmp$p.value,digits = 4)
+  t_matrix[ii,'Cohens_d'] <- round(CI_tmp$t0, 3)
+  t_matrix[ii,'CI_lower'] <- round(CI_tmp$bounds[1],3)
+  t_matrix[ii,'CI_upper'] <- round(CI_tmp$bounds[2],3)
+}
+
+
+## plot and save the results of d'
+rtdata <- subset(df5b_d2.v.sum_rt_acc_l,Match == "match")
+Mplots(saveDir = resDir, curDir = curDir, expName = 'exp5b_d2', df5b_d2.V.dprime_l,rtdata)
+
+df5.V.SDT.sum <- summarySE(df5.V.SDT_w,measurevar = 'dprime',groupvars = c('Morality','Identity'))
+e5.d.mean.moralself <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'moral' & df5.V.SDT.sum$Identity == 'self'],3)
+e5.d.sd.moralself <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'moral' & df5.V.SDT.sum$Identity == 'self'],3)
+e5.d.mean.immoralself <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'immoral' & df5.V.SDT.sum$Identity == 'self'],3)
+e5.d.sd.immoralself <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'immoral' & df5.V.SDT.sum$Identity == 'self'],3)
+e5.d.mean.aveself <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'average' & df5.V.SDT.sum$Identity == 'self'],3)
+e5.d.sd.aveself <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'average' & df5.V.SDT.sum$Identity == 'self'],3)
+
+e5.d.mean.moralother <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'moral' & df5.V.SDT.sum$Identity == 'other'],3)
+e5.d.sd.moralother <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'moral' & df5.V.SDT.sum$Identity == 'other'],3)
+e5.d.mean.immoralother <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'immoral' & df5.V.SDT.sum$Identity == 'other'],3)
+e5.d.sd.immoralother <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'immoral' & df5.V.SDT.sum$Identity == 'other'],3)
+e5.d.mean.aveother <- round(df5.V.SDT.sum$dprime[df5.V.SDT.sum$Morality == 'average' & df5.V.SDT.sum$Identity == 'other'],3)
+e5.d.sd.aveother <- round(df5.V.SDT.sum$sd[df5.V.SDT.sum$Morality == 'average' & df5.V.SDT.sum$Identity == 'other'],3)
+
+e5.p_dprime1 <- ggplot(data = df5.V.SDT.sum,aes(y = dprime, x = Identity, group = Morality,shape = Morality, fill = Morality)) +
+        geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3) +         # Thinner lines
+        geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
+        #geom_errorbar(aes(ymin = 1, ymax = 4),
+                      size = .3,
+                      width = .2,
+                      position=position_dodge(.9)) +
+        labs(x = 'self-referential',y = 'd prime') +
+        #ylab(" Reaction times") + 
+        #ylim(1, 4) +
+        ggtitle("d prime for each condition") +
+        coord_cartesian(ylim=c(1,3.5))+
+        scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
+        scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter. 
+        #theme_classic()
+        apatheme
+
+e5.p_dprime2 <- ggplot(data = df5.V.SDT.sum,aes(y = dprime, x = Morality, group = Identity,shape = Identity, fill = Identity)) +
+        geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3) +         # Thinner lines
+        geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
+        #geom_errorbar(aes(ymin = 1, ymax = 4),
+                      size = .3,
+                      width = .2,
+                      position=position_dodge(.9)) +
+        labs(x = 'self-referential',y = 'd prime') +
+        #ylab(" Reaction times") + 
+        #ylim(1, 4) +
+        ggtitle("d prime for each condition") +
+        coord_cartesian(ylim=c(1,3.5))+
+        scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
+        scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter. 
+        #theme_classic()
+        apatheme
+
+# ggsave('dprime_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
+```
+ANOVA for *d'* with moral character and self-relatedness as within-subjects factors.
+
+The main effect of `r e5.d_anova[[1]][1,1]`, *F*(`r e5.d_anova[[1]][1,2]`, `r e5.d_anova[[1]][1,3]`) = `r round(e5.d_anova[[1]][1,4],3)`, *p* = `r round(e5.d_anova[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][1,7],4)`. 
+
+The main effect of `r e5.d_anova[[1]][2,1]`: *F*(`r e5.d_anova[[1]][2,2]`, `r e5.d_anova[[1]][2,3]`) = `r round(e5.d_anova[[1]][2,4],3)`, *p* = `r round(e5.d_anova[[1]][2,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][2,7],4)`
+
+The interaction between `r e5.d_anova[[1]][3,1]`: *F*(`r e5.d_anova[[1]][3,2]`, `r e5.d_anova[[1]][3,3]`) = `r round(e5.d_anova[[1]][3,4],3)`, *p* = `r round(e5.d_anova[[1]][3,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][3,7],4)`.
+
+Then we conducted sample effect analysis for self- and other- association separately for the matched trials (see figure 1).
+
+A separate repeated ANOVA for self trials showed that the effect of  `r e5.d_anova.self[[1]][1,1]`, *F*(`r e5.d_anova.self[[1]][1,2]`, `r e5.d_anova.self[[1]][1,3]`) = `r round(e5.d_anova.self[[1]][1,4],3)`, *p* = `r round(e5.d_anova.self[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.self[[1]][1,7],4)`. 
+
+post-hoc comparision showed that moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`): *t*(`r e5.d.df5.mrl_imm_slf`) = `r e5.d.tvalue.mrl_imm_slf`, *p* = 
+`r e5.d.pvalue.mrl_imm_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_slf`, 95% CI [`r e5.d.CI.L.mrl_imm_slf` `r e5.d.CI.H.mrl_imm_slf`]
+
+Moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. Average self(`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.mrl_ave_slf`) = `r e5.d.tvalue.mrl_ave_slf`, *p* = 
+`r e5.d.pvalue.mrl_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_slf`, 95% CI [`r e5.d.CI.L.mrl_ave_slf` `r e5.d.CI.H.mrl_ave_slf`]
+
+Immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`) vs. Average self (`r e5.d.mean.aveself` $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.imm_ave_slf`) = `r e5.d.tvalue.imm_ave_slf`, *p* = 
+`r e5.d.pvalue.imm_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_slf`, 95% CI [`r e5.d.CI.L.imm_ave_slf` `r e5.d.CI.H.imm_ave_slf`]
+
+Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.mrl_imm_oth`) = `r e5.d.tvalue.mrl_imm_oth`, *p* = 
+`r e5.d.pvalue.mrl_imm_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_oth`, 95% CI [`r e5.d.CI.L.mrl_imm_oth` `r e5.d.CI.H.mrl_imm_oth`]
+
+Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`):  *t*(`r e5.d.df5.mrl_ave_oth`) = `r e5.d.tvalue.mrl_ave_oth`, *p* = 
+`r e5.d.pvalue.mrl_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_oth`, 95% CI [`r e5.d.CI.L.mrl_ave_oth` `r e5.d.CI.H.mrl_ave_oth`]
+
+Immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`) vs. Average other(`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.imm_ave_oth`) = `r e5.d.tvalue.imm_ave_oth`, *p* = 
+`r e5.d.pvalue.imm_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_oth`, 95% CI [`r e5.d.CI.L.imm_ave_oth` `r e5.d.CI.H.imm_ave_oth`]
+
+repeated ANOVA for other trials showed that the effect of  `r e5.d_anova.other[[1]][1,1]`, *F*(`r e5.d_anova.other[[1]][1,2]`, `r e5.d_anova.other[[1]][1,3]`) = `r round(e5.d_anova.other[[1]][1,4],3)`, *p* = `r round(e5.d_anova.other[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.other[[1]][1,7],4)`.
+
+To examine the effect of self-relatedness, we also conducted t-test for self-other pair for each moral condition. 
+moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`): *t*(`r e5.d.df5.slf_oth_mrl`) = `r e5.d.tvalue.slf_oth_mrl`, *p* = `r e5.d.pvalue.slf_oth_mrl.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_mrl`, 95% CI [`r e5.d.CI.L.slf_oth_mrl` `r e5.d.CI.H.slf_oth_mrl`]
+
+Average self (`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.slf_oth_ave`) = `r e5.d.tvalue.slf_oth_ave`, *p* = `r e5.d.pvalue.slf_oth_ave.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_ave`, 95% CI [`r e5.d.CI.L.slf_oth_ave` `r e5.d.CI.H.slf_oth_ave`]
+immoral self (`r e5.d.mean.immoralself` $\pm$ `r e5.d.sd.immoralself`) vs. immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.slf_oth_imm`) = `r e5.d.tvalue.slf_oth_imm`, *p* = `r e5.d.pvalue.slf_oth_imm.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_imm`, 95% CI [`r e5.d.CI.L.slf_oth_imm` `r e5.d.CI.H.slf_oth_imm`]
+
+
+```{r plot1 the d prime_e5, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
+ggplot(data = df5.V.SDT.sum,aes(y = dprime, x = Identity, group = Morality,shape = Morality, fill = Morality)) +
+        geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3) +         # Thinner lines
+        geom_errorbar(aes(ymin = dprime - se, ymax = dprime + se),
+        #geom_errorbar(aes(ymin = 1, ymax = 4),
+                      size = .3,
+                      width = .2,
+                      position=position_dodge(.9)) +
+        labs(x = 'self-referential',y = 'd prime') +
+        #ylab(" Reaction times") + 
+        #ylim(1, 4) +
+        ggtitle("d prime for each condition") +
+        coord_cartesian(ylim=c(1,3.5))+
+        scale_y_continuous(breaks = seq(1,3.5,0.5),expand = c(0, 0)) +
+        scale_fill_grey (start=0.2, end=0.8) +   # using grey scale, start from darker, end to lighter. 
+        #theme_classic()
+        apatheme
+
+# ggsave('dprime_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
+```
+
