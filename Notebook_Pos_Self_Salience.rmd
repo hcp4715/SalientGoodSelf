@@ -102,7 +102,17 @@ df4b_dprime_w <- df4b_dprime_long %>%
   
 # how to do the pair-wise t- test more efficiently?
 # generate combinations:
-df4b_t_matrix <- data.frame(t(data.frame(combn(unique(df4b_dprime_long$Cond),2))))
+#df4b_t_matrix <- data.frame(t(data.frame(combn(unique(df4b_dprime_long$Cond),2)))) %>%
+#  dplyr::filter((X1 == "Self_Good" & (X2 == "Self_Bad" | X2 == "Self_Neutral")) | 
+#                  (X1 == "Self_Neutral"  & X2 == "Self_Bad") |
+#                  (X1 == "Other_Good"    & (X2 == "Other_Bad" | X2 == "Other_Neutral"))| 
+#                  (X1 == "Other_Neutral" & X2 == "Other_Bad")|
+#                  (X1 == "Self_Good"     & X1 == "Other_Good") |
+#                  (X1 == "Self_Neutral"  & X1 == "Other_Neutral") |
+#                  (X1 == "Self_Bad"      & X1 == "Other_Bad"))
+
+df4b_t_matrix <- read.csv('ttest_pairs2.csv', header = T)
+
 df4b_t_matrix$t_val    <- NA
 df4b_t_matrix$df       <- NA
 df4b_t_matrix$p_val    <- NA
@@ -176,7 +186,6 @@ ggsave(fileName, P.dprime_4b, scale = 1,height = 6, width = 7, dpi = 300, family
 # save the RT plot
 fileName = paste0('p_','exp4b','_RT','.pdf')
 ggsave(fileName, P.rt_4b, scale = 1,height = 6, width = 7, dpi = 300, family = "Times")
-
 
 ```
 ANOVA for *d'* with moral character and self-relatedness as within-subjects factors.
