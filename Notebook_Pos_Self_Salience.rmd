@@ -66,7 +66,7 @@ source('Initial.r')
 ```{r loadingData_4b,echo=FALSE,results='hide'}
 df4b_dprime_long <- read.csv('.\\exp4b\\exp4b_dprime_long.csv') %>%
   dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
-                             ifelse(Morality == "Immoral","Bad", Morality)))
+                             ifelse(Morality == "Immoral","Bad", 'Neutral')))
 
 df4b_rt_acc_long <- read.csv('.\\exp4b\\exp4b_rt_acc_long.csv') %>%
   dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
@@ -86,19 +86,50 @@ r num.subj college students (r numT.female female, age: r ageT.mean $\pm$ r ageT
 ##Results
 ###Analaysis of d prime
 ```{r analyzing for d prime_e5, echo=FALSE, results='hide',warning=FALSE, message=FALSE}
+# using afex and emmeans to do the ANOVA and post-hoc comparison
+library('afex')
+library('emmeans')
+library('multcomp')
+afex_options(emmeans_model = "multivariate")
+
+#library(tidystats)
+#results <- list()
 
 # anova for d prime with 2*2 design
-df4b_dprime_anova <- ez::ezANOVA(df4b_dprime_long,dv = dprime, wid = Subject, within=.(Morality,Identity), type=3)
+#df4b_dprime_anova_ez <- ez::ezANOVA(df4b_dprime_long,dv = dprime, wid = Subject, within=.(Morality,Identity), type=3)
+
+df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b_dprime_long, within = c('Identity','Morality'))  # using afex's function
+
+#results <- results %>%
+#  tidystats::add_stats(df4b_dprime_anova)
+
+#knitr::kable(nice(df4b_dprime_anova))
+
+#m1 <- emmeans(df4b_dprime_anova, ~ Morality)
+#pairs(m1)
+
+m2 <- emmeans(df4b_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
+#pairs(m2)
+summary(as.glht(pairs(m2)), test=adjusted("free"))
+
+m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
+#pairs(m3)
+
+summary(as.glht(pairs(m3)), test=adjusted("free"))
+
+#library(apaTables)
+#apa.aov.table(df4b_dprime_anova$lm, filename = "Table7_APA.doc", table.number = 7)
+
 #df4b_dprime_anova.self <- ezANOVA(df5.V.SDT_w.self, dv = dprime, wid = Subject, within=.(Morality), type=3)
 #df4b_dprime_anova.other <- ezANOVA(df5.V.SDT_w.other, dv = dprime, wid = Subject, within=.(Morality), type=3)
-df4b_dprime_anova$ANOVA
+#df4b_dprime_anova$ANOVA
 
 
-df4b_dprime_long <- df4b_dprime_long %>% tidyr::unite(Cond, c("Identity","Morality"),sep = "_", remove = F)
+#df4b_dprime_long <- df4b_dprime_long %>% tidyr::unite(Cond, c("Identity","Morality"),sep = "_", remove = F)
 
-df4b_dprime_w <- df4b_dprime_long %>%
-  tidyr::unite(Cond,c("Identity", "Morality"),sep = "_", remove = T) %>%  # combine two factors to condition
-  tidyr::spread(key = Cond, value = dprime)
+#df4b_dprime_w <- df4b_dprime_long %>%
+#  tidyr::unite(Cond,c("Identity", "Morality"),sep = "_", remove = T) %>%  # combine two factors to condition
+#  tidyr::spread(key = Cond, value = dprime)
   
 # how to do the pair-wise t- test more efficiently?
 # generate combinations:
@@ -111,28 +142,33 @@ df4b_dprime_w <- df4b_dprime_long %>%
 #                  (X1 == "Self_Neutral"  & X1 == "Other_Neutral") |
 #                  (X1 == "Self_Bad"      & X1 == "Other_Bad"))
 
-df4b_t_matrix <- read.csv('ttest_pairs2.csv', header = T)
 
-df4b_t_matrix$t_val    <- NA
-df4b_t_matrix$df       <- NA
-df4b_t_matrix$p_val    <- NA
-df4b_t_matrix$Cohens_d <- NA
-df4b_t_matrix$CI_lower <- NA
-df4b_t_matrix$CI_upper <- NA
+#df4b_t_matrix <- read.csv('ttest_pairs2.csv', header = T)
 
-for (ii in 1:nrow(df4b_t_matrix)){
-  var1    <- as.character(df4b_t_matrix[ii,1])
-  var2    <- as.character(df4b_t_matrix[ii,2])
-  dat_tmp <-  df4b_dprime_w[,c(var1,var2)]
-  t_tmp   <-  t.test(dat_tmp[,1], dat_tmp[,2],paired = TRUE)
-  CI_tmp  <- bootES::bootES(dat_tmp[,1] - dat_tmp[,2],R = 20000, effect.type = "cohens.d")
-  df4b_t_matrix[ii,'t_val']    <- round(t_tmp$statistic,3)
-  df4b_t_matrix[ii,'df']       <- t_tmp$parameter
-  df4b_t_matrix[ii,'p_val']    <- round(t_tmp$p.value,digits = 4)
-  df4b_t_matrix[ii,'Cohens_d'] <- round(CI_tmp$t0, 3)
-  df4b_t_matrix[ii,'CI_lower'] <- round(CI_tmp$bounds[1],3)
-  df4b_t_matrix[ii,'CI_upper'] <- round(CI_tmp$bounds[2],3)
-}
+#df4b_t_matrix$t_val    <- NA
+#df4b_t_matrix$df       <- NA
+#df4b_t_matrix$p_val    <- NA
+#df4b_t_matrix$Cohens_d <- NA
+#df4b_t_matrix$CI_lower <- NA
+#df4b_t_matrix$CI_upper <- NA
+
+#for (ii in 1:nrow(df4b_t_matrix)){
+#  var1    <- as.character(df4b_t_matrix[ii,1])
+#  var2    <- as.character(df4b_t_matrix[ii,2])
+#  dat_tmp <-  df4b_dprime_w[,c(var1,var2)]
+#  t_tmp   <-  t.test(dat_tmp[,1], dat_tmp[,2],paired = TRUE)
+#  tmpName <- paste(colnames(dat_tmp[1]),colnames(dat_tmp[2]),sep = "_")  # get the contrast name
+#  assign(tmpName,t_tmp) # assign 
+#  results <- results %>%
+#    add_stats(tmpName[1])
+  #CI_tmp  <- bootES::bootES(dat_tmp[,1] - dat_tmp[,2],R = 20000, effect.type = "cohens.d")
+  #df4b_t_matrix[ii,'t_val']    <- round(t_tmp$statistic,3)
+  #df4b_t_matrix[ii,'df']       <- t_tmp$parameter
+  #df4b_t_matrix[ii,'p_val']    <- round(t_tmp$p.value,digits = 4)
+  #df4b_t_matrix[ii,'Cohens_d'] <- round(CI_tmp$t0, 3)
+  #df4b_t_matrix[ii,'CI_lower'] <- round(CI_tmp$bounds[1],3)
+  #df4b_t_matrix[ii,'CI_upper'] <- round(CI_tmp$bounds[2],3)
+#}
 
 # t-test
 
@@ -190,45 +226,18 @@ ggsave(fileName, P.rt_4b, scale = 1,height = 6, width = 7, dpi = 300, family = "
 ```
 ANOVA for *d'* with moral character and self-relatedness as within-subjects factors.
 
-The main effect of `r e5.d_anova[[1]][1,1]`, *F*(`r e5.d_anova[[1]][1,2]`, `r e5.d_anova[[1]][1,3]`) = `r round(e5.d_anova[[1]][1,4],3)`, *p* = `r round(e5.d_anova[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][1,7],4)`. 
-
-The main effect of `r e5.d_anova[[1]][2,1]`: *F*(`r e5.d_anova[[1]][2,2]`, `r e5.d_anova[[1]][2,3]`) = `r round(e5.d_anova[[1]][2,4],3)`, *p* = `r round(e5.d_anova[[1]][2,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][2,7],4)`
-
-The interaction between `r e5.d_anova[[1]][3,1]`: *F*(`r e5.d_anova[[1]][3,2]`, `r e5.d_anova[[1]][3,3]`) = `r round(e5.d_anova[[1]][3,4],3)`, *p* = `r round(e5.d_anova[[1]][3,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][3,7],4)`.
+r knitr::kable(nice(df4b_dprime_anova))
 
 Then we conducted sample effect analysis for self- and other- association separately for the matched trials (see figure 1).
 
-A separate repeated ANOVA for self trials showed that the effect of  `r e5.d_anova.self[[1]][1,1]`, *F*(`r e5.d_anova.self[[1]][1,2]`, `r e5.d_anova.self[[1]][1,3]`) = `r round(e5.d_anova.self[[1]][1,4],3)`, *p* = `r round(e5.d_anova.self[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.self[[1]][1,7],4)`. 
-
-post-hoc comparision showed that moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`): *t*(`r e5.d.df5.mrl_imm_slf`) = `r e5.d.tvalue.mrl_imm_slf`, *p* = 
-`r e5.d.pvalue.mrl_imm_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_slf`, 95% CI [`r e5.d.CI.L.mrl_imm_slf` `r e5.d.CI.H.mrl_imm_slf`]
-
-Moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. Average self(`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.mrl_ave_slf`) = `r e5.d.tvalue.mrl_ave_slf`, *p* = 
-`r e5.d.pvalue.mrl_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_slf`, 95% CI [`r e5.d.CI.L.mrl_ave_slf` `r e5.d.CI.H.mrl_ave_slf`]
-
-Immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`) vs. Average self (`r e5.d.mean.aveself` $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.imm_ave_slf`) = `r e5.d.tvalue.imm_ave_slf`, *p* = 
-`r e5.d.pvalue.imm_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_slf`, 95% CI [`r e5.d.CI.L.imm_ave_slf` `r e5.d.CI.H.imm_ave_slf`]
-
-Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.mrl_imm_oth`) = `r e5.d.tvalue.mrl_imm_oth`, *p* = 
-`r e5.d.pvalue.mrl_imm_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_oth`, 95% CI [`r e5.d.CI.L.mrl_imm_oth` `r e5.d.CI.H.mrl_imm_oth`]
-
-Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`):  *t*(`r e5.d.df5.mrl_ave_oth`) = `r e5.d.tvalue.mrl_ave_oth`, *p* = 
-`r e5.d.pvalue.mrl_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_oth`, 95% CI [`r e5.d.CI.L.mrl_ave_oth` `r e5.d.CI.H.mrl_ave_oth`]
-
-Immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`) vs. Average other(`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.imm_ave_oth`) = `r e5.d.tvalue.imm_ave_oth`, *p* = 
-`r e5.d.pvalue.imm_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_oth`, 95% CI [`r e5.d.CI.L.imm_ave_oth` `r e5.d.CI.H.imm_ave_oth`]
-
-repeated ANOVA for other trials showed that the effect of  `r e5.d_anova.other[[1]][1,1]`, *F*(`r e5.d_anova.other[[1]][1,2]`, `r e5.d_anova.other[[1]][1,3]`) = `r round(e5.d_anova.other[[1]][1,4],3)`, *p* = `r round(e5.d_anova.other[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.other[[1]][1,7],4)`.
+r summary(as.glht(pairs(m2)), test=adjusted("free"))
 
 To examine the effect of self-relatedness, we also conducted t-test for self-other pair for each moral condition. 
-moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`): *t*(`r e5.d.df5.slf_oth_mrl`) = `r e5.d.tvalue.slf_oth_mrl`, *p* = `r e5.d.pvalue.slf_oth_mrl.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_mrl`, 95% CI [`r e5.d.CI.L.slf_oth_mrl` `r e5.d.CI.H.slf_oth_mrl`]
 
-Average self (`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.slf_oth_ave`) = `r e5.d.tvalue.slf_oth_ave`, *p* = `r e5.d.pvalue.slf_oth_ave.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_ave`, 95% CI [`r e5.d.CI.L.slf_oth_ave` `r e5.d.CI.H.slf_oth_ave`]
-immoral self (`r e5.d.mean.immoralself` $\pm$ `r e5.d.sd.immoralself`) vs. immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.slf_oth_imm`) = `r e5.d.tvalue.slf_oth_imm`, *p* = `r e5.d.pvalue.slf_oth_imm.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_imm`, 95% CI [`r e5.d.CI.L.slf_oth_imm` `r e5.d.CI.H.slf_oth_imm`]
+r summary(as.glht(pairs(m3)), test=adjusted("free"))
 
 
-
-```{r analyzing RT_e5,echo=FALSE,results='hide',warning=FALSE, message=FALSE}
+```{r analyzing RT_e5,  eval = FALSE, echo=FALSE,results='hide',warning=FALSE, message=FALSE}
 ## plot density of each subject's RT and save them individually
 subNo <- unique(df5.V$Subject)
 ## doing the analysis for RT ####
@@ -414,52 +423,18 @@ dev.off()
 
 We conducted a 3 * 2 rmANOVA for RT
 For the matched trials, 
-The effect of `r e5.rt_anova.match[[1]][1,1]`: *F*(`r e5.rt_anova.match[[1]][1,2]`, `r e5.rt_anova.match[[1]][1,3]`) = `r round(e5.rt_anova.match[[1]][1,4],3)`, *p* = `r round(e5.rt_anova.match[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.match[[1]][1,7],4)`
 
-The effect of `r e5.rt_anova.match[[1]][2,1]`: *F*(`r e5.rt_anova.match[[1]][2,2]`, `r e5.rt_anova.match[[1]][2,3]`) = `r round(e5.rt_anova.match[[1]][2,4],3)`, *p* = `r round(e5.rt_anova.match[[1]][2,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.match[[1]][2,7],4)`
-
-The effect of `r e5.rt_anova.match[[1]][3,1]`: *F*(`r e5.rt_anova.match[[1]][3,2]`, `r e5.rt_anova.match[[1]][3,3]`) = `r round(e5.rt_anova.match[[1]][3,4],3)`, *p* = `r round(e5.rt_anova.match[[1]][3,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.match[[1]][3,7],4)`.
 
 For the nonmatched trials, 
-The effect of `r e5.rt_anova.nonmatch[[1]][1,1]`: *F*(`r e5.rt_anova.nonmatch[[1]][1,2]`, `r e5.rt_anova.nonmatch[[1]][1,3]`) = `r round(e5.rt_anova.nonmatch[[1]][1,4],3)`, *p* = `r round(e5.rt_anova.nonmatch[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.nonmatch[[1]][1,7],4)`
-
-The effect of `r e5.rt_anova.nonmatch[[1]][2,1]`: *F*(`r e5.rt_anova.nonmatch[[1]][2,2]`, `r e5.rt_anova.nonmatch[[1]][2,3]`) = `r round(e5.rt_anova.nonmatch[[1]][2,4],3)`, *p* = `r round(e5.rt_anova.nonmatch[[1]][2,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.nonmatch[[1]][2,7],4)`
-
-The effect of `r e5.rt_anova.nonmatch[[1]][3,1]`: *F*(`r e5.rt_anova.nonmatch[[1]][3,2]`, `r e5.rt_anova.nonmatch[[1]][3,3]`) = `r round(e5.rt_anova.nonmatch[[1]][3,4],3)`, *p* = `r round(e5.rt_anova.nonmatch[[1]][3,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.nonmatch[[1]][3,7],4)`.
 
 Then we conducted sample effect analysis for self- and other- association separately for the matched trials.
-A separate ANOVA for self trials showed that the effect of `r e5.rt_anova.match.self[[1]][1,1]`: *F*(`r e5.rt_anova.match.self[[1]][1,2]`, `r e5.rt_anova.match.self[[1]][1,3]`) = `r round(e5.rt_anova.match.self[[1]][1,4],3)`, *p* = `r round(e5.rt_anova.match.self[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.match.self[[1]][1,7],4)`
 
-A separate ANOVA for other trials showed that the effect of `r e5.rt_anova.match.other[[1]][1,1]`: *F*(`r e5.rt_anova.match.other[[1]][1,2]`, `r e5.rt_anova.match.other[[1]][1,3]`) = `r round(e5.rt_anova.match.other[[1]][1,4],3)`, *p* = `r round(e5.rt_anova.match.other[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.rt_anova.match.other[[1]][1,7],4)`
-
-Moral self (`r e5.rt.mean.moralself` $\pm$ `r e5.rt.sd.moralself`) vs immoral self (`r e5.rt.mean.immoralself` $\pm$ `r e5.rt.sd.immoralself`): *t*(`r e5.rt.df5.mrl_imm_slf`) = `r e5.rt.tvalue.mrl_imm_slf`, *p* = 
-`r e5.rt.pvalue.mrl_imm_slf.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.mrl_imm_slf`, 95% CI [`r e5.rt.CI.L.mrl_imm_slf` `r e5.rt.CI.H.mrl_imm_slf`]
-
-Moral self (`r e5.rt.mean.moralself` $\pm$ `r e5.rt.sd.moralself`) vs. average self (`r e5.rt.mean.aveself` $\pm$ `r e5.rt.sd.aveself`): *t*(`r e5.rt.df5.mrl_ave_slf`) = `r e5.rt.tvalue.mrl_ave_slf`, *p* = 
-`r e5.rt.pvalue.mrl_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.mrl_ave_slf`, 95% CI [`r e5.rt.CI.L.mrl_ave_slf` `r e5.rt.CI.H.mrl_ave_slf`]
-
-Immoral self (`r e5.rt.mean.immoralself` $\pm$ `r e5.rt.sd.immoralself`) vs. average self (`r e5.rt.mean.aveself` $\pm$ `r e5.rt.sd.aveself`): *t*(`r e5.rt.df5.imm_ave_slf`) = `r e5.rt.tvalue.imm_ave_slf`, *p* = 
-`r e5.rt.pvalue.imm_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.imm_ave_slf`, 95% CI [`r e5.rt.CI.L.imm_ave_slf` `r e5.rt.CI.H.imm_ave_slf`]
-
-Moral other (`r e5.rt.mean.moralother` $\pm$ `r e5.rt.sd.moralother`)  vs immoral other (`r e5.rt.mean.immoralother` $\pm$ `r e5.rt.sd.immoralother`): *t*(`r e5.rt.df5.mrl_imm_oth`) = `r e5.rt.tvalue.mrl_imm_oth`, *p* = 
-`r e5.rt.pvalue.mrl_imm_oth.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.mrl_imm_oth`, 95% CI [`r e5.rt.CI.L.mrl_imm_oth` `r e5.rt.CI.H.mrl_imm_oth`]
-
-Moral other (`r e5.rt.mean.moralother` $\pm$ `r e5.rt.sd.moralother`)  vs. average other (`r e5.rt.mean.aveother` $\pm$ `r e5.rt.sd.aveother`): *t*(`r e5.rt.df5.mrl_ave_oth`) = `r e5.rt.tvalue.mrl_ave_oth`, *p* = 
-`r e5.rt.pvalue.mrl_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.mrl_ave_oth`, 95% CI [`r e5.rt.CI.L.mrl_ave_oth` `r e5.rt.CI.H.mrl_ave_oth`]
-
-Immoral other (`r e5.rt.mean.immoralother` $\pm$ `r e5.rt.sd.immoralother`) vs. average other(`r e5.rt.mean.aveother` $\pm$ `r e5.rt.sd.aveother`): *t*(`r e5.rt.df5.imm_ave_oth`) = `r e5.rt.tvalue.imm_ave_oth`, *p* = 
-`r e5.rt.pvalue.imm_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.imm_ave_oth`, 95% CI [`r e5.rt.CI.L.imm_ave_oth` `r e5.rt.CI.H.imm_ave_oth`]
+A separate ANOVA for other trials showed that the effect of
 
 To examine the effect of self-relatedness, we also conducted t-test for self-other pair for each moral condition.
 
-moral self (`r e5.rt.mean.moralself` $\pm$ `r e5.rt.sd.moralself`) vs. moral other (`r e5.rt.mean.moralother` $\pm$ `r e5.rt.sd.moralother`) : *t*(`r e5.rt.df5.slf_oth_mrl`) = `r e5.rt.tvalue.slf_oth_mrl`, *p* = `r e5.rt.pvalue.slf_oth_mrl.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.slf_oth_mrl`, 95% CI [`r e5.rt.CI.L.slf_oth_mrl` `r e5.rt.CI.H.slf_oth_mrl`]
 
-average self (`r e5.rt.mean.aveself` $\pm$ `r e5.rt.sd.aveself`) vs. average other (`r e5.rt.mean.aveother` $\pm$ `r e5.rt.sd.aveother`): *t*(`r e5.rt.df5.slf_oth_ave`) = `r e5.rt.tvalue.slf_oth_ave`, *p* = `r e5.rt.pvalue.slf_oth_ave.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.slf_oth_ave`, 95% CI [`r e5.rt.CI.L.slf_oth_ave` `r e5.rt.CI.H.slf_oth_ave`]
-
-immoral self (`r e5.rt.mean.immoralself` $\pm$ `r e5.rt.sd.immoralself`) vs. immoral other (`r e5.rt.mean.immoralother` $\pm$ `r e5.rt.sd.immoralother`): *t*(`r e5.rt.df5.slf_oth_imm`) = `r e5.rt.tvalue.slf_oth_imm`, *p* = `r e5.rt.pvalue.slf_oth_imm.adj`, *Cohen's* $d_z$ = `r e5.rt.cohens.slf_oth_imm`, 95% CI [`r e5.rt.CI.L.slf_oth_imm` `r e5.rt.CI.H.slf_oth_imm`]
-
-
-```{r plot2 the RT_e5, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
+```{r plot2 the RT_e5, eval = F, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
 # change a way to plot
 ggplot(data = df5.V.RT.grand.match, aes(x=Identity,y=RT,group=Morality,shape = Morality,fill = Morality)) +
         geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3) +         # Thinner lines
@@ -482,7 +457,7 @@ ggplot(data = df5.V.RT.grand.match, aes(x=Identity,y=RT,group=Morality,shape = M
 
 The above is the reaction time for each condition
 
-```{r plot1 the RT_e5, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
+```{r plot1 the RT_e5, eval = F, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
 # df5.V.RT.grand.match <- df5.V.RT.grand[df5.V.RT.grand$Matchness == "match",]
 ggplot(data = df5.V.RT.grand.match, aes(x=Morality,y=RT,group=Identity,shape = Identity,fill = Identity)) +
         geom_bar(position = position_dodge(),stat = "identity",colour = "black", size=.3) +         # Thinner lines
@@ -600,42 +575,9 @@ ggsave(fileName, P.rt_5b_d1, scale = 1,height = 6, width = 7, dpi = 300, family 
 # ggsave('dprime_mean_plot.png', width=4, height=6, unit='in', dpi=300)  # save the plot
 ```
 ANOVA for *d'* with moral character and self-relatedness as within-subjects factors.
-
-The main effect of `r e5.d_anova[[1]][1,1]`, *F*(`r e5.d_anova[[1]][1,2]`, `r e5.d_anova[[1]][1,3]`) = `r round(e5.d_anova[[1]][1,4],3)`, *p* = `r round(e5.d_anova[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][1,7],4)`. 
-
-The main effect of `r e5.d_anova[[1]][2,1]`: *F*(`r e5.d_anova[[1]][2,2]`, `r e5.d_anova[[1]][2,3]`) = `r round(e5.d_anova[[1]][2,4],3)`, *p* = `r round(e5.d_anova[[1]][2,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][2,7],4)`
-
-The interaction between `r e5.d_anova[[1]][3,1]`: *F*(`r e5.d_anova[[1]][3,2]`, `r e5.d_anova[[1]][3,3]`) = `r round(e5.d_anova[[1]][3,4],3)`, *p* = `r round(e5.d_anova[[1]][3,5],4)`, $\eta_g^2$ = `r round(e5.d_anova[[1]][3,7],4)`.
-
 Then we conducted sample effect analysis for self- and other- association separately for the matched trials (see figure 1).
 
-A separate repeated ANOVA for self trials showed that the effect of  `r e5.d_anova.self[[1]][1,1]`, *F*(`r e5.d_anova.self[[1]][1,2]`, `r e5.d_anova.self[[1]][1,3]`) = `r round(e5.d_anova.self[[1]][1,4],3)`, *p* = `r round(e5.d_anova.self[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.self[[1]][1,7],4)`. 
-
-post-hoc comparision showed that moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`): *t*(`r e5.d.df5.mrl_imm_slf`) = `r e5.d.tvalue.mrl_imm_slf`, *p* = 
-`r e5.d.pvalue.mrl_imm_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_slf`, 95% CI [`r e5.d.CI.L.mrl_imm_slf` `r e5.d.CI.H.mrl_imm_slf`]
-
-Moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. Average self(`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.mrl_ave_slf`) = `r e5.d.tvalue.mrl_ave_slf`, *p* = 
-`r e5.d.pvalue.mrl_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_slf`, 95% CI [`r e5.d.CI.L.mrl_ave_slf` `r e5.d.CI.H.mrl_ave_slf`]
-
-Immoral self (`r e5.d.mean.immoralself`  $\pm$ `r e5.d.sd.immoralself`) vs. Average self (`r e5.d.mean.aveself` $\pm$ `r e5.d.sd.aveself`): *t*(`r e5.d.df5.imm_ave_slf`) = `r e5.d.tvalue.imm_ave_slf`, *p* = 
-`r e5.d.pvalue.imm_ave_slf.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_slf`, 95% CI [`r e5.d.CI.L.imm_ave_slf` `r e5.d.CI.H.imm_ave_slf`]
-
-Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.mrl_imm_oth`) = `r e5.d.tvalue.mrl_imm_oth`, *p* = 
-`r e5.d.pvalue.mrl_imm_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_imm_oth`, 95% CI [`r e5.d.CI.L.mrl_imm_oth` `r e5.d.CI.H.mrl_imm_oth`]
-
-Moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`):  *t*(`r e5.d.df5.mrl_ave_oth`) = `r e5.d.tvalue.mrl_ave_oth`, *p* = 
-`r e5.d.pvalue.mrl_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.mrl_ave_oth`, 95% CI [`r e5.d.CI.L.mrl_ave_oth` `r e5.d.CI.H.mrl_ave_oth`]
-
-Immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`) vs. Average other(`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.imm_ave_oth`) = `r e5.d.tvalue.imm_ave_oth`, *p* = 
-`r e5.d.pvalue.imm_ave_oth.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.imm_ave_oth`, 95% CI [`r e5.d.CI.L.imm_ave_oth` `r e5.d.CI.H.imm_ave_oth`]
-
-repeated ANOVA for other trials showed that the effect of  `r e5.d_anova.other[[1]][1,1]`, *F*(`r e5.d_anova.other[[1]][1,2]`, `r e5.d_anova.other[[1]][1,3]`) = `r round(e5.d_anova.other[[1]][1,4],3)`, *p* = `r round(e5.d_anova.other[[1]][1,5],4)`, $\eta_g^2$ = `r round(e5.d_anova.other[[1]][1,7],4)`.
-
-To examine the effect of self-relatedness, we also conducted t-test for self-other pair for each moral condition. 
-moral self (`r e5.d.mean.moralself`  $\pm$ `r e5.d.sd.moralself`) vs. moral other (`r e5.d.mean.moralother`  $\pm$ `r e5.d.sd.moralother`): *t*(`r e5.d.df5.slf_oth_mrl`) = `r e5.d.tvalue.slf_oth_mrl`, *p* = `r e5.d.pvalue.slf_oth_mrl.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_mrl`, 95% CI [`r e5.d.CI.L.slf_oth_mrl` `r e5.d.CI.H.slf_oth_mrl`]
-
-Average self (`r e5.d.mean.aveself`  $\pm$ `r e5.d.sd.aveself`) vs. Average other (`r e5.d.mean.aveother` $\pm$ `r e5.d.sd.aveother`): *t*(`r e5.d.df5.slf_oth_ave`) = `r e5.d.tvalue.slf_oth_ave`, *p* = `r e5.d.pvalue.slf_oth_ave.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_ave`, 95% CI [`r e5.d.CI.L.slf_oth_ave` `r e5.d.CI.H.slf_oth_ave`]
-immoral self (`r e5.d.mean.immoralself` $\pm$ `r e5.d.sd.immoralself`) vs. immoral other (`r e5.d.mean.immoralother`  $\pm$ `r e5.d.sd.immoralother`): *t*(`r e5.d.df5.slf_oth_imm`) = `r e5.d.tvalue.slf_oth_imm`, *p* = `r e5.d.pvalue.slf_oth_imm.adj`, *Cohen's* $d_z$ = `r e5.d.cohens.slf_oth_imm`, 95% CI [`r e5.d.CI.L.slf_oth_imm` `r e5.d.CI.H.slf_oth_imm`]
+A separate repeated ANOVA for self trials showed that the effect of 
 
 
 ```{r plot the d prime_e5, fig.width=4, fig.height=6,echo=FALSE,warning=FALSE,message=FALSE }
