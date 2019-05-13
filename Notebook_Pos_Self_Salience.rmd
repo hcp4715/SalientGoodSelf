@@ -8,7 +8,7 @@ output: word_document
 <style type="text/css">
 
 body{ /* Normal  */
-   font-family: Times     
+   font-family: Times;    
    font-size: 12px;
 }
 td {  /* Table  */
@@ -22,13 +22,15 @@ h2 { /* Header 2 */
 }
 h3 { /* Header 3 */
  font-size: 18px;
- color: DarkBlue;
+ color: black;
 }
 code.r{ /* Code block */
   font-size: 10px;
 }
 pre { /* Code block */
   font-size: 10px
+}
+p {line-height: 2em;
 }
 </style>
 
@@ -100,9 +102,6 @@ afex_options(emmeans_model = "multivariate")
 
 df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b_dprime_long, within = c('Identity','Morality'))  # using afex's function
 
-#results <- results %>%
-#  tidystats::add_stats(df4b_dprime_anova)
-
 #knitr::kable(nice(df4b_dprime_anova))
 
 #m1 <- emmeans(df4b_dprime_anova, ~ Morality)
@@ -114,66 +113,10 @@ summary(as.glht(pairs(m2)), test=adjusted("free"))
 
 m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
 #pairs(m3)
+```
 
-summary(as.glht(pairs(m3)), test=adjusted("free"))
-
-#library(apaTables)
-#apa.aov.table(df4b_dprime_anova$lm, filename = "Table7_APA.doc", table.number = 7)
-
-#df4b_dprime_anova.self <- ezANOVA(df5.V.SDT_w.self, dv = dprime, wid = Subject, within=.(Morality), type=3)
-#df4b_dprime_anova.other <- ezANOVA(df5.V.SDT_w.other, dv = dprime, wid = Subject, within=.(Morality), type=3)
-#df4b_dprime_anova$ANOVA
-
-
-#df4b_dprime_long <- df4b_dprime_long %>% tidyr::unite(Cond, c("Identity","Morality"),sep = "_", remove = F)
-
-#df4b_dprime_w <- df4b_dprime_long %>%
-#  tidyr::unite(Cond,c("Identity", "Morality"),sep = "_", remove = T) %>%  # combine two factors to condition
-#  tidyr::spread(key = Cond, value = dprime)
-  
-# how to do the pair-wise t- test more efficiently?
-# generate combinations:
-#df4b_t_matrix <- data.frame(t(data.frame(combn(unique(df4b_dprime_long$Cond),2)))) %>%
-#  dplyr::filter((X1 == "Self_Good" & (X2 == "Self_Bad" | X2 == "Self_Neutral")) | 
-#                  (X1 == "Self_Neutral"  & X2 == "Self_Bad") |
-#                  (X1 == "Other_Good"    & (X2 == "Other_Bad" | X2 == "Other_Neutral"))| 
-#                  (X1 == "Other_Neutral" & X2 == "Other_Bad")|
-#                  (X1 == "Self_Good"     & X1 == "Other_Good") |
-#                  (X1 == "Self_Neutral"  & X1 == "Other_Neutral") |
-#                  (X1 == "Self_Bad"      & X1 == "Other_Bad"))
-
-
-#df4b_t_matrix <- read.csv('ttest_pairs2.csv', header = T)
-
-#df4b_t_matrix$t_val    <- NA
-#df4b_t_matrix$df       <- NA
-#df4b_t_matrix$p_val    <- NA
-#df4b_t_matrix$Cohens_d <- NA
-#df4b_t_matrix$CI_lower <- NA
-#df4b_t_matrix$CI_upper <- NA
-
-#for (ii in 1:nrow(df4b_t_matrix)){
-#  var1    <- as.character(df4b_t_matrix[ii,1])
-#  var2    <- as.character(df4b_t_matrix[ii,2])
-#  dat_tmp <-  df4b_dprime_w[,c(var1,var2)]
-#  t_tmp   <-  t.test(dat_tmp[,1], dat_tmp[,2],paired = TRUE)
-#  tmpName <- paste(colnames(dat_tmp[1]),colnames(dat_tmp[2]),sep = "_")  # get the contrast name
-#  assign(tmpName,t_tmp) # assign 
-#  results <- results %>%
-#    add_stats(tmpName[1])
-  #CI_tmp  <- bootES::bootES(dat_tmp[,1] - dat_tmp[,2],R = 20000, effect.type = "cohens.d")
-  #df4b_t_matrix[ii,'t_val']    <- round(t_tmp$statistic,3)
-  #df4b_t_matrix[ii,'df']       <- t_tmp$parameter
-  #df4b_t_matrix[ii,'p_val']    <- round(t_tmp$p.value,digits = 4)
-  #df4b_t_matrix[ii,'Cohens_d'] <- round(CI_tmp$t0, 3)
-  #df4b_t_matrix[ii,'CI_lower'] <- round(CI_tmp$bounds[1],3)
-  #df4b_t_matrix[ii,'CI_upper'] <- round(CI_tmp$bounds[2],3)
-#}
-
-# t-test
-
-
-## plot and save the results of d'
+```{r results='asis', echo=FALSE}
+## plot and save the results of d' and RT
 rtData <- df4b_rt_acc_long %>% dplyr::filter(Match == "match") %>%
   dplyr::mutate(Morality = factor(Morality, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c("Self","Other")))
@@ -215,7 +158,7 @@ P.rt_4b <- ggplot(rtData,aes(x = Identity , y = RT, fill = Morality))+
                 scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
                 apatheme
 
-multiplot(P.rt_4b,P.dprime_4b,cols = 2)
+#multiplot(P.rt_4b,P.dprime_4b,cols = 2)
 fileName = paste0('p_','exp4b','_dprime','.pdf')
 ggsave(fileName, P.dprime_4b, scale = 1,height = 6, width = 7, dpi = 300, family = "Times")
 
@@ -224,9 +167,28 @@ fileName = paste0('p_','exp4b','_RT','.pdf')
 ggsave(fileName, P.rt_4b, scale = 1,height = 6, width = 7, dpi = 300, family = "Times")
 
 ```
+
 ANOVA for *d'* with moral character and self-relatedness as within-subjects factors.
 
-r knitr::kable(nice(df4b_dprime_anova))
+\newline \newline
+
+```{r results='asis', echo=F}
+knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+```
+
+\newline \newline
+
+```{r results='asis', echo=F}
+knitr::kable(pairs(m2), format = "markdown", caption = "Post-hoc comparison (valence)")
+```
+
+\newline \newline
+
+```{r results='asis', echo=F}
+knitr::kable(pairs(m3), caption = "Post-hoc comparison (idenity)")
+```
+
+
 
 Then we conducted sample effect analysis for self- and other- association separately for the matched trials (see figure 1).
 

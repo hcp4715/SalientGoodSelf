@@ -1,0 +1,321 @@
+\documentclass[man]{apa6}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Open notebook of perpecptual salience of positive self},
+            pdfauthor={Chuan-Peng Hu~\& AAA},
+            pdfkeywords={keywords},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+
+  \title{Open notebook of perpecptual salience of positive self}
+    \author{Chuan-Peng Hu\textsuperscript{1}~\& AAA\textsuperscript{1,2}}
+    \date{}
+  
+\shorttitle{Salient Positive Self}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} Tsinghua University\\\textsuperscript{2} DRZ}
+\keywords{keywords\newline\indent Word count: X}
+\usepackage{csquotes}
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+\usepackage{longtable}
+\usepackage{lscape}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{threeparttablex}
+
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
+\usepackage{lineno}
+
+\linenumbers
+
+\authornote{Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+
+Enter author note here.
+
+Correspondence concerning this article should be addressed to Chuan-Peng Hu, 55131. E-mail: \href{mailto:hcp4715@email.com}{\nolinkurl{hcp4715@email.com}}}
+
+\abstract{
+One or two sentences providing a \textbf{basic introduction} to the field, comprehensible to a scientist in any discipline.
+
+Two to three sentences of \textbf{more detailed background}, comprehensible to scientists in related disciplines.
+
+One sentence clearly stating the \textbf{general problem} being addressed by this particular study.
+
+One sentence summarizing the main result (with the words ``\textbf{here we show}'' or their equivalent).
+
+Two or three sentences explaining what the \textbf{main result} reveals in direct comparison to what was thought to be the case previously, or how the main result adds to previous knowledge.
+
+One or two sentences to put the results into a more \textbf{general context}.
+
+Two or three sentences to provide a \textbf{broader perspective}, readily comprehensible to a scientist in any discipline.
+
+
+}
+
+\begin{document}
+\maketitle
+
+\hypertarget{general-methods}{%
+\section{General Methods}\label{general-methods}}
+
+\hypertarget{participants.}{%
+\subsection{Participants.}\label{participants.}}
+
+The experiments (except experiment 3b) reported in the current study were first conducted between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding collecting more data so that each experiment has 50 or more valid data (Simmons, Nelson, \& Simonsohn, 2013) , we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. However, duo to the limited time and resources, additional data were not collected for experiment 2, 3, and 4b.
+
+\hypertarget{material-and-procedure}{%
+\subsection{Material and Procedure}\label{material-and-procedure}}
+
+In the current study, we used the social associative learning paradigm (Sui, He, \& Humphreys, 2012), in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60\% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase.
+
+If not noted, E-prime 2.0 was used in all experiments. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors, with a chin-rest brace. The visual angle of geometric shapes was about 3.7º × 3.7º, the finxation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. Participant fixed their head on a chin-fixation, about 60 cm from the screen.
+
+For participants recruited in Wenzhou University, they finished the experiment in a group consist of 3 \textasciitilde{} 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants's chin were not fixed.
+
+\hypertarget{data-analysis}{%
+\subsection{Data analysis}\label{data-analysis}}
+
+We used R (Version 3.5.2; R Core Team, 2018) and the R-packages \emph{afex} (Version 0.23.0; Singmann, Bolker, Westfall, \& Aust, 2019), \emph{BayesFactor} (Version 0.9.12.4.2; Morey \& Rouder, 2018), \emph{boot} (Version 1.3.20; Davison \& Hinkley, 1997; Gerlanc \& Kirby, 2015), \emph{bootES} (Version 1.2; Gerlanc \& Kirby, 2015), \emph{coda} (Version 0.19.2; Plummer, Best, Cowles, \& Vines, 2006), \emph{corrplot2017} (Wei \& Simko, 2017), \emph{dplyr} (Version 0.8.0.1; Wickham et al., 2019), \emph{emmeans} (Version 1.3.4; Lenth, 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version 3.1.1; Wickham, 2016), \emph{ggstatsplot} (Version 0.0.10; Patil \& Powell, 2018), \emph{Hmisc} (Version 4.2.0; Harrell Jr, Charles Dupont, \& others., 2019), \emph{lattice} (Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.21; Bates, Mächler, Bolker, \& Walker, 2015), \emph{MASS} (Version 7.3.51.4; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.2.17; Bates \& Maechler, 2019), \emph{MBESS} (Version 4.4.3; Kelley, 2018), \emph{multcomp} (Version 1.4.10; Hothorn, Bretz, \& Westfall, 2008), \emph{mvtnorm} (Version 1.0.10; Genz \& Bretz, 2009), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plyr} (Version 1.8.4; Wickham et al., 2019; Wickham, 2011), \emph{psych} (Version 1.8.12; Revelle, 2018), \emph{purrr} (Version 0.3.2; Henry \& Wickham, 2019), \emph{RColorBrewer} (Version 1.1.2; Neuwirth, 2014), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{reshape2} (Version 1.4.3; Wickham, 2007), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{survival} (Version 2.44.1.1; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{TH.data} (Version 1.0.10; Hothorn, 2019), \emph{tibble} (Version 2.1.1; Müller \& Wickham, 2019), \emph{tidyr} (Version 0.8.3; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.2.1; Wickham, 2017) for all our analyses.
+We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R (3.1.0, R core teams, 2018) and then analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60\% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+
+We analyzed accuracy performance using a signal detection approach, as in Sui et al. (2012). The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d'. Trials without response were coded either as \enquote{miss} (matched trials) or \enquote{false alarm} (mismatched trials). The d' were then analyzed using repeated measures analyses of variance (repeated measures ANOVA).
+
+The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs.~mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment (Sui et al., 2012).
+
+We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen's d and its 95\% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, \& Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs.~evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)'s convention for the strength of evidence: the BF10 \textgreater{} 3 means there are some evidence for H1 as compared with H0, BF10 ≥ 10 means strong evidence for H1.
+
+To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt \& Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+
+\hypertarget{experiment-4b}{%
+\section{Experiment 4b:}\label{experiment-4b}}
+
+\hypertarget{participants}{%
+\subsection{Participants}\label{participants}}
+
+\hypertarget{results}{%
+\subsection{Results}\label{results}}
+
+\hypertarget{analaysis-of-d-prime.}{%
+\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.}}
+
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+
+Morality (\(F(1.59, 69.94) = 2.34\), \(\mathit{MSE} = 0.48\), \(p = .115\), \(\hat{\eta}^2_G = .010\)) and Identity gender affected post-surgery quality of life, \(F(1, 44) = 0.00\), \(\mathit{MSE} = 0.08\), \(p = .994\), \(\hat{\eta}^2_G = .000\). However, the effect of gender differed by clinic, \(F(1.96, 86.41) = 0.53\), \(\mathit{MSE} = 0.10\), \(p = .585\), \(\hat{\eta}^2_G = .001\).
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-2}A really beautiful ANOVA table.}
+\begin{tabular}{lllllll}
+\toprule
+Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
+\midrule
+Identity & 0.00 & 1 & 44 & 0.08 & .994 & .000\\
+Morality & 2.34 & 1.59 & 69.94 & 0.48 & .115 & .010\\
+Identity $\times$ Morality & 0.53 & 1.96 & 86.41 & 0.10 & .585 & .001\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+\hypertarget{results-1}{%
+\section{Results}\label{results-1}}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+\newpage
+
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-R-papaja}{}%
+Aust, F., \& Barth, M. (2018). \emph{papaja: Create APA manuscripts with R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\leavevmode\hypertarget{ref-R-Matrix}{}%
+Bates, D., \& Maechler, M. (2019). \emph{Matrix: Sparse and dense matrix classes and methods}. Retrieved from \url{https://CRAN.R-project.org/package=Matrix}
+
+\leavevmode\hypertarget{ref-R-lme4}{}%
+Bates, D., Mächler, M., Bolker, B., \& Walker, S. (2015). Fitting linear mixed-effects models using lme4. \emph{Journal of Statistical Software}, \emph{67}(1), 1--48. \url{https://doi.org/10.18637/jss.v067.i01}
+
+\leavevmode\hypertarget{ref-R-boot}{}%
+Davison, A. C., \& Hinkley, D. V. (1997). \emph{Bootstrap methods and their applications}. Cambridge: Cambridge University Press. Retrieved from \url{http://statwww.epfl.ch/davison/BMA/}
+
+\leavevmode\hypertarget{ref-R-mvtnorm}{}%
+Genz, A., \& Bretz, F. (2009). \emph{Computation of multivariate normal and t probabilities}. Heidelberg: Springer-Verlag.
+
+\leavevmode\hypertarget{ref-R-bootES}{}%
+Gerlanc, D., \& Kirby, K. (2015). \emph{BootES: Bootstrap effect sizes}. Retrieved from \url{https://CRAN.R-project.org/package=bootES}
+
+\leavevmode\hypertarget{ref-R-Hmisc}{}%
+Harrell Jr, F. E., Charles Dupont, \& others. (2019). \emph{Hmisc: Harrell miscellaneous}. Retrieved from \url{https://CRAN.R-project.org/package=Hmisc}
+
+\leavevmode\hypertarget{ref-R-purrr}{}%
+Henry, L., \& Wickham, H. (2019). \emph{Purrr: Functional programming tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+
+\leavevmode\hypertarget{ref-R-TH.data}{}%
+Hothorn, T. (2019). \emph{TH.data: TH's data archive}. Retrieved from \url{https://CRAN.R-project.org/package=TH.data}
+
+\leavevmode\hypertarget{ref-R-multcomp}{}%
+Hothorn, T., Bretz, F., \& Westfall, P. (2008). Simultaneous inference in general parametric models. \emph{Biometrical Journal}, \emph{50}(3), 346--363.
+
+\leavevmode\hypertarget{ref-R-MBESS}{}%
+Kelley, K. (2018). \emph{MBESS: The mbess r package}. Retrieved from \url{https://CRAN.R-project.org/package=MBESS}
+
+\leavevmode\hypertarget{ref-R-emmeans}{}%
+Lenth, R. (2019). \emph{Emmeans: Estimated marginal means, aka least-squares means}. Retrieved from \url{https://CRAN.R-project.org/package=emmeans}
+
+\leavevmode\hypertarget{ref-R-BayesFactor}{}%
+Morey, R. D., \& Rouder, J. N. (2018). \emph{BayesFactor: Computation of bayes factors for common designs}. Retrieved from \url{https://CRAN.R-project.org/package=BayesFactor}
+
+\leavevmode\hypertarget{ref-R-tibble}{}%
+Müller, K., \& Wickham, H. (2019). \emph{Tibble: Simple data frames}. Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+
+\leavevmode\hypertarget{ref-R-RColorBrewer}{}%
+Neuwirth, E. (2014). \emph{RColorBrewer: ColorBrewer palettes}. Retrieved from \url{https://CRAN.R-project.org/package=RColorBrewer}
+
+\leavevmode\hypertarget{ref-R-ggstatsplot}{}%
+Patil, I., \& Powell, C. (2018). \emph{Ggstatsplot: 'Ggplot2' based plots with statistical details}. \url{https://doi.org/10.5281/zenodo.2074621}
+
+\leavevmode\hypertarget{ref-R-coda}{}%
+Plummer, M., Best, N., Cowles, K., \& Vines, K. (2006). CODA: Convergence diagnosis and output analysis for mcmc. \emph{R News}, \emph{6}(1), 7--11. Retrieved from \url{https://journal.r-project.org/archive/}
+
+\leavevmode\hypertarget{ref-R-base}{}%
+R Core Team. (2018). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
+
+\leavevmode\hypertarget{ref-R-psych}{}%
+Revelle, W. (2018). \emph{Psych: Procedures for psychological, psychometric, and personality research}. Evanston, Illinois: Northwestern University. Retrieved from \url{https://CRAN.R-project.org/package=psych}
+
+\leavevmode\hypertarget{ref-R-lattice}{}%
+Sarkar, D. (2008). \emph{Lattice: Multivariate data visualization with r}. New York: Springer. Retrieved from \url{http://lmdvr.r-forge.r-project.org}
+
+\leavevmode\hypertarget{ref-R-afex}{}%
+Singmann, H., Bolker, B., Westfall, J., \& Aust, F. (2019). \emph{Afex: Analysis of factorial experiments}. Retrieved from \url{https://CRAN.R-project.org/package=afex}
+
+\leavevmode\hypertarget{ref-R-survival-book}{}%
+Terry M. Therneau, \& Patricia M. Grambsch. (2000). \emph{Modeling survival data: Extending the Cox model}. New York: Springer.
+
+\leavevmode\hypertarget{ref-R-MASS}{}%
+Venables, W. N., \& Ripley, B. D. (2002). \emph{Modern applied statistics with s} (Fourth). New York: Springer. Retrieved from \url{http://www.stats.ox.ac.uk/pub/MASS4}
+
+\leavevmode\hypertarget{ref-R-corrplot2017}{}%
+Wei, T., \& Simko, V. (2017). \emph{R package "corrplot": Visualization of a correlation matrix}. Retrieved from \url{https://github.com/taiyun/corrplot}
+
+\leavevmode\hypertarget{ref-R-reshape2}{}%
+Wickham, H. (2007). Reshaping data with the reshape package. \emph{Journal of Statistical Software}, \emph{21}(12), 1--20. Retrieved from \url{http://www.jstatsoft.org/v21/i12/}
+
+\leavevmode\hypertarget{ref-R-plyr}{}%
+Wickham, H. (2011). The split-apply-combine strategy for data analysis. \emph{Journal of Statistical Software}, \emph{40}(1), 1--29. Retrieved from \url{http://www.jstatsoft.org/v40/i01/}
+
+\leavevmode\hypertarget{ref-R-ggplot2}{}%
+Wickham, H. (2016). \emph{Ggplot2: Elegant graphics for data analysis}. Springer-Verlag New York. Retrieved from \url{https://ggplot2.tidyverse.org}
+
+\leavevmode\hypertarget{ref-R-tidyverse}{}%
+Wickham, H. (2017). \emph{Tidyverse: Easily install and load the 'tidyverse'}. Retrieved from \url{https://CRAN.R-project.org/package=tidyverse}
+
+\leavevmode\hypertarget{ref-R-forcats}{}%
+Wickham, H. (2019a). \emph{Forcats: Tools for working with categorical variables (factors)}. Retrieved from \url{https://CRAN.R-project.org/package=forcats}
+
+\leavevmode\hypertarget{ref-R-stringr}{}%
+Wickham, H. (2019b). \emph{Stringr: Simple, consistent wrappers for common string operations}. Retrieved from \url{https://CRAN.R-project.org/package=stringr}
+
+\leavevmode\hypertarget{ref-R-dplyr}{}%
+Wickham, H., François, R., Henry, L., \& Müller, K. (2019). \emph{Dplyr: A grammar of data manipulation}. Retrieved from \url{https://CRAN.R-project.org/package=dplyr}
+
+\leavevmode\hypertarget{ref-R-tidyr}{}%
+Wickham, H., \& Henry, L. (2019). \emph{Tidyr: Easily tidy data with 'spread()' and 'gather()' functions}. Retrieved from \url{https://CRAN.R-project.org/package=tidyr}
+
+\leavevmode\hypertarget{ref-R-readr}{}%
+Wickham, H., Hester, J., \& Francois, R. (2018). \emph{Readr: Read rectangular text data}. Retrieved from \url{https://CRAN.R-project.org/package=readr}
+
+\leavevmode\hypertarget{ref-R-Formula}{}%
+Zeileis, A., \& Croissant, Y. (2010). Extended model formulas in R: Multiple parts and multiple responses. \emph{Journal of Statistical Software}, \emph{34}(1), 1--13. \url{https://doi.org/10.18637/jss.v034.i01}
+
+\endgroup
+
+
+\end{document}

@@ -1,0 +1,22 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-2}A really beautiful ANOVA table.}
+\begin{tabular}{lllllll}
+\toprule
+Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
+\midrule
+Identity & 0.00 & 1 & 44 & 0.08 & .994 & .000\\
+Morality & 2.34 & 1.59 & 69.94 & 0.48 & .115 & .010\\
+Identity $\times$ Morality & 0.53 & 1.96 & 86.41 & 0.10 & .585 & .001\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table*}

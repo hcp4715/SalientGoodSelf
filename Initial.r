@@ -16,8 +16,8 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c("tidyverse","ggplot2", "reshape2","ez", "bootES","MBESS", 
-                "BayesFactor","psych","corrplot",'plyr','ggstatsplot',"readr",
+pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "reshape2","afex", 'emmeans', 'multcomp', 
+                "BayesFactor","psych","corrplot",'plyr','ggstatsplot',"readr", "bootES","MBESS",
                 "tidyr","Hmisc","RColorBrewer"))
 
 lapply(pkgNeeded,pkgTest)
