@@ -4,18 +4,22 @@ shorttitle        : "Salient Positive Self"
 
 author: 
   - name          : "Chuan-Peng Hu"
-    affiliation   : "1"
+    affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
     address       : "55131"
     email         : "hcp4715@email.com"
-  - name          : "AAA"
-    affiliation   : "1,2"
+  - name          : "Jie Sui"
+    affiliation   : "3"
+  - name          : "Kaiping Peng"
+    affiliation   : "1"
 
 affiliation:
   - id            : "1"
-    institution   : "Tsinghua University"
+    institution   : "Tsinghua University, 100084 Beijing, China"
   - id            : "2"
-    institution   : "DRZ"
+    institution   : "German Resilience Center, 55131 Mainz, Germany"
+  - id            : "3"
+    institution   : "University of Bath, Bath, UK"
 
 authornote: |
   Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
@@ -39,7 +43,7 @@ abstract: |
   
   <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "keywords"
+keywords          : "Perceptual decision-making, Self"
 wordcount         : "X"
 
 bibliography      : ["r-references.bib"]
@@ -56,17 +60,20 @@ documentclass     : "apa6"
 classoption       : "man"
 output            : 
   papaja::apa6_pdf:
-    latex_engine  : xelatex
+#    latex_engine  : xelatex
 
 ---
 
 ```{r setup, include = FALSE}
 #library("papaja")
 source('Initial.r')
+
+# using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
+afex_options(emmeans_model = "multivariate")
 ```
 
-```{r, include=FALSE, eval=FALSE}
-options(tinytex.verbose = TRUE)
+```{r, include=FALSE}
+options(tinytex.verbose = F) # debug the tex
 ```
 
 ```{r analysis-preferences}
@@ -74,8 +81,6 @@ options(tinytex.verbose = TRUE)
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
-
-
 
 # General Methods
 ## Participants.
@@ -92,16 +97,111 @@ For participants recruited in Wenzhou University, they finished the experiment i
 
 
 ## Data analysis
-We used `r cite_r("r-references.bib")` for all our analyses.
-We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R (3.1.0, R core teams, 2018) and then analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R `r cite_r("r-references.bib")`. The clean data were analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
 We analyzed accuracy performance using a signal detection approach, as in Sui et al. (2012). The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d’. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The d’ were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
 
 The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment (Sui et al., 2012). 
 
-We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, & Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 ≥ 10 means strong evidence for H1.
+We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, & Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 great or equal to 10 means strong evidence for H1.
 
 To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt & Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+
+# Experiment 4a
+
+In study 1-3 participants made explicit judgements about moral associations. In Experiment 4, we examined whether the effects of moral valence occur even when the moral valence information might not be relevent to the task. In this study participants made perceptual match judgements to associations between self-referential labels and shapes (cf. Sui et al., 2012), but we presented labels of different moral valence levels in the shapes. 
+
+```{r loadingData_4a,echo=FALSE,results='hide'}
+df4a_dprime_long <- read.csv('.\\exp4a\\exp4a_dprime_long.csv') %>%
+  dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
+                             ifelse(Morality == "Immoral","Bad", 'Neutral')))
+
+df4a_rt_acc_long <- read.csv('.\\exp4a\\exp4a_rt_acc_long.csv') %>%
+  dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
+                             ifelse(Morality == "Immoral","Bad", "Neutral"))) %>%
+  dplyr::rename(Match = Matchness) %>%
+  dplyr::mutate(Match = ifelse(Match == 'Match', 'match','mismatch'))
+```
+## Participants
+64 participants (37 female, age = 19.7 $\pm$ 1.22) participated the current study, 32 of them were from Tsinghua Universtiy in 2015, the rest were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data of three participants from Tsinghua site and two participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining 59 participants (33 female, age = 19.78 $\pm$ 1.2) were analyzed and reported.
+
+## Results
+### Analaysis of d prime.
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+```{r analyzing for d prime_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df4a_dprime_anova <- afex::aov_ez('Subject','dprime',df4a_dprime_long,  # using afex's function 
+                                  within = c('Identity','Morality'))
+df4a_dprime_anova_apa <- df4a_dprime_anova %>% papaja::apa_print()
+#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
+```
+We found the effect of identity (`r df4a_dprime_anova_apa$full$Identity`) and its interaction with valence (the effect of gender differed by clinic, (`r df4a_dprime_anova_apa$full$Identity_Morality`). But the effect of valence was not found, `r df4a_dprime_anova_apa$full$Morality`.
+
+```{r results='asis', echo = F}
+#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+apa_table(df4a_dprime_anova_apa$table
+  , caption = "A really beautiful ANOVA table."
+  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
+)
+```
+
+We further examined the effect of valence for both self and other. 
+
+```{r results='asis', echo = F}
+m2 <- emmeans::emmeans(df4a_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
+#pairs(m2)
+# summary(as.glht(pairs(m2)), test=adjusted("free"))
+m3 <- emmeans(df4a_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
+#pairs(m3)
+```
+
+### Analaysis of reaction time.
+We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+```{r analyzing for RT_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df4a_RT_anova <- afex::aov_ez('Subject','RT',df4a_rt_acc_long,  # using afex's function 
+                                  within = c('Match','Identity','Morality'))
+df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print()
+#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
+```
+We found the main effect of Matchness (`r df4a_RT_anova_apa$full$Match`) and intercation between Matchness and Identity(`r df4a_RT_anova_apa$full$Match_Identity`)
+
+We carried out two separate ANOVA for both Match and mismatched trials.
+
+```{r analyzing for RT_4a_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df4a_rt_acc_long_m <- df4a_rt_acc_long %>% dplyr::filter(Match == 'match')
+df4a_rt_acc_long_nm <- df4a_rt_acc_long %>% dplyr::filter(Match == 'mismatch')
+df4a_RT_anova_m <- afex::aov_ez('Subject','RT',df4a_rt_acc_long_m,  # using afex's function 
+                                  within = c('Identity','Morality'))
+df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print()
+
+df4a_RT_anova_nm <- afex::aov_ez('Subject','RT',df4a_rt_acc_long_nm,  # using afex's function 
+                                  within = c('Identity','Morality'))
+df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print()
+
+```
+For matched trials, we found the effect of identity `r df4a_RT_anova_m_apa$full$Identity`, and the interaction between morality and identity,`r df4a_RT_anova_m_apa$full$Identity_Morality`. However, there is no main effect of valence (`r df4a_RT_anova_m_apa$full$Morality`). 
+
+For non-matched trials, there was no significant effect. Morality (`r df4a_RT_anova_nm_apa$full$Identity`), Identity(`r df4a_RT_anova_nm_apa$full$Morality`), interaction (`r df4a_RT_anova_nm_apa$full$Identity_Morality`).
+
+```{r results='asis', echo = F}
+#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+apa_table(df4a_RT_anova_m_apa$table
+  , caption = "A really beautiful ANOVA table."
+  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
+)
+```
+
+We further examined the effect of valence for both self and other for mached trials. 
+
+```{r results='asis', echo = F}
+m2 <- emmeans::emmeans(df4a_RT_anova_m, "Morality", by = "Identity") # compare each valence for both self and other condition
+pairs(m2)
+#summary(as.glht(pairs(m2)), test=adjusted("free"))
+m3 <- emmeans(df4a_RT_anova_m, "Identity", by = "Morality") # compare self vs. other for each valence condition
+pairs(m3)
+```
 
 
 # Experiment 4b:
@@ -123,33 +223,31 @@ df4b_rt_acc_long <- read.csv('.\\exp4b\\exp4b_rt_acc_long.csv') %>%
 ### Analaysis of d prime.
 We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
 ```{r analyzing for d prime_e5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# using afex and emmeans to do the ANOVA and post-hoc comparison
-#library('afex')
-#library('emmeans')
-#library('multcomp')
-afex_options(emmeans_model = "multivariate")
-
 # anova for d prime with 2*2 design
-df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b_dprime_long, 
-                                  within = c('Identity','Morality'))  # using afex's function
-apa_anova <- apa_print(df4b_dprime_anova)
+df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b_dprime_long,  # using afex's function 
+                                  within = c('Identity','Morality'))
+df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print()
+#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
+```
+Morality (`r df4b_dprime_anova_apa$full$Morality`) and Identity gender affected post-surgery quality of life, `r df4b_dprime_anova_apa$full$Identity`. However, the effect of gender differed by clinic, `r df4b_dprime_anova_apa$full$Identity_Morality`.
 
-m2 <- emmeans(df4b_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
+```{r results='asis', echo = TRUE}
+#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+apa_table(df4b_dprime_anova_apa$table
+  , caption = "A really beautiful ANOVA table."
+  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
+)
+```
+
+We further examined the effect of valence for both self and other. 
+
+```{r results='asis', echo = TRUE}
+m2 <- emmeans::emmeans(df4b_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
 #pairs(m2)
 summary(as.glht(pairs(m2)), test=adjusted("free"))
 
 m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
 #pairs(m3)
-```
-Morality (`r apa_anova$full$Morality`) and Identity gender affected post-surgery quality of life, `r apa_anova$full$Identity`. However, the effect of gender differed by clinic, `r apa_anova$full$Identity_Morality`.
-
-```{r results='asis'}
-#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-apa_table(
-  apa_anova$table
-  , caption = "A really beautiful ANOVA table."
-  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-)
 
 ```
 

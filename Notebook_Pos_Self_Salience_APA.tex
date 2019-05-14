@@ -24,11 +24,51 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={Open notebook of perpecptual salience of positive self},
-            pdfauthor={Chuan-Peng Hu~\& AAA},
-            pdfkeywords={keywords},
+            pdfauthor={Chuan-Peng Hu, Jie Sui, \& Kaiping Peng},
+            pdfkeywords={Perceptual decision-making, Self},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -64,14 +104,14 @@
 
 
   \title{Open notebook of perpecptual salience of positive self}
-    \author{Chuan-Peng Hu\textsuperscript{1}~\& AAA\textsuperscript{1,2}}
+    \author{Chuan-Peng Hu\textsuperscript{1,2}, Jie Sui\textsuperscript{3}, \& Kaiping Peng\textsuperscript{1}}
     \date{}
   
 \shorttitle{Salient Positive Self}
 \affiliation{
 \vspace{0.5cm}
-\textsuperscript{1} Tsinghua University\\\textsuperscript{2} DRZ}
-\keywords{keywords\newline\indent Word count: X}
+\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} German Resilience Center, 55131 Mainz, Germany\\\textsuperscript{3} University of Bath, Bath, UK}
+\keywords{Perceptual decision-making, Self\newline\indent Word count: X}
 \usepackage{csquotes}
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -149,22 +189,25 @@ For participants recruited in Wenzhou University, they finished the experiment i
 \hypertarget{data-analysis}{%
 \subsection{Data analysis}\label{data-analysis}}
 
-We used R (Version 3.5.2; R Core Team, 2018) and the R-packages \emph{afex} (Version 0.23.0; Singmann, Bolker, Westfall, \& Aust, 2019), \emph{BayesFactor} (Version 0.9.12.4.2; Morey \& Rouder, 2018), \emph{boot} (Version 1.3.20; Davison \& Hinkley, 1997; Gerlanc \& Kirby, 2015), \emph{bootES} (Version 1.2; Gerlanc \& Kirby, 2015), \emph{coda} (Version 0.19.2; Plummer, Best, Cowles, \& Vines, 2006), \emph{corrplot2017} (Wei \& Simko, 2017), \emph{dplyr} (Version 0.8.0.1; Wickham et al., 2019), \emph{emmeans} (Version 1.3.4; Lenth, 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version 3.1.1; Wickham, 2016), \emph{ggstatsplot} (Version 0.0.10; Patil \& Powell, 2018), \emph{Hmisc} (Version 4.2.0; Harrell Jr, Charles Dupont, \& others., 2019), \emph{lattice} (Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.21; Bates, Mächler, Bolker, \& Walker, 2015), \emph{MASS} (Version 7.3.51.4; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.2.17; Bates \& Maechler, 2019), \emph{MBESS} (Version 4.4.3; Kelley, 2018), \emph{multcomp} (Version 1.4.10; Hothorn, Bretz, \& Westfall, 2008), \emph{mvtnorm} (Version 1.0.10; Genz \& Bretz, 2009), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plyr} (Version 1.8.4; Wickham et al., 2019; Wickham, 2011), \emph{psych} (Version 1.8.12; Revelle, 2018), \emph{purrr} (Version 0.3.2; Henry \& Wickham, 2019), \emph{RColorBrewer} (Version 1.1.2; Neuwirth, 2014), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{reshape2} (Version 1.4.3; Wickham, 2007), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{survival} (Version 2.44.1.1; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{TH.data} (Version 1.0.10; Hothorn, 2019), \emph{tibble} (Version 2.1.1; Müller \& Wickham, 2019), \emph{tidyr} (Version 0.8.3; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.2.1; Wickham, 2017) for all our analyses.
-We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R (3.1.0, R core teams, 2018) and then analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60\% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R R (Version 3.6.0; R Core Team, 2018) and the R-packages \emph{afex} (Version 0.23.0; Singmann, Bolker, Westfall, \& Aust, 2019), \emph{BayesFactor} (Version 0.9.12.4.2; Morey \& Rouder, 2018), \emph{boot} (Version 1.3.22; Davison \& Hinkley, 1997; Gerlanc \& Kirby, 2015), \emph{bootES} (Version 1.2; Gerlanc \& Kirby, 2015), \emph{coda} (Version 0.19.2; Plummer, Best, Cowles, \& Vines, 2006), \emph{corrplot2017} (Wei \& Simko, 2017), \emph{dplyr} (Version 0.8.0.1; Wickham et al., 2019), \emph{emmeans} (Version 1.3.4; Lenth, 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggplot2} (Version 3.1.1; Wickham, 2016), \emph{ggstatsplot} (Version 0.0.10; Patil \& Powell, 2018), \emph{Hmisc} (Version 4.2.0; Harrell Jr, Charles Dupont, \& others., 2019), \emph{lattice} (Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.21; Bates, Mächler, Bolker, \& Walker, 2015), \emph{MASS} (Version 7.3.51.4; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.2.17; Bates \& Maechler, 2019), \emph{MBESS} (Version 4.4.3; Kelley, 2018), \emph{multcomp} (Version 1.4.10; Hothorn, Bretz, \& Westfall, 2008), \emph{mvtnorm} (Version 1.0.10; Genz \& Bretz, 2009), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plyr} (Version 1.8.4; Wickham et al., 2019; Wickham, 2011), \emph{psych} (Version 1.8.12; Revelle, 2018), \emph{purrr} (Version 0.3.2; Henry \& Wickham, 2019), \emph{RColorBrewer} (Version 1.1.2; Neuwirth, 2014), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{reshape2} (Version 1.4.3; Wickham, 2007), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{survival} (Version 2.44.1.1; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{TH.data} (Version 1.0.10; Hothorn, 2019), \emph{tibble} (Version 2.1.1; Müller \& Wickham, 2019), \emph{tidyr} (Version 0.8.3; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.2.1; Wickham, 2017). The clean data were analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60\% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
 We analyzed accuracy performance using a signal detection approach, as in Sui et al. (2012). The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d'. Trials without response were coded either as \enquote{miss} (matched trials) or \enquote{false alarm} (mismatched trials). The d' were then analyzed using repeated measures analyses of variance (repeated measures ANOVA).
 
 The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs.~mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment (Sui et al., 2012).
 
-We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen's d and its 95\% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, \& Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs.~evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)'s convention for the strength of evidence: the BF10 \textgreater{} 3 means there are some evidence for H1 as compared with H0, BF10 ≥ 10 means strong evidence for H1.
+We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen's d and its 95\% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, \& Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs.~evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)'s convention for the strength of evidence: the BF10 \textgreater{} 3 means there are some evidence for H1 as compared with H0, BF10 great or equal to 10 means strong evidence for H1.
 
 To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt \& Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
-\hypertarget{experiment-4b}{%
-\section{Experiment 4b:}\label{experiment-4b}}
+\hypertarget{experiment-4a}{%
+\section{Experiment 4a}\label{experiment-4a}}
+
+In study 1-3 participants made explicit judgements about moral associations. In Experiment 4, we examined whether the effects of moral valence occur even when the moral valence information might not be relevent to the task. In this study participants made perceptual match judgements to associations between self-referential labels and shapes (cf.~Sui et al., 2012), but we presented labels of different moral valence levels in the shapes.
 
 \hypertarget{participants}{%
 \subsection{Participants}\label{participants}}
+
+64 participants (37 female, age = 19.7 \(\pm\) 1.22) participated the current study, 32 of them were from Tsinghua Universtiy in 2015, the rest were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data of three participants from Tsinghua site and two participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (\textless{} 0.6). The results for the remaining 59 participants (33 female, age = 19.78 \(\pm\) 1.2) were analyzed and reported.
 
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
@@ -174,12 +217,122 @@ To assess the individual difference, we explored correlation between self-report
 
 We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
 
-Morality (\(F(1.59, 69.94) = 2.34\), \(\mathit{MSE} = 0.48\), \(p = .115\), \(\hat{\eta}^2_G = .010\)) and Identity gender affected post-surgery quality of life, \(F(1, 44) = 0.00\), \(\mathit{MSE} = 0.08\), \(p = .994\), \(\hat{\eta}^2_G = .000\). However, the effect of gender differed by clinic, \(F(1.96, 86.41) = 0.53\), \(\mathit{MSE} = 0.10\), \(p = .585\), \(\hat{\eta}^2_G = .001\).
+We found the effect of identity (\(F(1, 58) = 121.04\), \(\mathit{MSE} = 0.48\), \(p < .001\), \(\hat{\eta}^2_G = .189\)) and its interaction with valence (the effect of gender differed by clinic, (\(F(1.99, 115.2) = 4.12\), \(\mathit{MSE} = 0.14\), \(p = .019\), \(\hat{\eta}^2_G = .004\)). But the effect of valence was not found, \(F(1.93, 111.66) = 0.53\), \(\mathit{MSE} = 0.12\), \(p = .581\), \(\hat{\eta}^2_G = .000\).
 
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
 \caption{\label{tab:unnamed-chunk-2}A really beautiful ANOVA table.}
+\begin{tabular}{lllllll}
+\toprule
+Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
+\midrule
+Identity & 121.04 & 1 & 58 & 0.48 & < .001 & .189\\
+Morality & 0.53 & 1.93 & 111.66 & 0.12 & .581 & .000\\
+Identity $\times$ Morality & 4.12 & 1.99 & 115.2 & 0.14 & .019 & .004\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+We further examined the effect of valence for both self and other.
+
+\hypertarget{analaysis-of-reaction-time.}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.}}
+
+We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+
+We found the main effect of Matchness (\(F(1, 58) = 79.85\), \(\mathit{MSE} = 4,817.48\), \(p < .001\), \(\hat{\eta}^2_G = .123\)) and intercation between Matchness and Identity(\(F(1, 58) = 81.15\), \(\mathit{MSE} = 3,226.69\), \(p < .001\), \(\hat{\eta}^2_G = .087\))
+
+We carried out two separate ANOVA for both Match and mismatched trials.
+
+For matched trials, we found the effect of identity \(F(1, 58) = 124.15\), \(\mathit{MSE} = 4,037.53\), \(p < .001\), \(\hat{\eta}^2_G = .257\), and the interaction between morality and identity,\(F(1.9, 110.18) = 4.41\), \(\mathit{MSE} = 465.91\), \(p = .016\), \(\hat{\eta}^2_G = .003\). However, there is no main effect of valence (\(F(1.98, 114.82) = 0.94\), \(\mathit{MSE} = 606.30\), \(p = .392\), \(\hat{\eta}^2_G = .001\)).
+
+For non-matched trials, there was no significant effect. Morality (\(F(1, 58) = 0.16\), \(\mathit{MSE} = 1,547.37\), \(p = .692\), \(\hat{\eta}^2_G = .000\)), Identity(\(F(1.96, 113.52) = 0.68\), \(\mathit{MSE} = 390.26\), \(p = .508\), \(\hat{\eta}^2_G = .000\)), interaction (\(F(1.9, 110.27) = 0.04\), \(\mathit{MSE} = 585.80\), \(p = .953\), \(\hat{\eta}^2_G = .000\)).
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-4}A really beautiful ANOVA table.}
+\begin{tabular}{lllllll}
+\toprule
+Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
+\midrule
+Identity & 124.15 & 1 & 58 & 4,037.53 & < .001 & .257\\
+Morality & 0.94 & 1.98 & 114.82 & 606.30 & .392 & .001\\
+Identity $\times$ Morality & 4.41 & 1.9 & 110.18 & 465.91 & .016 & .003\\
+\bottomrule
+\addlinespace
+\end{tabular}
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table}
+
+We further examined the effect of valence for both self and other.
+
+Identity = Other:
+contrast estimate SE df t.ratio p.value
+Bad - Good -4.02 5.07 58 -0.792 0.7093
+Bad - Neutral -1.79 4.91 58 -0.365 0.9294
+Good - Neutral 2.23 4.40 58 0.506 0.8687
+
+Identity = Self:
+contrast estimate SE df t.ratio p.value
+Bad - Good 11.39 3.28 58 3.467 0.0028
+Bad - Neutral 1.39 3.62 58 0.383 0.9225
+Good - Neutral -10.00 3.60 58 -2.781 0.0197
+
+P value adjustment: tukey method for comparing a family of 3 estimates
+Morality = Bad:
+contrast estimate SE df t.ratio p.value
+Other - Self 69.1 8.00 58 8.631 \textless{}.0001
+
+Morality = Good:
+contrast estimate SE df t.ratio p.value
+Other - Self 84.5 7.28 58 11.605 \textless{}.0001
+
+Morality = Neutral:
+contrast estimate SE df t.ratio p.value
+Other - Self 72.2 7.06 58 10.231 \textless{}.0001
+
+\hypertarget{experiment-4b}{%
+\section{Experiment 4b:}\label{experiment-4b}}
+
+\hypertarget{participants-1}{%
+\subsection{Participants}\label{participants-1}}
+
+\hypertarget{results-1}{%
+\subsection{Results}\label{results-1}}
+
+\hypertarget{analaysis-of-d-prime.-1}{%
+\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-1}}
+
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+
+Morality (\(F(1.59, 69.94) = 2.34\), \(\mathit{MSE} = 0.48\), \(p = .115\), \(\hat{\eta}^2_G = .010\)) and Identity gender affected post-surgery quality of life, \(F(1, 44) = 0.00\), \(\mathit{MSE} = 0.08\), \(p = .994\), \(\hat{\eta}^2_G = .000\). However, the effect of gender differed by clinic, \(F(1.96, 86.41) = 0.53\), \(\mathit{MSE} = 0.10\), \(p = .585\), \(\hat{\eta}^2_G = .001\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")}
+\KeywordTok{apa_table}\NormalTok{(df4b_dprime_anova_apa}\OperatorTok{$}\NormalTok{table}
+\NormalTok{  , }\DataTypeTok{caption =} \StringTok{"A really beautiful ANOVA table."}
+\NormalTok{  , }\DataTypeTok{note =} \StringTok{"Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[tbp]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:unnamed-chunk-6}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -197,8 +350,51 @@ Identity $\times$ Morality & 0.53 & 1.96 & 86.41 & 0.10 & .585 & .001\\
 \end{center}
 \end{table}
 
-\hypertarget{results-1}{%
-\section{Results}\label{results-1}}
+We further examined the effect of valence for both self and other.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 <-}\StringTok{ }\NormalTok{emmeans}\OperatorTok{::}\KeywordTok{emmeans}\NormalTok{(df4b_dprime_anova, }\StringTok{"Morality"}\NormalTok{, }\DataTypeTok{by =} \StringTok{"Identity"}\NormalTok{) }\CommentTok{# compare each valence for both self and other condition}
+\CommentTok{#pairs(m2)}
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{as.glht}\NormalTok{(}\KeywordTok{pairs}\NormalTok{(m2)), }\DataTypeTok{test=}\KeywordTok{adjusted}\NormalTok{(}\StringTok{"free"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\$\texttt{Identity\ =\ Other}
+
+\begin{verbatim}
+ Simultaneous Tests for General Linear Hypotheses
+\end{verbatim}
+
+Linear Hypotheses:
+Estimate Std. Error t value Pr(\textgreater{}\textbar{}t\textbar{})
+Good - Neutral == 0 0.13423 0.09023 1.49 0.29
+Good - Bad == 0 0.14137 0.13188 1.07 0.42
+Neutral - Bad == 0 0.00714 0.09949 0.07 0.94
+(Adjusted p values reported -- free method)
+
+\$\texttt{Identity\ =\ Self}
+
+\begin{verbatim}
+ Simultaneous Tests for General Linear Hypotheses
+\end{verbatim}
+
+Linear Hypotheses:
+Estimate Std. Error t value Pr(\textgreater{}\textbar{}t\textbar{})
+Good - Neutral == 0 0.1697 0.0897 1.89 0.12
+Good - Bad == 0 0.2365 0.1154 2.05 0.11
+Neutral - Bad == 0 0.0668 0.0872 0.77 0.45
+(Adjusted p values reported -- free method)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 <-}\StringTok{ }\KeywordTok{emmeans}\NormalTok{(df4b_dprime_anova, }\StringTok{"Identity"}\NormalTok{, }\DataTypeTok{by =} \StringTok{"Morality"}\NormalTok{) }\CommentTok{# compare self vs. other for each valence condition}
+\CommentTok{#pairs(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{results-2}{%
+\section{Results}\label{results-2}}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}

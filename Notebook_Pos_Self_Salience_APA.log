@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  13 MAY 2019 09:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2019.5.10)  14 MAY 2019 09:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -70,10 +70,6 @@ Package: fontenc 2018/08/11 v2.0j Standard LaTeX package
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/t1enc.def
 File: t1enc.def 2018/08/11 v2.0j Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
-)
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 105.
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
-File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ))
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/geometry/geometry.
 sty
@@ -124,11 +120,11 @@ Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 ics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: xetex.def on input line 99.
+Package graphics Info: Driver file: pdftex.def on input line 99.
 
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/xetex
-.def
-File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdfte
+x.def
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen111
 \Gin@req@width=\dimen112
@@ -318,235 +314,16 @@ Package fixltx2e Warning: fixltx2e is not required with releases after 2015
 (fixltx2e)                See the latexrelease package for details.
 
 Already applied: [0000/00/00] Old fixltx2e package on input line 53.
-)
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/xelatex/mathspec/mathspe
-c.sty
-Package: mathspec 2016/12/22 v0.2b LaTeX Package (Mathematics font selection fo
-r XeLaTeX)
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.
-sty
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/
-xparse.sty
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2019-05-09 L3 programming layer (loader) 
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3-cod
-e.tex
-Package: expl3 2019-05-09 L3 programming layer (code)
-\c_max_int=\count116
-\l_tmpa_int=\count117
-\l_tmpb_int=\count118
-\g_tmpa_int=\count119
-\g_tmpb_int=\count120
-\g__kernel_prg_map_int=\count121
-\c__ior_term_ior=\count122
-\c_log_iow=\count123
-\l_iow_line_count_int=\count124
-\l__iow_line_target_int=\count125
-\l__iow_one_indent_int=\count126
-\l__iow_indent_int=\count127
-\c_zero_dim=\dimen142
-\c_max_dim=\dimen143
-\l_tmpa_dim=\dimen144
-\l_tmpb_dim=\dimen145
-\g_tmpa_dim=\dimen146
-\g_tmpb_dim=\dimen147
-\c_zero_skip=\skip68
-\c_max_skip=\skip69
-\l_tmpa_skip=\skip70
-\l_tmpb_skip=\skip71
-\g_tmpa_skip=\skip72
-\g_tmpb_skip=\skip73
-\c_zero_muskip=\muskip11
-\c_max_muskip=\muskip12
-\l_tmpa_muskip=\muskip13
-\l_tmpb_muskip=\muskip14
-\g_tmpa_muskip=\muskip15
-\g_tmpb_muskip=\muskip16
-\l_keys_choice_int=\count128
-\l__intarray_loop_int=\count129
-\c__intarray_sp_dim=\dimen148
-\g__intarray_font_int=\count130
-\c__fp_leading_shift_int=\count131
-\c__fp_middle_shift_int=\count132
-\c__fp_trailing_shift_int=\count133
-\c__fp_big_leading_shift_int=\count134
-\c__fp_big_middle_shift_int=\count135
-\c__fp_big_trailing_shift_int=\count136
-\c__fp_Bigg_leading_shift_int=\count137
-\c__fp_Bigg_middle_shift_int=\count138
-\c__fp_Bigg_trailing_shift_int=\count139
-\g__fp_array_int=\count140
-\l__fp_array_loop_int=\count141
-\l__sort_length_int=\count142
-\l__sort_min_int=\count143
-\l__sort_top_int=\count144
-\l__sort_max_int=\count145
-\l__sort_true_max_int=\count146
-\l__sort_block_int=\count147
-\l__sort_begin_int=\count148
-\l__sort_end_int=\count149
-\l__sort_A_int=\count150
-\l__sort_B_int=\count151
-\l__sort_C_int=\count152
-\l__tl_analysis_normal_int=\count153
-\l__tl_analysis_index_int=\count154
-\l__tl_analysis_nesting_int=\count155
-\l__tl_analysis_type_int=\count156
-\l__regex_internal_a_int=\count157
-\l__regex_internal_b_int=\count158
-\l__regex_internal_c_int=\count159
-\l__regex_balance_int=\count160
-\l__regex_group_level_int=\count161
-\l__regex_mode_int=\count162
-\c__regex_cs_in_class_mode_int=\count163
-\c__regex_cs_mode_int=\count164
-\l__regex_catcodes_int=\count165
-\l__regex_default_catcodes_int=\count166
-\c__regex_catcode_L_int=\count167
-\c__regex_catcode_O_int=\count168
-\c__regex_catcode_A_int=\count169
-\c__regex_all_catcodes_int=\count170
-\l__regex_show_lines_int=\count171
-\l__regex_min_state_int=\count172
-\l__regex_max_state_int=\count173
-\l__regex_left_state_int=\count174
-\l__regex_right_state_int=\count175
-\l__regex_capturing_group_int=\count176
-\l__regex_min_pos_int=\count177
-\l__regex_max_pos_int=\count178
-\l__regex_curr_pos_int=\count179
-\l__regex_start_pos_int=\count180
-\l__regex_success_pos_int=\count181
-\l__regex_curr_char_int=\count182
-\l__regex_curr_catcode_int=\count183
-\l__regex_last_char_int=\count184
-\l__regex_case_changed_char_int=\count185
-\l__regex_curr_state_int=\count186
-\l__regex_step_int=\count187
-\l__regex_min_active_int=\count188
-\l__regex_max_active_int=\count189
-\l__regex_replacement_csnames_int=\count190
-\l__regex_match_count_int=\count191
-\l__regex_min_submatch_int=\count192
-\l__regex_submatch_int=\count193
-\l__regex_zeroth_submatch_int=\count194
-\g__regex_trace_regex_int=\count195
-\c_empty_box=\box31
-\l_tmpa_box=\box32
-\l_tmpb_box=\box33
-\g_tmpa_box=\box34
-\g_tmpb_box=\box35
-\l__box_top_dim=\dimen149
-\l__box_bottom_dim=\dimen150
-\l__box_left_dim=\dimen151
-\l__box_right_dim=\dimen152
-\l__box_top_new_dim=\dimen153
-\l__box_bottom_new_dim=\dimen154
-\l__box_left_new_dim=\dimen155
-\l__box_right_new_dim=\dimen156
-\l__box_internal_box=\box36
-\l__coffin_internal_box=\box37
-\l__coffin_internal_dim=\dimen157
-\l__coffin_offset_x_dim=\dimen158
-\l__coffin_offset_y_dim=\dimen159
-\l__coffin_x_dim=\dimen160
-\l__coffin_y_dim=\dimen161
-\l__coffin_x_prime_dim=\dimen162
-\l__coffin_y_prime_dim=\dimen163
-\c_empty_coffin=\box38
-\l__coffin_aligned_coffin=\box39
-\l__coffin_aligned_internal_coffin=\box40
-\l_tmpa_coffin=\box41
-\l_tmpb_coffin=\box42
-\g_tmpa_coffin=\box43
-\g_tmpb_coffin=\box44
-\l__coffin_bounding_shift_dim=\dimen164
-\l__coffin_left_corner_dim=\dimen165
-\l__coffin_right_corner_dim=\dimen166
-\l__coffin_bottom_corner_dim=\dimen167
-\l__coffin_top_corner_dim=\dimen168
-\l__coffin_scaled_total_height_dim=\dimen169
-\l__coffin_scaled_width_dim=\dimen170
-\c__coffin_empty_coffin=\box45
-\l__coffin_display_coffin=\box46
-\l__coffin_display_coord_coffin=\box47
-\l__coffin_display_pole_coffin=\box48
-\l__coffin_display_offset_dim=\dimen171
-\l__coffin_display_x_dim=\dimen172
-\l__coffin_display_y_dim=\dimen173
-\g__file_internal_ior=\read1
-\l__seq_internal_a_int=\count196
-\l__seq_internal_b_int=\count197
-\c__deprecation_minus_one=\count198
-)
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/l3xdvipdf
-mx.def
-File: l3xdvipdfmx.def 2019-04-06 v L3 Experimental driver: xdvipdfmx
-\l__driver_internal_box=\box49
-\g__driver_graphics_int=\count199
-\g__driver_pdf_object_int=\count266
-\g__driver_pdf_annotation_int=\count267
-))
-Package: xparse 2019-05-03 L3 Experimental document command parser
-\l__xparse_current_arg_int=\count268
-\g__xparse_grabber_int=\count269
-\l__xparse_m_args_int=\count270
-\l__xparse_v_nesting_int=\count271
-)
-Package: fontspec 2019/03/15 v2.7c Font selection for XeLaTeX and LuaLaTeX
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec-
-xetex.sty
-Package: fontspec-xetex 2019/03/15 v2.7c Font selection for XeLaTeX and LuaLaTe
-X
-\l__fontspec_script_int=\count272
-\l__fontspec_language_int=\count273
-\l__fontspec_strnum_int=\count274
-\l__fontspec_tmp_int=\count275
-\l__fontspec_tmpa_int=\count276
-\l__fontspec_tmpb_int=\count277
-\l__fontspec_tmpc_int=\count278
-\l__fontspec_em_int=\count279
-\l__fontspec_emdef_int=\count280
-\l__fontspec_strong_int=\count281
-\l__fontspec_strongdef_int=\count282
-\l__fontspec_tmpa_dim=\dimen174
-\l__fontspec_tmpb_dim=\dimen175
-\l__fontspec_tmpc_dim=\dimen176
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
+) (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2018/08/11 v2.0j Standard LaTeX package
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/tuenc.def
-File: tuenc.def 2018/08/11 v2.0j Standard LaTeX file
-LaTeX Font Info:    Redeclaring font encoding TU on input line 82.
-))
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.
-cfg)
-LaTeX Info: Redefining \itshape on input line 4051.
-LaTeX Info: Redefining \slshape on input line 4056.
-LaTeX Info: Redefining \scshape on input line 4061.
-LaTeX Info: Redefining \upshape on input line 4066.
-LaTeX Info: Redefining \em on input line 4096.
-LaTeX Info: Redefining \emph on input line 4121.
-))
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.st
-y
-Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.
-tex
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils
-.tex
-\XKV@toks=\toks22
-\XKV@tempa@toks=\toks23
-)
-\XKV@depth=\count283
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-))
-\c@eu@=\count284
-\c@eu@i=\count285
-\c@mkern=\count286
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/t1enc.def
+File: t1enc.def 2018/08/11 v2.0j Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
+)) (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/inputenc.s
+ty
+Package: inputenc 2018/08/11 v1.3c Input encoding file
+\inpenc@prehook=\toks22
+\inpenc@posthook=\toks23
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/upquote/upquote.st
 y
@@ -568,7 +345,81 @@ Package textcomp Info: Sub-encoding information:
 Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
-)
+Now handling font encoding TS1 ...
+... processing UTF-8 mapping file for font encoding TS1
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2018/10/05 v1.2f UTF-8 support for inputenc
+   defining Unicode char U+00A2 (decimal 162)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00A4 (decimal 164)
+   defining Unicode char U+00A5 (decimal 165)
+   defining Unicode char U+00A6 (decimal 166)
+   defining Unicode char U+00A7 (decimal 167)
+   defining Unicode char U+00A8 (decimal 168)
+   defining Unicode char U+00A9 (decimal 169)
+   defining Unicode char U+00AA (decimal 170)
+   defining Unicode char U+00AC (decimal 172)
+   defining Unicode char U+00AE (decimal 174)
+   defining Unicode char U+00AF (decimal 175)
+   defining Unicode char U+00B0 (decimal 176)
+   defining Unicode char U+00B1 (decimal 177)
+   defining Unicode char U+00B2 (decimal 178)
+   defining Unicode char U+00B3 (decimal 179)
+   defining Unicode char U+00B4 (decimal 180)
+   defining Unicode char U+00B5 (decimal 181)
+   defining Unicode char U+00B6 (decimal 182)
+   defining Unicode char U+00B7 (decimal 183)
+   defining Unicode char U+00B9 (decimal 185)
+   defining Unicode char U+00BA (decimal 186)
+   defining Unicode char U+00BC (decimal 188)
+   defining Unicode char U+00BD (decimal 189)
+   defining Unicode char U+00BE (decimal 190)
+   defining Unicode char U+00D7 (decimal 215)
+   defining Unicode char U+00F7 (decimal 247)
+   defining Unicode char U+0192 (decimal 402)
+   defining Unicode char U+02C7 (decimal 711)
+   defining Unicode char U+02D8 (decimal 728)
+   defining Unicode char U+02DD (decimal 733)
+   defining Unicode char U+0E3F (decimal 3647)
+   defining Unicode char U+2016 (decimal 8214)
+   defining Unicode char U+2020 (decimal 8224)
+   defining Unicode char U+2021 (decimal 8225)
+   defining Unicode char U+2022 (decimal 8226)
+   defining Unicode char U+2030 (decimal 8240)
+   defining Unicode char U+2031 (decimal 8241)
+   defining Unicode char U+203B (decimal 8251)
+   defining Unicode char U+203D (decimal 8253)
+   defining Unicode char U+2044 (decimal 8260)
+   defining Unicode char U+204E (decimal 8270)
+   defining Unicode char U+2052 (decimal 8274)
+   defining Unicode char U+20A1 (decimal 8353)
+   defining Unicode char U+20A4 (decimal 8356)
+   defining Unicode char U+20A6 (decimal 8358)
+   defining Unicode char U+20A9 (decimal 8361)
+   defining Unicode char U+20AB (decimal 8363)
+   defining Unicode char U+20AC (decimal 8364)
+   defining Unicode char U+20B1 (decimal 8369)
+   defining Unicode char U+2103 (decimal 8451)
+   defining Unicode char U+2116 (decimal 8470)
+   defining Unicode char U+2117 (decimal 8471)
+   defining Unicode char U+211E (decimal 8478)
+   defining Unicode char U+2120 (decimal 8480)
+   defining Unicode char U+2122 (decimal 8482)
+   defining Unicode char U+2126 (decimal 8486)
+   defining Unicode char U+2127 (decimal 8487)
+   defining Unicode char U+212E (decimal 8494)
+   defining Unicode char U+2190 (decimal 8592)
+   defining Unicode char U+2191 (decimal 8593)
+   defining Unicode char U+2192 (decimal 8594)
+   defining Unicode char U+2193 (decimal 8595)
+   defining Unicode char U+2329 (decimal 9001)
+   defining Unicode char U+232A (decimal 9002)
+   defining Unicode char U+2422 (decimal 9250)
+   defining Unicode char U+25E6 (decimal 9702)
+   defining Unicode char U+25EF (decimal 9711)
+   defining Unicode char U+266A (decimal 9834)
+   defining Unicode char U+FEFF (decimal 65279)
+))
 LaTeX Info: Redefining \oldstylenums on input line 334.
 Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
 Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
@@ -658,10 +509,9 @@ Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
 Package: pdftexcmds 2018/09/10 v0.29 Utility functions of pdfTeX for LuaTeX (HO
 )
 Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: pdfTeX >= 1.30 not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode not found.
+Package pdftexcmds Info: \pdfdraftmode found.
 Package: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
 Package: bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers (HO
 )
@@ -685,15 +535,17 @@ Package: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
 .sty
 Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 )
-\@linkdim=\dimen177
-\Hy@linkcounter=\count287
-\Hy@pagecounter=\count288
+\@linkdim=\dimen142
+\Hy@linkcounter=\count116
+\Hy@pagecounter=\count117
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.de
 f
 File: pd1enc.def 2018/11/30 v6.88e Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
 )
-\Hy@SavedSpaceFactor=\count289
+\Hy@SavedSpaceFactor=\count118
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/latexconfig/hyperr
 ef.cfg
@@ -706,16 +558,16 @@ Package hyperref Info: Plain pages OFF on input line 4534.
 Package hyperref Info: Backreferencing OFF on input line 4539.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4772.
-\c@Hy@tempcnt=\count290
+\c@Hy@tempcnt=\count119
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip17
+\Urlmuskip=\muskip11
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 5125.
-\XeTeXLinkMargin=\dimen178
-\Fld@menulength=\count291
-\Field@Width=\dimen179
-\Fld@charsize=\dimen180
+\XeTeXLinkMargin=\dimen143
+\Fld@menulength=\count120
+\Field@Width=\dimen144
+\Fld@charsize=\dimen145
 Package hyperref Info: Hyper figures OFF on input line 6380.
 Package hyperref Info: Link nesting OFF on input line 6385.
 Package hyperref Info: Hyper index ON on input line 6388.
@@ -725,29 +577,17 @@ Package hyperref Info: Link coloring with OCG OFF on input line 6405.
 Package hyperref Info: PDF/A mode OFF on input line 6410.
 LaTeX Info: Redefining \ref on input line 6450.
 LaTeX Info: Redefining \pageref on input line 6454.
-\Hy@abspage=\count292
-\c@Item=\count293
-\c@Hfootnote=\count294
+\Hy@abspage=\count121
+\c@Item=\count122
+\c@Hfootnote=\count123
 )
-Package hyperref Info: Driver (autodetected): hxetex.
+Package hyperref Info: Driver (autodetected): hpdftex.
 
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hxetex.de
-f
-File: hxetex.def 2018/11/30 v6.88e Hyperref driver for XeTeX
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2018/11/30 v6.88e Hyperref: PDF Unicode definition (HO)
-)
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/oberdiek/stringe
-nc.sty
-Package: stringenc 2016/05/16 v1.11 Convert strings between diff. encodings (HO
-)
-)
-\pdfm@box=\box50
-\c@Hy@AnnotLevel=\count295
-\HyField@AnnotCount=\count296
-\Fld@listcount=\count297
-\c@bookmark@seq@number=\count298
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.d
+ef
+File: hpdftex.def 2018/11/30 v6.88e Hyperref driver for pdfTeX
+\Fld@listcount=\count124
+\c@bookmark@seq@number=\count125
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/oberdiek/rerunfile
 check.sty
@@ -755,17 +595,45 @@ Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 82.
 )
-\Hy@SectionHShift=\skip74
+\Hy@SectionHShift=\skip68
 )
 Package hyperref Info: Option `unicode' set `true' on input line 30.
 
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/oberdiek/se-asci
-i-print.def
-File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
-
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2018/11/30 v6.88e Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
 )
 Package hyperref Info: Option `breaklinks' set `true' on input line 30.
 
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color
+.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 147.
+)
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.
+sty
+Package: fancyvrb 2019/01/15
+Style option: `fancyvrb' v3.2a <2019/01/15> (tvz)
+\FV@CodeLineNo=\count126
+\FV@InFile=\read1
+\FV@TabBox=\box31
+\c@FancyVerbLine=\count127
+\FV@StepNumber=\count128
+\FV@OutFile=\write5
+) (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/framed/framed.st
+y
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip69
+\fb@frw=\dimen146
+\fb@frh=\dimen147
+\FrameRule=\dimen148
+\FrameSep=\dimen149
+)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/oberdiek/grffile.s
 ty
 Package: grffile 2017/06/30 v1.18 Extended file name support for graphics (HO)
@@ -777,12 +645,12 @@ Package grffile Info: \Gin@ii of package `graphicx' fixed on input line 494.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/csquotes/csquotes.
 sty
 Package: csquotes 2018/04/13 v5.2d context-sensitive quotations (JAW)
-\csq@reset=\count299
-\csq@gtype=\count300
-\csq@glevel=\count301
-\csq@qlevel=\count302
-\csq@maxlvl=\count303
-\csq@tshold=\count304
+\csq@reset=\count129
+\csq@gtype=\count130
+\csq@glevel=\count131
+\csq@qlevel=\count132
+\csq@maxlvl=\count133
+\csq@tshold=\count134
 \csq@ltx@everypar=\toks24
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/csquotes/csquotes.
@@ -805,20 +673,20 @@ LaTeX Font Info:    Overwriting symbol font `ugrf@m' in version `bold'
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.st
 y
 Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
-\LTleft=\skip75
-\LTright=\skip76
-\LTpre=\skip77
-\LTpost=\skip78
-\LTchunksize=\count305
-\LTcapwidth=\dimen181
-\LT@head=\box51
-\LT@firsthead=\box52
-\LT@foot=\box53
-\LT@lastfoot=\box54
-\LT@cols=\count306
-\LT@rows=\count307
-\c@LT@tables=\count308
-\c@LT@chunks=\count309
+\LTleft=\skip70
+\LTright=\skip71
+\LTpre=\skip72
+\LTpost=\skip73
+\LTchunksize=\count135
+\LTcapwidth=\dimen150
+\LT@head=\box32
+\LT@firsthead=\box33
+\LT@foot=\box34
+\LT@lastfoot=\box35
+\LT@cols=\count136
+\LT@rows=\count137
+\c@LT@tables=\count138
+\c@LT@chunks=\count139
 \LT@p@ftn=\toks25
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/lscape.st
@@ -828,29 +696,29 @@ Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/multirow/multirow.
 sty
 Package: multirow 2019/01/01 v2.4 Span multiple rows of a table
-\multirow@colwidth=\skip79
-\multirow@cntb=\count310
-\multirow@dima=\skip80
-\bigstrutjot=\dimen182
+\multirow@colwidth=\skip74
+\multirow@cntb=\count140
+\multirow@dima=\skip75
+\bigstrutjot=\dimen151
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/tabularx.sty
 Package: tabularx 2016/02/03 v2.11b `tabularx' package (DPC)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
 Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
-\col@sep=\dimen183
-\ar@mcellbox=\box55
-\extrarowheight=\dimen184
+\col@sep=\dimen152
+\ar@mcellbox=\box36
+\extrarowheight=\dimen153
 \NC@list=\toks26
-\extratabsurround=\skip81
-\backup@length=\skip82
-\ar@cellbox=\box56
+\extratabsurround=\skip76
+\backup@length=\skip77
+\ar@cellbox=\box37
 )
-\TX@col@width=\dimen185
-\TX@old@table=\dimen186
-\TX@old@col=\dimen187
-\TX@target=\dimen188
-\TX@delta=\dimen189
-\TX@cols=\count311
+\TX@col@width=\dimen154
+\TX@old@table=\dimen155
+\TX@old@col=\dimen156
+\TX@target=\dimen157
+\TX@delta=\dimen158
+\TX@cols=\count141
 \TX@ftn=\toks27
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttablex/th
@@ -865,26 +733,25 @@ Package: environ 2014/05/04 v0.3 A new way to define environments
 ces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
-\TPTL@width=\skip83
+\TPTL@width=\skip78
 )
-\longtablewidth=\skip84
+\longtablewidth=\skip79
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lineno/lineno.sty
 Package: lineno 2005/11/02 line numbers on paragraphs v4.41
-Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-\linenopenalty=\count312
+\linenopenalty=\count142
 \output=\toks28
-\linenoprevgraf=\count313
-\linenumbersep=\dimen190
-\linenumberwidth=\dimen191
-\c@linenumber=\count314
-\c@pagewiselinenumber=\count315
-\c@LN@truepage=\count316
-\c@internallinenumber=\count317
-\c@internallinenumbers=\count318
-\quotelinenumbersep=\dimen192
-\bframerule=\dimen193
-\bframesep=\dimen194
-\bframebox=\box57
+\linenoprevgraf=\count143
+\linenumbersep=\dimen159
+\linenumberwidth=\dimen160
+\c@linenumber=\count144
+\c@pagewiselinenumber=\count145
+\c@LN@truepage=\count146
+\c@internallinenumber=\count147
+\c@internallinenumbers=\count148
+\quotelinenumbersep=\dimen161
+\bframerule=\dimen162
+\bframesep=\dimen163
+\bframebox=\box38
 
 LaTeX Warning: Command \@parboxrestore  has changed.
                Check if current package is valid.
@@ -896,35 +763,37 @@ Package csquotes Info: ... none found.
 (./Notebook_Pos_Self_Salience_APA.aux)
 \openout1 = `Notebook_Pos_Self_Salience_APA.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 129.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 129.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 169.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 169.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 169.
+LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 169.
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 *geometry* driver: auto-detecting
-*geometry* detected driver: xetex
+*geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
-* driver: xetex
+* driver: pdftex
 * paper: <default>
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
@@ -956,6 +825,26 @@ LaTeX Font Info:    ... okay on input line 129.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/oberdiek/epstopdf-
+base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/oberdiek/grfext.st
+y
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/latexconfig/epstop
+df-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/apa6/config/APAame
 rican.txt
 File: APAamerican.txt 2012/02/23 v1.25 apa6 configuration for American English
@@ -969,8 +858,8 @@ sty
 Package: ltcaption 2018/08/26 v1.4-95 longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
-\AtBeginShipoutBox=\box58
-Package hyperref Info: Link coloring OFF on input line 129.
+\AtBeginShipoutBox=\box39
+Package hyperref Info: Link coloring OFF on input line 169.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.s
 ty
@@ -980,83 +869,122 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 estring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count319
+\c@section@level=\count149
 )
-LaTeX Info: Redefining \ref on input line 129.
-LaTeX Info: Redefining \pageref on input line 129.
-LaTeX Info: Redefining \nameref on input line 129.
+LaTeX Info: Redefining \ref on input line 169.
+LaTeX Info: Redefining \pageref on input line 169.
+LaTeX Info: Redefining \nameref on input line 169.
 (./Notebook_Pos_Self_Salience_APA.out) (./Notebook_Pos_Self_Salience_APA.out)
-\@outlinefile=\write5
-\openout5 = `Notebook_Pos_Self_Salience_APA.out'.
+\@outlinefile=\write6
+\openout6 = `Notebook_Pos_Self_Salience_APA.out'.
 
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 131.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 171.
+
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmss.fd
+File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 171.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 131.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 171.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 131
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 171
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 131
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 171
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 131.
+(Font)              <12> on input line 171.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 131.
+(Font)              <8> on input line 171.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 131.
-LaTeX Font Info:    Try loading font information for U+msa on input line 131.
+(Font)              <6> on input line 171.
+LaTeX Font Info:    Try loading font information for U+msa on input line 171.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 131.
+LaTeX Font Info:    Try loading font information for U+msb on input line 171.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+) [1{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/p
+dftex.map}
 
-] [2] [3] [4]
-Missing character: There is no ≥ in font [lmroman12-regular]:mapping=tex-text;!
+] [2]
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 185.
 
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+) [3] [4]
 Underfull \vbox (badness 3977) has occurred while \output is active []
 
-[5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[6]
+[5] [6]
 \openout3 = `Notebook_Pos_Self_Salience_APA.ttt'.
 
-(Notebook_Pos_Self_Salience_APA.ttt) [7] [8] [9] [10] AED endfloat: Processing 
-end Figures and Tables [11] (./Notebook_Pos_Self_Salience_APA.ttt)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 321.
-[12
+(Notebook_Pos_Self_Salience_APA.ttt) [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[8]
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 323.
+
+(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 325.
+[9] [10] [11] [12] [13] AED endfloat: Processing end Figures and Tables [14] (.
+/Notebook_Pos_Self_Salience_APA.ttt)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 517.
+[15
 
 
-]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 321.
+] [16]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 517.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 321.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 321.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 517.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 517.
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 306B51B3F0C5D1D8EAB1B6574622E705.
+(rerunfilecheck)             Checksum: 11F1FA7223A767FA6102129A171B0EB0;2409.
  ) 
 Here is how much of TeX's memory you used:
- 25192 strings out of 494894
- 468505 string characters out of 6175663
- 569503 words of memory out of 5000000
- 28868 multiletter control sequences out of 15000+600000
- 572316 words of font info for 63 fonts, out of 8000000 for 9000
+ 14151 strings out of 494553
+ 208366 string characters out of 6175971
+ 292382 words of memory out of 5000000
+ 17491 multiletter control sequences out of 15000+600000
+ 61613 words of font info for 57 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 46i,12n,61p,2053b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,13n,47p,2428b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
+{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.e
+nc}{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mat
+hit.enc}{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/l
+m-rm.enc}{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/
+lm-mathsy.enc}{c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvip
+s/lm/lm-ts1.enc}<c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/
+public/lm/lmbx12.pfb><c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fonts/t
+ype1/public/lm/lmmi12.pfb><c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/fo
+nts/type1/public/lm/lmmi8.pfb><c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dis
+t/fonts/type1/public/lm/lmr12.pfb><c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf
+-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/hcp47/AppData/Roaming/TinyTeX/te
+xmf-dist/fonts/type1/public/lm/lmri12.pfb><c:/Users/hcp47/AppData/Roaming/TinyT
+eX/texmf-dist/fonts/type1/public/lm/lmss8.pfb><c:/Users/hcp47/AppData/Roaming/T
+inyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/hcp47/AppData/Roam
+ing/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/hcp47/AppData
+/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/Users/hcp47/Ap
+pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on Notebook_Pos_Self_Salience_APA.pdf (16 pages, 230031 bytes).
+PDF statistics:
+ 316 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 92 named destinations out of 1000 (max. 500000)
+ 145 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (12 pages).
