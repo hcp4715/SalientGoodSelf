@@ -111,6 +111,107 @@ To assess the individual difference, we explored correlation between self-report
 # Experiment 1a
 
 ```{r loadingData_1a,echo=FALSE,results='hide'}
+
+## record from the meta-data:
+# One participant's ID changed from 26 to 261, because of duplication of subject id.
+# participant No. 14 finished two sessions of the experiment, only the first session were included in the analysis
+# # there are 4 foreign students, we didn't exclude them:
+# foreignStdID <- c(24,29,30,33)
+
+# data collected in Tsinghua U
+df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2014.csv", header = TRUE,
+                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
+        dplyr::mutate(Site = "THU") 
+
+# data collected in Wenzhou U
+df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2017.csv",header = TRUE,
+                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+        dplyr::mutate(Site = "WZU")
+
+# combine data and clean
+df1a   <- rbind(df1a_1,df1a_2) %>%
+        dplyr::rename(ACC = Target.ACC,           # rename columns
+                      RT  = Target.RT,
+                      CRESP = Target.CRESP,
+                      BlockNo = BlockList.Sample,
+                      TrialNo = SubTrial,
+                      RESP = Target.RESP,
+                      Matchness = YesNoResp,
+                      Valence = Shape) %>%
+        dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
+                      Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                      Age = ifelse(Age == 0, NA, Age),
+                      Subject = factor(Subject),
+                      Site = factor(Site))  # if the min age is 0, that age is missing
+
+rm(df1a_1,df1a_2)
+
+df1a.T.basic     <- df1a %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+  
+# distinguish between practice and formal data
+df1a.subj_P <- df1a %>%
+  dplyr::filter(is.na(BlockNo)) %>%
+  dplyr::distinct(Subject)
+
+#[is.na(df1a$BlockList.Sample),]            # data from practice
+df1a.subj_T <- df1a %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::distinct(Subject)
+
+#[complete.cases(df1a$BlockList.Sample),]   # data from test
+
+# number of participant who didn't finished the experiment
+nQuit <- length(df1a.subj_P) - length(df1a.subj_T)
+
+#.T[df1a.T$RT <= 200 & df1a.T$ACC == 1,]
+#df1a.excld.trial.r <- nrow(df1a.excld.trial)/nrow(df1a.T) # ratio of excluded trials in all triasl.
+
+# caculate the overall accuracy for each subject
+df1a.excld.sub <-  df1a %>%
+  dplyr::group_by(Subject) %>%
+  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%
+  dplyr::select(Subject)
+
+# exlucde the participants with less than 60% overall accuracy
+#df1a.valid <- df1a %>%
+#  dplyr::filter(complete.cases(BlockNo)) %>%
+#  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject))   # exclude the invalid subjects
+
+# The rate of the correct response with less than 200 ms reaction time
+df1a.invalid_trial_rate   <- df1a %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
+
+df1a.v   <- df1a %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))
+
+df1a.v.basic     <- df1a.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+
 df1a_dprime_long <- read.csv('.\\exp1a\\exp1a_dprime_long.csv') %>%
   dplyr::rename(Valence = Morality) %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good", "Neutral", "Bad")))
@@ -122,7 +223,7 @@ df1a_rt_acc_long <- read.csv('.\\exp1a\\exp1a_rt_acc_long.csv') %>%
   #dplyr::mutate(Match = ifelse(Match == 'Match', 'match','mismatch'))
 ```
 ## Participants
-57 college students (38 female, age = 20.75 $\pm$ 2.54 years) participated. 39 of them were recruited from Tsinghua University community in 2014; 18 were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participant’s data were excluded from analysis because nearly random level of accuracy (4 participants from the Tsinghua sample and 2 from the Wenzhou sample), leaving 51 participants (34 female, age = 20.72 $\pm$ 2.44 years).
+57 college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participant’s data were excluded from analysis because nearly random level of accuracy (4 participants from the Tsinghua sample and 2 from the Wenzhou sample), leaving 51 participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd`  years).
 
 ## Results
 ### Analaysis of d prime.

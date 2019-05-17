@@ -14,7 +14,8 @@ source('Initial_exp1a.r')
 curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp1a"
 
-df1a_1 <- read.csv("rawdata_behav_exp1a_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
+df1a_1 <- read.csv("rawdata_behav_exp1a_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+        dplyr::mutate(Site = "THU")
 length(unique(df1a_1$Subject))
 
 ## record from the meta-data:
@@ -23,33 +24,30 @@ length(unique(df1a_1$Subject))
 # # there are 4 foreign students, we didn't exclude them:
 # foreignStdID <- c(24,29,30,33)
 
-df1a_2 <- read.csv("rawdata_behav_exp1a_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
+df1a_2 <- read.csv("rawdata_behav_exp1a_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+        dplyr::mutate(Site = "WZU")
 length(unique(df1a_2$Subject))
-df1a   <- rbind(df1a_1,df1a_2)
+
+df1a   <- rbind(df1a_1,df1a_2) %>%
+        dplyr::rename(ACC = Target.ACC,           # rename columns
+                      RT  = Target.RT,
+                      CRESP = Target.CRESP,
+                      BlockNo = BlockList.Sample,
+                      TrialNo = SubTrial,
+                      RESP = Target.RESP,
+                      Matchness = YesNoResp,
+                      Valence = Shape) %>%
+        dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
+                      Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                      Age = ifelse(Age == 0, NA, Age),
+                      Subject = factor(Subject),
+                      Site = factor(Site))  # if the min age is 0, that age is missing
 
 rm(df1a_1,df1a_2)
 
-# edit the column names ####
-# rename colnames 
-colnames(df1a)[colnames(df1a)=="Target.ACC"] <- "ACC"
-colnames(df1a)[colnames(df1a)=="Target.RT"]  <- "RT"
-colnames(df1a)[colnames(df1a)=="YesNoResp"]  <- "Match"
-colnames(df1a)[colnames(df1a)=="Shape"]      <- "Morality"
-
-# renames independent variables
-#df1a$Morality[df1a$Morality == "Good"]   <- "Moral"
-df1a$Morality[df1a$Morality == "Normal"] <- "Neutral"
-# df1a$Morality[df1a$Morality == "Bad"]    <- "Immoral"
-df1a$Match[df1a$Match == "Yes"]  <- "Match"
-df1a$Match[df1a$Match == "No"]   <- "Mismatch"
+skimr::skim(df1a)
 
 ## Basic information of the data ####
-# if the min age is 0, that age is missing
-if (min(df1a$Age) == 0){
-        df1a$Age[df1a$Age == 0] <- NA
-        
-}
-
 df1a.T.basic     <- df1a[!duplicated(df1a$Subject), 1:4]
 df1a.num.subj    <- nrow(df1a.T.basic)                         # N = 57
 df1a.numT.female <- sum(df1a.T.basic$Sex == 'female');         # N female = 39
