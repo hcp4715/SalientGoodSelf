@@ -18,7 +18,7 @@ pkgTest <- function(x)
 
 pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "reshape2","afex", 'emmeans', 'multcomp', 
                 "BayesFactor","psych","corrplot",'plyr','ggstatsplot',"readr", "bootES","MBESS",
-                "tidyr","Hmisc","RColorBrewer"))
+                "tidyr","Hmisc","RColorBrewer",'mosaic'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';

@@ -151,7 +151,6 @@ df5b_d1.acc_w <- df5b_d1.acc_l %>%
 
 # one problem: how to code the trials without response??
 
-
 df5b_d1.V.dprime_l <- df5b_d1.V %>%
   dplyr::mutate(sdt = derivedFactor("hit" = (ACC ==1 & Match == "match"),    # code as hit
                                     "CR" = (ACC ==1 & Match == "mismatch"),  # code as correct reject

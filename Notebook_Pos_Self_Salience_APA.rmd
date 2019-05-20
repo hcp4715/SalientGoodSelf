@@ -175,22 +175,18 @@ nQuit <- length(df1a.subj_P) - length(df1a.subj_T)
 #.T[df1a.T$RT <= 200 & df1a.T$ACC == 1,]
 #df1a.excld.trial.r <- nrow(df1a.excld.trial)/nrow(df1a.T) # ratio of excluded trials in all triasl.
 
-# caculate the overall accuracy for each subject
 df1a.excld.sub <-  df1a %>%
   dplyr::group_by(Subject) %>%
+  #dplyr::filter(RT > 200)  %>%                       # only use > 200 ms response (this standard will keep more participants)
   dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
-  dplyr::summarise(N = length(ACC),
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
-  dplyr::filter(ACC < 0.6) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
   dplyr::select(Subject)
 
-# exlucde the participants with less than 60% overall accuracy
-#df1a.valid <- df1a %>%
-#  dplyr::filter(complete.cases(BlockNo)) %>%
-#  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject))   # exclude the invalid subjects
 
-# The rate of the correct response with less than 200 ms reaction time
+# The rate of excluded trials in valid data
 df1a.invalid_trial_rate   <- df1a %>%
   dplyr::filter(complete.cases(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
@@ -199,7 +195,7 @@ df1a.invalid_trial_rate   <- df1a %>%
 df1a.v   <- df1a %>%
   dplyr::filter(complete.cases(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-  dplyr::filter(!(RT <= 200 & ACC == 1))
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df1a.v.basic     <- df1a.v %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -212,30 +208,57 @@ df1a.v.basic     <- df1a.v %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
 
-df1a_dprime_long <- read.csv('.\\exp1a\\exp1a_dprime_long.csv') %>%
-  dplyr::rename(Valence = Morality) %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good", "Neutral", "Bad")))
+#df1a_dprime_long <- read.csv('.\\exp1a\\exp1a_dprime_long.csv') %>%
+#  dplyr::rename(Valence = Morality) %>%
+#  dplyr::mutate(Valence = factor(Valence, levels = c("Good", "Neutral", "Bad")))
 
-df1a_rt_acc_long <- read.csv('.\\exp1a\\exp1a_rt_acc_long.csv') %>%
-  dplyr::rename(Valence = Morality) %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good", "Neutral", "Bad"))) %>%
-  dplyr::rename(Matchness = Match) #%>%
+#df1a_rt_acc_long <- read.csv('.\\exp1a\\exp1a_rt_acc_long.csv') %>%
+#  dplyr::rename(Valence = Morality) %>%
+#  dplyr::mutate(Valence = factor(Valence, levels = c("Good", "Neutral", "Bad"))) %>%
+#  dplyr::rename(Matchness = Match) #%>%
   #dplyr::mutate(Match = ifelse(Match == 'Match', 'match','mismatch'))
 ```
 ## Participants
-57 college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participant’s data were excluded from analysis because nearly random level of accuracy (4 participants from the Tsinghua sample and 2 from the Wenzhou sample), leaving 51 participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd`  years).
+`r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participant’s data were excluded from analysis because nearly random level of accuracy (4 participants from the Tsinghua sample and 2 from the Wenzhou sample), leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
 
 ## Results
 ### Analaysis of d prime.
 We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime
+
+df1a.v.dprime_l <- df1a.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
+                FAR  = FA/(FA+CR)) %>%                                       # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+### Long to wide
+df1a.v.dprime_w <- df1a.v.dprime_l %>%
+  #tidyr::unite(col = "Cond",c("Valence"),sep = "_", remove = T) %>%  # combine two factors to condition
+  tidyr::spread(key = Valence, value = dprime) %>%                                   # long to wide
+  dplyr::rename_at(vars(-Site,-Subject,-Age,-Sex),function(x) paste0("d_",x))           # add prefix to certain conditions
+
+
 # anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a_dprime_long,  # using afex's function 
+df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
 
 # use LMM, random intercept for each participant
 df1a_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
-                          df1a_dprime_long,
+                          df1a.v.dprime_l,
                           method = "S",
                           control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
@@ -258,18 +281,26 @@ We further examined the effect of valence.
 posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
 pairs(posthoc_1a_d)
 ```
+The Good condition (2.23 $\pm$ 0.14) is great than Netural condition (2.05 $\pm$ 0.16, t(45) = 1.67, p = 0.226) and bad condition (1.87 $\pm$ 1.4, t(45) = 3.07, p = 0.01, Cohen'd = 0.36). This is no-significant difference between neutral and bad conidition, t(45) = 1.81, p = 1.77.
+
 
 ### Analaysis of reaction time.
 We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA:
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
-df1a_RT_anova <- afex::aov_ez('Subject','RT',df1a_rt_acc_long,     # using afex's function 
+df1a.v.rt_m <- df1a.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
 df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
 # use LMM, random intercept for each participant
-df1a_RT_mixed <- afex::mixed(RT ~ Matchness*Valence +(1|Subject), 
-                          df1a_rt_acc_long,
+df1a_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
+                          df1a.v.rt_m,
                           method = "S",
                           control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
