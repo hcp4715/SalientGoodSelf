@@ -3,7 +3,7 @@
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-2}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-1}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1$} & \multicolumn{1}{c}{$\mathit{df}_2$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -23,7 +23,7 @@ Valence & 5.51 & 2 & 90 & 0.26 & .006 & .020\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-6}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-5}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1$} & \multicolumn{1}{c}{$\mathit{df}_2$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -45,7 +45,7 @@ Identity $\times$ Morality & 4.12 & 2 & 116 & 0.14 & .019 & .004\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-8}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-7}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -67,7 +67,7 @@ Identity $\times$ Morality & 4.41 & 1.9 & 110.18 & 465.91 & .016 & .003\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-10}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-9}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\

@@ -22,9 +22,11 @@ affiliation:
     institution   : "University of Bath, Bath, UK"
 
 authornote: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
+  Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Germany Resilience Center, 55131 Mainz, Germany.
+  Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+  Jie Sui, Department of Psychology, the University of Bath, Bath, UK.
 
-  Enter author note here.
+  Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
   One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
@@ -70,9 +72,7 @@ source('Initial.r')
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
-```
 
-```{r, include=FALSE}
 options(tinytex.verbose = F) # debug the tex
 ```
 
@@ -398,33 +398,26 @@ df1b.T.basic     <- df1b %>%
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
 # distinguish between practice and formal data
-df1b.subj_P <- df1b %>%
+df1b.subj_P <- df1b %>%                      # subjet for practice
   dplyr::filter(is.na(BlockNo)) %>%
   dplyr::distinct(Subject)
 
-#[is.na(df1a$BlockList.Sample),]            # data from practice
-df1b.subj_T <- df1b %>%
+df1b.subj_T <- df1b %>%                       # subjects in formal exp
   dplyr::filter(complete.cases(BlockNo)) %>%
   dplyr::distinct(Subject)
-
-#[complete.cases(df1a$BlockList.Sample),]   # data from test
 
 # number of participant who didn't finished the experiment
 nQuit <- length(df1b.subj_P) - length(df1b.subj_T)
 
-#.T[df1a.T$RT <= 200 & df1a.T$ACC == 1,]
-#df1a.excld.trial.r <- nrow(df1a.excld.trial)/nrow(df1a.T) # ratio of excluded trials in all triasl.
-
+# participants should be excluded
 df1b.excld.sub <-  df1b %>%
   dplyr::group_by(Subject) %>%
-  #dplyr::filter(RT > 200)  %>%                       # only use > 200 ms response (this standard will keep more participants)
   dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
   dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
   dplyr::select(Subject)
-
 
 # The rate of excluded trials in valid data
 df1b.invalid_trial_rate   <- df1b %>%
@@ -454,24 +447,19 @@ df1b.v.basic     <- df1b.v %>%
 
 ### Stimuli and Tasks
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
-Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see Figure 1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
-
-Table 1b-1. Ratings of familarity, frequencies and concreteness for different labels that share similar meanings (n = 35).
-Label	Familiarity	frequencies	concreteness
-HaoRen	6.31 (1.01)	5.85 (1.24)	4.71 (1.83)
-HuaiRen	6 (1.44)	4.68 (1.85)	4.51 (1.96)
-ChangRen	5.49 (1.41)	4.4 (1.63)	4.28 (1.88)
-ShanReng	4.89 (1.42)	2.8 (1.6)	4.57 (1.59)
-Eren	5.08 (1.65)	2.69 (1.85)	4.6 (1.59)
+Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
 
 ### Procedure
 For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust senstivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
-## Analysis
+
+## Data Analysis
 Data was analyzed as in experiment 1a. 
 
 ## Results
+We replicated the advantage of positive condition in experiment 1a. 
+
 ### Analaysis of d prime.
-We conducted a single factor (Valence: good, neutral, bad) repeated measure ANOVA:
+
 ```{r 1b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # calculate d prime
 df1b.v.dprime_l <- df1b.v %>%
@@ -497,22 +485,22 @@ df1b.v.dprime_l <- df1b.v %>%
 #  tidyr::spread(key = Valence, value = dprime) %>%                                   # long to wide
 #  dplyr::rename_at(vars(-Site,-Subject,-Age,-Sex),function(x) paste0("d_",x))           # add prefix to certain conditions
 
-
-# anova for d prime with 2*2 design
+# anova for d prime
 df1b_dprime_anova <- afex::aov_ez('Subject','dprime',df1b.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
-
 # use LMM, random intercept for each participant
-df1b_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
-                          df1b.v.dprime_l,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+#df1b_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
+#                          df1b.v.dprime_l,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
 df1b_dprime_anova_apa <- df1b_dprime_anova$aov %>% papaja::apa_print()
-#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
-```
-We found the effect of Valence (`r df1b_dprime_anova_apa$full$Valence`).
 
+posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_1b_d)
+
+```
+There was evidence for the main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.9 $\pm$ 0.104) was with greater *d* prime than Netural condition (1.49 $\pm$ 0.1, *t*(49) = 5.583, *p* < 0.001, Cohen's *d* = 0.415). We also found that the Bad-Person condition (1.71 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(49) = -3.106, *p* = 0.008, Cohen's *d* = -0.229). There was no-significant difference between Good and bad conidition, *t*(49) = 2.05, *p* = 0.11.
 
 ```{r results='asis', echo = F}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
@@ -522,13 +510,233 @@ We found the effect of Valence (`r df1b_dprime_anova_apa$full$Valence`).
 #)
 ```
 
-We further examined the effect of valence. 
+### Analaysis of reaction time.
+The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df1b.v.rt_m <- df1b.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Valence'))
+df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print()
+
+# use LMM, random intercept for each participant
+df1b_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
+                          df1b.v.rt_m,
+                          method = "S",
+                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+```
+We found intercation between Matchness and Valence (`r df1b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a.
+
+```{r 1b_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df1b.v.rt_m1 <- df1b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m1,     # using afex's function 
+                                  within = c('Valence'))
+df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print()
+
+df1b.v.rt_m2 <- df1b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df1b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m2,     # using afex's function 
+                                  within = c('Valence'))
+df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print()
+posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each valence for both self and other condition
+# pairs(posthoc_1b_rt)
+
+```
+For matched trials, we found the effect of valence `r df1b_RT_anova_m_apa$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df1b_RT_anova_nm_apa$full$Valence`).
+
+Post-hoc *t*-tests revealed that shapes associated with Good Person (686 $\pm$ 8.97) were responded faster than Neutral-Person (743 $\pm$ 9.66), (*t*(49) = -8.379, *p* < 0.001) and Bad Person (730 $\pm$ 9.11), *t*(49) = -5.632, *p* < 0.0001). While there was no significant differences between Neutral and Bad-Person condition (*t*(49) = 1.83, *p* = 0.171).
+
+## Discussion
+These results confirmed the facilitation effect of positive moral valence on the perceptual matching task. This pattern of results mimic prior results demonstrating self-bias effect on perceptual matching (Sui et al., 2012) and in line with previous studies that indirect learning of other’s moral reputation do have influence on our subsequence behavior (Fouragnan et al., 2013). 
+
+
+# Experiment 1c
+In this study, we further control the valence of words using in our experiment. Instead of using label with moral valence, we used valence-neutral names in China. Participant first learn behaviors of the different person, then, they associate the names and shapes. And then they perform a name-shape matching task.
+
+## Method
+
+```{r loadingData_1c,echo=FALSE,results='hide'}
+# data collected in Tsinghua U
+df1c <- read.csv(".\\exp1c\\rawdata_behav_exp1c_2014.csv", header = TRUE,
+                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
+  dplyr::select(ï..Subject,Age,Sex,TrialList1.Sample,BlockList.Sample,
+                 Shape,YesNoResp,CorrectAnswer,                         # select necessary columns
+                 Target1.ACC,Target1.RESP, Target1.RT) %>%
+  dplyr::rename(Subject = ï..Subject, 
+                BlockNo = BlockList.Sample,
+                TrialNo = TrialList1.Sample,
+                ACC = Target1.ACC,                         # rename columns
+                RT = Target1.RT, RESP =Target1.RESP,
+                Matchness = YesNoResp, Valence = Shape) %>%
+  dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),    # change value
+                Valence = factor(Valence, levels=c("Good", "Neutral","Bad")),
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Matchness = factor(Matchness, levels=c("Match", "Mismatch"))) %>%
+  dplyr::mutate(Site = "THU")
+#length(unique(df1c$Subject))
+
+# distinguish between practice and formal data
+df1c.subj_P <- df1c %>%                      # subjet for practice
+  dplyr::filter(is.na(BlockNo)) %>%
+  dplyr::distinct(Subject)
+
+df1c.subj_T <- df1c %>%                       # subjects in formal exp
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::distinct(Subject)
+
+# number of participant who didn't finished the experiment
+nQuit <- length(df1c.subj_P) - length(df1c.subj_T)
+
+df1c.T.basic     <- df1c %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+
+# participants should be excluded
+df1c.excld.sub <-  df1c %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::group_by(Subject) %>%
+  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+  dplyr::select(Subject)
+
+# The rate of excluded trials in valid data
+df1c.invalid_trial_rate   <- df1c %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
+
+df1c.v   <- df1c %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df1c.v.basic     <- df1c.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+```
+
+### Participants
+`r df1c.T.basic$N` college students (`r df1c.T.basic$Nf` female, age = `r df1c.T.basic$Age_mean` $\pm$ `r df1c.T.basic$Age_sd` years) participated. All of them were recruited from Tsinghua University community in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. No participant was excluded because they overall accuracy were above 0.6.
+
+### Stimuli and Tasks
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
+Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions *t*(33) = 13.9, *p* < .001 (See supplementary materials).
+
+### Procedure
+After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
+In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95% accuracy before preceding to matching task.
+The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing util they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
+
+## Data Analysis
+Data was analyzed as in experiment 1a. 
+
+## Results
+
+```{r 1c_rt_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime
+df1c.v.dprime_l <- df1c.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
+                FAR  = FA/(FA+CR)) %>%                                       # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+### Long to wide
+#df1b.v.dprime_w <- df1b.v.dprime_l %>%
+#  tidyr::spread(key = Valence, value = dprime) %>%                                   # long to wide
+#  dplyr::rename_at(vars(-Site,-Subject,-Age,-Sex),function(x) paste0("d_",x))           # add prefix to certain conditions
+
+# anova for d prime
+df1c_dprime_anova <- afex::aov_ez('Subject','dprime',df1c.v.dprime_l,  # using afex's function 
+                                  within = c('Valence'))
+# use LMM, random intercept for each participant
+#df1b_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
+#                          df1b.v.dprime_l,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+
+df1c_dprime_anova_apa <- df1c_dprime_anova$aov %>% papaja::apa_print()
+
+posthoc_1c_d <- emmeans::emmeans(df1c_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_1c_d)
+
+# anova for RT
+df1c.v.rt_m <- df1c.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df1c_RT_anova <- afex::aov_ez('Subject','RT_m',df1c.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Valence'))
+df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print()
+
+# use LMM, random intercept for each participant
+df1c_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
+                          df1c.v.rt_m,
+                          method = "S",
+                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+```
+We didn't found effect of valence on *d* prime, `r df1c_dprime_anova_apa$full$Valence`. Also no effect of valence on RT (`r df1c_RT_anova_apa$full$Valence`) or interaction between valence and matchness on RT (`r df1c_RT_anova_apa$full$Matchness_Valence`).
 
 ```{r results='asis', echo = F}
-posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
-pairs(posthoc_1b_d)
+#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+#apa_table(df1b_dprime_anova_apa$table
+#  , caption = "A really beautiful ANOVA table."
+#  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
+#)
 ```
-The Good condition (1.9 $\pm$ 0.104) is great than Netural condition (1.49 $\pm$ 0.1, t(49) = 5.583, p < 0.001, Cohen's d = 0.415), Neutral and bad condition (1.71 $\pm$ 0.11, t(49) = -3.106, p = 0.008, Cohen'd = -0.229). This is no-significant difference between Good and bad conidition, t(49) = 2.05, p = 0.11.
+
+
+## Discussion
+Experiment 1c was not finished, with limited participants, it may not provide a rigirous test for the effect. (move to supplementary?) 
 
 
 # Experiment 4a
@@ -564,7 +772,6 @@ df4a_d_mixed <- afex::mixed(dprime ~ Identity*Morality +(1|Subject),
                           control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
 df4a_dprime_anova_apa <- df4a_dprime_anova$aov %>% papaja::apa_print()
-#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
 We found the effect of identity (`r df4a_dprime_anova_apa$full$Identity`) and its interaction with valence (the effect of gender differed by clinic, (`r df4a_dprime_anova_apa$full$Identity_Morality`). But the effect of valence was not found, `r df4a_dprime_anova_apa$full$Morality`.
 
@@ -682,7 +889,7 @@ We further examined the effect of valence for both self and other.
 ```{r results='asis', echo = TRUE}
 m2 <- emmeans::emmeans(df4b_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
 #pairs(m2)
-summary(as.glht(pairs(m2)), test=adjusted("free"))
+#summary(as.glht(pairs(m2)), test=adjusted("free"))
 
 m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
 #pairs(m3)

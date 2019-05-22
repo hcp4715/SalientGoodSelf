@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  21 MAY 2019 09:02
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  22 MAY 2019 08:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -924,31 +924,31 @@ Package csquotes Info: ... none found.
 (./Notebook_Pos_Self_Salience_APA.aux)
 \openout1 = `Notebook_Pos_Self_Salience_APA.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 169.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 169.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 171.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 171.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 169.
-LaTeX Font Info:    ... okay on input line 169.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 171.
+LaTeX Font Info:    ... okay on input line 171.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -998,7 +998,7 @@ Package: ltcaption 2018/08/26 v1.4-95 longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
 \AtBeginShipoutBox=\box59
-Package hyperref Info: Link coloring OFF on input line 169.
+Package hyperref Info: Link coloring OFF on input line 171.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.s
 ty
@@ -1010,44 +1010,44 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count322
 )
-LaTeX Info: Redefining \ref on input line 169.
-LaTeX Info: Redefining \pageref on input line 169.
-LaTeX Info: Redefining \nameref on input line 169.
+LaTeX Info: Redefining \ref on input line 171.
+LaTeX Info: Redefining \pageref on input line 171.
+LaTeX Info: Redefining \nameref on input line 171.
 (./Notebook_Pos_Self_Salience_APA.out) (./Notebook_Pos_Self_Salience_APA.out)
 \@outlinefile=\write6
 \openout6 = `Notebook_Pos_Self_Salience_APA.out'.
 
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 171.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 173.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 171.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 173.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 171
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 173
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 171
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 173
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 171.
+(Font)              <12> on input line 173.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 171.
+(Font)              <8> on input line 173.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 171.
-LaTeX Font Info:    Try loading font information for U+msa on input line 171.
+(Font)              <6> on input line 173.
+LaTeX Font Info:    Try loading font information for U+msa on input line 173.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 171.
+LaTeX Font Info:    Try loading font information for U+msb on input line 173.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
@@ -1083,31 +1083,37 @@ Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;
 Missing character: There is no 谭 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 永 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 红 in font [lmroman12-regular]:mapping=tex-text;!
-[11] [12] [13]
+[11]
+Underfull \vbox (badness 2293) has occurred while \output is active []
+
+[12] [13] [14] [15]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[16]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 457.
-[14] [15] [16] [17] [18] AED endfloat: Processing end Figures and Tables [19] (
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 501.
+[17] [18] [19] [20] [21] AED endfloat: Processing end Figures and Tables [22] (
 ./Notebook_Pos_Self_Salience_APA.ttt)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 661.
-[20
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 675.
+[23
 
 
-] [21] [22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 661.
+] [24] [25]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 675.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 661.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 661.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 675.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 675.
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 9C230809950CCF982F5E228FF4E42B3F.
+(rerunfilecheck)             Checksum: 56CFB7BDD05A78D5286715FF51276DD0.
  ) 
 Here is how much of TeX's memory you used:
- 25733 strings out of 494894
- 476969 string characters out of 6175663
- 581401 words of memory out of 5000000
- 29391 multiletter control sequences out of 15000+600000
+ 25746 strings out of 494894
+ 477173 string characters out of 6175663
+ 582523 words of memory out of 5000000
+ 29404 multiletter control sequences out of 15000+600000
  572340 words of font info for 66 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,13n,61p,2684b,598s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (22 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (25 pages).
