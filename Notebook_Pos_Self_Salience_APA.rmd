@@ -695,11 +695,6 @@ df1c.v.dprime_l <- df1c.v %>%
 # anova for d prime
 df1c_dprime_anova <- afex::aov_ez('Subject','dprime',df1c.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
-# use LMM, random intercept for each participant
-#df1b_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
-#                          df1b.v.dprime_l,
-#                          method = "S",
-#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
 df1c_dprime_anova_apa <- df1c_dprime_anova$aov %>% papaja::apa_print()
 
@@ -718,26 +713,198 @@ df1c_RT_anova <- afex::aov_ez('Subject','RT_m',df1c.v.rt_m,     # using afex's f
                                   within = c('Matchness','Valence'))
 df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print()
 
-# use LMM, random intercept for each participant
-df1c_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
-                          df1c.v.rt_m,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
 ```
 We didn't found effect of valence on *d* prime, `r df1c_dprime_anova_apa$full$Valence`. Also no effect of valence on RT (`r df1c_RT_anova_apa$full$Valence`) or interaction between valence and matchness on RT (`r df1c_RT_anova_apa$full$Matchness_Valence`).
 
-```{r results='asis', echo = F}
-#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-#apa_table(df1b_dprime_anova_apa$table
-#  , caption = "A really beautiful ANOVA table."
-#  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-#)
+## Discussion
+Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-signficant results. (move this experiment to supplementary?) 
+
+# Experiment 2: Sequential presenting
+Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the assocation between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of postive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect ocured because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
+
+
+## Method
+
+```{r loadingData_2,echo=FALSE,results='hide'}
+# data collected in Tsinghua U
+df2 <- read.csv(".\\exp2\\rawdata_behav_exp2.csv", header = TRUE,
+                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
+  dplyr::mutate(Site = "THU") %>%
+  dplyr::rename(ACC = Target.ACC,           # rename columns
+                RT  = Target.RT,
+                CRESP = Target.CRESP,
+                BlockNo = BlockList.Sample,
+                TrialNo = SubTrial,
+                RESP = Target.RESP,
+                Matchness = YesNoResp,
+                Valence = Shape) %>%
+  dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
+                Subject = factor(Subject))  
+
+df2.T.basic     <- df2 %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+  
+
+# number of participant who practiced but not in the formal experiment
+nQuit <- length(unique(df2$Subject[is.na(df2$BlockNo)])) - length(unique(df2$Subject[!is.na(df2$BlockNo)]))
+
+# participants should be excluded
+df2.excld.sub <-  df2 %>%
+  dplyr::group_by(Subject) %>%
+  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+  dplyr::select(Subject)
+
+# The rate of excluded trials in valid data
+df2.invalid_trial_rate   <- df2 %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
+
+df2.v   <- df2 %>%
+  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df2.v.basic     <- df2.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
 ```
 
+### Participants
+
+`r df2.T.basic$N` participants (`r df2.T.basic$Nf` female, age = `r df2.T.basic$Age_mean` $\pm$ `r df2.T.basic$Age_sd`) were recruited. 24 of them had participated in Experiment 1a (9 male, mean age = 21.9, s.d. = 2.9), and the time gap between these experiment 1a and experiment 2 is at least six weeks. The results of `r nrow(df2.excld.sub)` participants were excluded from analysis because of less than 60% overall accuracy, remains `r df2.v.basic$N` participants (`r df2.v.basic$Nf` female, age = `r df2.v.basic$Age_mean` $\pm$ `r df2.v.basic$Age_sd`).
+
+### Procedure
+In Experiment 2, the sequential presenting makes the matching task much easier than experiment 1. To avoid ceiling effect on behavioral data, we did a few pilot experiments to get optimal parameters, i.e., the conditions under which participant have similar accuracy as in Experiment 1 (around 70 ~ 80% accuracy). 
+In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with ¾ gray area and ¼ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
+### Analysis
+Data was analyzed as in study 1a. 
+
+## Results
+Less than 0.2% correct trials with less than 200ms reaction times were exlucded.
+
+### Analaysis of d prime.
+
+```{r 2_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime
+df2.v.dprime_l <- df2.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
+                FAR  = FA/(FA+CR)) %>%                                       # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+### Long to wide
+#df1b.v.dprime_w <- df1b.v.dprime_l %>%
+#  tidyr::spread(key = Valence, value = dprime) %>%                                   # long to wide
+#  dplyr::rename_at(vars(-Site,-Subject,-Age,-Sex),function(x) paste0("d_",x))           # add prefix to certain conditions
+
+# anova for d prime
+df2_dprime_anova <- afex::aov_ez('Subject','dprime',df2.v.dprime_l,  # using afex's function 
+                                  within = c('Valence'))
+# use LMM, random intercept for each participant
+#df1b_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
+#                          df1b.v.dprime_l,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+
+df2_dprime_anova_apa <- df2_dprime_anova$aov %>% papaja::apa_print()
+
+posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_2_d)
+
+```
+There was evidence for the main effect of valence, `r df2_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (2.86 $\pm$ 0.16) was with greater *d* prime than Netural condition (2.28 $\pm$ 0.15, *t*(32) = 4.46, *p* = 0.002, Cohen's *d* = 0.587). We also found that the Bad-Person condition (2.47 $\pm$ 0.135) has also greater *d* prime than neutral condition , *t*(32) = 4.15, *p* = 0.007, Cohen's *d* = 0.396). There was no-significant difference between Good and bad conidition, *t*(32) = -1,667, *p* = 0.233, Cohen's *d* = -0.191.
+
+### Analaysis of reaction time.
+The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+```{r 2_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df2.v.rt_m <- df2.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df2_RT_anova <- afex::aov_ez('Subject','RT_m',df2.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Valence'))
+df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print()
+
+# use LMM, random intercept for each participant
+#df1b_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
+#                          df1b.v.rt_m,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+```
+We found intercation between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a.
+
+```{r 2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df2.v.rt_m1 <- df2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df2.v.rt_m1,     # using afex's function 
+                                  within = c('Valence'))
+df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print()
+
+df2.v.rt_m2 <- df2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df2.v.rt_m2,     # using afex's function 
+                                  within = c('Valence'))
+df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print()
+posthoc_2_rt <- emmeans::emmeans(df2_RT_anova_m, "Valence") # compare each valence for both self and other condition
+# pairs(posthoc_2_rt)
+
+```
+For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).
+
+Post-hoc *t*-tests revealed that shapes associated with Good Person (550 $\pm$ 9.45) were responded faster than Neutral-Person (583 $\pm$ 11.1), (*t*(32) = -3.871, *p* = 0.0018) and Bad Person (584 $\pm$ 10.2), *t*(32) = -3.838, *p* = 0.0016). While there was no significant differences between Neutral and Bad-Person condition (*t*(32) = -0.122, *p* = 0.9918).
 
 ## Discussion
-Experiment 1c was not finished, with limited participants, it may not provide a rigirous test for the effect. (move to supplementary?) 
-
+In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valenced association. Moreover, with a croass task analysis, we didn’t found evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
+These findings suggested that the facilitation effect of positive moral valence is robust and not affected by task. This robust effect detected by the associative learning is unexpected. 
 
 # Experiment 4a
 
