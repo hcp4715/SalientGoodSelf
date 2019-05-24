@@ -17,7 +17,7 @@ curDir = dirname(rstudioapi::getSourceEditorContext()$path)
 resDir = "D:/HCP_cloud/Exps/P1_Pos_Self/Exp_Behav_Moral_Asso/Results_exp1_5/Data_Analysis/exp3a"
 
 ## load data and edite data
-df3a <- read.csv("rawdata_behav_exp3_2018.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
+df3a <- read.csv("rawdata_behav_exp3_2014.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"))
 
 # rename colnames
 colnames(df3a)[colnames(df3a)=="Target.ACC"] <- "ACC"
