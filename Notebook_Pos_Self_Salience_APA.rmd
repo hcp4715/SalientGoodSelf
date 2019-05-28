@@ -1245,11 +1245,128 @@ df3b_dprime_anova <- afex::aov_ez('Subject','dprime',df3b.v.dprime_l,  # using a
 
 df3b_dprime_anova_apa <- df3b_dprime_anova$aov %>% papaja::apa_print()
 
-#posthoc_3a_d <- emmeans::emmeans(df3a_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_3a_d)
+posthoc_3b_d_1 <- emmeans::emmeans(df3b_dprime_anova, "Valence")  # main effect
 
+posthoc_3b_d_val <- emmeans::emmeans(df3b_dprime_anova, "Identity", by = "Valence") # simple effect
+
+pairs(posthoc_3b_d_1)
+
+pairs(posthoc_3b_d_val)
 ```
 There was evidence for the main effect of valence, `r df3b_dprime_anova_apa$full$Valence`, and main effect of self-relevance, `r df3b_dprime_anova_apa$full$Identity`, as well as the intercation, `r df3b_dprime_anova_apa$full$Identity_Valence`.
+
+```{r 3b_dprime_id, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime for self condition
+df3b.v.dprime_l_s <- df3b.v.dprime_l %>%
+  dplyr::filter(Identity == "Self")
+
+df3b_dprime_anova_s <- afex::aov_ez('Subject','dprime',df3b.v.dprime_l_s,  # using afex's function 
+                                  within = c('Valence'))
+
+df3b_dprime_anova_s_apa <- df3b_dprime_anova_s$aov %>% papaja::apa_print()
+
+df3b.v.dprime_l_o <- df3b.v.dprime_l %>%
+  dplyr::filter(Identity == "Other")
+
+df3b_dprime_anova_o <- afex::aov_ez('Subject','dprime',df3b.v.dprime_l_o,  # using afex's function 
+                                  within = c('Valence'))
+
+df3b_dprime_anova_o_apa <- df3b_dprime_anova_o$aov %>% papaja::apa_print()
+
+posthoc_3b_d_s <- emmeans::emmeans(df3b_dprime_anova_s, "Valence")  # main effect
+
+posthoc_3b_d_o <- emmeans::emmeans(df3b_dprime_anova_o, "Valence") # simple effect
+
+pairs(posthoc_3b_d_s)
+
+pairs(posthoc_3b_d_o)
+```
+We conducted two repeated measures ANOVA for self and other condition separately. For the results from self-condition aligned with previous experiments, showed an main effect of moral valence on *d’*: `r df3b_dprime_anova_s_apa$full$Valence`.  Simple effect analysis showed that the d’ was larger for good self (2.23 ± 0.81) than for bad self (1.66 ± 0.74), *t*(55) = 6.11, *p* < 0.001, Cohen’s *d* = 0.817, 95% CI [0.511 1.117] , BF10 = 8.43, and neutral self (1.91 ± 0.66), *t*(55) = 3.03, *p* = 0.0038, Cohen’s *d*  = 0.404, 95%CI [0.13 0.675] , BF10 = 1.33e+5. There was also higher d’ for neutral-self condition than bad-self conditions, *t*(34) = 3.02, *p* = 0.0039, Cohen’s *d*  = 0.403, 95% CI [0.129 0.674], BF10 = 8.22.
+
+For the stranger condition, there was no strong evidence for the effect of the morality of the association on d’, `r df3b_dprime_anova_o_apa$full$Valence`.
+
+We also tested the effect of personal association by comparing *d’* values for difference moral valence level. The results showed that the bad-self association condition was responded worse than the bad-stranger association condition (2.18 ± 0.911), *t*(55) = -4.1, *p* < 0.001, Cohen’s *d*  = -0.548, 95% CI [-0.827 -0.265], BF10 = 167.  The neutral-self was also worse than the neutral-stranger (2.28 ± 1), *t*(55) = -3.15, *p* = 0.0026 , Cohen’s *d*  = -0.422, 95% CI [-0.693 -0.146], BF10 = 11.7. While the good-self association condition and good-stranger conditions (2.03 ± 0.89) are not differ from each other, *t*(55) = 1.394, *p* = 0.169, Cohen’s *d* = 0.186, 95% CI[-0.079 0.449], BF10 = 0.364.
+
+### Analaysis of reaction time.
+The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+```{r 3b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d RT with 2*2*3 design
+df3b.v.rt_m <- df3b.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df3b_RT_anova <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Identity','Valence'))
+df3b_RT_anova_apa <- df3b_RT_anova %>% papaja::apa_print()
+
+# use LMM, random intercept for each participant
+#df1b_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
+#                          df1b.v.rt_m,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+```
+We found three-way intercation between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+
+```{r 3b_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# match trials
+df3b.v.rt_m1 <- df3b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+df3b_RT_anova_m <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m1,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df3b_RT_anova_m_apa <- df3b_RT_anova_m %>% papaja::apa_print()
+
+posthoc_3b_rt <- emmeans::emmeans(df3b_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
+# pairs(posthoc_3b_rt)
+
+df3b.v.rt_m1_s_anova <- df3b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT), Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+df3b.v.rt_m1_s_anova_apa <- df3b.v.rt_m1_s_anova %>% papaja::apa_print()
+
+df3b.v.rt_m1_o_anova <- df3b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT), Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+
+df3b.v.rt_m1_o_anova_apa <- df3b.v.rt_m1_o_anova %>% papaja::apa_print()
+
+# Mismatch trials
+df3b.v.rt_m2 <- df3b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df3b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m2,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df3b_RT_anova_nm_apa <- df3b_RT_anova_nm %>% papaja::apa_print()
+```
+For the matched trials, ce , the effect of identity , and the interaction . 
+For the matched trials, we found that interaction between of valence and identity, `r df3b_RT_anova_m_apa$full$Identity_Valence`, BF10 = 1.17. 
+
+Then, the matched trials were analyzed for the self-relevance and stranger-relevance pairs separately. The results showed a significant effect of moral valence for the self condition, `r df3b.v.rt_m1_s_anova_apa$full$Valence`, BF10 = 4.54e+6. Paired t tests showed that responses to the good-self association (817 ± 119) were faster than to bad-self associations (915 ± 132), t(55) = -8.78, p < 0.001, Cohen’s *d* = -1.173, 95% CI [-1.511 -0.828], BF10 = 1.84e+9, and to neutral-self association (880 ± 116), t(55) = 3.748, p < 0.0001, Cohen’s *d* = -0.501, 95% CI [-0.777 -0.221], BF10 = 58.7. The neutral-self was faster than the bad-self associations, t(55) = -2.41, p = 0.019 , Cohen’s *d* = -0.321, 95% CI [-0.589 -0.051], BF10 = 2.03. 
+The effect of moral valence was also significant for the stranger-relevance conditions, `r df3b.v.rt_m1_o_anova_apa$full$Valence`, BF10 = 8.55. the good-other condition (734 ± 158) didn’t differ from neutral-other condition (735 ±160), t(55) = -0.07, p = 0.946, Cohen’s *d* = -0.009, 95% CI [-0.271 -0.293], BF10 = 0.15, but faster than the bad other condition (776 ± 173), t(55) = -3.14, p = 0.0027, Cohen’s *d* = -0.419, 95% CI [-0.691 -0.144], BF10 = 11.3. The neutral-other condition also faster than the bad-other condition, t(55) = -3.232, p = 0.0021, Cohen’s *d* = -0.432, 95% CI [-0.704 -0.156], BF10 = 14.3. 
+
+We also analyzed the effect of self-relevance on the different moral valence levels. The results showed that for all three different valence levels, there the self condition was responded slower than other condition: good-self  vs. good-stranger, t(55) = 4.29, p < 0.001, Cohen’s *d* = 0.573, 95% CI [0.288 0.854], BF10 = 297.2; neutral-self  vs. neutral -stranger, t(55) = 7.17, p < 0.001, Cohen’s *d* = 0.958, 95% CI [0.638 1.272]), BF10 = 5.77e+6; bad-self vs. bad-other, t(55) = 6.03, p < 0.001, Cohen’s *d* = 0.806, 95% CI [0.5 1.11], BF10 = 100208.03. 
+
 
 # Experiment 4a
 
