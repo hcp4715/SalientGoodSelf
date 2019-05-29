@@ -23,36 +23,14 @@ Valence & 5.51 & 2 & 90 & 0.26 & .006 & .020\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-4}A really beautiful ANOVA table.}
-\begin{tabular}{lllllll}
-\toprule
-Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1$} & \multicolumn{1}{c}{$\mathit{df}_2$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
-\midrule
-Identity & 121.04 & 1 & 58 & 0.48 & < .001 & .189\\
-Morality & 0.53 & 2 & 116 & 0.11 & .587 & .000\\
-Identity $\times$ Morality & 4.12 & 2 & 116 & 0.14 & .019 & .004\\
-\bottomrule
-\addlinespace
-\end{tabular}
-\begin{tablenotes}[para]
-\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
-\end{tablenotes}
-\end{threeparttable}
-\end{center}
-\end{table*}
-\begin{table*}[hbt]
-\ifnextchar[{\eatarg}{}
-[tbp]
-\begin{center}
-\begin{threeparttable}
 \caption{\label{tab:unnamed-chunk-6}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
 \midrule
-Identity & 124.15 & 1 & 58 & 4,037.53 & < .001 & .257\\
-Morality & 0.94 & 1.98 & 114.82 & 606.30 & .392 & .001\\
-Identity $\times$ Morality & 4.41 & 1.9 & 110.18 & 465.91 & .016 & .003\\
+Identity & 119.02 & 1 & 51 & 4,014.61 & < .001 & .291\\
+Valence & 1.84 & 1.98 & 101.03 & 589.86 & .164 & .002\\
+Identity $\times$ Valence & 3.79 & 1.76 & 89.9 & 450.33 & .031 & .003\\
 \bottomrule
 \addlinespace
 \end{tabular}
@@ -67,7 +45,7 @@ Identity $\times$ Morality & 4.41 & 1.9 & 110.18 & 465.91 & .016 & .003\\
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-8}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-7}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
