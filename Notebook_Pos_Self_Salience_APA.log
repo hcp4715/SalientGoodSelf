@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  30 MAY 2019 12:33
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  31 MAY 2019 09:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -766,34 +766,6 @@ File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
 )
 Package hyperref Info: Option `breaklinks' set `true' on input line 30.
 
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
-Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
-
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color
-.cfg
-File: color.cfg 2016/01/02 v1.6 sample color configuration
-)
-Package color Info: Driver file: xetex.def on input line 147.
-)
-(c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.
-sty
-Package: fancyvrb 2019/01/15
-Style option: `fancyvrb' v3.2a <2019/01/15> (tvz)
-\FV@CodeLineNo=\count299
-\FV@InFile=\read2
-\FV@TabBox=\box51
-\c@FancyVerbLine=\count300
-\FV@StepNumber=\count301
-\FV@OutFile=\write5
-) (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/framed/framed.st
-y
-Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
-\OuterFrameSep=\skip75
-\fb@frw=\dimen181
-\fb@frh=\dimen182
-\FrameRule=\dimen183
-\FrameSep=\dimen184
-)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/oberdiek/grffile.s
 ty
 Package: grffile 2017/06/30 v1.18 Extended file name support for graphics (HO)
@@ -805,12 +777,12 @@ Package grffile Info: \Gin@ii of package `graphicx' fixed on input line 494.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/csquotes/csquotes.
 sty
 Package: csquotes 2018/04/13 v5.2d context-sensitive quotations (JAW)
-\csq@reset=\count302
-\csq@gtype=\count303
-\csq@glevel=\count304
-\csq@qlevel=\count305
-\csq@maxlvl=\count306
-\csq@tshold=\count307
+\csq@reset=\count299
+\csq@gtype=\count300
+\csq@glevel=\count301
+\csq@qlevel=\count302
+\csq@maxlvl=\count303
+\csq@tshold=\count304
 \csq@ltx@everypar=\toks24
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/csquotes/csquotes.
@@ -833,20 +805,20 @@ LaTeX Font Info:    Overwriting symbol font `ugrf@m' in version `bold'
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.st
 y
 Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
-\LTleft=\skip76
-\LTright=\skip77
-\LTpre=\skip78
-\LTpost=\skip79
-\LTchunksize=\count308
-\LTcapwidth=\dimen185
-\LT@head=\box52
-\LT@firsthead=\box53
-\LT@foot=\box54
-\LT@lastfoot=\box55
-\LT@cols=\count309
-\LT@rows=\count310
-\c@LT@tables=\count311
-\c@LT@chunks=\count312
+\LTleft=\skip75
+\LTright=\skip76
+\LTpre=\skip77
+\LTpost=\skip78
+\LTchunksize=\count305
+\LTcapwidth=\dimen181
+\LT@head=\box51
+\LT@firsthead=\box52
+\LT@foot=\box53
+\LT@lastfoot=\box54
+\LT@cols=\count306
+\LT@rows=\count307
+\c@LT@tables=\count308
+\c@LT@chunks=\count309
 \LT@p@ftn=\toks25
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/lscape.st
@@ -856,29 +828,29 @@ Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/multirow/multirow.
 sty
 Package: multirow 2019/01/01 v2.4 Span multiple rows of a table
-\multirow@colwidth=\skip80
-\multirow@cntb=\count313
-\multirow@dima=\skip81
-\bigstrutjot=\dimen186
+\multirow@colwidth=\skip79
+\multirow@cntb=\count310
+\multirow@dima=\skip80
+\bigstrutjot=\dimen182
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/tabularx.sty
 Package: tabularx 2016/02/03 v2.11b `tabularx' package (DPC)
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
 Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
-\col@sep=\dimen187
-\ar@mcellbox=\box56
-\extrarowheight=\dimen188
+\col@sep=\dimen183
+\ar@mcellbox=\box55
+\extrarowheight=\dimen184
 \NC@list=\toks26
-\extratabsurround=\skip82
-\backup@length=\skip83
-\ar@cellbox=\box57
+\extratabsurround=\skip81
+\backup@length=\skip82
+\ar@cellbox=\box56
 )
-\TX@col@width=\dimen189
-\TX@old@table=\dimen190
-\TX@old@col=\dimen191
-\TX@target=\dimen192
-\TX@delta=\dimen193
-\TX@cols=\count314
+\TX@col@width=\dimen185
+\TX@old@table=\dimen186
+\TX@old@col=\dimen187
+\TX@target=\dimen188
+\TX@delta=\dimen189
+\TX@cols=\count311
 \TX@ftn=\toks27
 )
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttablex/th
@@ -893,26 +865,26 @@ Package: environ 2014/05/04 v0.3 A new way to define environments
 ces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
-\TPTL@width=\skip84
+\TPTL@width=\skip83
 )
-\longtablewidth=\skip85
+\longtablewidth=\skip84
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lineno/lineno.sty
 Package: lineno 2005/11/02 line numbers on paragraphs v4.41
 Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
-\linenopenalty=\count315
+\linenopenalty=\count312
 \output=\toks28
-\linenoprevgraf=\count316
-\linenumbersep=\dimen194
-\linenumberwidth=\dimen195
-\c@linenumber=\count317
-\c@pagewiselinenumber=\count318
-\c@LN@truepage=\count319
-\c@internallinenumber=\count320
-\c@internallinenumbers=\count321
-\quotelinenumbersep=\dimen196
-\bframerule=\dimen197
-\bframesep=\dimen198
-\bframebox=\box58
+\linenoprevgraf=\count313
+\linenumbersep=\dimen190
+\linenumberwidth=\dimen191
+\c@linenumber=\count314
+\c@pagewiselinenumber=\count315
+\c@LN@truepage=\count316
+\c@internallinenumber=\count317
+\c@internallinenumbers=\count318
+\quotelinenumbersep=\dimen192
+\bframerule=\dimen193
+\bframesep=\dimen194
+\bframebox=\box57
 
 LaTeX Warning: Command \@parboxrestore  has changed.
                Check if current package is valid.
@@ -924,31 +896,31 @@ Package csquotes Info: ... none found.
 (./Notebook_Pos_Self_Salience_APA.aux)
 \openout1 = `Notebook_Pos_Self_Salience_APA.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 171.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 171.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 131.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 131.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 171.
-LaTeX Font Info:    ... okay on input line 171.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -997,8 +969,8 @@ sty
 Package: ltcaption 2018/08/26 v1.4-95 longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
-\AtBeginShipoutBox=\box59
-Package hyperref Info: Link coloring OFF on input line 171.
+\AtBeginShipoutBox=\box58
+Package hyperref Info: Link coloring OFF on input line 131.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.s
 ty
@@ -1008,46 +980,46 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 estring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count322
+\c@section@level=\count319
 )
-LaTeX Info: Redefining \ref on input line 171.
-LaTeX Info: Redefining \pageref on input line 171.
-LaTeX Info: Redefining \nameref on input line 171.
+LaTeX Info: Redefining \ref on input line 131.
+LaTeX Info: Redefining \pageref on input line 131.
+LaTeX Info: Redefining \nameref on input line 131.
 (./Notebook_Pos_Self_Salience_APA.out) (./Notebook_Pos_Self_Salience_APA.out)
-\@outlinefile=\write6
-\openout6 = `Notebook_Pos_Self_Salience_APA.out'.
+\@outlinefile=\write5
+\openout5 = `Notebook_Pos_Self_Salience_APA.out'.
 
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 173.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 133.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 173.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 133.
 
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 173
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 133
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 173
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 133
 .
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 173.
+(Font)              <12> on input line 133.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 173.
+(Font)              <8> on input line 133.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 173.
-LaTeX Font Info:    Try loading font information for U+msa on input line 173.
+(Font)              <6> on input line 133.
+LaTeX Font Info:    Try loading font information for U+msa on input line 133.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 173.
+LaTeX Font Info:    Try loading font information for U+msb on input line 133.
 (c:/Users/hcp47/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
@@ -1092,34 +1064,29 @@ Underfull \vbox (badness 1137) has occurred while \output is active []
 [18]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[19] [20] [21] [22] [23] [24]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[25] [26]
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 646.
-[27] [28] [29] [30] [31] AED endfloat: Processing end Figures and Tables [32] (
-./Notebook_Pos_Self_Salience_APA.ttt)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 820.
-[33
+[19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] AED 
+endfloat: Processing end Figures and Tables [34] (./Notebook_Pos_Self_Salience_
+APA.ttt)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 772.
+[35
 
 
-] [34]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 820.
+] [36]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 772.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 820.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 820.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 772.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 772.
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: F8F914B8AC886A2B6ECE89E08C0894F3.
+(rerunfilecheck)             Checksum: 771D7597DE63482B69A2531E3D1E1C5F.
  ) 
 Here is how much of TeX's memory you used:
- 25791 strings out of 494894
- 477920 string characters out of 6175663
- 586215 words of memory out of 5000000
- 29447 multiletter control sequences out of 15000+600000
- 572348 words of font info for 67 fonts, out of 8000000 for 9000
+ 25288 strings out of 494894
+ 470025 string characters out of 6175663
+ 575802 words of memory out of 5000000
+ 28962 multiletter control sequences out of 15000+600000
+ 572324 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 46i,13n,61p,2684b,598s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,12n,61p,2684b,587s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (34 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (36 pages).

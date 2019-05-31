@@ -156,27 +156,28 @@ df1a.T.basic     <- df1a %>%
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
 # distinguish between practice and formal data
-df1a.subj_P <- df1a %>%
-  dplyr::filter(is.na(BlockNo)) %>%
-  dplyr::distinct(Subject)
+#df1a.subj_P <- df1a %>%
+#  dplyr::filter(is.na(BlockNo)) %>%
+#  dplyr::distinct(Subject)
 
 #[is.na(df1a$BlockList.Sample),]            # data from practice
-df1a.subj_T <- df1a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
-  dplyr::distinct(Subject)
+#df1a.subj_T <- df1a %>%
+#  dplyr::filter(complete.cases(BlockNo)) %>%
+#  dplyr::distinct(Subject)
 
 #[complete.cases(df1a$BlockList.Sample),]   # data from test
 
 # number of participant who didn't finished the experiment
-nQuit <- length(df1a.subj_P) - length(df1a.subj_T)
+nQuit <- length(unique(df1a$Subject[is.na(df1a$BlockNo)])) - length(unique(df1a$Subject[!is.na(df1a$BlockNo)]))
 
 #.T[df1a.T$RT <= 200 & df1a.T$ACC == 1,]
 #df1a.excld.trial.r <- nrow(df1a.excld.trial)/nrow(df1a.T) # ratio of excluded trials in all triasl.
 
 df1a.excld.sub <-  df1a %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
   #dplyr::filter(RT > 200)  %>%                       # only use > 200 ms response (this standard will keep more participants)
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
@@ -185,12 +186,12 @@ df1a.excld.sub <-  df1a %>%
 
 # The rate of excluded trials in valid data
 df1a.invalid_trial_rate   <- df1a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
 
 df1a.v   <- df1a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -207,7 +208,7 @@ df1a.v.basic     <- df1a.v %>%
 ```
 ## Methods
 ### Participants
-`r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r length(df1a.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
+`r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1a.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
 
 ### Stimuli and Tasks
 Three geometric shapes were used in this experiment: triangle, square, and circle. These shapes were paired with three labels (bad person, good person or neutral person). The pairs were counterbalanced across participants. 
@@ -282,7 +283,7 @@ We further examined the effect of valence.
 posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1a_d)
 ```
-The Good condition (2.23 $\pm$ 0.14) is great than Netural condition (2.05 $\pm$ 0.16, t(45) = 1.67, p = 0.226) and bad condition (1.87 $\pm$ 1.4, t(45) = 3.07, p = 0.01, Cohen'd = 0.36). This is no-significant difference between neutral and bad conidition, t(45) = 1.81, p = 1.77.
+The Good condition (2.23 $\pm$ 0.14) is great than Netural condition (2.05 $\pm$ 0.16, t(45) = 1.67, p = 0.226) and bad condition (1.87 $\pm$ 1.4, *t*(45) = 3.07, *p* = 0.01, Cohen'd = 0.36). This is no-significant difference between neutral and bad conidition, *t*(45) = 1.81, p = 1.77.
 
 ### Analaysis of reaction time.
 We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA:
@@ -294,8 +295,9 @@ df1a.v.rt_m <- df1a.v %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
-df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Valence'))
+
+df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
+
 df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
 # use LMM, random intercept for each participant
@@ -308,18 +310,13 @@ df1a_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject),
 df1a.v.rt_lmm <- df1a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  #dplyr::summarise(RT_m = mean(RT),
-  #                 Ntrial = length(RT)) %>%
   dplyr::ungroup()
-#df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Valence'))
-#df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
 # use LMM, random intercept for each participant
-df1a_RT_mixed <- afex::mixed(RT ~ Matchness*Valence + (1|Subject), 
-                          df1a.v.rt_lmm,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
+#df1a_RT_mixed <- afex::mixed(RT ~ Matchness*Valence + (1|Subject), 
+#                          df1a.v.rt_lmm,
+#                          method = "S",
+#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
 
 ```
 We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and intercation between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`)
@@ -353,7 +350,7 @@ posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each val
 
 We carried out two separate ANOVA for both Match and mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
 
-We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person responded faster than Neutral (t(45) = -2.662, p = 0.0284) and Bad Person (t(45) = -4.793, p = 0.0001). Neutral condition is slightly faster than bad condition (t(45) = -2.33, p = 0.0618)
+We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person responded faster than Neutral (t(45) = -2.662, p = 0.0284) and Bad Person (*t*(45) = -4.793, *p* = 0.0001). Neutral condition is slightly faster than bad condition (t(45) = -2.33, p = 0.0618)
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confouding factor of the familarity of words we used in experiment 1a, by matching the familiarity of the words.
@@ -401,21 +398,23 @@ df1b.T.basic     <- df1b %>%
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
 # distinguish between practice and formal data
-df1b.subj_P <- df1b %>%                      # subjet for practice
-  dplyr::filter(is.na(BlockNo)) %>%
-  dplyr::distinct(Subject)
+#df1b.subj_P <- df1b %>%                      # subjet for practice
+#  dplyr::filter(is.na(BlockNo)) %>%
+#  dplyr::distinct(Subject)
 
-df1b.subj_T <- df1b %>%                       # subjects in formal exp
-  dplyr::filter(complete.cases(BlockNo)) %>%
-  dplyr::distinct(Subject)
+#df1b.subj_T <- df1b %>%                       # subjects in formal exp
+#  dplyr::filter(complete.cases(BlockNo)) %>%
+#  dplyr::distinct(Subject)
 
 # number of participant who didn't finished the experiment
-nQuit <- length(df1b.subj_P) - length(df1b.subj_T)
+#nQuit <- length(df1b.subj_P) - length(df1b.subj_T)
+nQuit <- length(unique(df1b$Subject[is.na(df1b$BlockNo)])) - length(unique(df1b$Subject[!is.na(df1b$BlockNo)]))
 
 # participants should be excluded
 df1b.excld.sub <-  df1b %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+#  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
@@ -424,12 +423,12 @@ df1b.excld.sub <-  df1b %>%
 
 # The rate of excluded trials in valid data
 df1b.invalid_trial_rate   <- df1b %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1b.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
 
 df1b.v   <- df1b %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1b.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -446,7 +445,7 @@ df1b.v.basic     <- df1b.v %>%
 ```
 
 ### Participants
-`r df1b.T.basic$N` college students (`r df1b.T.basic$Nf` female, age = `r df1b.T.basic$Age_mean` $\pm$ `r df1b.T.basic$Age_sd` years) participated. `r df1b.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1b.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r length(df1b.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1b.v.basic$N` participants (`r df1b.v.basic$Nf` female, age = `r df1b.v.basic$Age_mean` $\pm$ `r df1b.v.basic$Age_sd` years).
+`r df1b.T.basic$N` college students (`r df1b.T.basic$Nf` female, age = `r df1b.T.basic$Age_mean` $\pm$ `r df1b.T.basic$Age_sd` years) participated. `r df1b.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1b.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1b.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1b.v.basic$N` participants (`r df1b.v.basic$Nf` female, age = `r df1b.v.basic$Age_mean` $\pm$ `r df1b.v.basic$Age_sd` years).
 
 ### Stimuli and Tasks
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
@@ -602,7 +601,7 @@ df1c.subj_P <- df1c %>%                      # subjet for practice
   dplyr::distinct(Subject)
 
 df1c.subj_T <- df1c %>%                       # subjects in formal exp
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::distinct(Subject)
 
 # number of participant who didn't finished the experiment
@@ -621,9 +620,9 @@ df1c.T.basic     <- df1c %>%
 
 # participants should be excluded
 df1c.excld.sub <-  df1c %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
@@ -632,12 +631,12 @@ df1c.excld.sub <-  df1c %>%
 
 # The rate of excluded trials in valid data
 df1c.invalid_trial_rate   <- df1c %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
 
 df1c.v   <- df1c %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -761,8 +760,9 @@ nQuit <- length(unique(df2$Subject[is.na(df2$BlockNo)])) - length(unique(df2$Sub
 
 # participants should be excluded
 df2.excld.sub <-  df2 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
@@ -771,12 +771,12 @@ df2.excld.sub <-  df2 %>%
 
 # The rate of excluded trials in valid data
 df2.invalid_trial_rate   <- df2 %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
 
 df2.v   <- df2 %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -955,8 +955,9 @@ nQuit <- length(unique(df3a$Subject[is.na(df3a$BlockNo)])) - length(unique(df3a$
 
 # participants should be excluded
 df3a.excld.sub <-  df3a %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   #dplyr::filter(!(ACC == 1 & RT <= 200)) %>%
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
@@ -966,13 +967,13 @@ df3a.excld.sub <-  df3a %>%
 
 # The rate of excluded trials in valid data
 df3a.invalid_trial_rate   <- df3a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df3a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
   dplyr::pull()
 
 df3a.v   <- df3a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df3a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -1155,8 +1156,9 @@ df3b.T.basic     <- df3b %>%
 
 # participants should be excluded
 df3b.excld.sub <-  df3b %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   #dplyr::filter(!(ACC == 1 & RT <= 200)) %>%
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
@@ -1169,13 +1171,13 @@ df3b.excld.sub2[5,1] <- 31003 # the participant whose hit rate is zero under one
 
 # The rate of excluded trials in valid data
 df3b.invalid_trial_rate   <- df3b %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df3b.excld.sub2$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
   dplyr::pull()
 
 df3b.v   <- df3b %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df3b.excld.sub2$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -1413,8 +1415,9 @@ nQuit <- length(unique(df4a$Subject[is.na(df4a$BlockNo)])) - length(unique(df4a$
 
 # participants should be excluded
 df4a.excld.sub <-  df4a %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   #dplyr::filter(!(ACC == 1 & RT <= 200)) %>%
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
@@ -1424,13 +1427,13 @@ df4a.excld.sub <-  df4a %>%
 
 # The rate of excluded trials in valid data
 df4a.invalid_trial_rate   <- df4a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df4a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
   dplyr::pull()
 
 df4a.v   <- df4a %>%
-  dplyr::filter(complete.cases(BlockNo)) %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::filter(!(Subject %in% df4a.excld.sub$Subject)) %>%   # exclude the invalid subjects
   dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
@@ -1447,7 +1450,7 @@ df4a.v.basic     <- df4a.v %>%
 ```
 ## Methods
 ### Participants
-`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data of three participants from Tsinghua site and two participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
+`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
 
 ### Experimental design
 As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, normalneutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
@@ -1612,57 +1615,229 @@ For the stranger condition, the results showed that there was no difference amon
 
 For non-matched trials, there was no significant effect. Morality (`r df4a_RT_anova_nm_apa$full$Identity`), Identity(`r df4a_RT_anova_nm_apa$full$Valence`), interaction (`r df4a_RT_anova_nm_apa$full$Identity_Valence`).
 
-# Experiment 4b:
+# Experiment 4b
+
+In study 4b we further investigated whether the effects of moral valence would modulate by the presence of self. In this study, participants made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. However, as in study 4, we made the self-referential task as an implicit task, to examine the interaction between self-referential effect and modulation of positive moral valence. 
+
+## Method
 
 ```{r loadingData_4b,echo=FALSE,results='hide'}
-df4b_dprime_long <- read.csv('.\\exp4b\\exp4b_dprime_long.csv') %>%
-  dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
-                             ifelse(Morality == "Immoral","Bad", 'Neutral')))
+df4b_1 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Morality = morality) %>%
+  dplyr::mutate(Site = "THU")
 
-df4b_rt_acc_long <- read.csv('.\\exp4b\\exp4b_rt_acc_long.csv') %>%
-  dplyr::mutate(Morality = ifelse(Morality == "Moral", "Good",
-                             ifelse(Morality == "Immoral","Bad", "Neutral"))) %>%
-  dplyr::rename(Match = Matchness) %>%
-  dplyr::mutate(Match = ifelse(Match == 'Match', 'match','mismatch'))
+df4b_2 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Morality = morality) %>%
+  dplyr::mutate(Site = "WZU")
+
+df4b <- rbind(df4b_1,df4b_2) %>%
+  dplyr::rename(ACC = Target.ACC,           # rename columns
+                RT  = Target.RT,
+                CRESP = Target.CRESP,
+                BlockNo = BlockList.Sample,
+                TrialNo = SubTrial,
+                RESP = Target.RESP,
+                Matchness = YesNoResp,
+                Valence = Morality) %>%
+  dplyr::mutate(Valence  = ifelse(Valence == "Ord", "Neutral", Valence),
+                Identity = ifelse(Identity == "self" | Identity == "Self", "Self", "Other"),
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
+                Subject = factor(Subject))
+rm(df4b_1,df4b_2) # remove the temporary variables.
+
+df4b.T.basic     <- df4b %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+  
+# number of participant who practiced but not in the formal experiment
+nQuit <- length(unique(df4b$Subject[is.na(df4b$BlockNo)])) - length(unique(df4b$Subject[!is.na(df4b$BlockNo)]))
+
+# participants should be excluded
+df4b.excld.sub <-  df4b %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::group_by(Subject) %>%
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+  dplyr::select(Subject)
+
+# The rate of excluded trials in valid data
+df4b.invalid_trial_rate   <- df4b %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
+  dplyr::pull()
+
+df4b.v   <- df4b %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df4b.v.basic     <- df4b.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
 ```
-## Participants
+### Participants
+`r df4b.T.basic$N` college students (`r df4b.T.basic$Nf` female, age = `r df4b.T.basic$Age_mean` $\pm$ `r df4b.T.basic$Age_sd`) participated the current study, `r df4b.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015 `r df4b.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4b.excld.sub)` participants were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4b.v.basic$N` participants (`r df4b.v.basic$Nf` female, age = `r df4b.v.basic$Age_mean` $\pm$ `r df4b.v.basic$Age_sd`) were analyzed and reported.
+
+### Experimental design
+The experimental design of this experiment is same as experiment 4a:  a 3× 2 × 2 within-subject design with moral valence (good, normalneutral and bad associations), self-relatedness (self vs. other), and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word “self” or “other” were presented in the shapes (see below).
+
+### Stimuli
+In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments.  Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels “self” and “other”. Before the experiment, we informed participants only response to the relationship between shapes’shapes configure and the labels below the fixation, ignoring the wordswithin each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
+
+### Procedure
+The procedure was similar to Experiment 4 a. Both samples of participants finished 6 blocks of trial, each with 120 trials.
+
+### Data analysis
+The data were analyzed as in experiment 4a.
 
 ## Results
-### Analaysis of d prime.
-We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+### *d* prime
+
 ```{r analyzing for d prime_e5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculating the dprime 
+df4b.v.dprime_l <- df4b.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+
 # anova for d prime with 2*2 design
-df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b_dprime_long,  # using afex's function 
-                                  within = c('Identity','Morality'))
+df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b.v.dprime_l,  # using afex's function 
+                                  within = c('Identity','Valence'))
 df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print()
 #df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
-Morality (`r df4b_dprime_anova_apa$full$Morality`) and Identity gender affected post-surgery quality of life, `r df4b_dprime_anova_apa$full$Identity`. However, the effect of gender differed by clinic, `r df4b_dprime_anova_apa$full$Identity_Morality`.
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
 
-```{r results='asis', echo = TRUE}
-#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-apa_table(df4b_dprime_anova_apa$table
-  , caption = "A really beautiful ANOVA table."
-  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-)
-```
-
-We further examined the effect of valence for both self and other. 
-
-```{r results='asis', echo = TRUE}
-m2 <- emmeans::emmeans(df4b_dprime_anova, "Morality", by = "Identity") # compare each valence for both self and other condition
+```{r results='asis', echo = F}
+#m2 <- emmeans::emmeans(df4b_dprime_anova, "Valence", by = "Identity") # compare each valence for both self and other condition
 #pairs(m2)
 #summary(as.glht(pairs(m2)), test=adjusted("free"))
 
-m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
+#m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
 #pairs(m3)
 
 ```
 
-# Results
+### Reaction times
+We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+```{r analyzing for RT_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df4b.v.rt_m <- df4b.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
 
-# Discussion
+df4b_RT_anova <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Identity','Valence'))
+df4b_RT_anova_apa <- df4b_RT_anova %>% papaja::apa_print()
+```
+There was a main effect of Matchness (`r df4b_RT_anova_apa$full$Matchness`), main effect of valence (`r df4b_RT_anova_apa$full$Valence`),  intercation between Matchness and Valence(`r df4b_RT_anova_apa$full$Matchness_Valence`), and three way interaction (`r df4b_RT_anova_apa$full$Matchness_Identity_Valence`).
 
+
+```{r analyzing for RT_4b_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# match trials
+df4b.v.rt_m1 <- df4b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+df4b_RT_anova_m <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df4b_RT_anova_m_apa <- df4b_RT_anova_m %>% papaja::apa_print()
+
+posthoc_4b_rt <- emmeans::emmeans(df4b_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
+# pairs(posthoc_4b_rt)
+
+# Mismatch trials
+df4b.v.rt_m2 <- df4b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df4b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m2,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df4b_RT_anova_nm_apa <- df4b_RT_anova_nm %>% papaja::apa_print()
+
+# match trials: self condition
+df4b.v.rt_m1_s <- df4b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df4b_RT_anova_m_s <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1_s,     # using afex's function 
+                                  within = c('Valence'))
+df4b_RT_anova_m_s_apa <- df4b_RT_anova_m_s %>% papaja::apa_print()
+
+posthoc_4b_rt_s <- emmeans::emmeans(df4b_RT_anova_m_s, c("Valence")) # compare each valence for both self and other condition
+# pairs(posthoc_4b_rt_s)
+
+# match trials: other condition
+df4b.v.rt_m1_o <- df4b.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df4b_RT_anova_m_o <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1_o,     # using afex's function 
+                                  within = c('Valence'))
+df4b_RT_anova_m_o_apa <- df4b_RT_anova_m_o %>% papaja::apa_print()
+
+posthoc_4b_rt_o <- emmeans::emmeans(df4b_RT_anova_m_o, c("Valence")) # compare each valence for both self and other condition
+# pairs(posthoc_4b_rt_o)
+```
+We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4b_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired t tests showed that good-self association (680 ± 65.7) were faster than bad-self associations (720  ± 60.2), *t*(44) = -4.22, *p* < .001, Cohen’s *d* = -0.629 CI [-0.947 -0.306], BF10 = 200, and  neutral-self association (712 ± 54.9), *t*(44) = -4.67, *p* < 0.001, Cohen’s *d* = -0.696, 95% CI [-1.019 -0.367], BF10 = 745.3. The neutral-self and bad-self associations did not differ, *t*(44) = -1.04, *p* = .31, Cohen’s *d* = -0.155, 95%CI [-0.448 0.14], BF10 = 0.267. RTs in good-self condition were facilitated but without performance being impaired for bad-self associations (relative to the normal neutral self)(see Figure 5). 
+For the stranger condition, the main effect of moral valence was  also significant, `r df4b_RT_anova_m_o_apa$full$Valence`, BF10 = 21. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen’s d = -0.4999, 95%CI [-0.8075 -0.1872], BF10 = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen’s d = -0.3294, 95%CI [-6278 -0.0275], BF10 = 1.454. While there is is no strong evidence about the differences between bad-other vs. neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen’s d = -0.2723, 95%CI [-0.5685 0.0268], BF10 = 0.743.
+
+For non-matched trials, there was no significant effect. Idneity (`r df4b_RT_anova_nm_apa$full$Identity`), interaction (`r df4b_RT_anova_nm_apa$full$Identity_Valence`). But here are effect of Valence (`r df4b_RT_anova_nm_apa$full$Valence`)
+
+## Discussion
+In experiment 4, we manipulated the task so that the moral valence (experiment 4a) or the self-relatedness (experiment 4b) become irrelevant to the task. We found a robust effect of the task: when the self-relatedness is task related, the results showed a strong effect of self-relatedness; in contrast, when moral valence become task related the main effect of moral valence was strong. However, the task irrelevant stimuli in the shape exerted influence on the performance as well. The good self conditions (the shape associated the self and with a “good person” within the shape) performed better than bad self conditions. These results demonstrated that even when the moral valence and self-reference was separated by the task, participants can still couple the the self with the morally good, and facilitated the perceptual decision making.
 
 \newpage
 
