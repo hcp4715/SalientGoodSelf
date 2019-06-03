@@ -2008,6 +2008,233 @@ df5a_RT_anova_nm_apa <- df5a_RT_anova_nm %>% papaja::apa_print()
 We found intercation between Matchness and Valence (`r df5a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 2. For matched trials, we found the effect of valence `r df5a_RT_anova_m_apa$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df5a_RT_anova_nm_apa$full$Valence`). Post-hoc *t*-tests revealed that shapes associated with Good Person (mean = 550, SE = 13.8) were responded faster than Neutral-Person (501, SE = 14.7), (*t*(24) = -5.171, *p* = 0.0001) and Bad Person (523, SE = 16.3), *t*(24) = -8.137, *p* < 0.0001)., and Neutral is faster than Bad-Person condition (*t*(32) = -3.282, *p* = 0.0085).
 
 
+# Experiment 5b: EEG study 2
+Experiment 5b was conducted to study the neural correlates of the prioritization effect of positive self, i.e., the neural underlying of the behavioral effect found int experiment 3a. However, as in experiment 5a, the procedure of this experiment was modified to adopted to ERP experiment. 
+
+## Method
+```{r loadingData_5b,echo=FALSE,results='hide'}
+df5b_d1 <- read.csv(".\\exp5b_erp2\\rawdata_erp_exp5b_d1_2016.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+  dplyr::rename(Subject = ï..Subject, 
+                BlockNo = BlockList.Sample,
+                TrialNo = SubTrial,
+                Matchness = YesNoResp,
+                Identity = identity,
+                Valence = morality,
+                ACC = Target.ACC, 
+                CRESP = Target.CRESP,                   # rename the columns
+                RESP = Target.RESP, RT = Target.RT) %>%    #
+  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
+                Valence = derivedFactor("Bad" = (Valence == "bad"), 
+                                        "Good" = (Valence == "good"), 
+                                        "Neutral" = (Valence == "normal"), 
+                                        method ="first", .default = NA),
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age)) %>%
+  dplyr::mutate(Site = "THU")
+
+df5b_d2 <- read.csv(".\\exp5b_erp2\\rawdata_erp_exp5b_d2_2016.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+  dplyr::rename(Subject = ï..Subject, 
+                BlockNo = BlockList.Sample,
+                TrialNo = SubTrial,
+                Matchness = YesNoResp,
+                Identity = identity,
+                Valence = morality,
+                ACC = Target.ACC, 
+                CRESP = Target.CRESP,                   # rename the columns
+                RESP = Target.RESP, RT = Target.RT) %>%    #
+  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
+                Valence = derivedFactor("Bad" = (Valence == "bad"), 
+                                        "Good" = (Valence == "good"), 
+                                        "Neutral" = (Valence == "normal"), 
+                                        method ="first", .default = NA),
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age)) %>%
+  dplyr::mutate(Site = "THU")
+
+df5b_d1.T.basic     <- df5b_d1 %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+
+df5b_d2.T.basic     <- df5b_d2 %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+  
+# number of participant who practiced but not in the formal experiment
+#nQuit <- length(unique(df5a$Subject[is.na(df5a$BlockNo)])) - length(unique(df5a$Subject[!is.na(df5a$BlockNo)]))
+
+# participants should be excluded
+df5b_d1.excld.sub <-  df5b_d1 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::group_by(Subject) %>%
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+  dplyr::select(Subject)
+
+# The rate of excluded trials in valid data
+df5b_d1.invalid_trial_rate   <- df5b_d1 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df5b_d1.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
+  dplyr::pull()
+
+df5b_d1.v   <- df5b_d1 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df5b_d1.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df5b_d1.v.basic     <- df5b_d1.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+
+df5b_d2.excld.sub <-  df5b_d2 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::group_by(Subject) %>%
+  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
+  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+                   N_crrct = sum(ACC),
+                   ACC = sum(ACC)/length(ACC)) %>%
+  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+  dplyr::select(Subject)
+
+
+df5b_d2.v   <- df5b_d2 %>%
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::filter(!(Subject %in% df5b_d2.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df5b_d2.v.basic     <- df5b_d2.v %>%
+  dplyr::select(Site, Subject, Age, Sex) %>%
+  dplyr::distinct(Subject, .keep_all = TRUE) %>%
+  dplyr::summarise(N = length(Subject),
+                   N_thu = length(Site[Site == "THU"]),
+                   N_wzu = length(Site[Site == "WZU"]),
+                   Nf = length(Sex[Sex == "female"]),
+                   Nm = length(Sex[Sex == "male"]),
+                   Age_mean = round(mean(Age,na.rm=TRUE),2),
+                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+
+
+```
+
+### Participants
+`r df5b_d1.T.basic$N` college students (`r df5b_d1.T.basic$Nf` female, age = `r df5b_d1.T.basic$Age_mean` $\pm$ `r df5b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df5b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy.`r df5b_d1.v.basic$N` college students (`r df5b_d1.v.basic$Nf` female, age = `r df5b_d1.v.basic$Age_mean` $\pm$ `r df5b_d1.v.basic$Age_sd`). For day 2's data, one participant dropp out , and leaving 22 participants  (`r df5b_d2.v.basic$Nf` female, age = `r df5b_d2.v.basic$Age_mean` $\pm$ `r df5b_d2.v.basic$Age_sd`) in day 2, all of them has overall accuracy higher than 60%.
+
+### Experimental design
+The experimental design of this experiment is same as experiment 3:  a 2 × 3 × 2 within-subject design with self-relevance (self-relevant vs. other-relevant), moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
+
+### Stimuli
+As in experiment 3 a & 3b, 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
+
+### Procedure
+The procedure was similar to Experiment 2 and 5b. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
+
+All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
+
+Given that learning 6 association is more difficult than 3 association and participant has low accuracy at the begining, to maximizing the accurate trials that can be used in EEG data, the current experiment has two day session. At the first day, participants learnt the associations and finished XX blocks of the matching task, each had XX trials, without EEG recording. They came back to lab at the second day and finish the same task again, with EEG recorded.
+
+## Results
+Only the behavioral results were reported here.
+
+```{r 5b_dprime_d1, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime
+df5b_d1.v.dprime_l <- df5b_d1.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+
+df5b_d2.v.dprime_l <- df5b_d2.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+# anova for d prime
+df5b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df5b_d1.v.dprime_l,  # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d1_dprime_anova_apa <- df5b_d1_dprime_anova$aov %>% papaja::apa_print()
+
+#posthoc_5b_d1_d <- emmeans::emmeans(df5b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_5b_d1_d)
+
+df5b_d2_dprime_anova <- afex::aov_ez('Subject','dprime',df5b_d2.v.dprime_l,  # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d2_dprime_anova_apa <- df5b_d2_dprime_anova$aov %>% papaja::apa_print()
+#posthoc_5b_d2_d <- emmeans::emmeans(df5b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_5b_d2_d)
+```
+
+
+### Day one
+
+#### *d* prime
+There was evidence for the interaction between identity and valence, `r df5b_d1_dprime_anova_apa$full$Identity_Valence`. 
+
+#### RT
+
+### Day two
+
+#### *d* prime
+There was evidence for the interaction between identity and valence, `r df5b_d2_dprime_anova_apa$full$Identity_Valence`. 
+
+#### RT
+
+
 \newpage
 
 # References
