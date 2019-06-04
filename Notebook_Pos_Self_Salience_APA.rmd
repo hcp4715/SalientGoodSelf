@@ -1058,7 +1058,7 @@ Paired t test showed that the Good-Person condition (2.86 $\pm$ 0.16) was with g
 ### Analaysis of reaction time.
 The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
 ```{r 3a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime with 2*2 design
+# anova for RT with 2*2*3 design
 df3a.v.rt_m <- df3a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
@@ -1069,12 +1069,6 @@ df3a.v.rt_m <- df3a.v %>%
 df3a_RT_anova <- afex::aov_ez('Subject','RT_m',df3a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
 df3a_RT_anova_apa <- df3a_RT_anova %>% papaja::apa_print()
-
-# use LMM, random intercept for each participant
-#df1b_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
-#                          df1b.v.rt_m,
-#                          method = "S",
-#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
 ```
 We found intercation between Matchness and Valence (`r df3a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
@@ -2162,7 +2156,6 @@ Given that learning 6 association is more difficult than 3 association and parti
 
 ## Results
 Only the behavioral results were reported here.
-
 ```{r 5b_dprime_d1, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # calculate d prime
 df5b_d1.v.dprime_l <- df5b_d1.v %>%
@@ -2172,7 +2165,7 @@ df5b_d1.v.dprime_l <- df5b_d1.v %>%
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
                                     method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
-  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
   dplyr::ungroup() %>%
   tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
   dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
@@ -2180,11 +2173,126 @@ df5b_d1.v.dprime_l <- df5b_d1.v %>%
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
                 FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other')))
 
+# anova for d prime
+df5b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df5b_d1.v.dprime_l,  # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d1_dprime_anova_apa <- df5b_d1_dprime_anova$aov %>% papaja::apa_print()
 
+# anova for self condition
+df5b_d1_dprime_s_anova <- df5b_d1.v.dprime_l %>%
+  dplyr::filter(Identity == "Self") %>%
+  afex::aov_ez('Subject','dprime',., within = c('Valence'))
+
+df5b_d1_dprime_s_anova_apa <- df5b_d1_dprime_s_anova$aov %>% papaja::apa_print()
+
+posthoc_5b_d1_s_d <- emmeans::emmeans(df5b_d1_dprime_s_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_5b_d1_s_d)
+
+# anova for Other condition
+df5b_d1_dprime_o_anova <- df5b_d1.v.dprime_l %>%
+  dplyr::filter(Identity == "Other") %>%
+  afex::aov_ez('Subject','dprime',., within = c('Valence'))
+
+df5b_d1_dprime_o_anova_apa <- df5b_d1_dprime_o_anova$aov %>% papaja::apa_print()
+```
+### Day one
+
+#### *d* prime
+There was evidence for the interaction between identity and valence, `r df5b_d1_dprime_anova_apa$full$Identity_Valence`. We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df5b_d1_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), *t*(21) = 5.984, *p* < 0.001, and bad-self condition (2.07, SE = 0.154), *t*(21) = 6.555, *p* < 0.001. But there was no significant difference between bad-self and neutral-self, *t*(21) = -1.059, *p* = 0.549. For other trials, there was no significant effect of valuence, `r df5b_d1_dprime_o_anova_apa$full$Valence`.
+
+```{r 5b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for RT with 2*2*3 design
+df5b_d1.v.rt_m <- df5b_d1.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df5b_d1_RT_anova <- afex::aov_ez('Subject','RT_m',df5b_d1.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Identity','Valence'))
+df5b_d1_RT_anova_apa <- df5b_d1_RT_anova %>% papaja::apa_print()
+
+df5b_d2.v.rt_m <- df5b_d2.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df5b_d2_RT_anova <- afex::aov_ez('Subject','RT_m',df5b_d2.v.rt_m,     # using afex's function 
+                                  within = c('Matchness','Identity','Valence'))
+df5b_d2_RT_anova_apa <- df5b_d2_RT_anova %>% papaja::apa_print()
+```
+
+```{r 5b_d1_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# Day 1: match trials
+df5b_d1.v.rt_m1 <- df5b_d1.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+df5b_d1_RT_anova_m <- afex::aov_ez('Subject','RT_m',df5b_d1.v.rt_m1,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d1_RT_anova_m_apa <- df5b_d1_RT_anova_m %>% papaja::apa_print()
+
+### For matched, self trials
+df5b_d1.v.rt_m1_s <- df5b_d1.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df5b_d1_RT_anova_m_s <- afex::aov_ez('Subject','RT_m',df5b_d1.v.rt_m1_s,     # using afex's function 
+                                  within = c('Valence'))
+df5b_d1_RT_anova_m_s_apa <- df5b_d1_RT_anova_m_s %>% papaja::apa_print()
+
+posthoc_5b_d1_rt_s <- emmeans::emmeans(df5b_d1_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
+# pairs(posthoc_5b_d1_rt_s)
+
+### For matched, other trials
+df5b_d1.v.rt_m1_o <- df5b_d1.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df5b_d1_RT_anova_m_o <- afex::aov_ez('Subject','RT_m',df5b_d1.v.rt_m1_o,     # using afex's function 
+                                  within = c('Valence'))
+df5b_d1_RT_anova_m_o_apa <- df5b_d1_RT_anova_m_o %>% papaja::apa_print()
+
+
+# Day1: Mismatch trials
+df5b_d1.v.rt_m2 <- df5b_d1.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df5b_d1_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df5b_d1.v.rt_m2,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d1_RT_anova_nm_apa <- df5b_d1_RT_anova_nm %>% papaja::apa_print()
+```
+
+#### RT
+For the matched trials, there was interaction between identity and valence, `r df5b_d1_RT_anova_m_apa$full$Identity_Valence`. We split the self-relevant and other relevant trials separately. For the self condition, the valence effect is significant, `r df5b_d1_RT_anova_m_s_apa$full$Valence`. The Self-good (484, SE = 13.2) is faster than self-neutral (543, SE = 16.7) , *t* = -4.521, *p* = 0.0005, *df* = 21 and self-bad condition (535, SE = 18.4),  *t* = -4.489, *p* = 0.0006, *df* = 21. but not significant different between neutral and bad condition, *t* = 0.689, *p* = 0.772, *df* = 21. For other condition, there was no effect of valence, `r df5b_d1_RT_anova_m_o_apa$full$Valence`. 
+
+### Day two
+```{r 5b_dprime_d2, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculate d prime
 df5b_d2.v.dprime_l <- df5b_d2.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
@@ -2200,40 +2308,98 @@ df5b_d2.v.dprime_l <- df5b_d2.v %>%
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
                 FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other')))
-
-# anova for d prime
-df5b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df5b_d1.v.dprime_l,  # using afex's function 
-                                  within = c('Identity','Valence'))
-df5b_d1_dprime_anova_apa <- df5b_d1_dprime_anova$aov %>% papaja::apa_print()
-
-#posthoc_5b_d1_d <- emmeans::emmeans(df5b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_5b_d1_d)
 
 df5b_d2_dprime_anova <- afex::aov_ez('Subject','dprime',df5b_d2.v.dprime_l,  # using afex's function 
                                   within = c('Identity','Valence'))
 df5b_d2_dprime_anova_apa <- df5b_d2_dprime_anova$aov %>% papaja::apa_print()
 #posthoc_5b_d2_d <- emmeans::emmeans(df5b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_5b_d2_d)
+
+# anova for self condition
+df5b_d2_dprime_s_anova <- df5b_d2.v.dprime_l %>%
+  dplyr::filter(Identity == "Self") %>%
+  afex::aov_ez('Subject','dprime',., within = c('Valence'))
+
+df5b_d2_dprime_s_anova_apa <- df5b_d2_dprime_s_anova$aov %>% papaja::apa_print()
+
+posthoc_5b_d2_s_d <- emmeans::emmeans(df5b_d2_dprime_s_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_5b_d2_s_d)
+
+# anova for Other condition
+df5b_d2_dprime_o_anova <- df5b_d2.v.dprime_l %>%
+  dplyr::filter(Identity == "Other") %>%
+  afex::aov_ez('Subject','dprime',., within = c('Valence'))
+
+df5b_d2_dprime_o_anova_apa <- df5b_d2_dprime_o_anova$aov %>% papaja::apa_print()
+
+```
+#### *d* prime
+There was evidence for the interaction between identity and valence, `r df5b_d2_dprime_anova_apa$full$Identity_Valence`.  We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df5b_d2_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), *t*(21) = 2.98, *p* = 0.0189, and bad-self condition (2.43, SE = 0.199), *t*(21) = 3.93, *p* = 0.0021. But there was no significant difference between bad-self and neutral-self, *t*(21) = -0.097, *p* = 0.995. For other trials, there was no significant effect of valuence, `r df5b_d2_dprime_o_anova_apa$full$Valence`.
+
+```{r 5b_d2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# Day2: match trials
+df5b_d2.v.rt_m1 <- df5b_d2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+df5b_d2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df5b_d2.v.rt_m1,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d2_RT_anova_m_apa <- df5b_d2_RT_anova_m %>% papaja::apa_print()
+
+posthoc_5b_d2_rt <- emmeans::emmeans(df5b_d2_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
+# pairs(posthoc_5b_d2_rt)
+
+df5b_d2.v.rt_m1_s <- df5b_d2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df5b_d2_RT_anova_m_s <- afex::aov_ez('Subject','RT_m',df5b_d2.v.rt_m1_s,     # using afex's function 
+                                  within = c('Valence'))
+df5b_d2_RT_anova_m_s_apa <- df5b_d2_RT_anova_m_s %>% papaja::apa_print()
+
+posthoc_5b_d2_rt_s <- emmeans::emmeans(df5b_d2_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
+# pairs(posthoc_5b_d2_rt_s)
+
+### For matched, other trials
+df5b_d2.v.rt_m1_o <- df5b_d2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df5b_d2_RT_anova_m_o <- afex::aov_ez('Subject','RT_m',df5b_d2.v.rt_m1_o,     # using afex's function 
+                                  within = c('Valence'))
+df5b_d2_RT_anova_m_o_apa <- df5b_d2_RT_anova_m_o %>% papaja::apa_print()
+
+# Day2: Mismatch trials
+df5b_d2.v.rt_m2 <- df5b_d2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df5b_d2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df5b_d2.v.rt_m2,     # using afex's function 
+                                  within = c('Identity','Valence'))
+df5b_d2_RT_anova_nm_apa <- df5b_d2_RT_anova_nm %>% papaja::apa_print()
 ```
 
-
-### Day one
-
-#### *d* prime
-There was evidence for the interaction between identity and valence, `r df5b_d1_dprime_anova_apa$full$Identity_Valence`. 
-
 #### RT
-
-### Day two
-
-#### *d* prime
-There was evidence for the interaction between identity and valence, `r df5b_d2_dprime_anova_apa$full$Identity_Valence`. 
-
-#### RT
-
+For the matched trials, the interaction between identity and valence, `r df5b_d2_RT_anova_m_apa$full$Identity_Valence`. As in previous studies, we splited the self- and other-relevant trials. For the self condition, the valence effect is significant, `r df5b_d2_RT_anova_m_s_apa$full$Valence`. The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , *t* = -2.289, *p* = 0.0795, *df* = 21 and self-bad condition (508, SE = 17.9),  *t* = -4.342, *p* = 0.0008, *df* = 21. but not significant different between neutral and bad condition, *t* = -0.503, *p* = 0.871, *df* = 21. For other condition, there was no effect of valence, `r df5b_d2_RT_anova_m_o_apa$full$Valence`. 
 
 \newpage
 
