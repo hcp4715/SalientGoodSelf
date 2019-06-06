@@ -235,7 +235,7 @@ df1a.v.dprime_l <- df1a.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -469,7 +469,7 @@ df1b.v.dprime_l <- df1b.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -676,7 +676,7 @@ df1c.v.dprime_l <- df1c.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -814,7 +814,7 @@ df2.v.dprime_l <- df2.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -931,10 +931,10 @@ df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014.csv", header = TRUE,
   dplyr::mutate(Valence = derivedFactor("Neutral" = (Shape == "Normalself" | Shape == 'Normalother'), 
                                         "Good" = (Shape == "Goodself" | Shape == 'Goodother'), 
                                         "Bad" = (Shape == "Badself" | Shape == 'Badother'), 
-                                        method ="first", .default = NA),
+                                        .method ="first", .default = NA),
                 Identity  = derivedFactor("Self" = (Shape == "Normalself" | Shape == 'Goodself' | Shape == 'Badself'), 
                                         "Other" = (Shape == "Normalother" | Shape == 'Goodother' | Shape == 'Badother'), 
-                                        method ="first", .default = NA),
+                                        .method ="first", .default = NA),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
                 Subject = factor(Subject))
@@ -1017,7 +1017,7 @@ df3a.v.dprime_l <- df3a.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -1127,7 +1127,7 @@ df3b <- read.csv(".\\exp3b\\rawdata_behav_exp3b_2017.csv", header = TRUE,
   dplyr::mutate(Valence = derivedFactor("Neutral" = (Shape == "Neutralself" | Shape == 'NeutralOther'), 
                                         "Good" = (Shape == "Goodself" | Shape == 'GoodOther'), 
                                         "Bad" = (Shape == "Badself" | Shape == 'BadOther'), 
-                                        method ="first", .default = NA),
+                                        .method ="first", .default = NA),
                 Identity  = ifelse(Identity == "Self" | Identity == 'self', "Self", "Other"),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age),  # if the min age is 0, that age is missing
@@ -1214,7 +1214,7 @@ df3b.v.dprime_l <- df3b.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -1470,7 +1470,7 @@ df4a.v.dprime_l <- df4a.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -1711,7 +1711,7 @@ df4b.v.dprime_l <- df4b.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -1836,56 +1836,39 @@ So far, we have considered the modulation effect of morality and found that the 
 ## Method
 
 ```{r loadingData_5,echo=FALSE,results='hide'}
-df5 <- read.csv(".\\exp5_specificity\\rawdata_behav_5_specificity_2016.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE) %>%
-  dplyr::rename(BlockListM = BlockListMoral) %>%
-  dplyr::mutate(taskType = derivedFactor("Emotion"  = (Label == "sad" | Label == "happy" | Label == "neutral"),
+df5 <- read.csv(".\\exp5_specificity\\rawdata_behav_5_specificity_2016.csv",header = TRUE, sep = ",",
+                stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
+  dplyr::rename(BlockListM.Sample = BlockListMoral.Sample, Matchness = YesNoResp) %>%                            # rename the columns
+  dplyr::mutate(Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                taskType = derivedFactor("Emotion"  = (Label == "sad" | Label == "happy" | Label == "neutral"),
                                          "Morality" = (Label == "bad" | Label == "good" | Label == "ordinary"),
                                          "Person"   = (Label == "uglyP" | Label == "beautyP" | Label == "normalP"),
                                          "Scene"    = (Label == "uglyS" | Label == "beautyS" | Label == "normalS"), 
-                                         method ="first", .default = NA)) %>%
-  tidyr::replace_na(list(PracListE="",    PracListM="",    PracListP="",    PracListS="",
-                         BlockListE="",   BlockListM="",   BlockListP="",   BlockListS="",
+                                         .method ="first", .default = NA),
+                Valence = derivedFactor("Good"= (Label ==  "good" | Label == "happy" | Label == "beautyP"  | Label == "beautyS"),
+                                         "Bad" = (Label == "bad"  | Label == "sad"   | Label == "uglyP"    | Label == "uglyS"),
+                                         "Neutral" = (Label == "ordinary" | Label == "neutral" | Label == "normalP" | Label == "normalS"),
+                                         .method ="first", .default = NA)) %>%
+  tidyr::replace_na(list(PracListE="",    PracListM="",    PracListP="",    PracListS="",          # replace NA with "" for later unite
+                         BlockListE.Sample="", BlockListM.Sample="", BlockListP.Sample="", BlockListS.Sample="",
+                         TrialListE.Sample="", TrialListM.Sample="", TrialListP.Sample="", TrialListS.Sample="",
                          TargetE.ACC="",  TargetM.ACC="",  TargetP.ACC="",  TargetS.ACC="",
                          TargetE.RESP="", TargetM.RESP="", TargetP.RESP="", TargetS.RESP="",
                          TargetE.RT="",   TargetM.RT="",   TargetP.RT="",   TargetS.RT="")) %>%
-  tidyr::unite("PracList", PracListE,PracListM,PracListP,PracListS, sep = "")  %>%
-  tidyr::unite("BlockList", BlockListE,BlockListM,BlockListP,BlockListS, sep = "") %>%
-  tidyr::unite("ACC", TargetE.ACC,  TargetM.ACC,  TargetP.ACC,  TargetS.ACC, sep = "") %>%
-  tidyr::unite("RESP", TargetE.RESP,  TargetM.RESP,  TargetP.RESP,  TargetS.RESP, sep = "") %>%
-  tidyr::unite("RT", TargetE.RT,  TargetM.RT,  TargetP.RT,  TargetS.RT, sep = "") %>%
-  
-  dplyr::mutate(taskType = as.character(taskType)) %>%
-  dplyr::filter(is.na(taskType))
+  tidyr::unite("PracList", PracListE,PracListM,PracListP,PracListS, sep = "")  %>%                # unite all praclist
+  tidyr::unite("BlockNo", BlockListE.Sample,BlockListM.Sample,BlockListP.Sample,BlockListS.Sample, sep = "") %>% # unite all blocklist
+  tidyr::unite("TrialNo", TrialListE.Sample,TrialListM.Sample,TrialListP.Sample,TrialListS.Sample, sep = "") %>% # unite all blocklist
+  tidyr::unite("ACC", TargetE.ACC,  TargetM.ACC,  TargetP.ACC,  TargetS.ACC, sep = "") %>%        # unite all ACC
+  tidyr::unite("RESP", TargetE.RESP,  TargetM.RESP,  TargetP.RESP,  TargetS.RESP, sep = "") %>%   # unite all RESP
+  tidyr::unite("RT", TargetE.RT,  TargetM.RT,  TargetP.RT,  TargetS.RT, sep = "") %>%             # unite all RT
+  dplyr::mutate(Site = "THU", 
+                ACC = as.numeric(ACC), 
+                RT = as.numeric(RT),
+                BlockNo = as.numeric(BlockNo),
+                TrialNo = as.numeric(TrialNo)) %>% 
+  dplyr::mutate_if(is_character, list(~na_if(.,"")))     # blank to NA
 
-  transmute_all(funs(ifelse(. == 1, deparse(substitute(.)), NA))(PracListE:BlockListS))
-
-  tidyr::gather(bList, value, PracListE:BlockListS) %>%
-  dplyr::mutate(bList = ifelse(bList == "BlockListMoral","BlockListM", bList)) %>%
-  tidyr::separate(bList,c("listType","taskType"), sep = "List")
-  dplyr::rename(Morality = morality) %>%
-  dplyr::mutate(Site = "THU")
-
-df4b_2 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Morality = morality) %>%
-  dplyr::mutate(Site = "WZU")
-
-df4b <- rbind(df4b_1,df4b_2) %>%
-  dplyr::rename(ACC = Target.ACC,           # rename columns
-                RT  = Target.RT,
-                CRESP = Target.CRESP,
-                BlockNo = BlockList.Sample,
-                TrialNo = SubTrial,
-                RESP = Target.RESP,
-                Matchness = YesNoResp,
-                Valence = Morality) %>%
-  dplyr::mutate(Valence  = ifelse(Valence == "Ord", "Neutral", Valence),
-                Identity = ifelse(Identity == "self" | Identity == "Self", "Self", "Other"),
-                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
-                Subject = factor(Subject))
-rm(df4b_1,df4b_2) # remove the temporary variables.
-
-df4b.T.basic     <- df4b %>%
+df5.T.basic     <- df5 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
   dplyr::distinct(Subject, .keep_all = TRUE) %>%
   dplyr::summarise(N = length(Subject),
@@ -1896,14 +1879,15 @@ df4b.T.basic     <- df4b %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
-# number of participant who practiced but not in the formal experiment
-nQuit <- length(unique(df4b$Subject[is.na(df4b$BlockNo)])) - length(unique(df4b$Subject[!is.na(df4b$BlockNo)]))
+# find the participants who practiced but not finish experiment
+subjPrac <- df5 %>% dplyr::filter(is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
+subjFinish <- df5 %>% dplyr::filter(!is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
+subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
 
 # participants should be excluded
-df4b.excld.sub <-  df4b %>%
+df5.excld.sub <-  df5 %>%
   dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
@@ -1911,18 +1895,21 @@ df4b.excld.sub <-  df4b %>%
   dplyr::select(Subject)
 
 # The rate of excluded trials in valid data
-df4b.invalid_trial_rate   <- df4b %>%
+df5.invalid_trial_rate   <- df5 %>%
   dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(Subject %in% subjQuit)) %>%                 # exclude the invalid subjects
+  dplyr::filter(!(Subject %in% df5.excld.sub$Subject)) %>%    # exclude the invalid subjects
   dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
   dplyr::pull()
 
-df4b.v   <- df4b %>%
+df5.v   <- df5 %>%
   dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) %>%   # exclude the invalid subjects
-  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+  dplyr::filter(!(Subject %in% subjQuit)) %>%                 # exclude the invalid subjects
+  dplyr::filter(!(Subject %in% df5.excld.sub$Subject)) %>%   # exclude the invalid subjects
+  dplyr::filter(!(RT <= 200 & ACC == 1)) %>%                      # exclude < 200 trials
+  dplyr::arrange(Subject)
 
-df4b.v.basic     <- df4b.v %>%
+df5.v.basic     <- df5.v %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
   dplyr::distinct(Subject, .keep_all = TRUE) %>%
   dplyr::summarise(N = length(Subject),
@@ -1935,17 +1922,76 @@ df4b.v.basic     <- df4b.v %>%
 ```
 
 ### Participants
-43 participant recruited from Tsinghua University university community (21 females; 18 to 29 years of age, mean age = 22.93 ±2.56). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, one (male) didn’t finished the experiment, and the other four accuracy was less than 60%. The results for the remaining 38 subjects, with mean age of 22.875 ± 2.59, were included in data analyses.
+`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(subjQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
 
 ### Experimental design
 A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, atttractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
-###Stimuli
-4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of words, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires XXXXXXXX.
+
+### Stimuli
+4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires XXXXXXXX.
 
 ### Procedure
 Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomnized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
 
+## Results
+### *d* prime
+```{r analyzing for d prime_e5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculating the dprime 
+df5.v.dprime_l <- df5.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, taskType, Subject, Age, Sex, Valence,sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, taskType,Valence, dprime) %>%   # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                taskType = factor(taskType, levels = c('Morality', 'Emotion',"Person", "Scene")))
 
+
+# anova for d prime with 2*2 design
+df5_dprime_anova <- afex::aov_ez('Subject','dprime',df5.v.dprime_l,  # using afex's function 
+                                  within = c('taskType','Valence'))
+df5_dprime_anova_apa <- df5_dprime_anova %>% papaja::apa_print()
+#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
+```
+We conducted 4 (task type: morality, emotion, person, scene) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (`r df5_dprime_anova_apa$full$taskType`), but revealed effect of valence, `r df5_dprime_anova_apa$full$Valence`, and their interactions, `r df5_dprime_anova_apa$full$taskType_Valence`. 
+
+```{r analyzing for d prime_e5_tasks, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# calculating the dprime 
+df5.v.dprime_M_anova <- df5.v.dprime_l %>%
+  dplyr::filter(taskType == "Morality") %>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df5_dprime_M_anova_apa <- df5.v.dprime_M_anova %>% papaja::apa_print()
+post_hoc_5_d_m <- emmeans::emmeans(df5.v.dprime_M_anova,'Valence')
+pairs(post_hoc_5_d_m)
+
+df5.v.dprime_E_anova <- df5.v.dprime_l %>%
+  dplyr::filter(taskType == "Emotion") %>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df5_dprime_E_anova_apa <- df5.v.dprime_E_anova %>% papaja::apa_print()
+
+df5.v.dprime_P_anova <- df5.v.dprime_l %>%
+  dplyr::filter(taskType == "Person") %>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df5_dprime_P_anova_apa <- df5.v.dprime_P_anova %>% papaja::apa_print()
+
+df5.v.dprime_S_anova <- df5.v.dprime_l %>%
+  dplyr::filter(taskType == "Scene") %>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df5_dprime_S_anova_apa <- df5.v.dprime_S_anova %>% papaja::apa_print()
+
+```
+
+To understand the interaction, we separated four different tasks. For the morality task, the valence effect `r df5_dprime_M_anova_apa$full$Valence`; for emotion, `r df5_dprime_E_anova_apa$full$Valence`; for the person appearance, `r df5_dprime_P_anova_apa$full$Valence`; for scene appearance, `r df5_dprime_S_anova_apa$full$Valence`.
 
 # Experiment 6a: EEG study 1
 Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
@@ -2045,7 +2091,7 @@ df6a.v.dprime_l <- df6a.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -2140,7 +2186,7 @@ df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016.csv",header = TRUE
                 Valence = derivedFactor("Bad" = (Valence == "bad"), 
                                         "Good" = (Valence == "good"), 
                                         "Neutral" = (Valence == "normal"), 
-                                        method ="first", .default = NA),
+                                        .method ="first", .default = NA),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
@@ -2161,7 +2207,7 @@ df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016.csv",header = TRUE
                 Valence = derivedFactor("Bad" = (Valence == "bad"), 
                                         "Good" = (Valence == "good"), 
                                         "Neutral" = (Valence == "normal"), 
-                                        method ="first", .default = NA),
+                                        .method ="first", .default = NA),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
@@ -2280,7 +2326,7 @@ df6b_d1.v.dprime_l <- df6b_d1.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
   dplyr::ungroup() %>%
@@ -2415,7 +2461,7 @@ df6b_d2.v.dprime_l <- df6b_d2.v %>%
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
                                     "miss" = (ACC == 0 & Matchness == "Match"),       # miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    method ="first",  .default = NA)) %>% 
+                                    .method ="first",  .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
