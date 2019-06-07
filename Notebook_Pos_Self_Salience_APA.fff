@@ -1,0 +1,10 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics{./figures/p_exp5a_match_dprime}
+
+}
+
+\caption{...}(\#fig:test figure)
+\end{figure*}

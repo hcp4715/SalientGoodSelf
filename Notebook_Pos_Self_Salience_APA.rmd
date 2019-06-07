@@ -1978,20 +1978,110 @@ df5.v.dprime_E_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Emotion") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 df5_dprime_E_anova_apa <- df5.v.dprime_E_anova %>% papaja::apa_print()
+post_hoc_5_d_e <- emmeans::emmeans(df5.v.dprime_E_anova,'Valence')
+pairs(post_hoc_5_d_e)
 
 df5.v.dprime_P_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Person") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 df5_dprime_P_anova_apa <- df5.v.dprime_P_anova %>% papaja::apa_print()
+post_hoc_5_d_p <- emmeans::emmeans(df5.v.dprime_P_anova,'Valence')
+pairs(post_hoc_5_d_p)
+
 
 df5.v.dprime_S_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Scene") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 df5_dprime_S_anova_apa <- df5.v.dprime_S_anova %>% papaja::apa_print()
 
+post_hoc_5_d_s <- emmeans::emmeans(df5.v.dprime_S_anova,'Valence')
+pairs(post_hoc_5_d_s)
+
 ```
 
-To understand the interaction, we separated four different tasks. For the morality task, the valence effect `r df5_dprime_M_anova_apa$full$Valence`; for emotion, `r df5_dprime_E_anova_apa$full$Valence`; for the person appearance, `r df5_dprime_P_anova_apa$full$Valence`; for scene appearance, `r df5_dprime_S_anova_apa$full$Valence`.
+To understand the interaction, we separated four different tasks. For the morality task, the valence effect `r df5_dprime_M_anova_apa$full$Valence`.
+
+For emotion conditions, we found that main effect of valence `r df5_dprime_E_anova_apa$full$Valence`. Post-hoc comparison showed that good (2.13, s.e. = 0.161) was not different from neutral condition (2.10, se = 0.125), *t*(37) = 0.163, *p* = 0.9854, but both are higher than  than bad condition (1.79, se = 0.148) (neutral > bad, *t*(37) = 3.588, *p* = 0.0027; good > bad, *t*(37) = 2.62, *p* = 0.0332).
+
+For the person appearance, the main effect of valence is significant, `r df5_dprime_P_anova_apa$full$Valence`. Post-hoc analysis found that good condition (2.4, se = 0.167) was higher than both neutral (1.71, se = 0.175, *t*(37) = 5.482, *p* < .0001) and bad (1.70, se = 0.182, *t*(37) = 6.365, *p* < .0001), but neutral and bad condition are not different (*t*(37) = 0.197, *p* =0.9788).
+
+For scene appearance, the main effect of valence is significnat `r df5_dprime_S_anova_apa$full$Valence`. Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, se = 0.156) is higher than both neutral (1.57, se = 0.178, *t*(37) =4.683, *p* = 0.0001) and bad (1.77, se = 0.148, *t*(37) = 3.414, *p* = 0.0044), but neutral and bad conditions are not different (*t*(37) = -1.893, *p* = 0.1549)
+
+```{r test figure, fig.align='center', fig.cap='...'}
+knitr::include_graphics('./figures/p_exp5a_match_dprime.pdf', dpi = 300)
+```
+
+### Reaction time
+
+As in previous experiment, we focused our analysis on the matched trials. We conducted 4 (task type: morality, emotion, beauty of person, beauty of scene) by 3 (Valence: good, neutral, bad) repeated measure ANOVA for matched trials only.
+```{r 5_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for RT with 2*2 design
+df5.v.rt_m <- df5.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness,taskType,Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df5_RT_anova <- afex::aov_ez('Subject','RT_m',df5.v.rt_m, within = c("Matchness",'taskType','Valence')) # using afex's function
+
+df5_RT_anova_apa <- df5_RT_anova %>% papaja::apa_print()
+
+df5.v.rt_anova_m <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Match") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('taskType','Valence'))
+df5.v.rt_anova_m_apa <- df5.v.rt_anova_m %>% papaja::apa_print()
+posthoc_5_rt_m <- emmeans::emmeans(df5.v.rt_anova_m, 'Valence', by = 'taskType')
+pairs(posthoc_5_rt_m)
+
+df5.v.rt_anova_m_M <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & taskType == "Morality") %>%     # task = morality
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+df5.v.rt_anova_m_M_apa <- df5.v.rt_anova_m_M %>% papaja::apa_print()
+
+df5.v.rt_anova_m_E <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & taskType == "Emotion") %>%     # task = emotion
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+df5.v.rt_anova_m_E_apa <- df5.v.rt_anova_m_E %>% papaja::apa_print()
+
+df5.v.rt_anova_m_P <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & taskType == "Person") %>%     # task = person
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+df5.v.rt_anova_m_P_apa <- df5.v.rt_anova_m_P %>% papaja::apa_print()
+
+df5.v.rt_anova_m_S <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & taskType == "Scene") %>%     # task = scene
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+df5.v.rt_anova_m_S_apa <- df5.v.rt_anova_m_S %>% papaja::apa_print()
+
+df5.v.rt_anova_nm <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('taskType','Valence'))
+
+df5.v.rt_anova_nm_M <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch" & taskType == "Morality") %>%     # task = morality
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+
+df5.v.rt_anova_nm_E <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch" & taskType == "Emotion") %>%     # task = emotion
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+
+df5.v.rt_anova_nm_P <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch" & taskType == "Person") %>%     # task = person
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+posthoc_5_rt_nm_P <- emmeans::emmeans(df5.v.rt_anova_nm_P, 'Valence')
+pairs(posthoc_5_rt_nm_P)
+
+df5.v.rt_anova_nm_S <- df5.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch" & taskType == "Scene") %>%     # task = scene
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
+posthoc_5_rt_nm_S <- emmeans::emmeans(df5.v.rt_anova_nm_S, 'Valence')
+pairs(posthoc_5_rt_nm_S)
+```
+We din't found the main effect of task type (`r df5.v.rt_anova_m_apa$full$taskType`), but the main effect of valence (`r df5.v.rt_anova_m_apa$full$Valence`), and intercation between Matchness and Valence (`r df5.v.rt_anova_m_apa$full$taskType_Valence`). We then analyze the effect of valence for each task type. We found that for all four task, the valence effect was significant: morality (`r df5.v.rt_anova_m_M_apa$full$Valence`), emotion (`r df5.v.rt_anova_m_E_apa$full$Valence`), person (`r df5.v.rt_anova_m_P_apa$full$Valence`), scene (`r df5.v.rt_anova_m_S_apa$full$Valence`). Post-hoc analyses revealed that for emotion task, the good condition is reacted faster than bad condition (*t*(37) = 3.475, *p* = 0.0037) but not neutral conditions are not different ((*t*(37) = -0.77, *p* = 0.7236)). The bad condiiton is longer than the neutral (*t*(37) = 5.09, *p* < 0.0001). The pattern is different for morality, person, and scence tasks, which showed that good is faster than both neutral ((*ts*(37) = [-7.289 -2.4], *ps* < 0.0548)) and bad (*ts*(37) = [-7.232 -3.817], *ps* < 0.0014).
+
+## Discussion
+Morality is not specific but reflected an general positive effect. However, this positive effect might not same as the emotion effect.
 
 # Experiment 6a: EEG study 1
 Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
