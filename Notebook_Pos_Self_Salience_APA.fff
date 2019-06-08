@@ -1,10 +1,7 @@
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
-
-{\centering \includegraphics{./figures/p_exp5a_match_dprime}
-
-}
-
-\caption{...}(\#fig:test figure)
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf}
+\caption{\label{fig:ex1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
 \end{figure*}

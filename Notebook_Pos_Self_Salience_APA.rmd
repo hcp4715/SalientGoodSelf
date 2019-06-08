@@ -69,7 +69,9 @@ output            :
 ```{r setup, include = FALSE}
 #library("papaja")
 source('Initial.r')
-
+curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
+#curDir = '.'#dirname(rstudioapi::getSourceEditorContext()$path)
+figDir = paste(curDir, '/figures', sep = '')
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
 options(tinytex.verbose = F) # debug the tex
@@ -226,9 +228,8 @@ For all participants from Wenzhou University, they finished following questionna
 As we describe in the general method section.
 
 ## Results
-### Analaysis of d prime.
-We conducted a single factor (morlaity: good, neutral, bad) repeated measure ANOVA:
-```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height = 6, fig.width = 10}
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
@@ -247,6 +248,24 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
   dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+# get the mean RT for each particpant and each condition for ANOVA
+df1a.v.rt_m <- df1a.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp1a', df1a.v.dprime_l,rtdata)
+```
+
+### Analaysis of d prime.
+We conducted a single factor (morlaity: good, neutral, bad) repeated measure ANOVA:
+```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 ### Long to wide
 #df1a.v.dprime_w <- df1a.v.dprime_l %>%
@@ -288,13 +307,6 @@ The Good condition (2.23 $\pm$ 0.14) is great than Netural condition (2.05 $\pm$
 ### Analaysis of reaction time.
 We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA:
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for RT with 2*2 design
-df1a.v.rt_m <- df1a.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
 
 df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
 
@@ -2007,9 +2019,6 @@ For the person appearance, the main effect of valence is significant, `r df5_dpr
 
 For scene appearance, the main effect of valence is significnat `r df5_dprime_S_anova_apa$full$Valence`. Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, se = 0.156) is higher than both neutral (1.57, se = 0.178, *t*(37) =4.683, *p* = 0.0001) and bad (1.77, se = 0.148, *t*(37) = 3.414, *p* = 0.0044), but neutral and bad conditions are not different (*t*(37) = -1.893, *p* = 0.1549)
 
-```{r test figure, fig.align='center', fig.cap='...'}
-knitr::include_graphics('./figures/p_exp5a_match_dprime.pdf', dpi = 300)
-```
 
 ### Reaction time
 
