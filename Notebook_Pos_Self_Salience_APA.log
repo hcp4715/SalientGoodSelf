@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  8 JUN 2019 16:56
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  9 JUN 2019 15:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1058,7 +1058,10 @@ Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;
 Missing character: There is no 谭 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 永 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 红 in font [lmroman12-regular]:mapping=tex-text;!
-[11] [12] [13] [14] [15] [16] [17]
+[11]
+Underfull \vbox (badness 2293) has occurred while \output is active []
+
+[12] [13] [14] [15] [16] [17]
 Underfull \vbox (badness 1137) has occurred while \output is active []
 
 [18]
@@ -1089,24 +1092,24 @@ File: Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf Gr
 aphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf>
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 954.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 942.
 [46
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 954.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 942.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 954.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 954.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 942.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 942.
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: C3575483402F049112574A1329E78794.
+(rerunfilecheck)             Checksum: B2ABFF9C234EC381B54F5842650554F7.
  ) 
 Here is how much of TeX's memory you used:
- 25344 strings out of 494894
- 471138 string characters out of 6175663
- 580218 words of memory out of 5000000
- 29010 multiletter control sequences out of 15000+600000
- 572332 words of font info for 65 fonts, out of 8000000 for 9000
+ 25341 strings out of 494894
+ 471058 string characters out of 6175663
+ 580175 words of memory out of 5000000
+ 29009 multiletter control sequences out of 15000+600000
+ 572324 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,12n,61p,2725b,583s stack positions out of 5000i,500n,10000p,200000b,80000s
 

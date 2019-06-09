@@ -198,27 +198,21 @@ As we describe in the general method section.
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-\begin{verbatim}
-## Warning: Removed 18 rows containing missing values (geom_flat_violin).
-\end{verbatim}
-
 \begin{figure}
 \centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf}
 \caption{\label{fig:ex1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
 \end{figure}
 
-\hypertarget{analaysis-of-d-prime.}{%
-\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.}}
+\hypertarget{d-prime}{%
+\subsubsection{d prime}\label{d-prime}}
 
-We conducted a single factor (morlaity: good, neutral, bad) repeated measure ANOVA:
-
-We found the effect of Valence (\(F(2, 100) = 6.19\), \(\mathit{MSE} = 0.26\), \(p = .003\), \(\hat{\eta}^2_G = .020\)).
+Figure \ref{fig:ex1a-dprime-rt} shows \emph{d} prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA.
 
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-1}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-1}Repeated measure ANOVA of *d* prime from Experiment 1a}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1$} & \multicolumn{1}{c}{$\mathit{df}_2$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -228,26 +222,20 @@ Valence & 6.19 & 2 & 100 & 0.26 & .003 & .020\\
 \addlinespace
 \end{tabular}
 \begin{tablenotes}[para]
-\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\normalsize{\textit{Note.} *d* prime was calculated in a signal detection way.}
 \end{tablenotes}
 \end{threeparttable}
 \end{center}
 \end{table}
 
-We further examined the effect of valence.
+We found the effect of Valence (\(F(2, 100) = 6.19\), \(\mathit{MSE} = 0.26\), \(p = .003\), \(\hat{\eta}^2_G = .020\)). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater \emph{d} prime than shapes associated with Bad-person (1.75, SE = 0.14), \emph{t}(50) = 3.304, \emph{p} = 0.0049. The Good-person condition was also greater than the Netural-person condition (1.95, SE = 0.16), but didn't reach statical significant, \emph{t}(50) = 1.54, \emph{p} = 0.28. Neither the Neutral-person conditiona is significantly greater than the Bad-person conidition, \emph{t}(50) = 2.109, p = 098.
 
-The Good condition (2.23 \(\pm\) 0.14) is great than Netural condition (2.05 \(\pm\) 0.16, t(45) = 1.67, p = 0.226) and bad condition (1.87 \(\pm\) 1.4, \emph{t}(45) = 3.07, \emph{p} = 0.01, Cohen'd = 0.36). This is no-significant difference between neutral and bad conidition, \emph{t}(45) = 1.81, p = 1.77.
+\hypertarget{reaction-time}{%
+\subsubsection{Reaction time}\label{reaction-time}}
 
-\hypertarget{analaysis-of-reaction-time.}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.}}
+We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (\(F(1, 50) = 232.39\), \(\mathit{MSE} = 948.92\), \(p < .001\), \(\hat{\eta}^2_G = .104\)), main effect of valence (\(F(1.87, 93.31) = 9.62\), \(\mathit{MSE} = 1,673.86\), \(p < .001\), \(\hat{\eta}^2_G = .016\)), and intercation between Matchness and Valence (\(F(1.73, 86.65) = 8.52\), \(\mathit{MSE} = 1,441.75\), \(p = .001\), \(\hat{\eta}^2_G = .011\)).
 
-We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA:
-
-We found the main effect of Matchness (\(F(1, 50) = 232.39\), \(\mathit{MSE} = 948.92\), \(p < .001\), \(\hat{\eta}^2_G = .104\)), main effect of valence (\(F(1.87, 93.31) = 9.62\), \(\mathit{MSE} = 1,673.86\), \(p < .001\), \(\hat{\eta}^2_G = .016\)), and intercation between Matchness and Valence (\(F(1.73, 86.65) = 8.52\), \(\mathit{MSE} = 1,441.75\), \(p = .001\), \(\hat{\eta}^2_G = .011\))
-
-We carried out two separate ANOVA for both Match and mismatched trials. For matched trials, we found the effect of valence . For non-matched trials, there was no significant effect of Valence ().
-
-We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person responded faster than Neutral (t(45) = -2.662, p = 0.0284) and Bad Person (\emph{t}(45) = -4.793, \emph{p} = 0.0001). Neutral condition is slightly faster than bad condition (t(45) = -2.33, p = 0.0618)
+We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence . We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), \emph{t}(50) = -2.265, \emph{p} = 0.0702) and Bad Person (728 ms, SE = 11.7), \emph{t}(50) = -4.41, \emph{p} = 0.0002), and the Neutral condition was faster than the Bad condition, \emph{t}(50) = -2.495, \emph{p} = 0.0415). For non-matched trials, there was no significant effect of Valence ().
 
 \hypertarget{experiment-1b}{%
 \section{Experiment 1b}\label{experiment-1b}}
@@ -283,13 +271,13 @@ Data was analyzed as in experiment 1a.
 
 We replicated the advantage of positive condition in experiment 1a.
 
-\hypertarget{analaysis-of-d-prime.-1}{%
-\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-1}}
+\hypertarget{analaysis-of-d-prime.}{%
+\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.}}
 
 There was evidence for the main effect of valence, \(F(2, 102) = 14.98\), \(\mathit{MSE} = 0.16\), \(p < .001\), \(\hat{\eta}^2_G = .053\). Paired t test showed that the Good-Person condition (1.9 \(\pm\) 0.104) was with greater \emph{d} prime than Netural condition (1.49 \(\pm\) 0.1, \emph{t}(49) = 5.583, \emph{p} \textless{} 0.001, Cohen's \emph{d} = 0.415). We also found that the Bad-Person condition (1.71 \(\pm\) 0.11) has also greater \emph{d} prime than neutral condition , \emph{t}(49) = -3.106, \emph{p} = 0.008, Cohen's \emph{d} = -0.229). There was no-significant difference between Good and bad conidition, \emph{t}(49) = 2.05, \emph{p} = 0.11.
 
-\hypertarget{analaysis-of-reaction-time.-1}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-1}}
+\hypertarget{analaysis-of-reaction-time.}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.}}
 
 The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data.
 
@@ -371,13 +359,13 @@ Data was analyzed as in study 1a.
 
 Less than 0.2\% correct trials with less than 200ms reaction times were exlucded.
 
-\hypertarget{analaysis-of-d-prime.-2}{%
-\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-2}}
+\hypertarget{analaysis-of-d-prime.-1}{%
+\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-1}}
 
 There was evidence for the main effect of valence, \(F(2, 66) = 14.41\), \(\mathit{MSE} = 0.21\), \(p < .001\), \(\hat{\eta}^2_G = .066\). Paired t test showed that the Good-Person condition (2.86 \(\pm\) 0.16) was with greater \emph{d} prime than Netural condition (2.28 \(\pm\) 0.15, \emph{t}(32) = 4.46, \emph{p} = 0.002, Cohen's \emph{d} = 0.587). We also found that the Bad-Person condition (2.47 \(\pm\) 0.135) has also greater \emph{d} prime than neutral condition , \emph{t}(32) = 4.15, \emph{p} = 0.007, Cohen's \emph{d} = 0.396). There was no-significant difference between Good and bad conidition, \emph{t}(32) = -1,667, \emph{p} = 0.233, Cohen's \emph{d} = -0.191.
 
-\hypertarget{analaysis-of-reaction-time.-2}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-2}}
+\hypertarget{analaysis-of-reaction-time.-1}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-1}}
 
 The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data.
 
@@ -431,15 +419,15 @@ Data analysis followed strategies described in the general method section. React
 
 0.00 correct trials with less than 200ms reaction times were exlucded.
 
-\hypertarget{analaysis-of-d-prime.-3}{%
-\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-3}}
+\hypertarget{analaysis-of-d-prime.-2}{%
+\subsubsection{Analaysis of d prime.}\label{analaysis-of-d-prime.-2}}
 
 There was evidence for the main effect of valence, \(F(2, 68) = 11.09\), \(\mathit{MSE} = 0.22\), \(p < .001\), \(\hat{\eta}^2_G = .039\), and main effect of self-relevance, \(F(1, 34) = 3.22\), \(\mathit{MSE} = 0.54\), \(p = .082\), \(\hat{\eta}^2_G = .015\).
 
 Paired t test showed that the Good-Person condition (2.86 \(\pm\) 0.16) was with greater \emph{d} prime than Netural condition (2.28 \(\pm\) 0.15, \emph{t}(32) = 4.46, \emph{p} = 0.002, Cohen's \emph{d} = 0.587). We also found that the Bad-Person condition (2.47 \(\pm\) 0.135) has also greater \emph{d} prime than neutral condition , \emph{t}(32) = 4.15, \emph{p} = 0.007, Cohen's \emph{d} = 0.396). There was no-significant difference between Good and bad conidition, \emph{t}(32) = -1,667, \emph{p} = 0.233, Cohen's \emph{d} = -0.191.
 
-\hypertarget{analaysis-of-reaction-time.-3}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-3}}
+\hypertarget{analaysis-of-reaction-time.-2}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-2}}
 
 The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data.
 
@@ -493,8 +481,8 @@ For the stranger condition, there was no strong evidence for the effect of the m
 
 We also tested the effect of personal association by comparing \emph{d'} values for difference moral valence level. The results showed that the bad-self association condition was responded worse than the bad-stranger association condition (2.18 ± 0.911), \emph{t}(55) = -4.1, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -0.548, 95\% CI {[}-0.827 -0.265{]}, BF10 = 167. The neutral-self was also worse than the neutral-stranger (2.28 ± 1), \emph{t}(55) = -3.15, \emph{p} = 0.0026 , Cohen's \emph{d} = -0.422, 95\% CI {[}-0.693 -0.146{]}, BF10 = 11.7. While the good-self association condition and good-stranger conditions (2.03 ± 0.89) are not differ from each other, \emph{t}(55) = 1.394, \emph{p} = 0.169, Cohen's \emph{d} = 0.186, 95\% CI{[}-0.079 0.449{]}, BF10 = 0.364.
 
-\hypertarget{analaysis-of-reaction-time.-4}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-4}}
+\hypertarget{analaysis-of-reaction-time.-3}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-3}}
 
 The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data.
 
@@ -570,7 +558,7 @@ For matched trials, we found the effect of identity \(F(1, 58) = 124.15\), \(\ma
 \begin{table}[tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-6}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-5}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
@@ -630,8 +618,8 @@ The data were analyzed as in experiment 4a.
 \hypertarget{results-7}{%
 \subsection{Results}\label{results-7}}
 
-\hypertarget{d-prime}{%
-\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime}}
+\hypertarget{d-prime-1}{%
+\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-1}}
 
 We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (\(F(1.59, 69.94) = 2.34\), \(\mathit{MSE} = 0.48\), \(p = .115\), \(\hat{\eta}^2_G = .010\)), or identity, \(F(1, 44) = 0.00\), \(\mathit{MSE} = 0.08\), \(p = .994\), \(\hat{\eta}^2_G = .000\), or their interactions, \(F(1.96, 86.41) = 0.53\), \(\mathit{MSE} = 0.10\), \(p = .585\), \(\hat{\eta}^2_G = .001\).
 
@@ -683,8 +671,8 @@ Participants finish 4 session of experiment, and each include one experiment as 
 \hypertarget{results-8}{%
 \subsection{Results}\label{results-8}}
 
-\hypertarget{d-prime-1}{%
-\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-1}}
+\hypertarget{d-prime-2}{%
+\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-2}}
 
 We conducted 4 (task type: morality, emotion, person, scene) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (\(F(2.95, 108.97) = 1.18\), \(\mathit{MSE} = 0.76\), \(p = .321\), \(\hat{\eta}^2_G = .006\)), but revealed effect of valence, \(F(1.85, 68.49) = 29.70\), \(\mathit{MSE} = 0.29\), \(p < .001\), \(\hat{\eta}^2_G = .034\), and their interactions, \(F(4.68, 173.09) = 5.85\), \(\mathit{MSE} = 0.31\), \(p < .001\), \(\hat{\eta}^2_G = .019\).
 
@@ -696,8 +684,8 @@ For the person appearance, the main effect of valence is significant, \(F(1.73, 
 
 For scene appearance, the main effect of valence is significnat \(F(1.79, 66.4) = 14.02\), \(\mathit{MSE} = 0.34\), \(p < .001\), \(\hat{\eta}^2_G = .072\). Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, se = 0.156) is higher than both neutral (1.57, se = 0.178, \emph{t}(37) =4.683, \emph{p} = 0.0001) and bad (1.77, se = 0.148, \emph{t}(37) = 3.414, \emph{p} = 0.0044), but neutral and bad conditions are not different (\emph{t}(37) = -1.893, \emph{p} = 0.1549)
 
-\hypertarget{reaction-time}{%
-\subsubsection{Reaction time}\label{reaction-time}}
+\hypertarget{reaction-time-1}{%
+\subsubsection{Reaction time}\label{reaction-time-1}}
 
 As in previous experiment, we focused our analysis on the matched trials. We conducted 4 (task type: morality, emotion, beauty of person, beauty of scene) by 3 (Valence: good, neutral, bad) repeated measure ANOVA for matched trials only.
 
@@ -746,13 +734,13 @@ All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-prim
 
 Only the behavioral results were reported here.
 
-\hypertarget{d-prime-2}{%
-\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-2}}
+\hypertarget{d-prime-3}{%
+\subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-3}}
 
 We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (\(F(1.73, 41.45) = 4.63\), \(\mathit{MSE} = 0.10\), \(p = .019\), \(\hat{\eta}^2_G = .025\)). Post-hoc anlaysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),\emph{t} = 2.916, \emph{df} = 24, \emph{p} = 0.02, p-value adjusted by Tukey method, but the \emph{d} prime between Good and bad (mean = 3.03, SE = 0.142) (\emph{t} = 1.512, \emph{df} = 24, \emph{p} = 0.3034, p-value adjusted by Tukey method), bad and neutral (\emph{t} = 1.599, \emph{df} = 24, \emph{p} = 0.2655, p-value adjusted by Tukey method) were not siginificant.
 
-\hypertarget{analaysis-of-reaction-time.-5}{%
-\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-5}}
+\hypertarget{analaysis-of-reaction-time.-4}{%
+\subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.-4}}
 
 The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data.
 
@@ -798,8 +786,8 @@ Only the behavioral results were reported here.
 \hypertarget{day-one}{%
 \subsubsection{Day one}\label{day-one}}
 
-\hypertarget{d-prime-3}{%
-\paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-3}}
+\hypertarget{d-prime-4}{%
+\paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-4}}
 
 There was evidence for the interaction between identity and valence, \(F(2, 42) = 12.88\), \(\mathit{MSE} = 0.13\), \(p < .001\), \(\hat{\eta}^2_G = .041\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(2, 42) = 29.31\), \(\mathit{MSE} = 0.12\), \(p < .001\), \(\hat{\eta}^2_G = .147\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), \emph{t}(21) = 5.984, \emph{p} \textless{} 0.001, and bad-self condition (2.07, SE = 0.154), \emph{t}(21) = 6.555, \emph{p} \textless{} 0.001. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -1.059, \emph{p} = 0.549. For other trials, there was no significant effect of valuence, \(F(2, 42) = 0.00\), \(\mathit{MSE} = 0.16\), \(p = .999\), \(\hat{\eta}^2_G = .000\).
 
@@ -811,8 +799,8 @@ For the matched trials, there was interaction between identity and valence, \(F(
 \hypertarget{day-two}{%
 \subsubsection{Day two}\label{day-two}}
 
-\hypertarget{d-prime-4}{%
-\paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-4}}
+\hypertarget{d-prime-5}{%
+\paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-5}}
 
 There was evidence for the interaction between identity and valence, \(F(2, 42) = 3.86\), \(\mathit{MSE} = 0.08\), \(p = .029\), \(\hat{\eta}^2_G = .005\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(2, 42) = 7.35\), \(\mathit{MSE} = 0.08\), \(p = .002\), \(\hat{\eta}^2_G = .021\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), \emph{t}(21) = 2.98, \emph{p} = 0.0189, and bad-self condition (2.43, SE = 0.199), \emph{t}(21) = 3.93, \emph{p} = 0.0021. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -0.097, \emph{p} = 0.995. For other trials, there was no significant effect of valuence, \(F(2, 42) = 1.46\), \(\mathit{MSE} = 0.09\), \(p = .245\), \(\hat{\eta}^2_G = .004\).
 

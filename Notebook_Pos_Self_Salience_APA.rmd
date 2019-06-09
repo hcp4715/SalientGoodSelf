@@ -75,6 +75,7 @@ figDir = paste(curDir, '/figures', sep = '')
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
 options(tinytex.verbose = F) # debug the tex
+knitr::opts_chunk$set(message = FALSE)
 ```
 
 ```{r analysis-preferences}
@@ -229,7 +230,7 @@ As we describe in the general method section.
 
 ## Results
 
-```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height = 6, fig.width = 10}
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
@@ -263,77 +264,32 @@ rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(
 Mplots(expName = 'exp1a', df1a.v.dprime_l,rtdata)
 ```
 
-### Analaysis of d prime.
-We conducted a single factor (morlaity: good, neutral, bad) repeated measure ANOVA:
+### d prime
+Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
-### Long to wide
-#df1a.v.dprime_w <- df1a.v.dprime_l %>%
-  #tidyr::unite(col = "Cond",c("Valence"),sep = "_", remove = T) %>%  # combine two factors to condition
-#  tidyr::spread(key = Valence, value = dprime) %>%                                   # long to wide
-#  dplyr::rename_at(vars(-Site,-Subject,-Age,-Sex),function(x) paste0("d_",x))           # add prefix to certain conditions
-
 # anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l,  # using afex's function 
-                                  within = c('Valence'))
-
-# use LMM, random intercept for each participant
-df1a_d_mixed <- afex::mixed(dprime ~ Valence +(1|Subject), 
-                          df1a.v.dprime_l,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
-
+df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
 df1a_dprime_anova_apa <- df1a_dprime_anova$aov %>% papaja::apa_print()
-#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
-```
-We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`).
 
+posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_1a_d)
+
+```
 ```{r results='asis', echo = F}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
 apa_table(df1a_dprime_anova_apa$table
-  , caption = "A really beautiful ANOVA table."
-  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-)
+  , caption = "Repeated measure ANOVA of *d* prime from Experiment 1a"
+  , note = "*d* prime was calculated in a signal detection way.")
 ```
 
-We further examined the effect of valence. 
+We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Netural-person condition (1.95, SE = 0.16), but didn't reach statical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person conditiona is significantly greater than the Bad-person conidition, *t*(50) = 2.109, *p* = .098.
 
-```{r results='asis', echo = F}
-posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_1a_d)
-```
-The Good condition (2.23 $\pm$ 0.14) is great than Netural condition (2.05 $\pm$ 0.16, t(45) = 1.67, p = 0.226) and bad condition (1.87 $\pm$ 1.4, *t*(45) = 3.07, *p* = 0.01, Cohen'd = 0.36). This is no-significant difference between neutral and bad conidition, *t*(45) = 1.81, p = 1.77.
-
-### Analaysis of reaction time.
-We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA:
+### Reaction time
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
 df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
 
 df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
-# use LMM, random intercept for each participant
-df1a_RT_mixed <- afex::mixed(RT_m ~ Matchness*Valence + (1|Subject), 
-                          df1a.v.rt_m,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
-
-# LMM for RT with 2*2 design, using trials data
-df1a.v.rt_lmm <- df1a.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::ungroup()
-
-# use LMM, random intercept for each participant
-#df1a_RT_mixed <- afex::mixed(RT ~ Matchness*Valence + (1|Subject), 
-#                          df1a.v.rt_lmm,
-#                          method = "S",
-#                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
-
-```
-We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and intercation between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`)
-
-```{r 1a_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1a.v.rt_m1 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
   dplyr::group_by(Site,Subject,Matchness, Valence) %>%
@@ -342,8 +298,7 @@ df1a.v.rt_m1 <- df1a.v %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
-df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1,     # using afex's function 
-                                  within = c('Valence'))
+df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
 
 df1a.v.rt_m2 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
@@ -352,17 +307,16 @@ df1a.v.rt_m2 <- df1a.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
-df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2,     # using afex's function 
-                                  within = c('Valence'))
+df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
 
 posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1a_rt)
 
 ```
+We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and intercation between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
 
-We carried out two separate ANOVA for both Match and mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
+We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
 
-We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person responded faster than Neutral (t(45) = -2.662, p = 0.0284) and Bad Person (*t*(45) = -4.793, *p* = 0.0001). Neutral condition is slightly faster than bad condition (t(45) = -2.33, p = 0.0618)
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confouding factor of the familarity of words we used in experiment 1a, by matching the familiarity of the words.
