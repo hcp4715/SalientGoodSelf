@@ -3,27 +3,7 @@
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-1}Repeated measure ANOVA of *d* prime from Experiment 1a}
-\begin{tabular}{lllllll}
-\toprule
-Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1$} & \multicolumn{1}{c}{$\mathit{df}_2$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
-\midrule
-Valence & 6.19 & 2 & 100 & 0.26 & .003 & .020\\
-\bottomrule
-\addlinespace
-\end{tabular}
-\begin{tablenotes}[para]
-\normalsize{\textit{Note.} *d* prime was calculated in a signal detection way.}
-\end{tablenotes}
-\end{threeparttable}
-\end{center}
-\end{table*}
-\begin{table*}[hbt]
-\ifnextchar[{\eatarg}{}
-[tbp]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-5}A really beautiful ANOVA table.}
+\caption{\label{tab:unnamed-chunk-4}A really beautiful ANOVA table.}
 \begin{tabular}{lllllll}
 \toprule
 Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
