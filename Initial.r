@@ -200,11 +200,11 @@ Mplots <- function(expName = 'exp1', dData,rtData){
           P.dprime <- ggplot(dData,aes(x = Identity, y = dprime, fill = Valence)) +
                 geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
                                  adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                geom_dotplot(aes(x = Identity,y = dprime, color = Valence), 
-                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 2.5,
+                geom_dotplot(aes(x = Identity, y = dprime, color = Valence), 
+                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 5.5,
                              position = position_dodge(0.2)) +
-                geom_boxplot(aes(x = Identity,  y = dprime,fill = Valence),outlier.shape = NA,
-                             alpha = 0.5, width = 0.1,  color = "Valence",
+                geom_boxplot(aes(x = Identity,  y = dprime, fill = Valence), 
+                             outlier.shape = NA, alpha = 0.5, width = 0.1,  color = 'black',
                              position = position_dodge(0.2)) + 
                 scale_color_brewer(palette = "Dark2") +
                 scale_fill_brewer(palette = "Dark2") +
@@ -220,7 +220,8 @@ Mplots <- function(expName = 'exp1', dData,rtData){
                 #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
                 #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
                 geom_dotplot(aes(x = Identity,y = RT, color = Valence), 
-                             binaxis='y', binwidth = 0.8, stackdir='center', dotsize= 7,position = position_dodge(0.2)) + 
+                             binaxis='y', binwidth = 0.8, stackdir='center', dotsize= 8,
+                             position = position_dodge(0.2)) + 
                 geom_boxplot(aes(x = Identity,  y = RT,fill = Valence),outlier.shape = NA,
                              alpha = 0.5, width = 0.1,  color = "black",
                              position = position_dodge(0.2))+ 
@@ -288,7 +289,8 @@ Mplots <- function(expName = 'exp1', dData,rtData){
                   #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
                   #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
                 geom_dotplot(aes(x = Valence,y = RT, color = Valence), 
-                             binaxis='y', binwidth = 0.4, stackdir='center', dotsize= 16,position = position_dodge(0.2)) + 
+                             binaxis='y', binwidth = 0.4, stackdir='center', dotsize= 16,
+                             position = position_dodge(0.2)) + 
                 geom_boxplot(aes(x = Valence,  y = RT,fill = Valence),outlier.shape = NA,
                              alpha = 0.5, width = 0.1,  color = "black",
                              position = position_dodge(0.2))+ 
