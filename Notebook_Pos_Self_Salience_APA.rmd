@@ -1172,7 +1172,7 @@ Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
 
 ```
 
-Figure \@ref(fig:ex3b-dprime-rt) shows *d* prime and reaction times of experiment 3a. Less than 5% correct trials with less than 200ms reaction times were exlucded.
+Figure \@ref(fig:ex3b-dprime-rt) shows *d* prime and reaction times of experiment 3b. Less than 5% correct trials with less than 200ms reaction times were exlucded.
 
 ### *d* prime
 
@@ -1267,10 +1267,13 @@ We also analyzed the effect of self-relevance on the different moral valence lev
 For the mismacthed trials, we also found interaction between of valence and identity, `r df3b_RT_anova_nm_apa$full$Identity_Valence`. Further analysis showed that there was effect of valence for other-referential trials (`r df3b_RT_anova_nm_o_apa$full$Valence`) but not for the self-referential trials (`r df3b_RT_anova_nm_s_apa$full$Valence`). Post-hoc comparison revealed that bad-other trials (857 $\pm$ 20.9) were responded faster than good (967 $\pm$ 25.1), *t* = -9.625, *p* < 0.0001, and neutral (876 $\pm$ 21.4) trials, *t* = -2.263, *p* = 0.697, good-other conditions were also slower than neutral-other, *t* = -8.016, *p* < 0.0001
 
 ## Discussion
-In experiment 3b, we separated the self-referential and other-referential tasks into different blocks so that participants had lower cognitive load when finish the task. We replicated the pattern from experiment 3a that the valence effect is stronger when the stimuli were self-referential. Contrast to experiment 3a, however, we found that the self-referential condition is out-performed by other-referential conditions. This pattern suggest that the self-referential enhanced the valence effect, and the advantage to self is relative instead of absolute.
+In experiment 3b, we separated the self-referential and other-referential tasks into different blocks so that participants had lower cognitive load when finish the task. We replicated the pattern from experiment 3a that the valence effect is stronger when the stimuli were self-referential. Contrast to experiment 3a, however, we found that the self-referential condition is out-performed by other-referential conditions. This pattern suggest that the self-referential enhanced the valence effect, and the advantage to self might be relative instead of absolute.
 
 # Experiment 4a
-In study 1-3 participants made explicit judgements about moral associations. In Experiment 4, we examined whether the effects of moral valence occur even when the moral valence information might not be relevent to the task. In this study participants made perceptual match judgements to associations between self-referential labels and shapes (cf. Sui et al., 2012), but we presented labels of different moral valence levels in the shapes. 
+In study 1-3 participants made explicit judgements about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevent to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgements only about the self or other conditions labels and shapes (cf. Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
+
+In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the instrinc binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
+
 ```{r loadingData_4a,echo=FALSE,results='hide'}
 df4a_1 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality,
@@ -1364,9 +1367,8 @@ The data were analyzed in the same way as in experiment 3a and 3b.
 
 
 ## Results
-### *d* prime.
-We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measures ANOVA.
-```{r analyzing for d prime_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 # calculating the dprime 
 df4a.v.dprime_l <- df4a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1386,41 +1388,7 @@ df4a.v.dprime_l <- df4a.v %>%
   dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%   # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other')))
-# anova for d prime with 2*2 design
-df4a_dprime_anova <- afex::aov_ez('Subject','dprime',df4a.v.dprime_l,  # using afex's function 
-                                  within = c('Identity','Valence'))
 
-# use LMM, random intercept for each participant
-df4a_d_mixed <- afex::mixed(dprime ~ Identity*Valence +(1|Subject), 
-                          df4a.v.dprime_l,
-                          method = "S",
-                          control = lmerControl(optCtrl = list(maxfun = 1e6)))
-
-df4a_dprime_anova_apa <- df4a_dprime_anova$aov %>% papaja::apa_print()
-```
-The effect of identity (`r df4a_dprime_anova_apa$full$Identity`), also the interaction between identity and valence, (`r df4a_dprime_anova_apa$full$Identity_Valence`). But not the effect of valence was not found, `r df4a_dprime_anova_apa$full$Valence`.
-
-```{r results='asis', echo = F}
-#knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-#apa_table(df4a_dprime_anova_apa$table
-#  , caption = "A really beautiful ANOVA table."
-#  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-#)
-```
-
-We further examined the effect of valence for both self and other. 
-
-```{r results='asis', echo = F}
-posthoc_4a_d_m1 <- emmeans::emmeans(df4a_dprime_anova, "Valence", by = "Identity") # compare each valence for both self and other condition
-#pairs(posthoc_4a_d_m1)
-# summary(as.glht(pairs(m2)), test=adjusted("free"))
-posthoc_4a_d_m2 <- emmeans(df4a_dprime_anova, "Identity", by = "Valence") # compare self vs. other for each valence condition
-#pairs(posthoc_4a_d_m2)
-```
-
-### Reaction times.
-We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
-```{r analyzing for RT_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4a.v.rt_m <- df4a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
@@ -1428,77 +1396,90 @@ df4a.v.rt_m <- df4a.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
-df4a_RT_anova <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Identity','Valence'))
-df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print()
+rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
+
 ```
-There was a main effect of Matchness (`r df4a_RT_anova_apa$full$Matchness`) and intercation between Matchness and Identity(`r df4a_RT_anova_apa$full$Matchness_Identity`)
 
-We carried out two separate ANOVA for both matched and mismatched trials.
+Figure \@ref(fig:ex4a-dprime-rt) shows *d* prime and reaction times of experiment 4a.
 
-```{r analyzing for RT_4a_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+### *d* prime.
+
+```{r analyzing for d prime_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df4a_dprime_anova <- afex::aov_ez('Subject','dprime',df4a.v.dprime_l, within = c('Identity','Valence'))
+df4a_dprime_anova_apa <- df4a_dprime_anova$aov %>% papaja::apa_print()
+
+df4a_dprime_s_anova <- df4a.v.dprime_l %>%
+  dplyr::filter(Identity == "Self")%>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df4a_dprime_s_anova_apa <- df4a_dprime_s_anova$aov %>% papaja::apa_print()
+
+posthoc_4a_d_s <- emmeans::emmeans(df4a_dprime_s_anova, "Valence")
+pairs(posthoc_4a_d_s)
+
+df4a_dprime_o_anova <- df4a.v.dprime_l %>%
+  dplyr::filter(Identity == "Other")%>%
+  afex::aov_ez('Subject','dprime', ., within = c('Valence'))
+df4a_dprime_o_anova_apa <- df4a_dprime_o_anova$aov %>% papaja::apa_print()
+
+posthoc_4a_d_m1 <- emmeans::emmeans(df4a_dprime_anova, "Valence", by = "Identity") # compare each valence for both self and other condition
+#pairs(posthoc_4a_d_m1)
+# summary(as.glht(pairs(m2)), test=adjusted("free"))
+posthoc_4a_d_m2 <- emmeans(df4a_dprime_anova, "Identity", by = "Valence") # compare self vs. other for each valence condition
+#pairs(posthoc_4a_d_m2)
+
+```
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measures ANOVA. The effect of identity (`r df4a_dprime_anova_apa$full$Identity`), also the interaction between identity and valence, (`r df4a_dprime_anova_apa$full$Identity_Valence`). But not the effect of valence was not found, `r df4a_dprime_anova_apa$full$Valence`. We further examined the effect of valence for both self and other. For the self-referential trials,  there was a weak effect of valence `r df4a_dprime_s_anova_apa$full$Valence`. Post-hoc analysis showed that good self condition (2.55 $\pm$ 0.111) is slightly higher than bad self condition (2.38 $\pm$ 0.105) , *t*(58) = 2.339, *p* = .0583. But there was no differences between good-self and neutral self (2.45 $\pm$ 0.101), *t*(58) = 1.575, *p* = .264, neither between neutral-self and bad-self, *t*(58) = 0.966, *p* = .601. As for the other-referential conditions, the result didn't show effect of valence `r df4a_dprime_o_anova_apa$full$Valence`.
+
+### Reaction times.
+
+```{r analyzing for RT_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df4a_RT_anova <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m, within = c('Matchness','Identity','Valence'))
+df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print()
+
 # match trials
-df4a.v.rt_m1 <- df4a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
-                Identity = factor(Identity, levels = c('Self', 'Other')))
-
-df4a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m1,     # using afex's function 
-                                  within = c('Identity','Valence'))
+df4a_RT_anova_m <- df4a.v.rt_m %>%
+  dplyr::filter(Matchness == "Match") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
 df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print()
 
 posthoc_4a_rt <- emmeans::emmeans(df4a_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4a_rt)
 
-# Mismatch trials
-df4a.v.rt_m2 <- df4a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df4a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m2,     # using afex's function 
-                                  within = c('Identity','Valence'))
-df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print()
-
 # match trials: self condition
-df4a.v.rt_m1_s <- df4a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df4a_RT_anova_m_s <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m1_s,     # using afex's function 
-                                  within = c('Valence'))
+df4a_RT_anova_m_s <- df4a.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
 df4a_RT_anova_m_s_apa <- df4a_RT_anova_m_s %>% papaja::apa_print()
 
 posthoc_4a_rt_s <- emmeans::emmeans(df4a_RT_anova_m_s, c("Valence")) # compare each valence for both self and other condition
-# pairs(posthoc_4a_rt_s)
+pairs(posthoc_4a_rt_s)
 
 # match trials: other condition
-df4a.v.rt_m1_o <- df4a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df4a_RT_anova_m_o <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m1_o,     # using afex's function 
-                                  within = c('Valence'))
+df4a_RT_anova_m_o <- df4a.v.rt_m %>%
+  dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
 df4a_RT_anova_m_o_apa <- df4a_RT_anova_m_o %>% papaja::apa_print()
 
-```
-For matched trials, we found the effect of identity `r df4a_RT_anova_m_apa$full$Identity`, and the interaction between morality and identity,`r df4a_RT_anova_m_apa$full$Identity_Valence`. However, there is no main effect of valence (`r df4a_RT_anova_m_apa$full$Valence`). 
+# Mismatch trials
+df4a_RT_anova_nm <- df4a.v.rt_m %>%
+  dplyr::filter(Matchness == "Mismatch") %>%
+  afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
+df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print()
 
-```{r results='asis', echo = F}
+
+```
+We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (`r df4a_RT_anova_apa$full$Matchness`) and intercation between Matchness and Identity(`r df4a_RT_anova_apa$full$Matchness_Identity`)
+
+We carried out two separate ANOVA for both matched and mismatched trials. The results showed that for matched trials, there was an interaction between valence and identity, `r df4a_RT_anova_m_apa$full$Identity_Valence`. However, there is no main effect of valence (`r df4a_RT_anova_m_apa$full$Valence`). We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4a_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired *t*-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), *t*(58) = -3.47, *p* = 0.0028, Cohen’s *d* = -0.451 CI [-0.718 -0.182], BF10 = 27.0, and  over neutral-self condition (664 ± 64), *t*(58) = -2.78, *p* = 0.013, Cohen’s  *d* = -0.362, 95% CI [-0.624 -0.097], BF10 = 4.63. The neutral-self and bad-self conditionsdid not differ, *t*(58) = -0.44, *p* = 0.89, Cohen’s *d* = 0.0499, CI [-0.305 0.206], BF10 = 0.153. For the stranger condition, the results showed that there was no difference among these conditions, `r df4a_RT_anova_m_o_apa$full$Valence`, BF10 = 0.077.
+
+For non-matched trials, there was no significant effect. Morality (`r df4a_RT_anova_nm_apa$full$Identity`), Identity(`r df4a_RT_anova_nm_apa$full$Valence`), interaction (`r df4a_RT_anova_nm_apa$full$Identity_Valence`).
+
+
+
+```{r results='asis', echo = F, eval=FALSE}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
 apa_table(df4a_RT_anova_m_apa$table
   , caption = "A really beautiful ANOVA table."
@@ -1506,14 +1487,7 @@ apa_table(df4a_RT_anova_m_apa$table
 )
 ```
 
-We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4a_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired t tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), *t*(51) = -3.57, *p* = 0.0022, Cohen’s *d* = -0.451 CI [-0.718 -0.182], BF10 = 27.0, and  over neutral-self condition (664 ± 64), *t*(51) = -2.94, *p* = 0.013, Cohen’s  *d* = -0.362, 95% CI [-0.624 -0.097], BF10 = 4.63. The neutral-self and bad-self conditionsdid not differ, *t*(51) = -0.44, *p* = 0.89, Cohen’s *d* = 0.0499, CI [-0.305 0.206], BF10 = 0.153 (see Figure 5). 
-
-For the stranger condition, the results showed that there was no difference among these conditions, `r df4a_RT_anova_m_o_apa$full$Valence`, BF10 = 0.077.
-
-For non-matched trials, there was no significant effect. Morality (`r df4a_RT_anova_nm_apa$full$Identity`), Identity(`r df4a_RT_anova_nm_apa$full$Valence`), interaction (`r df4a_RT_anova_nm_apa$full$Identity_Valence`).
-
 # Experiment 4b
-In study 4b we further investigated whether the effects of moral valence would modulate by the presence of self. In this study, participants made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. However, as in study 4, we made the self-referential task as an implicit task, to examine the interaction between self-referential effect and modulation of positive moral valence. 
 
 ## Method
 
@@ -1606,8 +1580,8 @@ The procedure was similar to Experiment 4 a. Both samples of participants finish
 The data were analyzed as in experiment 4a.
 
 ## Results
-### *d* prime
-```{r analyzing for d prime_e4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+```{r 'ex4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
 # calculating the dprime 
 df4b.v.dprime_l <- df4b.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1628,28 +1602,6 @@ df4b.v.dprime_l <- df4b.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other')))
 
-
-# anova for d prime with 2*2 design
-df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b.v.dprime_l,  # using afex's function 
-                                  within = c('Identity','Valence'))
-df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print()
-#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
-```
-We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
-
-```{r results='asis', echo = F}
-#m2 <- emmeans::emmeans(df4b_dprime_anova, "Valence", by = "Identity") # compare each valence for both self and other condition
-#pairs(m2)
-#summary(as.glht(pairs(m2)), test=adjusted("free"))
-
-#m3 <- emmeans(df4b_dprime_anova, "Identity", by = "Morality") # compare self vs. other for each valence condition
-#pairs(m3)
-
-```
-
-### Reaction times
-We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
-```{r analyzing for RT_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4b.v.rt_m <- df4b.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
@@ -1657,6 +1609,26 @@ df4b.v.rt_m <- df4b.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp4b', df4a.v.dprime_l,rtdata)
+
+```
+
+Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
+
+### *d* prime
+```{r analyzing for d prime_e4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b.v.dprime_l, within = c('Identity','Valence'))
+df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print()
+#df4b_dprime_anova <- apa_print(df4b_dprime_anova)
+```
+We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
+
+### Reaction times
+We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+```{r analyzing for RT_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4b_RT_anova <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
 df4b_RT_anova_apa <- df4b_RT_anova %>% papaja::apa_print()

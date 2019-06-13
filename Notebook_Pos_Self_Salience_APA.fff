@@ -40,3 +40,10 @@
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex3b-dprime-rt-1.pdf}
 \caption{\label{fig:ex3b-dprime-rt}RT and \emph{d} prime of Experiment 3b.}
 \end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex4a-dprime-rt-1.pdf}
+\caption{\label{fig:ex4a-dprime-rt}RT and \emph{d} prime of Experiment 4a.}
+\end{figure*}
