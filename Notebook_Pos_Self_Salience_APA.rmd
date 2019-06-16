@@ -1810,7 +1810,7 @@ Participants finish 4 session of experiment, and each include one experiment as 
 
 ## Results
 
-```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=15, warning=FALSE}
+```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 5.", fig.height=6, fig.width=15, warning=FALSE}
 # calculating the dprime 
 df5.v.dprime_l <- df5.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1878,7 +1878,7 @@ multiplot(P.rt,P.dprime,cols = 2)
 
 ```
 
-Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 5.
+Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment 5.
 
 ### *d* prime
 ```{r analyzing for d prime_e5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -2088,10 +2088,8 @@ As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the asso
 All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
 
 ## Results
-Only the behavioral results were reported here.
 
-### *d* prime
-```{r analyzing for d prime_e6a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
 # calculating the dprime 
 df6a.v.dprime_l <- df6a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -2111,22 +2109,7 @@ df6a.v.dprime_l <- df6a.v %>%
   dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%   # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
-
-# anova for d prime with 2*2 design
-df6a_dprime_anova <- afex::aov_ez('Subject','dprime',df6a.v.dprime_l,  # using afex's function 
-                                  within = c('Valence'))
-df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print()
-
-posthoc_5a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
-graphics::pairs(posthoc_5a_d)
-# plot(posthoc_5a_d, comparisons = TRUE)
-```
-We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (`r df6a_dprime_anova_apa$full$Valence`). Post-hoc anlaysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),*t* = 2.916, *df* = 24, *p* = 0.02, p-value adjusted by Tukey method, but the *d* prime between Good and bad (mean = 3.03, SE = 0.142) (*t* = 1.512, *df* = 24, *p* = 0.3034, p-value adjusted by Tukey method), bad and neutral (*t* = 1.599, *df* = 24, *p* = 0.2655, p-value adjusted by Tukey method) were not siginificant.
-
-### Analaysis of reaction time.
-The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
-```{r 6a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime with 2*2 design
+# Mean RT for each condition of each participant.
 df6a.v.rt_m <- df6a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject,Matchness, Valence) %>%
@@ -2134,13 +2117,35 @@ df6a.v.rt_m <- df6a.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
+
+```
+
+Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt) shows *d* prime and reaction times of experiment 6a. 
+
+### *d* prime
+```{r analyzing for d prime_e6a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df6a_dprime_anova <- afex::aov_ez('Subject','dprime',df6a.v.dprime_l,  # using afex's function 
+                                  within = c('Valence'))
+df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print()
+
+posthoc_6a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
+graphics::pairs(posthoc_6a_d)
+# plot(posthoc_5a_d, comparisons = TRUE)
+```
+We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (`r df6a_dprime_anova_apa$full$Valence`). Post-hoc anlaysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),*t* = 2.916, *df* = 24, *p* = 0.02, p-value adjusted by Tukey method, but the *d* prime between Good and bad (mean = 3.03, SE = 0.142) (*t* = 1.512, *df* = 24, *p* = 0.3034, p-value adjusted by Tukey method), bad and neutral (*t* = 1.599, *df* = 24, *p* = 0.2655, p-value adjusted by Tukey method) were not siginificant.
+
+### Analaysis of reaction time.
+The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+```{r 6a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
 df6a_RT_anova <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
 df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print()
-```
 
-
-```{r 6a_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # match trials
 df6a.v.rt_m1 <- df6a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
@@ -2168,7 +2173,9 @@ df6a.v.rt_m2 <- df6a.v %>%
 df6a_RT_anova_nm <- afex::aov_ez('Subject','RT_m', df6a.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
 df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print()
+
 ```
+
 We found intercation between Matchness and Valence (`r df6a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 2. For matched trials, we found the effect of valence `r df6a_RT_anova_m_apa$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df6a_RT_anova_nm_apa$full$Valence`). Post-hoc *t*-tests revealed that shapes associated with Good Person (mean = 550, SE = 13.8) were responded faster than Neutral-Person (501, SE = 14.7), (*t*(24) = -5.171, *p* = 0.0001) and Bad Person (523, SE = 16.3), *t*(24) = -8.137, *p* < 0.0001)., and Neutral is faster than Bad-Person condition (*t*(32) = -3.282, *p* = 0.0085).
 
 
