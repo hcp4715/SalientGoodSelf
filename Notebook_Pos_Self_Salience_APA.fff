@@ -59,5 +59,26 @@
 
 \centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex5-dprime-rt-1.pdf}
-\caption{\label{fig:ex5-dprime-rt}RT and \emph{d} prime of Experiment 4b.}
+\caption{\label{fig:ex5-dprime-rt}RT and \emph{d} prime of Experiment 5.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6a-dprime-rt-1.pdf}
+\caption{\label{fig:ex6a-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d1-dprime-rt-1.pdf}
+\caption{\label{fig:ex6b-d1-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d2-dprime-rt-1.pdf}
+\caption{\label{fig:ex6b-d2-dprime-rt}RT and \emph{d} prime of Experiment 6b.}
 \end{figure*}
