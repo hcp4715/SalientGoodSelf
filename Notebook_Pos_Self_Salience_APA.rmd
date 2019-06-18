@@ -2021,6 +2021,13 @@ df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep 
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
 
+df6a_trials <- df6a %>%
+  dplyr::group_by(Subject, Matchness, Valence) %>%
+  dplyr::summarise(N_trial = length(TrialNo)) %>%
+  dplyr::ungroup()%>%
+  dplyr::group_by(Subject) %>%
+  dplyr::summarise(N_block = length(BlockNo))
+
 df6a.T.basic     <- df6a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
   dplyr::distinct(Subject, .keep_all = TRUE) %>%
@@ -2081,7 +2088,7 @@ Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visu
 We used backward masking to avoid over-processing of the moral words, in which a scrabmled picture were presented for 900 ms after the label. Also, to avoid the celling effect on accruacy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picutre of 3/4gray and ¼ white at resoluation of 2 × 2 pixel. 
 
 ### Procedure
-The procedure was similar to Experiment 2. Participants finished 6 blocks of trial, each with 180 trials. In total, participants finished 180 trials for each combination of condition.
+The procedure was similar to Experiment 2. Participants finished 9 blocks of trial, each with 120 trials. In total, participants finished 180 trials for each combination of condition.
 
 As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
 
@@ -2226,6 +2233,7 @@ df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016.csv",header = TRUE
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
 
+
 df6b_d1.T.basic     <- df6b_d1 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
   dplyr::distinct(Subject, .keep_all = TRUE) %>%
@@ -2316,20 +2324,22 @@ df6b_d2.v.basic     <- df6b_d2.v %>%
 ```
 
 ### Participants
-`r df6b_d1.T.basic$N` college students (`r df6b_d1.T.basic$Nf` female, age = `r df6b_d1.T.basic$Age_mean` $\pm$ `r df6b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df6b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy.`r df6b_d1.v.basic$N` college students (`r df6b_d1.v.basic$Nf` female, age = `r df6b_d1.v.basic$Age_mean` $\pm$ `r df6b_d1.v.basic$Age_sd`). For day 2's data, one participant dropp out , and leaving 22 participants  (`r df6b_d2.v.basic$Nf` female, age = `r df6b_d2.v.basic$Age_mean` $\pm$ `r df6b_d2.v.basic$Age_sd`) in day 2, all of them has overall accuracy higher than 60%.
+`r df6b_d1.T.basic$N` college students (`r df6b_d1.T.basic$Nf` female, age = `r df6b_d1.T.basic$Age_mean` $\pm$ `r df6b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df6b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy, remaining `r df6b_d1.v.basic$N` participants (`r df6b_d1.v.basic$Nf` female, age = `r df6b_d1.v.basic$Age_mean` $\pm$ `r df6b_d1.v.basic$Age_sd`). For day 2's data, one participant dropped out, leaving 22 participants  (`r df6b_d2.v.basic$Nf` female, age = `r df6b_d2.v.basic$Age_mean` $\pm$ `r df6b_d2.v.basic$Age_sd`), all of them has overall accuracy higher than 60%.
 
 ### Experimental design
-The experimental design of this experiment is same as experiment 3:  a 2 × 3 × 2 within-subject design with self-relevance (self-relevant vs. other-relevant), moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
+The experimental design of this experiment is same as experiment 3:  a 2 × 3 × 2 within-subject design with self-relevance (self-relevant vs. other-relevant), moral valence (good, neutral, and bad) and matchness between shape and label (match vs. mismatch) as within-subject variables. 
 
 ### Stimuli
-As in experiment 3 a & 3b, 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
+As in experiment 3a, 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
 
 ### Procedure
-The procedure was similar to Experiment 2 and 6b. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
+The procedure was similar to Experiment 2 and 6a. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
 
 All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
 
-Given that learning 6 association is more difficult than 3 association and participant has low accuracy at the begining, to maximizing the accurate trials that can be used in EEG data, the current experiment has two day session. At the first day, participants learnt the associations and finished XX blocks of the matching task, each had XX trials, without EEG recording. They came back to lab at the second day and finish the same task again, with EEG recorded.
+Because learning 6 associations was more difficult than 3 associations and participant might have low accuracy (see experiment 3a), the current study had extended to a two-day paradigm to maximizing the accurate trials that can be used in EEG data. At the first day, participants learnt the associations and finished 9 blocks of the matching task, each had 120 trials, without EEG recording. That is, each condition has 90 trials.
+
+Participants came back to lab at the second day and finish the same task again, with EEG recorded. Before the EEG experiment, each participant finished a practice session again, if their accuracy is equal or higher than 85%, they start the experiment (one participant used lower threshold 75%). Each participant finished 18 blocks, each has 90 trials. One participant finished additional 6 blocks because of high error rate at the beginning, another two participant finished addition 3 blocks because of the technique failure in recording the EEG data. To increase the number of trials that can be used for EEG data analysis, matched trials has twice number as mismatched trials, therefore, for matched trials each participants finished 180 trials for each condition, for mismatched trials, each conditions has 90 trials.
 
 ## Results
 
@@ -2370,7 +2380,6 @@ Mplots(expName = 'exp6b_d1', df6b_d1.v.dprime_l,rtdata)
 
 Only the behavioral results were reported here.
 ```{r 6b_dprime_d1, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
 # anova for d prime
 df6b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df6b_d1.v.dprime_l,  # using afex's function 
                                   within = c('Identity','Valence'))
@@ -2590,6 +2599,31 @@ df6b_d2_RT_anova_nm_apa <- df6b_d2_RT_anova_nm %>% papaja::apa_print()
 For the matched trials, the interaction between identity and valence, `r df6b_d2_RT_anova_m_apa$full$Identity_Valence`. As in previous studies, we splited the self- and other-relevant trials. For the self condition, the valence effect is significant, `r df6b_d2_RT_anova_m_s_apa$full$Valence`. The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , *t* = -2.289, *p* = 0.0795, *df* = 21 and self-bad condition (508, SE = 17.9),  *t* = -4.342, *p* = 0.0008, *df* = 21. but not significant different between neutral and bad condition, *t* = -0.503, *p* = 0.871, *df* = 21. For other condition, there was no effect of valence, `r df6b_d2_RT_anova_m_o_apa$full$Valence`. 
 
 \newpage
+
+
+# Meta-analysis of the effect size
+
+To get a better estimation of the effect in the current study, we combined the data of the 11 experiments described above and 2 experiments from another study (Hu, Lan, Macrae, & Sui, 2019). More specifically, we conducted random effect model meta-analyses of the effect size of *d*’ and RTs across our 13 experiments. Mini meta-analysis has been shown to be an effective way to get more precise and stable estimation of effect (Goh, Hall, & Rosenthal, 2016). We conducted a mini meta-analysis to estimate the effects observed in current study. 
+
+## Methods
+### Software
+Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of d’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
+
+### Data analysis strategy
+
+Before analyzing, we first calculated the effect size based on for each participant. Then, we used the '' function of the metafor to estimate the overall effect size.
+
+Specifically, we are interested in the effect size of the following effects. First, the effects of moral valence, regardless of identity. To this end, we estimated the different between good vs. bad, good vs. neutral, and neutral vs. bad, for both *d* prime and RTs. Second, the interaction between moral valence and identity. To this end, we estimated the effect for both self and other conditions. Additionally, we also examined the main effect of identity, regardless of valence. To this end we estimated the differences between self vs. other conditions, across all valence conditions.
+
+## Results
+
+
+
+# Behavioral-Traits correlation analysis
+
+We also analyzed the relationship between behavioral response and self-reported psychological traits. First, we conducted repeated measure ANOVAs for the psychological distance across all experiment, to check the validity of psychological distance. We predicted that the distance between self and good person should be the shortest, while self and bad-person would show longest distance. Second, we conducted a correlation analysis for behavioral data and score data, i.e., between psychological distance and the bias in perceptual matching task. 
+
+
 
 # References
 ```{r create_r-references}

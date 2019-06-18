@@ -98,7 +98,7 @@ df.d_2.sum <- df.d_2 %>%
                    sd   = sd(dprime),
                    se   = sd(dprime)/sqrt(length(dprime)-1))
   
-  #summarySE(df.d_2,measurevar = 'dprime',groupvars = c('exp','Identity','Morality'))
+#summarySE(df.d_2,measurevar = 'dprime',groupvars = c('exp','Identity','Morality'))
 
 
 #### calculate the effect size and variation of them ########
