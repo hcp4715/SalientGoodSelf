@@ -2021,12 +2021,11 @@ df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep 
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
 
-df6a_trials <- df6a %>%
-  dplyr::group_by(Subject, Matchness, Valence) %>%
-  dplyr::summarise(N_trial = length(TrialNo)) %>%
-  dplyr::ungroup()%>%
-  dplyr::group_by(Subject) %>%
-  dplyr::summarise(N_block = length(BlockNo))
+# show the number of trials for each condition
+# df6a_trials <- df6a %>%
+#   dplyr::group_by(Subject, Matchness, Valence) %>%
+#   dplyr::summarise(N_trial = length(TrialNo)) %>%
+#   dplyr::ungroup()
 
 df6a.T.basic     <- df6a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
