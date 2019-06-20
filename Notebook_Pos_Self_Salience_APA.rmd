@@ -122,7 +122,8 @@ To assess the individual difference, we explored correlation between self-report
 # data collected in Tsinghua U
 df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2014.csv", header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
-        dplyr::mutate(Site = "THU") 
+        dplyr::mutate(Site = "THU") %>%
+        dplyr::mutate(Subject = Subject + 1000)
 
 # data collected in Wenzhou U
 df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2017.csv",header = TRUE,
@@ -326,7 +327,8 @@ In this study, we aimed at excluding the potential confouding factor of the fami
 # data collected in Tsinghua U
 df1b_1 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_2014.csv", header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
-        dplyr::mutate(Site = "THU") 
+        dplyr::mutate(Site = "THU") %>%
+        dplyr::mutate(Subject = Subject + 1100)
 
 # data collected in Wenzhou U
 df1b_2 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201705.csv",header = TRUE,
@@ -520,7 +522,8 @@ df1c <- read.csv(".\\exp1c\\rawdata_behav_exp1c_2014.csv", header = TRUE,
                 Valence = factor(Valence, levels=c("Good", "Neutral","Bad")),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Matchness = factor(Matchness, levels=c("Match", "Mismatch"))) %>%
-  dplyr::mutate(Site = "THU")
+  dplyr::mutate(Site = "THU") %>%
+  dplyr::mutate(Subject = Subject + 1200)     # change subject ID to 12XX
 #length(unique(df1c$Subject))
 
 # distinguish between practice and formal data
@@ -670,10 +673,11 @@ df2 <- read.csv(".\\exp2\\rawdata_behav_exp2.csv", header = TRUE,
                 RESP = Target.RESP,
                 Matchness = YesNoResp,
                 Valence = Shape) %>%
-  dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
+  dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),       # recode values
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
-                Subject = factor(Subject))  
+                Age = ifelse(Age == 0, NA, Age)) %>%                             # if the min age is 0, that age is missing
+                #Subject = factor(Subject)) %>%
+  dplyr::mutate(Subject = ifelse(Subject < 40, Subject + 1000, Subject + 2000))  # recode subject ID, identify those particiant from exp1a
 
 df2.T.basic     <- df2 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -853,8 +857,9 @@ df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014.csv", header = TRUE,
                                         "Other" = (Shape == "Normalother" | Shape == 'Goodother' | Shape == 'Badother'), 
                                         .method ="first", .default = NA),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
-                Subject = factor(Subject))
+                Age = ifelse(Age == 0, NA, Age)) %>%                             # if the min age is 0, that age is missing
+                #Subject = factor(Subject)) %>%
+  dplyr::mutate(Subject = Subject + 3100)                                        # re-code the subject id
 
 df3a.T.basic     <- df3a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1278,7 +1283,8 @@ In study 4b, we changed the role of valence and identity in task. In this experi
 df4a_1 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality,
                 Identity = self) %>%
-  dplyr::mutate(Site = "THU")
+  dplyr::mutate(Site = "THU") %>%
+  dplyr::mutate(Subject = Subject + 4100)  
 
 df4a_2 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::mutate(Site = "WZU")
@@ -2019,7 +2025,8 @@ df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep 
   dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),                   # re-code the data
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
-  dplyr::mutate(Site = "THU")
+  dplyr::mutate(Site = "THU") %>%
+  dplyr::mutate(Subject = Subject + 6100) 
 
 # show the number of trials for each condition
 # df6a_trials <- df6a %>%
