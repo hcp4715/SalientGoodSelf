@@ -83,8 +83,8 @@ knitr::opts_chunk$set(message = FALSE)
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
-CommonColnames <- c("ExpID", "Site", "Subject", "Age", "Handedness", "Sex", "BlockNo", "TrialNo", 
-                    'Domain',"Matchness", "Identity", "Valence", "CRESP", "RESP", "ACC", "RT")
+CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
+CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
 ```
 
 # General Methods
@@ -146,11 +146,11 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
                       #Subject = factor(Subject),
-                      Identity = NA,
-                      ExpID = 'Exp1a',
-                      Site = factor(Site),
-                      Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames) %>%
+                      #Identity = NA,
+                      #ExpID = 'Exp1a',
+                      Site = factor(Site))%>%
+                      #Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+        #dplyr::select(CommonColnames) %>%
         dplyr::arrange(Subject)
 
 rm(df1a_1,df1a_2)
@@ -166,30 +166,15 @@ df1a.T.basic     <- df1a %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
-# distinguish between practice and formal data
-#df1a.subj_P <- df1a %>%
-#  dplyr::filter(is.na(BlockNo)) %>%
-#  dplyr::distinct(Subject)
-
-#[is.na(df1a$BlockList.Sample),]            # data from practice
-#df1a.subj_T <- df1a %>%
-#  dplyr::filter(complete.cases(BlockNo)) %>%
-#  dplyr::distinct(Subject)
-
-#[complete.cases(df1a$BlockList.Sample),]   # data from test
-
 # number of participant who didn't finished the experiment
 nQuit <- length(unique(df1a$Subject[is.na(df1a$BlockNo)])) - length(unique(df1a$Subject[!is.na(df1a$BlockNo)]))
-
-#.T[df1a.T$RT <= 200 & df1a.T$ACC == 1,]
-#df1a.excld.trial.r <- nrow(df1a.excld.trial)/nrow(df1a.T) # ratio of excluded trials in all triasl.
 
 df1a.excld.sub <-  df1a %>%
   dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  #dplyr::filter(RT > 200)  %>%                       # only use > 200 ms response (this standard will keep more participants)
+  #dplyr::filter(RT > 200)  %>%                        # only use > 200 ms response (this standard will keep more participants)
   #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
-  dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+  dplyr::summarise(N = length(ACC),                    # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
                    ACC = sum(ACC)/length(ACC)) %>%
   dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
@@ -216,6 +201,50 @@ df1a.v.basic     <- df1a.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
+
+# calculate d prime
+df1a.v.dprime_l <- df1a.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
+                FAR  = FA/(FA+CR)) %>%                                       # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+
+# get the mean RT for each particpant and each condition for ANOVA
+df1a.v.rt_m <- df1a.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+### prepare for the later meta-analysis
+df1a.meta.d <- df1a.v.dprime_l %>% 
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df1a.meta.rt <- df1a.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
 ```
 ## Methods
 ### Participants
@@ -239,34 +268,6 @@ As we describe in the general method section.
 ## Results
 
 ```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
-# calculate d prime
-df1a.v.dprime_l <- df1a.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                    .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
-  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
-  dplyr::ungroup() %>%
-  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
-  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
-                FAR  = FA/(FA+CR)) %>%                                       # fa rate
-  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
-  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-# get the mean RT for each particpant and each condition for ANOVA
-df1a.v.rt_m <- df1a.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
 rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp1a', df1a.v.dprime_l,rtdata)
@@ -355,11 +356,11 @@ df1b   <- rbind(df1b_1,df1b_2) %>%
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age),
                       #Subject = factor(Subject),
-                      ExpID = 'Exp_1b',
+                      #ExpID = 'Exp_1b',
                       Identity = NA,
-                      Domain = "Morality",
+                      #Domain = "Morality",
                       Site = factor(Site)) %>% # if the min age is 0, that age is missing
-        dplyr::select(CommonColnames)%>%
+        #dplyr::select(CommonColnames)%>%
         dplyr::arrange(Subject)
 
 rm(df1b_1,df1b_2)
@@ -410,24 +411,7 @@ df1b.v.basic     <- df1b.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-`r df1b.T.basic$N` college students (`r df1b.T.basic$Nf` female, age = `r df1b.T.basic$Age_mean` $\pm$ `r df1b.T.basic$Age_sd` years) participated. `r df1b.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1b.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1b.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1b.v.basic$N` participants (`r df1b.v.basic$Nf` female, age = `r df1b.v.basic$Age_mean` $\pm$ `r df1b.v.basic$Age_sd` years).
-
-### Stimuli and Tasks
-Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
-Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
-
-### Procedure
-For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust senstivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
-
-## Data Analysis
-Data was analyzed as in experiment 1a. 
-
-## Results
-
-```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=6, fig.width=10, warning=FALSE}
 # calculate d prime
 df1b.v.dprime_l <- df1b.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
@@ -450,11 +434,43 @@ df1b.v.dprime_l <- df1b.v %>%
 # calculate the mean RT of each condition for each participants for ANOVA
 df1b.v.rt_m <- df1b.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df1b.meta.d <- df1b.v.dprime_l %>% 
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df1b.meta.rt <- df1b.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+```
+
+### Participants
+`r df1b.T.basic$N` college students (`r df1b.T.basic$Nf` female, age = `r df1b.T.basic$Age_mean` $\pm$ `r df1b.T.basic$Age_sd` years) participated. `r df1b.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1b.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1b.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1b.v.basic$N` participants (`r df1b.v.basic$Nf` female, age = `r df1b.v.basic$Age_mean` $\pm$ `r df1b.v.basic$Age_sd` years).
+
+### Stimuli and Tasks
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
+Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
+
+### Procedure
+For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust senstivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
+
+## Data Analysis
+Data was analyzed as in experiment 1a. 
+
+## Results
+
+```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df1b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
@@ -535,11 +551,11 @@ df1c <- read.csv(".\\exp1c\\rawdata_behav_exp1c_2014.csv", header = TRUE,
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Matchness = factor(Matchness, levels=c("Match", "Mismatch"))) %>%
   dplyr::mutate(Site = "THU",
-                Identity = NA,
-                ExpID = "Exp1c",
-                Domain = "Morality",
+                #Identity = NA,
+                #ExpID = "Exp1c",
+                #Domain = "Morality",
                 Subject = Subject + 1200) %>%    # change subject ID to 12XX
-  dplyr::select(CommonColnames) %>%
+  #dplyr::select(CommonColnames) %>%
   dplyr::arrange(Subject)
 #length(unique(df1c$Subject))
 
@@ -598,25 +614,7 @@ df1c.v.basic     <- df1c.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
-### Participants
-`r df1c.T.basic$N` college students (`r df1c.T.basic$Nf` female, age = `r df1c.T.basic$Age_mean` $\pm$ `r df1c.T.basic$Age_sd` years) participated. All of them were recruited from Tsinghua University community in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. No participant was excluded because they overall accuracy were above 0.6.
 
-### Stimuli and Tasks
-Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
-Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions *t*(33) = 13.9, *p* < .001 (See supplementary materials).
-
-### Procedure
-After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
-In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95% accuracy before preceding to matching task.
-The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing util they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
-
-## Data Analysis
-Data was analyzed as in experiment 1a. 
-
-## Results
-
-```{r 'ex1c-dprime-rt', fig.cap="RT and *d* prime of Experiment 1c.", fig.height=6, fig.width=10, warning=FALSE}
 # calculate d prime
 df1c.v.dprime_l <- df1c.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
@@ -639,11 +637,43 @@ df1c.v.dprime_l <- df1c.v %>%
 # calculate mean RT for anova
 df1c.v.rt_m <- df1c.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df1c.meta.d <- df1c.v.dprime_l %>% 
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1c',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df1c.meta.rt <- df1c.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp1c',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+```
+### Participants
+`r df1c.T.basic$N` college students (`r df1c.T.basic$Nf` female, age = `r df1c.T.basic$Age_mean` $\pm$ `r df1c.T.basic$Age_sd` years) participated. All of them were recruited from Tsinghua University community in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. No participant was excluded because they overall accuracy were above 0.6.
+
+### Stimuli and Tasks
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
+Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions *t*(33) = 13.9, *p* < .001 (See supplementary materials).
+
+### Procedure
+After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
+In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95% accuracy before preceding to matching task.
+The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing util they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
+
+## Data Analysis
+Data was analyzed as in experiment 1a. 
+
+## Results
+
+```{r 'ex1c-dprime-rt', fig.cap="RT and *d* prime of Experiment 1c.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df1c.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp1c', df1c.v.dprime_l,rtdata)
@@ -693,11 +723,11 @@ df2 <- read.csv(".\\exp2\\rawdata_behav_exp2.csv", header = TRUE,
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age),
                 Site = "THU",
-                ExpID = 'exp2',
-                Identity = NA,
-                Domain = "Morality",
-                Subject = ifelse(Subject < 40, Subject + 1000, Subject + 2000)) %>%  # recode subject ID, identify those particiant from exp1a
-  dplyr::select(CommonColnames)
+                #ExpID = 'exp2',
+                #Identity = NA,
+                #Domain = "Morality",
+                Subject = ifelse(Subject < 40, Subject + 1000, Subject + 2000))  # recode subject ID, identify those particiant from exp1a
+  #dplyr::select(CommonColnames)
 
 df2.T.basic     <- df2 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -745,22 +775,7 @@ df2.v.basic     <- df2.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-
-`r df2.T.basic$N` participants (`r df2.T.basic$Nf` female, age = `r df2.T.basic$Age_mean` $\pm$ `r df2.T.basic$Age_sd`) were recruited. 24 of them had participated in Experiment 1a (9 male, mean age = 21.9, s.d. = 2.9), and the time gap between these experiment 1a and experiment 2 is at least six weeks. The results of `r nrow(df2.excld.sub)` participants were excluded from analysis because of less than 60% overall accuracy, remains `r df2.v.basic$N` participants (`r df2.v.basic$Nf` female, age = `r df2.v.basic$Age_mean` $\pm$ `r df2.v.basic$Age_sd`).
-
-### Procedure
-In Experiment 2, the sequential presenting makes the matching task much easier than experiment 1. To avoid ceiling effect on behavioral data, we did a few pilot experiments to get optimal parameters, i.e., the conditions under which participant have similar accuracy as in Experiment 1 (around 70 ~ 80% accuracy). 
-In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with ¾ gray area and ¼ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
-
-### Analysis
-Data was analyzed as in study 1a. 
-
-## Results
-
-```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
 # calculate d prime
 df2.v.dprime_l <- df2.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
@@ -783,11 +798,41 @@ df2.v.dprime_l <- df2.v %>%
 # calculated means RT for ANOVA
 df2.v.rt_m <- df2.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df2.meta.d <- df2.v.dprime_l %>% 
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp2',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df2.meta.rt <- df2.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(Identity = NA,
+                ExpID = 'Exp2',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+```
+
+### Participants
+
+`r df2.T.basic$N` participants (`r df2.T.basic$Nf` female, age = `r df2.T.basic$Age_mean` $\pm$ `r df2.T.basic$Age_sd`) were recruited. 24 of them had participated in Experiment 1a (9 male, mean age = 21.9, s.d. = 2.9), and the time gap between these experiment 1a and experiment 2 is at least six weeks. The results of `r nrow(df2.excld.sub)` participants were excluded from analysis because of less than 60% overall accuracy, remains `r df2.v.basic$N` participants (`r df2.v.basic$Nf` female, age = `r df2.v.basic$Age_mean` $\pm$ `r df2.v.basic$Age_sd`).
+
+### Procedure
+In Experiment 2, the sequential presenting makes the matching task much easier than experiment 1. To avoid ceiling effect on behavioral data, we did a few pilot experiments to get optimal parameters, i.e., the conditions under which participant have similar accuracy as in Experiment 1 (around 70 ~ 80% accuracy). 
+In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with ¾ gray area and ¼ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
+
+### Analysis
+Data was analyzed as in study 1a. 
+
+## Results
+
+```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df2.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp2', df2.v.dprime_l,rtdata)
@@ -879,10 +924,10 @@ df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014.csv", header = TRUE,
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age),
                 Site = "THU",
-                ExpID = "Exp3a",
-                Domain = "Morality",
-                Subject = Subject + 3100) %>%                                        # re-code the subject id
-  dplyr::select(CommonColnames)
+                #ExpID = "Exp3a",
+                #Domain = "Morality",
+                Subject = Subject + 3100) #%>%                                        # re-code the subject id
+  #dplyr::select(CommonColnames)
 
 df3a.T.basic     <- df3a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -932,27 +977,8 @@ df3a.v.basic     <- df3a.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-`r df3a.T.basic$N` college students (`r df3a.T.basic$Nf` female, age = `r df3a.T.basic$Age_mean` $\pm$ `r df3a.T.basic$Age_sd`) participated in experiment 3a. All of them were right-handed, and all had normal or correted-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. One female and one male student did not finish the experiment, and `r nrow(df3a.excld.sub)` participants' data were excluded from analysis because less than 60% overall accuracy, remains `r df3a.v.basic$N` participants (`r df3a.v.basic$Nf` female, age = `r df3a.v.basic$Age_mean` $\pm$ `r df3a.v.basic$Age_sd`).
-
-### Design
-Study 3a combined moral valence with self-relevance, hence the experiment has a   2 × 3 × 2 within-subject design. The first variable was self-relevance, include two levels: self-relevance vs. stranger-relevance; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. mismatch.
-
-### Stimuli
-The stimuli used in study 3a share the same parameters with experiment 1 & 2. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
-
-### Procedure
-After being fully explained and signed the informed consent, participants were instructed to chose a name that can represent a stranger with same gender as the participant themselves, from a common Chinese name pool. Before experiment, the experimenter explained the meaning of each label to participants. For example, the “good self” mean the morally good side of themselves, them could imagine the moment when they do something’s morally applauded, “bad self” means the morally bad side of themselves, they could also imagine the moment when they doing something morally wrong, and “neutral self” means the aspect of self that doesn’t related to morality, they could imagine the moment when they doing something irrelevant to morality. In the same sense, the “good other”, “bad other”, and “neutral other” means the three different aspects of the stranger, whose name was chosen before the experiment. Then, the experiment proceeded as study 1a. Each participant finished 6 blocks, each have 120 trials. The sequence of trials was pseudo-randomized so that there are 10 matched trials for each condition and 10 non-matched trials for each condition (good self, neutral sef, bad self, good other, neutral other, bad other) for each block.
-
-### Data Analysis
-Data analysis followed strategies described in the general method section. Reaction times and *d* prime data were analyzed as in study 1 and study 2, except that one more within-subject variable (i.e., self-relevance) was included in the repeated measures ANOVA. 
-
-
-## Results
-
-```{r 'ex3a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+# calculate d prime
 df3a.v.dprime_l <- df3a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
                                     "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
@@ -975,11 +1001,43 @@ df3a.v.dprime_l <- df3a.v %>%
 # calculate the mean RT for each condition of each participant
 df3a.v.rt_m <- df3a.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df3a.meta.d <- df3a.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp3a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df3a.meta.rt <- df3a.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp3a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+```
+
+### Participants
+`r df3a.T.basic$N` college students (`r df3a.T.basic$Nf` female, age = `r df3a.T.basic$Age_mean` $\pm$ `r df3a.T.basic$Age_sd`) participated in experiment 3a. All of them were right-handed, and all had normal or correted-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. One female and one male student did not finish the experiment, and `r nrow(df3a.excld.sub)` participants' data were excluded from analysis because less than 60% overall accuracy, remains `r df3a.v.basic$N` participants (`r df3a.v.basic$Nf` female, age = `r df3a.v.basic$Age_mean` $\pm$ `r df3a.v.basic$Age_sd`).
+
+### Design
+Study 3a combined moral valence with self-relevance, hence the experiment has a   2 × 3 × 2 within-subject design. The first variable was self-relevance, include two levels: self-relevance vs. stranger-relevance; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. mismatch.
+
+### Stimuli
+The stimuli used in study 3a share the same parameters with experiment 1 & 2. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
+
+### Procedure
+After being fully explained and signed the informed consent, participants were instructed to chose a name that can represent a stranger with same gender as the participant themselves, from a common Chinese name pool. Before experiment, the experimenter explained the meaning of each label to participants. For example, the “good self” mean the morally good side of themselves, them could imagine the moment when they do something’s morally applauded, “bad self” means the morally bad side of themselves, they could also imagine the moment when they doing something morally wrong, and “neutral self” means the aspect of self that doesn’t related to morality, they could imagine the moment when they doing something irrelevant to morality. In the same sense, the “good other”, “bad other”, and “neutral other” means the three different aspects of the stranger, whose name was chosen before the experiment. Then, the experiment proceeded as study 1a. Each participant finished 6 blocks, each have 120 trials. The sequence of trials was pseudo-randomized so that there are 10 matched trials for each condition and 10 non-matched trials for each condition (good self, neutral sef, bad self, good other, neutral other, bad other) for each block.
+
+### Data Analysis
+Data analysis followed strategies described in the general method section. Reaction times and *d* prime data were analyzed as in study 1 and study 2, except that one more within-subject variable (i.e., self-relevance) was included in the repeated measures ANOVA. 
+
+
+## Results
+
+```{r 'ex3a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df3a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
@@ -1093,9 +1151,7 @@ df3b <- read.csv(".\\exp3b\\rawdata_behav_exp3b_2017.csv", header = TRUE,
                 Age = ifelse(Age == 0, NA, Age),  # if the min age is 0, that age is missing
                 BlockNo = dplyr::coalesce(otherBlocklList.Sample, selfBlockList.Sample),
                 TrialNo = dplyr::coalesce(OtherTrialist.Sample, selfTrialList.Sample, otherProcTrialList.Sample, selfPracTrialList.Sample),
-                Site = "WZU", ExpID = "Exp3b", Domain = "Morality") %>%
-  dplyr::select(CommonColnames)
-                
+                Site = "WZU") 
 #                Subject = factor(Subject))
 
 df3b.T.basic     <- df3b %>%
@@ -1109,9 +1165,6 @@ df3b.T.basic     <- df3b %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
-# number of participant who practiced but not in the formal experiment
-#nQuit <- length(unique(df3$Subject[is.na(df3a$BlockNo)])) - length(unique(df3a$Subject[!is.na(df3a$BlockNo)]))
-
 # participants should be excluded
 df3b.excld.sub <-  df3b %>%
   dplyr::filter(!is.na(BlockNo)) %>%
@@ -1149,28 +1202,7 @@ df3b.v.basic     <- df3b.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s d) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effec size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normalneutral or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
-
-
-### Design
-Study 3b has the same experimental design as 3a, with a 2× 3× 2 within-subject design. The first variable was self-relevance, include two levels: self-relevant vs. stranger-relevant; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. mismatch.
- Stimuli.	The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to “good self”, “neutral self”, “bad self”, “good him/her”, bad him/her”, “neutral him/her”, the stranger’s label is consistent with participants’ gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data didn’t collect for this experiment.
- 
-### Procedure
-In this experiment, participants finished two matching tasks, i.e., self-matching task, and other-matching task. In the self-matching task, participants first associate the three aspects of self to three different shapes, and then perform the matching task. In the other-matching task, participants first associate the three aspects of the stranger to three different shapes, and then perform the matching task. The order of self-task and other-task are counter-balanced among participants.
-Different from experiment 3a, after presenting the stimuli pair for 100ms, participant has 1900 ms to response, and they were feedbacked with both accuracy and reaction time.
-As in study 3a, before each task, the intruction showed the meaning of each label to participants. The self-matching task and other-matching task were randomized between participants. Each participant finished 6 blocks, each have 120 trials.
-
-### Data Analysis
-Data analysis is the same as study 3a.
-
-## Results
-
-
-```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
 # calculate d prime
 df3b.v.dprime_l <- df3b.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1194,11 +1226,43 @@ df3b.v.dprime_l <- df3b.v %>%
 # calculate mean RT for each condition of each participant
 df3b.v.rt_m <- df3b.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df3b.meta.d <- df3b.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp3b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df3b.meta.rt <- df3b.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp3b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+```
+
+### Participants
+Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s d) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effec size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normalneutral or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
+
+
+### Design
+Study 3b has the same experimental design as 3a, with a 2× 3× 2 within-subject design. The first variable was self-relevance, include two levels: self-relevant vs. stranger-relevant; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. mismatch.
+ Stimuli.	The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to “good self”, “neutral self”, “bad self”, “good him/her”, bad him/her”, “neutral him/her”, the stranger’s label is consistent with participants’ gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data didn’t collect for this experiment.
+ 
+### Procedure
+In this experiment, participants finished two matching tasks, i.e., self-matching task, and other-matching task. In the self-matching task, participants first associate the three aspects of self to three different shapes, and then perform the matching task. In the other-matching task, participants first associate the three aspects of the stranger to three different shapes, and then perform the matching task. The order of self-task and other-task are counter-balanced among participants.
+Different from experiment 3a, after presenting the stimuli pair for 100ms, participant has 1900 ms to response, and they were feedbacked with both accuracy and reaction time.
+As in study 3a, before each task, the intruction showed the meaning of each label to participants. The self-matching task and other-matching task were randomized between participants. Each participant finished 6 blocks, each have 120 trials.
+
+### Data Analysis
+Data analysis is the same as study 3a.
+
+## Results
+
+```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
@@ -1329,9 +1393,7 @@ df4a <- rbind(df4a_1,df4a_2) %>%
   dplyr::mutate(Valence  = ifelse(Valence == "Normal", "Neutral", Valence),
                 Identity = ifelse(Identity == "self" | Identity == "Self", "Self", "Other"),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
-                ExpID = 'Exp4a', Domain = "Morality") %>%
-  dplyr::select(CommonColnames)
+                Age = ifelse(Age == 0, NA, Age))
                 #Subject = factor(Subject))
 
 rm(df4a_1,df4a_2) # remove the temporary variables.
@@ -1384,28 +1446,7 @@ df4a.v.basic     <- df4a.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
-## Methods
-### Participants
-`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
 
-### Experimental design
-As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, normalneutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
-However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
-
-### Stimuli
-2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
-
-### Procedure
-The procedure was similar to Experiment 1. There were 6 blocks of trial, each with 120 trials for 2017 data. Due to procedure error, the data collected in 2015 in Tsinghua community only have 60 trials for each block, i.e., 30 trials per condition. 
-
-### Data analysis
-The data were analyzed in the same way as in experiment 3a and 3b.
-
-
-## Results
-
-```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 # calculating the dprime 
 df4a.v.dprime_l <- df4a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1428,10 +1469,45 @@ df4a.v.dprime_l <- df4a.v %>%
 
 df4a.v.rt_m <- df4a.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
+
+### prepare for the later meta-analysis
+df4a.meta.d <- df4a.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp4a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df4a.meta.rt <- df4a.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp4a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+```
+## Methods
+### Participants
+`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
+
+### Experimental design
+As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, normalneutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
+However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
+
+### Stimuli
+2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
+
+### Procedure
+The procedure was similar to Experiment 1. There were 6 blocks of trial, each with 120 trials for 2017 data. Due to procedure error, the data collected in 2015 in Tsinghua community only have 60 trials for each block, i.e., 30 trials per condition. 
+
+### Data analysis
+The data were analyzed in the same way as in experiment 3a and 3b.
+
+
+## Results
+
+```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 
 rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
@@ -1547,9 +1623,9 @@ df4b <- rbind(df4b_1,df4b_2) %>%
   dplyr::mutate(Valence  = ifelse(Valence == "Ord", "Neutral", Valence),
                 Identity = ifelse(Identity == "self" | Identity == "Self", "Self", "Other"),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age),                             # if the min age is 0, that age is missing
-                ExpID = 'Exp4b', Domain = "Morality") %>%
-  dplyr::select(CommonColnames)
+                Age = ifelse(Age == 0, NA, Age))                             # if the min age is 0, that age is missing
+                #ExpID = 'Exp4b', Domain = "Morality") %>%
+#  dplyr::select(CommonColnames)
 
 rm(df4b_1,df4b_2) # remove the temporary variables.
 
@@ -1600,25 +1676,7 @@ df4b.v.basic     <- df4b.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
-### Participants
-`r df4b.T.basic$N` college students (`r df4b.T.basic$Nf` female, age = `r df4b.T.basic$Age_mean` $\pm$ `r df4b.T.basic$Age_sd`) participated the current study, `r df4b.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015 `r df4b.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4b.excld.sub)` participants were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4b.v.basic$N` participants (`r df4b.v.basic$Nf` female, age = `r df4b.v.basic$Age_mean` $\pm$ `r df4b.v.basic$Age_sd`) were analyzed and reported.
 
-### Experimental design
-The experimental design of this experiment is same as experiment 4a:  a 3× 2 × 2 within-subject design with moral valence (good, normalneutral and bad associations), self-relatedness (self vs. other), and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word “self” or “other” were presented in the shapes (see below).
-
-### Stimuli
-In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments.  Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels “self” and “other”. Before the experiment, we informed participants only response to the relationship between shapes’shapes configure and the labels below the fixation, ignoring the wordswithin each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
-
-### Procedure
-The procedure was similar to Experiment 4 a. Both samples of participants finished 6 blocks of trial, each with 120 trials.
-
-### Data analysis
-The data were analyzed as in experiment 4a.
-
-## Results
-
-```{r 'ex4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
 # calculating the dprime 
 df4b.v.dprime_l <- df4b.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1641,15 +1699,45 @@ df4b.v.dprime_l <- df4b.v %>%
 
 df4b.v.rt_m <- df4b.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df4b.meta.d <- df4b.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp4b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df4b.meta.rt <- df4b.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp4b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+```
+### Participants
+`r df4b.T.basic$N` college students (`r df4b.T.basic$Nf` female, age = `r df4b.T.basic$Age_mean` $\pm$ `r df4b.T.basic$Age_sd`) participated the current study, `r df4b.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015 `r df4b.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4b.excld.sub)` participants were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4b.v.basic$N` participants (`r df4b.v.basic$Nf` female, age = `r df4b.v.basic$Age_mean` $\pm$ `r df4b.v.basic$Age_sd`) were analyzed and reported.
+
+### Experimental design
+The experimental design of this experiment is same as experiment 4a:  a 3× 2 × 2 within-subject design with moral valence (good, normalneutral and bad associations), self-relatedness (self vs. other), and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word “self” or “other” were presented in the shapes (see below).
+
+### Stimuli
+In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments.  Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels “self” and “other”. Before the experiment, we informed participants only response to the relationship between shapes’shapes configure and the labels below the fixation, ignoring the wordswithin each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
+
+### Procedure
+The procedure was similar to Experiment 4 a. Both samples of participants finished 6 blocks of trial, each with 120 trials.
+
+### Data analysis
+The data were analyzed as in experiment 4a.
+
+## Results
+
+```{r 'ex4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp4b', df4a.v.dprime_l,rtdata)
-
 ```
 
 Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
@@ -1792,12 +1880,6 @@ df5 <- read.csv(".\\exp5_specificity\\rawdata_behav_5_specificity_2016.csv",head
                   BlockListE.Sample,BlockListM.Sample,BlockListP.Sample,BlockListS.Sample,
                   TrialListE.Sample,TrialListM.Sample,TrialListP.Sample,TrialListS.Sample))
 
-df5_meta <- df5 %>%
-  dplyr::rename(Domain = taskType) %>%
-  dplyr::mutate(Identity = NA) %>%
-  dplyr::select(CommonColnames)
-  
-
 df5.T.basic     <- df5 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
   dplyr::distinct(Subject, .keep_all = TRUE) %>%
@@ -1849,23 +1931,7 @@ df5.v.basic     <- df5.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(subjQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
-
-### Experimental design
-A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, atttractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
-
-### Stimuli
-4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires XXXXXXXX.
-
-### Procedure
-Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomnized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
-
-## Results
-
-```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 5.", fig.height=6, fig.width=15, warning=FALSE}
 # calculating the dprime 
 df5.v.dprime_l <- df5.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -1888,12 +1954,43 @@ df5.v.dprime_l <- df5.v %>%
 # anova for RT with 2*2 design
 df5.v.rt_m <- df5.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness,taskType,Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness,taskType,Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 taskType = factor(taskType, levels = c('Morality', 'Emotion',"Person", "Scene")))
+
+### prepare for the later meta-analysis
+df5.meta.d <- df5.v.dprime_l %>% 
+  dplyr::rename(Domain = taskType) %>%
+  dplyr::mutate(ExpID = 'Exp5',
+                Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df5.meta.rt <- df5.v.rt_m %>% 
+  dplyr::rename(Domain = taskType,
+                RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp5',
+                Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+```
+
+### Participants
+`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(subjQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
+
+### Experimental design
+A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, atttractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
+
+### Stimuli
+4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires XXXXXXXX.
+
+### Procedure
+Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomnized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
+
+## Results
+
+```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 5.", fig.height=6, fig.width=15, warning=FALSE}
 
 P.dprime <- ggplot(df5.v.dprime_l,aes(x = taskType, y = dprime, fill = Valence)) +
                 geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
@@ -2075,12 +2172,12 @@ df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep 
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU",
-                ExpID = "Exp6a",        # add experiment id
-                Domain = "Morality",    # add domain as morality (to be comparable with experiment 5)
-                Identity = NA,
+                #ExpID = "Exp6a",        # add experiment id
+                #Domain = "Morality",    # add domain as morality (to be comparable with experiment 5)
+                #Identity = NA,
                 Subject = Subject + 6100) 
 
-df6a_meta <- df6a %>% dplyr::select(CommonColnames)
+#df6a_meta <- df6a %>% dplyr::select(CommonColnames)
 # show the number of trials for each condition
 # df6a_trials <- df6a %>%
 #   dplyr::group_by(Subject, Matchness, Valence) %>%
@@ -2098,9 +2195,6 @@ df6a.T.basic     <- df6a %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
-# number of participant who practiced but not in the formal experiment
-#nQuit <- length(unique(df6a$Subject[is.na(df6a$BlockNo)])) - length(unique(df6a$Subject[!is.na(df6a$BlockNo)]))
-
 # participants should be excluded
 df6a.excld.sub <-  df6a %>%
   dplyr::filter(!is.na(BlockNo)) %>%
@@ -2134,28 +2228,7 @@ df6a.v.basic     <- df6a.v %>%
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
-```
 
-### Participants
-`r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua Universtiy in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
-
-### Experimental design
-The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
-
-### Stimuli
-Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (“坏人, HuaiRen”), good person (“好人, HaoRen”) or ordinary  person (“常人, ChangRen”) was counterbalanced across participants. The words bad person, good person or ordinary  person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
-We used backward masking to avoid over-processing of the moral words, in which a scrabmled picture were presented for 900 ms after the label. Also, to avoid the celling effect on accruacy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picutre of 3/4gray and ¼ white at resoluation of 2 × 2 pixel. 
-
-### Procedure
-The procedure was similar to Experiment 2. Participants finished 9 blocks of trial, each with 120 trials. In total, participants finished 180 trials for each combination of condition.
-
-As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
-
-All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
-
-## Results
-
-```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
 # calculating the dprime 
 df6a.v.dprime_l <- df6a.v %>%
   dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
@@ -2178,11 +2251,47 @@ df6a.v.dprime_l <- df6a.v %>%
 # Mean RT for each condition of each participant.
 df6a.v.rt_m <- df6a.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
+### prepare for the later meta-analysis
+df6a.meta.d <- df6a.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp6a',
+                Domain = "Morality",
+                Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df6a.meta.rt <- df6a.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp6a',
+                Domain = "Morality",
+                Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+```
+
+### Participants
+`r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua Universtiy in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
+
+### Experimental design
+The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
+
+### Stimuli
+Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (“坏人, HuaiRen”), good person (“好人, HaoRen”) or ordinary  person (“常人, ChangRen”) was counterbalanced across participants. The words bad person, good person or ordinary  person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
+We used backward masking to avoid over-processing of the moral words, in which a scrabmled picture were presented for 900 ms after the label. Also, to avoid the celling effect on accruacy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picutre of 3/4gray and ¼ white at resoluation of 2 × 2 pixel. 
+
+### Procedure
+The procedure was similar to Experiment 2. Participants finished 9 blocks of trial, each with 120 trials. In total, participants finished 180 trials for each combination of condition.
+
+As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
+
+All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
+
+## Results
+
+```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
 rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
 Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
@@ -2225,8 +2334,8 @@ df6a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m1,     # using afex'
                                   within = c('Valence'))
 df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print()
 
-posthoc_5a_rt <- emmeans::emmeans(df6a_RT_anova_m, "Valence") # compare each valence for both self and other condition
-# pairs(posthoc_5a_rt)
+posthoc_6a_rt <- emmeans::emmeans(df6a_RT_anova_m, "Valence") # compare each valence for both self and other condition
+# pairs(posthoc_6a_rt)
 
 # Mismatch trials
 df6a.v.rt_m2 <- df6a.v %>%
@@ -2271,10 +2380,10 @@ df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016.csv",header = TRUE
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU")
 
-df6b_meta <- df6b_d1 %>%
-  dplyr::mutate(ExpID = "Exp6b",
-                Domain = "Morality") %>%
-  dplyr::select(CommonColnames)
+#df6b_meta <- df6b_d1 %>%
+#  dplyr::mutate(ExpID = "Exp6b",
+#                Domain = "Morality") %>%
+#  dplyr::select(CommonColnames)
 
 df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016.csv",header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -2320,9 +2429,6 @@ df6b_d2.T.basic     <- df6b_d2 %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
   
-# number of participant who practiced but not in the formal experiment
-#nQuit <- length(unique(df6a$Subject[is.na(df6a$BlockNo)])) - length(unique(df6a$Subject[!is.na(df6a$BlockNo)]))
-
 # participants should be excluded
 df6b_d1.excld.sub <-  df6b_d1 %>%
   dplyr::filter(!is.na(BlockNo)) %>%
@@ -2384,6 +2490,45 @@ df6b_d2.v.basic     <- df6b_d2.v %>%
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
                    Age_sd = round(sd(Age,na.rm=TRUE),2))
 
+# calculate d prime
+df6b_d1.v.dprime_l <- df6b_d1.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+#  prepare the mean RT for each participant
+df6b_d1.v.rt_m <- df6b_d1.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+### prepare for the later meta-analysis
+df6b.meta.d <- df6b_d1.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp6b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df6b.meta.rt <- df6b_d1.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp6b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
 
 ```
 
@@ -2408,33 +2553,6 @@ Participants came back to lab at the second day and finish the same task again, 
 ## Results
 
 ```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
-# calculate d prime
-df6b_d1.v.dprime_l <- df6b_d1.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
-  dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
-  dplyr::ungroup() %>%
-  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
-  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
-                FAR  = FA/(FA+CR)) %>%                                      # fa rate
-  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
-  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
-                Identity = factor(Identity, levels = c('Self', 'Other')))
-
-#  prepare the mean RT for each participant
-df6b_d1.v.rt_m <- df6b_d1.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
 
 rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
@@ -2675,11 +2793,225 @@ Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the eff
 
 ### Data analysis
 
-```{r combine Data,echo=FALSE,results='hide'}
-df.meta <- rbind(df1a,df1b,df1c,df2,df3a,df4a,df5_meta,df6a_meta,df6b_meta) # combine data, need to exclude those overlapping participants.
+```{r prep exp7,echo=FALSE,results='hide'}
+## load data and clean data of exp 7a (copy the code from Hu et al., 2019) 
+df7a_m <- read.csv(".\\exp7\\rawdata_behav_exp7a_2016.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+  dplyr::rename(Subject = SubjectID, 
+                Sex = Gender,
+                Matchness = Match,
+                Valence = Morality,
+                ACC = Accuracy, 
+                RESP = ResponseKey) %>%    #
+  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
+                Valence = ifelse(Valence == "moral" | Valence == "Moral", "Good", "Bad"),
+                Matchness = ifelse(Matchness == "Match" | Matchness == "match", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age)) %>%
+  dplyr::filter(!Subject %in% c(2027, 7, 8, 7035))   # exclude participants
+
+# exclude trials, criterio 2: practicing trials in matching task (first 48 trials)
+subNo <- unique(df7a_m$Subject)
+for (subj in subNo) {
+      if (exists('df.M.fm')){
+            df.tmp <- df7a_m[df7a_m$Subject == subj,]
+            df.tmp <- df.tmp[49:nrow(df.tmp),]
+            df.M.fm <- rbind(df.M.fm,df.tmp)
+      } else {
+            df.M.fm <- df7a_m[df7a_m$Subject == subj,]
+            df.M.fm <- df.M.fm[49:nrow(df.M.fm),]
+      }
+}   # df.M.fm should be 14880 rows
+
+df7a_m <- df.M.fm %>%          # all the experimental trials
+  dplyr::mutate(ACC = ifelse(ACC == -1, 0, ACC))
+rm(subNo,df.M.fm,df.tmp) # remove the intermedia variables
+
+# calculate the overall accuracy for matching task
+df7a_m.M.acc.g <-  df7a_m %>%
+      dplyr::group_by(Subject) %>%
+      dplyr::summarise(N = length(ACC),
+                     countN = sum(ACC),
+                     ACC = sum(ACC)/length(ACC)) %>%
+      dplyr::ungroup()
+
+df7a_m.excldSub2.M <- df7a_m.M.acc.g %>% dplyr::filter(ACC < 0.5) %>%
+  dplyr::select(Subject) %>% dplyr::pull()# < 50% accuracy in matching task
+
+df7a_m.v <- df7a_m %>%
+  dplyr::filter(!Subject %in% df7a_m.excldSub2.M) %>% # exclude the invalid subjects
+  dplyr::mutate(RT = RT * 1000, Site = "THU") %>%
+  dplyr::filter(RT > 200) 
+
+# calculate d prime
+df7a_m.v.dprime_l <- df7a_m.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+#  prepare the mean RT for each participant
+df7a_m.v.rt_m <- df7a_m.v %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT), Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+### prepare for the later meta-analysis
+df7a_m.meta.d <- df7a_m.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp7a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df7a_m.meta.rt <- df7a_m.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp7a',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
+
+## Load and prepare for exp7b
+df7b_m <- read.csv(".\\exp7\\rawdata_behav_exp7b_2018.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA"))
+
+### Rule 1: wrong trials numbers because of procedure errors
+df7b.excldSub1_M <- df7b_m %>%
+   dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0))  %>%  # no response as wrong
+   dplyr::group_by(Subject, Match, Identity,Morality) %>%
+   dplyr::summarise(N = length(ACC)) %>%  # count the trial # for each condition of each subject
+   dplyr::ungroup() %>%
+   dplyr::filter(N != 75) %>%             # filter the rows that trial Number is not 75
+   dplyr::distinct(Subject) %>%           # find the unique subject ID
+   dplyr::pull(Subject)                   # pull the subj ID as vector
+
+### Rule 2:  overall accuracy < 0.5
+df7b.excldSub2_M <- df7b_m %>%
+   dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0))  %>%  # no response as wrong
+   dplyr::group_by(Subject) %>%
+   dplyr::summarise(N = length(ACC),
+                    countN = sum(ACC),
+                    ACC = sum(ACC)/length(ACC)) %>%  # count the trial # for each condition of each subject
+   dplyr::ungroup() %>%
+   dplyr::filter(ACC < .5) %>%             # filter the subjects with over all ACC < 0.5
+   dplyr::distinct(Subject) %>%             # find the unique subject ID
+   dplyr::pull(Subject)                     # pull the subj ID as vector
+
+### Rule 3:  one condition with zero ACC
+df7b.excldSub3_M <- df7b_m %>%
+   dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0))  %>%  # no response as wrong
+   dplyr::group_by(Subject, Match, Identity,Morality) %>%
+   dplyr::summarise(N = length(ACC),
+                    countN = sum(ACC),
+                    ACC = sum(ACC)/length(ACC)) %>%  # count the trial # for each condition of each subject
+   dplyr::ungroup() %>%
+   dplyr::filter(ACC == 0) %>%             # filter the subjects with over all ACC < 0.5
+   dplyr::distinct(Subject) %>%             # find the unique subject ID
+   dplyr::pull(Subject)                     # pull the subj ID as vector
+
+# all participants excluded
+df7b.excldSub_M   <- c(df7b.excldSub1_M, df7b.excldSub2_M, df7b.excldSub3_M) # 7302, 7303
+
+# select valid data for further analysis
+df7b_m.V <- df7b_m %>%
+  dplyr::rename(Matchness = Match,
+                Valence = Morality) %>%
+  dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0),                  # no response as wrong
+                Site = "THU",
+                Matchness = ifelse(Matchness == 'match', 'Match', 'Mismatch'))  %>% 
+  dplyr::filter(Subject,!Subject %in% df7b.excldSub_M)    # exclude the invalid subjects
+  
+
+# calculate d prime
+df7b_m.v.dprime_l <- df7b_m.V %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+#  prepare the mean RT for each participant
+df7b_m.v.rt_m <- df7b_m.V %>%
+  dplyr::filter(ACC == 1) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT)*1000,
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+### prepare for the later meta-analysis
+df7b_m.meta.d <- df7b_m.v.dprime_l %>% 
+  dplyr::mutate(ExpID = 'Exp7b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_d)
+
+df7b_m.meta.rt <- df7b_m.v.rt_m %>% 
+  dplyr::rename(RT = RT_m) %>%
+  dplyr::mutate(ExpID = 'Exp7b',
+                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+  dplyr::select(CommonColnames_rt)
 
 ```
 
+```{r combine valid Data,echo=FALSE,results='hide'}
+
+## exclude the repeating subjects
+
+
+# combine d prime data
+df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
+                   df4b.meta.d, df5.meta.d, df6a.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
+
+df.meta_rt <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df3a.meta.rt, df3b.meta.rt, df4a.meta.rt,
+                   df4b.meta.rt, df5.meta.rt, df6a.meta.rt, df6b.meta.rt, df7a_m.meta.rt, df7b_m.meta.rt)
+
+# calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
+effectList <- c('Good-Bad','Good-Neut','Neut-Bad',
+                'Good-Bad_S','Good-Neut_S','Neut-Bad_S',
+                'Good-Bad_O','Good-Neut_O','Neut-Bad_O')
+
+for (expName in unique(df.meta_d$ExpID)){
+  for (effectName in effectList)){
+    tmpdata <- df.meta_d %>% dplyr::filter(ExpID == expName)
+    if (effectName == 'Good_Bad'){
+      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+    }else if (effectName == 'Good_Neut'){
+      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+    }else if (effectName == 'Neut_Bad'){
+      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+    }else if (effectName == 'Neut_Bad_S' & sum(!is.na(tmpdata$Identity))){
+      next
+    }
+    
+  }
+}
+
+```
 To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
 
 Before analyzing, we first calculated the effect size based on the primary data of each experiment. Then, we used the '' function of the metafor to estimate the overall effect size.
