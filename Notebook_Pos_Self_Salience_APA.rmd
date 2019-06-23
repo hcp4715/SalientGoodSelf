@@ -2978,7 +2978,29 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
 ```{r combine valid Data,echo=FALSE,results='hide'}
 
 ## exclude the repeating subjects
+df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
+df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210)) # exclude participants who participated exp1a or 1b
 
+df2.meta.d <- df2.meta.d %>% dplyr::filter(Subject > 2000)    # exclude participant from exp 1a
+df2.meta.rt <- df2.meta.rt %>% dplyr::filter(Subject > 2000)
+
+df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3113, 3112, 3143, 3146)) # exclude participants from ex1b, 1c, and 2
+df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3113, 3112, 3143, 3146)) # exclude participants from ex1b, 1c, and 2
+
+df4b.meta.d <- df4b.meta.d %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   # exclude participants from ex1b, 1c, and 2
+df4b.meta.rt <- df4b.meta.rt %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201)) # exclude participants from ex1b, 1c, and 2
+
+df5.meta.d <- df5.meta.d %>% dplyr::filter(!Subject %in% c(5201))   # exclude participants from ex1b, 1c, and 2
+df5.meta.rt <- df5.meta.rt %>% dplyr::filter(!Subject %in% c(5201)) # exclude participants from ex1b, 1c, and 2
+
+df6a.meta.d <- df6a.meta.d %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   # exclude participants from ex1b, 1c, and 2
+df6a.meta.rt <- df6a.meta.rt %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131)) # exclude participants from ex1b, 1c, and 2
+
+df6b.meta.d <- df6b.meta.d %>% dplyr::filter(!Subject %in% c(6217))   # exclude participants from ex1b, 1c, and 2
+df6b.meta.rt <- df6b.meta.rt %>% dplyr::filter(!Subject %in% c(6217)) # exclude participants from ex1b, 1c, and 2
+
+df7a_m.meta.d <- df7a_m.meta.d %>% dplyr::filter(!Subject %in% c(7020))   # exclude participants from ex1b, 1c, and 2
+df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # exclude participants from ex1b, 1c, and 2
 
 # combine d prime data
 df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
@@ -2988,28 +3010,134 @@ df.meta_rt <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df3a.
                    df4b.meta.rt, df5.meta.rt, df6a.meta.rt, df6b.meta.rt, df7a_m.meta.rt, df7b_m.meta.rt)
 
 # calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
-effectList <- c('Good-Bad','Good-Neut','Neut-Bad',
-                'Good-Bad_S','Good-Neut_S','Neut-Bad_S',
-                'Good-Bad_O','Good-Neut_O','Neut-Bad_O')
+effectList <- c('Good_Bad','Good_Neut','Neut_Bad',
+                'Good_Bad_S','Good_Neut_S','Neut_Bad_S',
+                'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
+groupList <- rep(c('Overall','Self','Other'), each = 3)
 
-for (expName in unique(df.meta_d$ExpID)){
-  for (effectName in effectList)){
-    tmpdata <- df.meta_d %>% dplyr::filter(ExpID == expName)
-    if (effectName == 'Good_Bad'){
-      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-    }else if (effectName == 'Good_Neut'){
-      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-    }else if (effectName == 'Neut_Bad'){
-      dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-      dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-    }else if (effectName == 'Neut_Bad_S' & sum(!is.na(tmpdata$Identity))){
-      next
+df.ES_d <- data.frame(matrix(, nrow=length(unique(df.meta_d$ExpID))*length(effectList)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d$ExpID))*length(effectList)),
+                ExpID  = rep(rep(unique(df.meta_d$ExpID), each = length(effectList)), 2),
+                Effect = rep(effectList, length(unique(df.meta_d$ExpID))*2),
+                Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
+                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+
+for (DVName in c('RT','dprime')){
+  if (DVName == 'RT'){
+    metaData <- df.meta_rt %>% dplyr::rename(Value = RT)
+  } else{
+    metaData <- df.meta_d %>% dplyr::rename(Value = dprime)
+  }
+  
+  for (expName in unique(metaData$ExpID)){
+    for (effectName in effectList){
+      tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+      
+      if (effectName == 'Good_Bad'){
+        #print(paste('processing Good_Bad of ', expName, sep = ''))
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        }
+      else if (effectName == 'Good_Neut'){
+        #print(paste('processing Good_Neut of ', expName, sep = ''))
+        if ('Neutral' %in% tmpdata$Valence){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+          }
+        else{
+          #print(paste('There is no Neutral condition in', expName, sepe=''))
+          next
+          }
+        }
+      else if (effectName == 'Neut_Bad'){
+        if ('Neutral' %in% tmpdata$Valence)
+          {
+            dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+            dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+          }
+        else{
+            #print(paste('There is no Neutral condition in', expName, sepe=''))
+            next
+          }
+        }
+      else if (effectName == 'Good_Bad_S'){
+        if (!all(is.na(tmpdata$Identity))){
+          #print(paste('processing Good_Bad_S of ', expName, sep = ''))
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          }
+        else{
+            #print(paste('Skip Good_Bad_S of ', expName, sep = ''))
+          next
+          }
+        }
+      else if (effectName == 'Good_Neut_S'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence )
+          {
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')  
+          }
+        else{
+          next
+          }
+        }  
+      else if (effectName == 'Neut_Bad_S'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          }
+        else{
+          next
+          }
+        }
+      else if (effectName == 'Good_Bad_O'){
+        if (!all(is.na(tmpdata$Identity))){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }
+      else if (effectName == 'Good_Neut_O'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence )
+          {
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }  
+      else if (effectName == 'Neut_Bad_O'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+      }
+      M1  <- mean(dataCond1$Value) -> df.ES_d$M1[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES_d$SD1[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES_d$M2[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES_d$SD2[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES_d$N[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_d$r[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] 
+      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
+      df.ES_d$ES[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] <- tmp2[1,1]
+      df.ES_d$ES.var[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] <- tmp2[1,2]
     }
-    
   }
 }
+
+df.d_1_goodbad <- df.ES_d %>%
+  dplyr::filter(DVtype == 'dprime' & Effect == 'Good_Bad')
+
+M_D_GB <- metafor::rma(yi = df.d_1_goodbad$ES,
+                       vi = df.d_1_goodbad$ES.var,
+                       slab = df.d_1_goodbad$ExpID)
+metafor::forest(M_D_GB)
 
 ```
 To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
