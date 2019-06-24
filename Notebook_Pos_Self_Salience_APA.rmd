@@ -3013,18 +3013,17 @@ df.meta_rt <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df3a.
 effectList <- c('Good_Bad','Good_Neut','Neut_Bad',
                 'Good_Bad_S','Good_Neut_S','Neut_Bad_S',
                 'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
-groupList <- rep(c('Overall','Self','Other'), each = 3)
 
-df.ES_d <- data.frame(matrix(, nrow=length(unique(df.meta_d$ExpID))*length(effectList)*2, ncol=0)) %>%
+df.ES <- data.frame(matrix(, nrow=length(unique(df.meta_d$ExpID))*length(effectList)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d$ExpID))*length(effectList)),
                 ExpID  = rep(rep(unique(df.meta_d$ExpID), each = length(effectList)), 2),
                 Effect = rep(effectList, length(unique(df.meta_d$ExpID))*2),
-                Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
+                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
                 M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
 
 for (DVName in c('RT','dprime')){
   if (DVName == 'RT'){
-    metaData <- df.meta_rt %>% dplyr::rename(Value = RT)
+    metaData <- df.meta_rt %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
   } else{
     metaData <- df.meta_d %>% dplyr::rename(Value = dprime)
   }
@@ -3118,26 +3117,91 @@ for (DVName in c('RT','dprime')){
           next
           }
       }
-      M1  <- mean(dataCond1$Value) -> df.ES_d$M1[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
-      SD1 <- sd(dataCond1$Value)   -> df.ES_d$SD1[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] 
-      M2  <- mean(dataCond2$Value) -> df.ES_d$M2[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
-      SD2 <- sd(dataCond2$Value)   -> df.ES_d$SD2[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
-      N   <- length(unique(dataCond2$Subject)) -> df.ES_d$N[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName]
-      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_d$r[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] 
+      M1  <- mean(dataCond1$Value) -> df.ES$M1[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES$SD1[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES$M2[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES$SD2[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES$N[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES$r[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName] 
       tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
-      df.ES_d$ES[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] <- tmp2[1,1]
-      df.ES_d$ES.var[df.ES_d$DVtype == DVName & df.ES_d$ExpID == expName & df.ES_d$Effect == effectName] <- tmp2[1,2]
+      df.ES$ES[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName] <- tmp2[1,1]
+      df.ES$ES.var[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName] <- tmp2[1,2]
     }
   }
 }
 
-df.d_1_goodbad <- df.ES_d %>%
-  dplyr::filter(DVtype == 'dprime' & Effect == 'Good_Bad')
+groupList <- rep(c('Overall','Self','Other'), each = 3)
 
-M_D_GB <- metafor::rma(yi = df.d_1_goodbad$ES,
-                       vi = df.d_1_goodbad$ES.var,
-                       slab = df.d_1_goodbad$ExpID)
-metafor::forest(M_D_GB)
+df.res.meta.all <- data.frame(matrix(, nrow=3*3*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = 3*3),
+                Group  = rep(groupList, 2),
+                Effect = rep(effectList, 2),
+                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
+                N_exp = NA, Cohen_d = NA, se = NA, CI_low = NA, CI_upp = NA, pval = NA)
+
+#magicfor::magic_for(silent = TRUE)
+p_meta_list = list() # create a empty list to store the forest plot
+
+for (DVName in c('RT','dprime')){
+  for (effectName in effectList){
+    df.res.meta <- df.ES %>%
+      dplyr::filter(DVtype == DVName & Effect == effectName) %>%
+      tidyr::drop_na()
+  
+    tmp.meta.res <- metafor::rma(yi = df.res.meta$ES,
+                           vi = df.res.meta$ES.var,
+                           slab = df.res.meta$ExpID)
+    df.res.meta.all$N_exp[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$k
+    df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$beta
+    df.res.meta.all$se[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$se
+    df.res.meta.all$CI_low[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$ci.lb
+    df.res.meta.all$CI_upp[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$ci.ub
+    df.res.meta.all$pval[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$pval
+    
+    #p_meta <- metafor::forest(tmp.meta.res)
+    #if (is_empty(p_meta_list)){
+    #  p_meta_list[1] = p_meta
+    #} else{
+    #  p_meta_list = c(p_meta_list, p_meta)
+    #}
+    #magicfor::put(p_meta)
+  }
+}
+
+#magicfor::magic_result()
+df.res.meta.all$EffectType <- rep(c('Good_Bad','Good_Neut','Neut_Bad'), 3*2)
+
+df.res.meta.dprime <- df.res.meta.all %>% dplyr::filter(DVtype == 'dprime') %>%
+  dplyr::mutate(Group = factor(Group, levels = c("Overall", "Self", "Other")),
+                EffectType = factor(EffectType, levels = c('Good_Bad','Good_Neut', 'Neut_Bad')))
+
+df.res.meta.rt <- df.res.meta.all %>% dplyr::filter(DVtype == 'RT') %>%
+  dplyr::mutate(Group = factor(Group, levels = c("Overall", "Self", "Other")),
+                EffectType = factor(EffectType, levels = c('Good_Bad','Good_Neut', 'Neut_Bad')))
+
+p_meta_dprime <- ggplot(df.res.meta.dprime, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
+                 position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(-0.2, 0.9))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen' d of ",italic("d"), "prime", sep = ' ')))+
+  apatheme
+
+p_meta_rt <- ggplot(df.res.meta.rt, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
+                 position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(-0.9, 0.2))+
+  scale_y_reverse()+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab("Cohen' d of  RTs")+
+  apatheme
+multiplot(p_meta_rt, p_meta_dprime, cols = 2)
 
 ```
 To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
