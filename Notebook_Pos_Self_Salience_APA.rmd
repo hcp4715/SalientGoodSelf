@@ -2792,6 +2792,16 @@ To get a better estimation of the effect in the current study, we combined the d
 Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of d’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
 
 ### Data analysis
+We first calculated the mean of *d* prime and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for each contrast (i.e., Good v. Bad, Good v. Neutral, and Neutral v. Bad). Cohen'd and its variance were estimated using the following formula (Citation):
+
+$$Cohen's d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
+
+$$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
+
+$M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants).
+
+To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
+
 
 ```{r prep exp7,echo=FALSE,results='hide'}
 ## load data and clean data of exp 7a (copy the code from Hu et al., 2019) 
@@ -3130,6 +3140,11 @@ for (DVName in c('RT','dprime')){
   }
 }
 
+df.ES_sum <- df.ES %>% 
+  dplyr::group_by(DVtype, Effect) %>% 
+  tidyr::drop_na() %>% 
+  dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
+
 groupList <- rep(c('Overall','Self','Other'), each = 3)
 
 df.res.meta.all <- data.frame(matrix(, nrow=3*3*2, ncol=0)) %>%
@@ -3180,7 +3195,7 @@ df.res.meta.rt <- df.res.meta.all %>% dplyr::filter(DVtype == 'RT') %>%
                 EffectType = factor(EffectType, levels = c('Good_Bad','Good_Neut', 'Neut_Bad')))
 
 p_meta_dprime <- ggplot(df.res.meta.dprime, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
-  geom_bar(stat="identity", color="black", 
+  geom_bar(stat="identity", color=NA, 
            position=position_dodge()) +
   geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
                  position=position_dodge(.9)) +
@@ -3191,7 +3206,7 @@ p_meta_dprime <- ggplot(df.res.meta.dprime, aes(x=Group, y=Cohen_d, fill=EffectT
   apatheme
 
 p_meta_rt <- ggplot(df.res.meta.rt, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
-  geom_bar(stat="identity", color="black", 
+  geom_bar(stat="identity", color=NA, 
            position=position_dodge()) +
   geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
                  position=position_dodge(.9)) +
@@ -3201,19 +3216,22 @@ p_meta_rt <- ggplot(df.res.meta.rt, aes(x=Group, y=Cohen_d, fill=EffectType)) +
   scale_fill_brewer(palette = "Dark2")+
   ylab("Cohen' d of  RTs")+
   apatheme
-multiplot(p_meta_rt, p_meta_dprime, cols = 2)
 
 ```
-To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
 
-Before analyzing, we first calculated the effect size based on the primary data of each experiment. Then, we used the '' function of the metafor to estimate the overall effect size.
-
-To test different effect, conducted following analysis. First, we tested the effects of moral valence, regardless of self-relevance. To this end, we estimated the different between good vs. bad (13 experiments), good vs. neutral (11 experiments), and neutral vs. bad (11 experiments), for both *d* prime and RTs. Second, we examined the interaction between moral valence and identity. That is, we estimated the effect of valence for both self- and other- relevance conditions. Additionally, we examined the main effect of self-relevance, regardless of valence. To this end we estimated the differences between self vs. other conditions, regardless of the valence ().
-
+In total, we calculated nine meta-analyses for both reaction times and *d* prime. First, we estimated the effects of valence regardless of self-referential (Good-Bad, Good-Neutral, and Neutral-Bad), The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
 
 
 ## Results
 
+```{r 'meta-all-dprime-rt', fig.cap="Meta-analysis of RT and *d* prime of all experiments.", fig.height=6, fig.width=15, warning=FALSE}
+
+multiplot(p_meta_rt, p_meta_dprime, cols = 2)
+
+```
+
+
+Figure \@ref(fig:meta-all-dprime-rt) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
 
 
 # Behavioral-Traits correlation analysis

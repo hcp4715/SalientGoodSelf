@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  19 JUN 2019 08:44
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  25 JUN 2019 09:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1080,11 +1080,8 @@ Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;
 
 Underfull \vbox (badness 1635) has occurred while \output is active []
 
-[35] [36] [37] [38] [39] [40]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[41] [42] [43] [44] AED endfloat: Processing end Figures and Tables [45] (./Not
-ebook_Pos_Self_Salience_APA.fff
+[35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] AED endfloat: Processing
+ end Figures and Tables [46] (./Notebook_Pos_Self_Salience_APA.fff
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf Gr
 aphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf>
@@ -1123,27 +1120,32 @@ File: Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d2-dprime-rt-1.pdf
  Graphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d2-dprime-rt-1.pdf>
 
+File: Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1.pd
+f Graphic file (type pdf)
+<use Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1.pdf
+>
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 989.
-[46
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1005.
+[47
 
 
-] [47] [48] [49] [50] [51] [52]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 989.
+] [48] [49] [50] [51] [52] [53]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1005.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 989.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 989.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1005.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1005.
+
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 273D4A1C99B63A069C465B67DDE072F2.
+(rerunfilecheck)             Checksum: D5C03116B1514657DC70E2AFA5F943EF.
  ) 
 Here is how much of TeX's memory you used:
- 25392 strings out of 494894
- 473959 string characters out of 6175663
- 581424 words of memory out of 5000000
- 29052 multiletter control sequences out of 15000+600000
+ 25397 strings out of 494894
+ 474251 string characters out of 6175663
+ 581492 words of memory out of 5000000
+ 29056 multiletter control sequences out of 15000+600000
  572324 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,10n,61p,2725b,455s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (52 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (53 pages).

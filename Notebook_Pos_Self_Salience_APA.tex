@@ -843,15 +843,31 @@ To get a better estimation of the effect in the current study, we combined the d
 
 Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of d' and RTs, we used \enquote{metafor} package (Viechtbauer, 2010).
 
-\hypertarget{data-analysis-strategy}{%
-\subsubsection{Data analysis strategy}\label{data-analysis-strategy}}
+\hypertarget{data-analysis-8}{%
+\subsubsection{Data analysis}\label{data-analysis-8}}
 
-Before analyzing, we first calculated the effect size based on for each participant. Then, we used the '' function of the metafor to estimate the overall effect size.
+We first calculated the mean of \emph{d} prime and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for each contrast (i.e., Good v. Bad, Good v. Neutral, and Neutral v. Bad). Cohen'd and its variance were estimated using the following formula (Citation):
 
-Specifically, we are interested in the effect size of the following effects. First, the effects of moral valence, regardless of identity. To this end, we estimated the different between good vs.~bad, good vs.~neutral, and neutral vs.~bad, for both \emph{d} prime and RTs. Second, the interaction between moral valence and identity. To this end, we estimated the effect for both self and other conditions. Additionally, we also examined the main effect of identity, regardless of valence. To this end we estimated the differences between self vs.~other conditions, across all valence conditions.
+\[Cohen's d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}\]
+
+\[var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})\]
+
+\(M_1\) is the mean of the first condition, \(sd_1\) is the standard deviation of the first condition, while \(M_2\) is the mean of the second condition, \(sd_2\) is the standard deviation of the second condition. \(r\) is the correlation coefficient between data from first and second condition. \(n\) is the number of data point (in our case the number of participants).
+
+To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
+
+In total, we calculated nine meta-analyses for both reaction times and \emph{d} prime. First, we estimated the effects of valence regardless of self-referential (Good-Bad, Good-Neutral, and Neutral-Bad), The Good-Bad contrast included 13 experiments (1a - 7b, N = 475) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a \textasciitilde{} 6b, N = 405). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = 282), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = 212).
 
 \hypertarget{results-11}{%
 \subsection{Results}\label{results-11}}
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1.pdf}
+\caption{\label{fig:meta-all-dprime-rt}Meta-analysis of RT and \emph{d} prime of all experiments.}
+\end{figure}
+
+Figure \ref{fig:meta-all-dprime-rt} shows meta-analytic results for the effect of \emph{d} prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast.
 
 \hypertarget{behavioral-traits-correlation-analysis}{%
 \section{Behavioral-Traits correlation analysis}\label{behavioral-traits-correlation-analysis}}
