@@ -8,10 +8,10 @@ author:
     corresponding : yes    # Define only one corresponding author
     address       : "Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany"
     email         : "hcp4715@email.com"
-  - name          : "Jie Sui"
-    affiliation   : "3"
   - name          : "Kaiping Peng"
     affiliation   : "1"
+  - name          : "Jie Sui"
+    affiliation   : "3"
 
 affiliation:
   - id            : "1"
@@ -2794,7 +2794,7 @@ To get a better estimation of the effect in the current study, we combined the d
 Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of d’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
 
 ### Data analysis
-We first calculated the mean of *d* prime and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for each contrast (i.e., Good v. Bad, Good v. Neutral, and Neutral v. Bad). Cohen'd and its variance were estimated using the following formula (Citation):
+We first calculated the mean of *d* prime and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for each contrast (i.e., Good v. Bad, Good v. Neutral, and Neutral v. Bad). Cohen'd and its variance were estimated using the following formula (Cooper, Hedges, & Valentine, 2009):
 
 $$Cohen's d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
 
