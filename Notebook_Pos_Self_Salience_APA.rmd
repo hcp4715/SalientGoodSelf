@@ -7,7 +7,7 @@ author:
     affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
     address       : "Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany"
-    email         : "hcp4715@email.com"
+    email         : "hcp4715@gmail.com"
   - name          : "Kaiping Peng"
     affiliation   : "1"
   - name          : "Jie Sui"
@@ -29,23 +29,11 @@ authornote: |
   Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
-  
-  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
-  
-  One sentence clearly stating the **general problem** being addressed by  this particular study.
-  
-  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
-  
-  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
-  
-  One or two sentences to put the results into a more **general context**.
-  
-  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
+  Perception is not just a passive process but actively constructing. There are rich literature on different factors that impact the processing efficiency of our perceptual system. Two prominent examples are the self-prioritization and emotional attnetion. However, how these two factors interact in perceptual processes in largely unknown. We set out to examine the relationship between self-relevance and valence using a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust good-self prioritization effect, which drives the valence effect when the self was not explicitly referred. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, peopel literally "see" the positive side of themselves better.
   
   <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "Perceptual decision-making, Self"
+keywords          : "Perceptual decision-making, Self, positive bias"
 wordcount         : "X"
 
 bibliography      : ["r-references.bib"]
@@ -3226,7 +3214,7 @@ In total, we calculated nine meta-analyses for both reaction times and *d* prime
 
 ## Results
 
-```{r 'meta-all-dprime-rt', fig.cap="Meta-analysis of RT and *d* prime of all experiments.", fig.height=6, fig.width=15, warning=FALSE}
+```{r 'meta-all-dprime-rt', fig.cap="Meta-analysis of RT and *d* prime of all experiments.", fig.height=6, fig.width=15, fig.align="center", warning=FALSE}
 
 multiplot(p_meta_rt, p_meta_dprime, cols = 2)
 

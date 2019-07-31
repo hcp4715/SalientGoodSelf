@@ -85,7 +85,10 @@
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1.pdf}
-\caption{\label{fig:meta-all-dprime-rt}Meta-analysis of RT and \emph{d} prime of all experiments.}
+
+{\centering \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1}
+
+}
+
+\caption{Meta-analysis of RT and *d* prime of all experiments.}\label{fig:meta-all-dprime-rt}
 \end{figure*}
