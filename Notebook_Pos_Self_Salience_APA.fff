@@ -86,9 +86,19 @@
 \ifnextchar[{\eatarg}{}
 
 
-{\centering \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-dprime-rt-1}
+{\centering \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-val-1}
 
 }
 
-\caption{Meta-analysis of RT and *d* prime of all experiments.}\label{fig:meta-all-dprime-rt}
+\caption{Meta-analysis of RT and *d* prime for valence effect.}\label{fig:meta-all-val}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-self-ref-1}
+
+}
+
+\caption{Meta-analysis of RT and *d* prime for self-referential effect.}\label{fig:meta-all-self-ref}
 \end{figure*}

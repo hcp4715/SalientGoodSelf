@@ -29,7 +29,7 @@ authornote: |
   Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  Perception is not just a passive process but actively constructing. There are rich literature on different factors that impact the processing efficiency of our perceptual system. Two prominent examples are the self-prioritization and emotional attnetion. However, how these two factors interact in perceptual processes in largely unknown. We set out to examine the relationship between self-relevance and valence using a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust good-self prioritization effect, which drives the valence effect when the self was not explicitly referred. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, peopel literally "see" the positive side of themselves better.
+  Perception is not just a passive process but actively constructing. There are rich literature on different factors that impact the processing efficiency of our perceptual system. One prominent example is the self-prioritization. However, the self is multifaceted and may include different aspsects and the moral self-concept pop out as the most importance one for people's identity. To examine whether the morally positive self facilitate the perceptual decision-making, we used a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust moral-self prioritization effect, which may drives self-priortization effect when the self was not explicitly separated into different aspects. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, people literally "see" the positive side of themselves better.
   
   <!-- https://tinyurl.com/ybremelq -->
   
@@ -77,12 +77,12 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 
 # General Methods
 ## Participants.
-All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data (Simmons, Nelson, & Simonsohn, 2013) , we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiment.
+All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data (Simmons, Nelson, & Simonsohn, 2013) , we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments.
 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
 
 ## Material and Procedure
-In the current study, we used the social associative learning paradigm (or a variant of the self-tagging paradigm)(Sui, He, & Humphreys, 2012), in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase.
+In the current study, we used the social associative learning paradigm (or self-tagging paradigm)(Sui, He, & Humphreys, 2012), in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase.
 
 If not noted, E-prime 2.0 was used in all experiments. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors, with a chin-rest brace. The visual angle of geometric shapes was about 3.7º × 3.7º, the finxation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. Participant fixed their head on a chin-fixation, about 60 cm from the screen. 
 
@@ -2775,22 +2775,22 @@ For the matched trials, the interaction between identity and valence, `r df6b_d2
 
 # Meta-analysis of the effect size
 
-To get a better estimation of the effect in the current study, we combined the data of the 11 experiments described above and 2 experiments from another study (Hu, Lan, Macrae, & Sui, 2019). More specifically, we conducted random effect model meta-analyses of the effect size of *d*’ and RTs across our 13 experiments. Mini meta-analysis has been shown to be an effective way to get more precise and stable estimation of effect (Goh, Hall, & Rosenthal, 2016). We conducted a mini meta-analysis to estimate the effects observed in current study. 
+To get a better estimation of the effect in the current study, we combined the data of the 11 experiments described above and 2 experiments from another study (Hu, Lan, Macrae, & Sui, 2019) by conducting a mini-meta-analysis (Goh, Hall, & Rosenthal, 2016). More specifically, we conducted random effect model meta-analyses of the effect size of *d*’ and RTs across our 13 experiments.  
 
 ## Methods
 ### Software
-Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of d’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
+Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of *d*’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
 
 ### Data analysis
-We first calculated the mean of *d* prime and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for each contrast (i.e., Good v. Bad, Good v. Neutral, and Neutral v. Bad). Cohen'd and its variance were estimated using the following formula (Cooper, Hedges, & Valentine, 2009):
+We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen'd and its variance were estimated using the following formula (Cooper, Hedges, & Valentine, 2009):
 
-$$Cohen's d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
+$$d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
 
 $$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
 
 $M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants).
 
-To avoid stituation that some participant participated more than one experiment, we inspected the all the available participant information and markered those participants and only include their results from the first participation. Also, 24 participants were intentionally recruited to participate both exp 1a and exp 2, only results from exp 1a were included in the current meta-analysis.
+To avoid the cases that some participants participated more than one experiments, we inspected the all available information about participants. For those participants, only the results from their first participation were included. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the current meta-analysis.
 
 
 ```{r prep exp7,echo=FALSE,results='hide'}
@@ -3012,7 +3012,9 @@ df.meta_rt <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df3a.
 # calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
 effectList <- c('Good_Bad','Good_Neut','Neut_Bad',
                 'Good_Bad_S','Good_Neut_S','Neut_Bad_S',
-                'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
+                'Good_Bad_O','Good_Neut_O','Neut_Bad_O',
+                'Self_Other','Self_Other_G','Self_Other_N',
+                'Self_Other_B')
 
 df.ES <- data.frame(matrix(, nrow=length(unique(df.meta_d$ExpID))*length(effectList)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d$ExpID))*length(effectList)),
@@ -3109,7 +3111,7 @@ for (DVName in c('RT','dprime')){
           }
         }  
       else if (effectName == 'Neut_Bad_O'){
-        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
           dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
           dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
           }
@@ -3117,6 +3119,43 @@ for (DVName in c('RT','dprime')){
           next
           }
       }
+      else if (effectName == 'Self_Other'){
+        if (!all(is.na(tmpdata$Identity))){
+          dataCond1 <- tmpdata %>% dplyr::filter(Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Identity == 'Other')  
+          }
+        else{
+          next
+          }
+      }
+      else if (effectName == 'Self_Other_G'){
+        if (!all(is.na(tmpdata$Identity))){
+          dataCond1 <- tmpdata %>% dplyr::filter(Identity == 'Self' & Valence == "Good")
+          dataCond2 <- tmpdata %>% dplyr::filter(Identity == 'Other' & Valence == "Good")  
+          }
+        else{
+          next
+          }
+      }
+      else if (effectName == 'Self_Other_N'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
+          dataCond1 <- tmpdata %>% dplyr::filter(Identity == 'Self' & Valence == "Neutral")
+          dataCond2 <- tmpdata %>% dplyr::filter(Identity == 'Other' & Valence == "Neutral")  
+          }
+        else{
+          next
+          }
+      }
+      else if (effectName == 'Self_Other_B'){
+        if (!all(is.na(tmpdata$Identity))){
+          dataCond1 <- tmpdata %>% dplyr::filter(Identity == 'Self' & Valence == "Bad")
+          dataCond2 <- tmpdata %>% dplyr::filter(Identity == 'Other' & Valence == "Bad")  
+          }
+        else{
+          next
+          }
+      }
+      
       M1  <- mean(dataCond1$Value) -> df.ES$M1[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
       SD1 <- sd(dataCond1$Value)   -> df.ES$SD1[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName] 
       M2  <- mean(dataCond2$Value) -> df.ES$M2[df.ES$DVtype == DVName & df.ES$ExpID == expName & df.ES$Effect == effectName]
@@ -3136,9 +3175,10 @@ df.ES_sum <- df.ES %>%
   dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
 
 groupList <- rep(c('Overall','Self','Other'), each = 3)
+groupList[10:13] <- c('Self_Other', 'Self_Other_G', 'Self_Other_N', 'Self_Other_B')
 
-df.res.meta.all <- data.frame(matrix(, nrow=3*3*2, ncol=0)) %>%
-  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = 3*3),
+df.res.meta.all <- data.frame(matrix(, nrow= (3*3 + 4)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = (3*3 + 4)),
                 Group  = rep(groupList, 2),
                 Effect = rep(effectList, 2),
                 #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
@@ -3162,29 +3202,29 @@ for (DVName in c('RT','dprime')){
     df.res.meta.all$CI_low[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$ci.lb
     df.res.meta.all$CI_upp[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$ci.ub
     df.res.meta.all$pval[df.res.meta.all$DVtype == DVName & df.res.meta.all$Effect == effectName] <- tmp.meta.res$pval
-    
-    #p_meta <- metafor::forest(tmp.meta.res)
-    #if (is_empty(p_meta_list)){
-    #  p_meta_list[1] = p_meta
-    #} else{
-    #  p_meta_list = c(p_meta_list, p_meta)
-    #}
-    #magicfor::put(p_meta)
   }
 }
 
 #magicfor::magic_result()
-df.res.meta.all$EffectType <- rep(c('Good_Bad','Good_Neut','Neut_Bad'), 3*2)
+df.res.meta.all_val <- df.res.meta.all[c(1:9, 14:22),]
+df.res.meta.all_val$EffectType <- rep(c('Good_Bad','Good_Neut','Neut_Bad'), 3*2)
 
-df.res.meta.dprime <- df.res.meta.all %>% dplyr::filter(DVtype == 'dprime') %>%
+df.res.meta.all_id  <- df.res.meta.all[c(10:13, 23:26),]
+df.res.meta.all_id$Group <- rep(c('Overall','Good', 'Neutral','Bad'), 2)
+df.res.meta.all_id$EffectType <- 'Self-Other'
+df.res.meta.all_id <- df.res.meta.all_id %>% 
+  dplyr::mutate(Group = factor(Group, levels = c('Good', 'Neutral','Bad', 'Overall')),
+                DVtype = factor(DVtype, levels = c("RT", "dprime")))
+
+df.res.meta.dprime_val <- df.res.meta.all_val %>% dplyr::filter(DVtype == 'dprime') %>%
   dplyr::mutate(Group = factor(Group, levels = c("Overall", "Self", "Other")),
                 EffectType = factor(EffectType, levels = c('Good_Bad','Good_Neut', 'Neut_Bad')))
 
-df.res.meta.rt <- df.res.meta.all %>% dplyr::filter(DVtype == 'RT') %>%
+df.res.meta.rt_val <- df.res.meta.all_val %>% dplyr::filter(DVtype == 'RT') %>%
   dplyr::mutate(Group = factor(Group, levels = c("Overall", "Self", "Other")),
                 EffectType = factor(EffectType, levels = c('Good_Bad','Good_Neut', 'Neut_Bad')))
 
-p_meta_dprime <- ggplot(df.res.meta.dprime, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
+p_meta_dprime_val <- ggplot(df.res.meta.dprime_val, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
   geom_bar(stat="identity", color=NA, 
            position=position_dodge()) +
   geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
@@ -3195,7 +3235,7 @@ p_meta_dprime <- ggplot(df.res.meta.dprime, aes(x=Group, y=Cohen_d, fill=EffectT
   ylab(expression(paste("Cohen' d of ",italic("d"), "prime", sep = ' ')))+
   apatheme
 
-p_meta_rt <- ggplot(df.res.meta.rt, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
+p_meta_rt_val <- ggplot(df.res.meta.rt_val, aes(x=Group, y=Cohen_d, fill=EffectType)) + 
   geom_bar(stat="identity", color=NA, 
            position=position_dodge()) +
   geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
@@ -3207,21 +3247,35 @@ p_meta_rt <- ggplot(df.res.meta.rt, aes(x=Group, y=Cohen_d, fill=EffectType)) +
   ylab("Cohen' d of  RTs")+
   apatheme
 
+
+p_meta_id <- ggplot(df.res.meta.all_id, aes(x=DVtype, y=Cohen_d, fill=Group)) + 
+  geom_bar(stat="identity", color=NA, 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Cohen_d-se, ymax=Cohen_d+se), width=.2,
+                 position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(-0.7, 0.7))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen' d", sep = ' ')))+
+  apatheme
+
 ```
 
-In total, we calculated nine meta-analyses for both reaction times and *d* prime. First, we estimated the effects of valence regardless of self-referential (Good-Bad, Good-Neutral, and Neutral-Bad), The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
+In total, we conducted 13 meta-analyses for both reaction times and *d* prime for both valence effect and self-relevance effect. For the valence effect, we compared the differences between valences for over all effect as well as for self-referential and other-referential separately. The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
+
+The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
 
 
 ## Results
 
-```{r 'meta-all-dprime-rt', fig.cap="Meta-analysis of RT and *d* prime of all experiments.", fig.height=6, fig.width=15, fig.align="center", warning=FALSE}
+```{r 'meta-all-val', fig.cap="Meta-analysis of RT and *d* prime for valence effect.", fig.height=6, fig.width=15, fig.align="center", warning=FALSE}
 
-multiplot(p_meta_rt, p_meta_dprime, cols = 2)
+multiplot(p_meta_rt_val, p_meta_dprime_val, cols = 2)
 
 ```
 
 
-Figure \@ref(fig:meta-all-dprime-rt) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
+Figure \@ref(fig:meta-all-val) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
 
 Across all experiments, we found that the good-association condition has advantage over bad conditions for both RT (Cohen's d = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']`]) and *d* prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Bad']`]). Also the good-association has advantages over the neutral condition for both RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']`]) and *d* prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Good_Neut']`]). But the neutral condition did not differ from the bad conditions for d prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']`]) but slightly faster on RT, RT Cohen's (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Overall' & df.res.meta.all$EffectType == 'Neut_Bad']`]).
 
@@ -3229,6 +3283,14 @@ When we distinguish between self-referential and other-referential conditions, i
 
 For the other condition, no differences were observed for *d* prime: Good vs. Bad  (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']`]); good vs. neutral (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']`]); neutral vs. bad (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']`]). But the effect on RT has the similar pattern as the overall effect, with much small effect size on Good vs. Bad, (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Bad']`]) and Good vs. Neutral, (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Good_Neut']`]), and similar effect size on neutral vs. bad condition,  (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Group == 'Other' & df.res.meta.all$EffectType == 'Neut_Bad']`]).
 
+```{r 'meta-all-self-ref', fig.cap="Meta-analysis of RT and *d* prime for self-referential effect.", fig.height=6, fig.width=9, fig.align="center", warning=FALSE}
+
+p_meta_id
+
+```
+
+
+Figure \@ref(fig:meta-all-self-ref) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
 
 
 # Behavioral-Traits correlation analysis
