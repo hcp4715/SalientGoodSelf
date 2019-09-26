@@ -6,7 +6,6 @@ Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
 #rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
-rm(list = ls())
 pkgTest <- function(x)
 {
         if (!require(x,character.only = TRUE))

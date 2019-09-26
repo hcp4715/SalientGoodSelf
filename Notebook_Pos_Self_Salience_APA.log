@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  24 SEP 2019 09:26
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  25 SEP 2019 08:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1071,8 +1071,11 @@ Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;
 Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;!
-[35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] [46] AED endfloat: Proce
-ssing end Figures and Tables [47] (./Notebook_Pos_Self_Salience_APA.fff
+[35] [36] [37] [38] [39] [40] [41] [42]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[43] [44] [45] [46] AED endfloat: Processing end Figures and Tables [47] (./Not
+ebook_Pos_Self_Salience_APA.fff
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf Gr
 aphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf>
@@ -1119,15 +1122,15 @@ File: Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-self-ref-1.pdf
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/meta-all-self-ref-1.pdf>
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1017.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1019.
 [48
 
 
 ] [49] [50] [51] [52] [53] [54] [55]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1017.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1019.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1017.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1017.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1019.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1019.
 
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
