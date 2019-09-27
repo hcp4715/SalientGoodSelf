@@ -917,7 +917,7 @@ df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014.csv", header = TRUE,
                 Site = "THU",
                 #ExpID = "Exp3a",
                 #Domain = "Morality",
-                Subject = Subject + 3100) #%>%                                        # re-code the subject id
+                Subject = Subject + 3000) #%>%                                        # re-code the subject id
   #dplyr::select(CommonColnames)
 
 df3a.T.basic     <- df3a %>%
@@ -2166,7 +2166,7 @@ df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep 
                 #ExpID = "Exp6a",        # add experiment id
                 #Domain = "Morality",    # add domain as morality (to be comparable with experiment 5)
                 #Identity = NA,
-                Subject = Subject + 6100) 
+                Subject = Subject + 6100) # here started with 61XX instead of 60XX, which is the id for anther project.
 
 #df6a_meta <- df6a %>% dplyr::select(CommonColnames)
 # show the number of trials for each condition
@@ -2985,8 +2985,8 @@ df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208,
 df2.meta.d <- df2.meta.d %>% dplyr::filter(Subject > 2000)    # exclude participant from exp 1a
 df2.meta.rt <- df2.meta.rt %>% dplyr::filter(Subject > 2000)
 
-df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3113, 3112, 3143, 3146)) # exclude participants from ex1b, 1c, and 2
-df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3113, 3112, 3143, 3146)) # exclude participants from ex1b, 1c, and 2
+df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
+df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
 
 df4b.meta.d <- df4b.meta.d %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   # exclude participants from ex1b, 1c, and 2
 df4b.meta.rt <- df4b.meta.rt %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201)) # exclude participants from ex1b, 1c, and 2
@@ -3311,7 +3311,28 @@ For the behavioral task part, we derived different indices. First, we used the m
 For the questinnaire part, we are most interested in the self-rated distance between different person. Other questionnaire were not intended to correlated with behavioral data, but we explored the results that might be theoretically interest, e.g., self-esteem, moral identity.
 
 ```{r prepare correlational data,}
+library(mosaic) # using this library for its derivedFactor function
 # prepare questionnare data
+df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
+                                      "Exp1b" = (expID == "exp1.1"),
+                                      "Exp3a" = (expID == "exp3"),
+                                      "Exp3b" = (expID == "exp3.1"),
+                                      "Exp4a" = (expID == "exp4.1"),
+                                      "Exp4b" = (expID == "exp4.2"),
+                                      "Exp5" = (expID == "exp5.2"),
+                                      "Exp6b" = (expID == "exp6.2"),
+                                      "Exp7a" = (expID == "exp7.1"),
+                                      "Exp7b" = (expID == "exp7r"),
+                                      "Exp_dpr" = (expID == "exp6"),
+                                      .method ="first", .default = NA),
+                expID = as.character(expID))
+
+# intersection between participant from behavioral task and scales and get the data
+subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
+
+df.scales <- df.scales %>% dplyr::filter(subjID %in% subj.common)  
 
 # prepare behavioral task data
 
