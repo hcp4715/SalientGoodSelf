@@ -3332,10 +3332,25 @@ df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE,
 # intersection between participant from behavioral task and scales and get the data
 subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
 
-df.scales <- df.scales %>% dplyr::filter(subjID %in% subj.common)  
+df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
+  dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
-# prepare behavioral task data
+# prepare behavioral task data for exp1a
+df1a.v.cor.anal <- df1a.v %>%
+  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
+  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
+  dplyr::group_by(Subject, Valence) %>%
+  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
+                   RT_SD   = sd(RT, na.rm = T)) %>%
+  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%
+  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
+  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
 
+library(corrr)
+res.cor <- cor(df1a.v.cor.anal[,5:13])
+res.cor
+
+corrplot::corrplot(res.cor, method="circle")
 ```
 
 # References
