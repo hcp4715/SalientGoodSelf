@@ -3306,7 +3306,9 @@ All data were collected after participants finished the behavioral tasks. In som
 ### Data Analysis
 We reported all the reliability of the questionnaires. Then we calculated the correlation between the data from behavioral task and the questionnaire data. 
 
-For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's d.
+For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's *d*.
+
+The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questinnaire part, we are most interested in the self-rated distance between different person. Other questionnaire were not intended to correlated with behavioral data, but we explored the results that might be theoretically interest, e.g., self-esteem, moral identity.
 
@@ -3345,6 +3347,21 @@ df1a.v.cor.anal <- df1a.v %>%
   dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%
   dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
   tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
+
+# prepare the data for hddm for exp1a
+# This data is for stim-coding. for both stimuli and resposne: match stim and button press for match is 1; for mismatch is 0;
+df1a.v.hddm_stim <- df1a.v %>%
+  dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+  dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+  dplyr::mutate(RT = RT/1000,
+                stim = ifelse(Matchness == "Match", 1, 0),          
+                response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+  dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+  dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+
+# write csv for the HDDM analyses
+write.csv(df1a.v.hddm_stim, file = paste(curDir,'/HDDM/df1a.v.hddm_stim.csv', sep = ''), row.names = F)
+
 
 library(corrr)
 res.cor <- cor(df1a.v.cor.anal[,5:13])
