@@ -3337,17 +3337,7 @@ subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
 df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
-# prepare behavioral task data for exp1a
-df1a.v.cor.anal <- df1a.v %>%
-  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
-  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
-  dplyr::group_by(Subject, Valence) %>%
-  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
-                   RT_SD   = sd(RT, na.rm = T)) %>%
-  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%
-  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
-  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
-
+### Exp 1a
 # prepare the data for hddm for exp1a
 # This data is for stim-coding. for both stimuli and resposne: match stim and button press for match is 1; for mismatch is 0;
 df1a.v.hddm_stim <- df1a.v %>%
@@ -3362,9 +3352,70 @@ df1a.v.hddm_stim <- df1a.v %>%
 # write csv for the HDDM analyses
 write.csv(df1a.v.hddm_stim, file = paste(curDir,'/HDDM/df1a.v.hddm_stim.csv', sep = ''), row.names = F)
 
+# get the parameters from hddm
+df1a.v.hddm_params <- read.csv(".\\HDDM\\exp1a_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
+
+# prepare behavioral task data for exp1b
+df1a.v.cor.anal <- df1b.v %>%
+  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
+  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
+  dplyr::group_by(Subject, Valence) %>%
+  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
+                   RT_SD   = sd(RT, na.rm = T)) %>%
+  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
+  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
+  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
+
+df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::right_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
+
+### Exp1b
+
+# prepare the data for hddm for exp1a
+# This data is for stim-coding. for both stimuli and resposne: match stim and button press for match is 1; for mismatch is 0;
+df1b.v.hddm_stim <- df1b.v %>%
+  dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+  dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+  dplyr::mutate(RT = RT/1000,
+                stim = ifelse(Matchness == "Match", 1, 0),          
+                response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+  dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+  dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+
+# write csv for the HDDM analyses
+write.csv(df1b.v.hddm_stim, file = paste(curDir,'/HDDM/df1b.v.hddm_stim.csv', sep = ''), row.names = F)
+
+# get the parameters from hddm
+df1b.v.hddm_params <- read.csv(".\\HDDM\\exp1b_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
+
+# prepare behavioral task data for exp1b
+df1a.v.cor.anal <- df1b.v %>%
+  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
+  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
+  dplyr::group_by(Subject, Valence) %>%
+  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
+                   RT_SD   = sd(RT, na.rm = T)) %>%
+  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
+  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
+  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
+
+df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::right_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
 
 library(corrr)
-res.cor <- cor(df1a.v.cor.anal[,5:13])
+res.cor <- cor(df1a.v.cor.anal[,5:22])
 res.cor
 
 corrplot::corrplot(res.cor, method="circle")
