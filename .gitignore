@@ -1,5 +1,5 @@
 *.csv
-*.ddm*
+*_ddm*
 *.out
 *.xlsx
 *.xls
