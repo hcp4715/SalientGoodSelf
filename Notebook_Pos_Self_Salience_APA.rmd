@@ -3337,8 +3337,50 @@ subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
 df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
-### Exp 1a
-# prepare the data for hddm for exp1a
+
+### Prepare the data for hddm
+#expNameList <- unique(df.scales.v$expID)
+dataList <- list(df1a.v, df1b.v, df4a.v, df4b.v, df5.v, df6b_d1.v, df7a_m.v, df7b_m.V, df3b.v)
+hddmNameList <- c('df1a.v', 'df1b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6b_d1.v', 'df7a_m.v', 'df7b_m.V', 'df3b.v')
+for (indx in 1:length(unique(df.scales.v$expID))) {
+  current.df <- dataList[[indx]]
+  if ('Resp' %in% colnames(current.df)){
+    current.df <- current.df %>% dplyr::rename(RESP = Resp)
+  }
+  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
+  if (indx == 1 | indx == 2){                                           # for exp 1a and 1b, 2*3 design
+    cur.df.hddm_stim <- current.df %>%
+      dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+      dplyr::mutate(RT = RT/1000,
+                    stim = ifelse(Matchness == "Match", 1, 0),          
+                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+  } else if (indx == 5){    # exp5                                      # for exp 5, only select morality task
+    cur.df.hddm_stim <- current.df %>%
+      dplyr::filter(taskType == 'Morality') %>%
+      dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+      dplyr::mutate(RT = RT/1000,
+                    stim = ifelse(Matchness == "Match", 1, 0),          
+                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+    
+  } else if (indx %in% c(3, 4, 6, 7, 8, 9)){    # for expa4a, 4b, 6b, 7a, 7b, 3b,  three-way design,
+    cur.df.hddm_stim <- current.df %>%
+      dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+      dplyr::mutate(RT = RT/1000,
+                    stim = ifelse(Matchness == "Match", 1, 0),          
+                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+  } 
+ write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
+}
+
 # This data is for stim-coding. for both stimuli and resposne: match stim and button press for match is 1; for mismatch is 0;
 df1a.v.hddm_stim <- df1a.v %>%
   dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
