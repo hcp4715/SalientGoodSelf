@@ -3337,6 +3337,83 @@ subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
 df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
+## get the questionnaire names
+# big five inventory
+BFI_ANames <- c("BFI_A1","BFI_A2","BFI_A3","BFI_A4","BFI_A5","BFI_A6","BFI_A7","BFI_A8","BFI_A9")
+BFI_CNames <- c("BFI_C1","BFI_C2","BFI_C3","BFI_C4","BFI_C5","BFI_C6","BFI_C7","BFI_C8","BFI_C9")
+BFI_NNames <- c("BFI_N1","BFI_N2","BFI_N3","BFI_N4","BFI_N5","BFI_N6","BFI_N7","BFI_N8")
+BFI_ONames <- c("BFI_O1","BFI_O2","BFI_O3","BFI_O4","BFI_O5","BFI_O6","BFI_O7","BFI_O8","BFI_O9","BFI_O10")
+BFI_ENames <- c("BFI_E1","BFI_E2","BFI_E3","BFI_E4","BFI_E5","BFI_E6","BFI_E7","BFI_E8")
+
+# Self-esteem
+SESNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
+
+#SESKeys <- c(1,2,-3,4,-5,6,7,8,-9,-10)   #original reverse coding
+SESKeys <- c(1,2,3,4,5,6,7,8,9,10) # reverse coded as negative
+
+SlfEstAlpha <-  psych::alpha(df.scales.v[,SESNames], keys=SESKeys)  # calculate the alpha coefficient of SES
+print(SlfEstAlpha$total)  # print the alpha for SES
+# sta alpha = .87
+
+SESOmega <- psych::omega(df.scales.v[,SESNames])  
+print(c(SESOmega$omega_h,SESOmega$omega.tot)) 
+# omega.tot = .90
+
+# Relational self-esteem
+RelSlfEstname <- c("Relat_SE_1","Relat_SE_2","Relat_SE_3","Relat_SE_4",
+                   "Relat_SE_5","Relat_SE_6","Relat_SE_7","Relat_SE_8") 
+RelSlfEstKeys <- c(1,2,3,4,5,6,7,8)
+
+RelSlfEstAlpha <-  psych::alpha(df.scales.v[,RelSlfEstname], keys=RelSlfEstKeys)  # calculate the alpha coefficient of Relational Self-Esteem
+print(RelSlfEstAlpha$total)  # print the alpha for Relational Self-Esteem
+# sta alpha = .84
+
+RelSlfEstOmega <- psych::omega(df.scales.v[,RelSlfEstname])  
+print(c(RelSlfEstOmega$omega_h,RelSlfEstOmega$omega.tot)) 
+# omega.tot = .89
+
+# moral identity
+mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
+                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
+                "morId_13","morId_14","morId_15")
+
+# moral self images
+mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
+                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
+
+# personal distance
+perDistNames <- c("SelfSelf", 
+                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
+                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
+                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
+                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
+                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
+                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
+                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
+
+df.perdist <- df.scales.v %>%
+  dplyr::select(c(expID, subjID),perDistNames) %>%
+  #dplyr::rowwise() %>%
+  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
+                SelfSelfraw = SelfSelf,
+                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
+                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
+                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
+                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
+                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
+                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
+                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
+  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
+                SelfGoodraw, SelfNeutraw, SelfBadraw,
+                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
+  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
+                SelfGood = SelfGoodraw/sumRaw,
+                SelfNeut = SelfNeutraw/sumRaw,
+                SelfBad = SelfBadraw/sumRaw,
+                SelfStra = SelfStraraw/sumRaw, 
+                GoodNeut = GoodNeutraw/sumRaw, 
+                GoodBad = GoodBadraw/sumRaw, 
+                NeutBad = NeutBadraw/sumRaw)
 
 ### Prepare the data for hddm
 #expNameList <- unique(df.scales.v$expID)
@@ -3435,7 +3512,7 @@ for (indx in 1:length(params.list)){
   flush.console()
 }
 
-df1a.v.hddm_params <- read.csv(".\\HDDM\\exp1a_hddm_params.csv",header = TRUE, sep = ",",
+df1a.v.hddm_params <- read.csv(".\\HDDM\\df1a_hddm_params.csv",header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
   dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
@@ -3445,17 +3522,27 @@ df1a.v.hddm_params <- read.csv(".\\HDDM\\exp1a_hddm_params.csv",header = TRUE, s
   tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
 
 # prepare behavioral task data for exp1b
-df1a.v.cor.anal <- df1b.v %>%
+df1a.v.cor.anal <- df1a.v %>%
   dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
   dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
   dplyr::group_by(Subject, Valence) %>%
   dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
                    RT_SD   = sd(RT, na.rm = T)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = as.factor(Valence)) %>%
   dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
   dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
   tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
 
-df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::right_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
+df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
+
+library(corrr)
+res.cor <- cor(df1a.v.cor.anal[,5:22])
+res.cor
+
+corrplot::corrplot(res.cor, method="circle")
+
+
 
 ### Exp1b
 
