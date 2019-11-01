@@ -11,7 +11,7 @@ author:
   - name          : "Kaiping Peng"
     affiliation   : "1"
   - name          : "Jie Sui"
-    affiliation   : "3"
+    affiliation   : "1,3"
 
 affiliation:
   - id            : "1"
@@ -3346,32 +3346,10 @@ BFI_ONames <- c("BFI_O1","BFI_O2","BFI_O3","BFI_O4","BFI_O5","BFI_O6","BFI_O7","
 BFI_ENames <- c("BFI_E1","BFI_E2","BFI_E3","BFI_E4","BFI_E5","BFI_E6","BFI_E7","BFI_E8")
 
 # Self-esteem
-SESNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
-
-#SESKeys <- c(1,2,-3,4,-5,6,7,8,-9,-10)   #original reverse coding
-SESKeys <- c(1,2,3,4,5,6,7,8,9,10) # reverse coded as negative
-
-SlfEstAlpha <-  psych::alpha(df.scales.v[,SESNames], keys=SESKeys)  # calculate the alpha coefficient of SES
-print(SlfEstAlpha$total)  # print the alpha for SES
-# sta alpha = .87
-
-SESOmega <- psych::omega(df.scales.v[,SESNames])  
-print(c(SESOmega$omega_h,SESOmega$omega.tot)) 
-# omega.tot = .90
-
+SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
 # Relational self-esteem
 RelSlfEstname <- c("Relat_SE_1","Relat_SE_2","Relat_SE_3","Relat_SE_4",
                    "Relat_SE_5","Relat_SE_6","Relat_SE_7","Relat_SE_8") 
-RelSlfEstKeys <- c(1,2,3,4,5,6,7,8)
-
-RelSlfEstAlpha <-  psych::alpha(df.scales.v[,RelSlfEstname], keys=RelSlfEstKeys)  # calculate the alpha coefficient of Relational Self-Esteem
-print(RelSlfEstAlpha$total)  # print the alpha for Relational Self-Esteem
-# sta alpha = .84
-
-RelSlfEstOmega <- psych::omega(df.scales.v[,RelSlfEstname])  
-print(c(RelSlfEstOmega$omega_h,RelSlfEstOmega$omega.tot)) 
-# omega.tot = .89
-
 # moral identity
 mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
                 "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
@@ -3390,6 +3368,21 @@ perDistNames <- c("SelfSelf",
                   "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
                   "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
                   "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
+
+# calculate the average score of each relevant scale
+df.q_scores.v <- df.scales.v %>%
+  dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
+                RelSlfEst = rowMeans(.[, RelSlfEstname], na.rm = F),
+                mrlId = rowMeans(.[, mrlIdNames], na.rm = F),
+                mrlslfImg = rowMeans(.[, mrlslfImgNames], na.rm = F),
+                BFI_A = rowMeans(.[, BFI_ANames], na.rm = F),
+                BFI_C = rowMeans(.[, BFI_CNames], na.rm = F),
+                BFI_N = rowMeans(.[, BFI_NNames], na.rm = F),
+                BFI_O = rowMeans(.[, BFI_ONames], na.rm = F),
+                BFI_E = rowMeans(.[, BFI_ENames], na.rm = F)) %>%
+  dplyr::select(subjID, SlfEst, RelSlfEst, mrlId, mrlslfImg,
+                BFI_A, BFI_C, BFI_N, BFI_O, BFI_E)
+
 
 df.perdist <- df.scales.v %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
@@ -3413,7 +3406,31 @@ df.perdist <- df.scales.v %>%
                 SelfStra = SelfStraraw/sumRaw, 
                 GoodNeut = GoodNeutraw/sumRaw, 
                 GoodBad = GoodBadraw/sumRaw, 
-                NeutBad = NeutBadraw/sumRaw)
+                NeutBad = NeutBadraw/sumRaw) %>%
+  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
+                SelfStra, GoodNeut, GoodBad, NeutBad)
+
+### Reliability of these scales
+# self-esteem
+#SESKeys <- c(1,2,-3,4,-5,6,7,8,-9,-10)   # original reverse coding
+SESKeys <- c(1,2,3,4,5,6,7,8,9,10)        # reverse coded as negative
+SlfEstAlpha <-  psych::alpha(df.scales.v[,SESNames], keys=SESKeys)  # calculate the alpha coefficient of SES
+SESOmega <- psych::omega(df.scales.v[,SESNames])  
+print(c(SESOmega$omega_h,SESOmega$omega.tot)) 
+# omega.tot = .90
+
+
+# Relational self-esteem
+RelSlfEstKeys <- c(1,2,3,4,5,6,7,8)
+RelSlfEstAlpha <-  psych::alpha(df.scales.v[,RelSlfEstname], keys=RelSlfEstKeys)  # calculate the alpha coefficient of Relational Self-Esteem
+print(RelSlfEstAlpha$total)  # print the alpha for Relational Self-Esteem
+RelSlfEstOmega <- psych::omega(df.scales.v[,RelSlfEstname])  
+print(c(RelSlfEstOmega$omega_h,RelSlfEstOmega$omega.tot)) 
+# omega.tot = .89
+
+# moral identity
+
+# moral self images
 
 ### Prepare the data for hddm
 #expNameList <- unique(df.scales.v$expID)
@@ -3535,9 +3552,14 @@ df1a.v.cor.anal <- df1a.v %>%
   tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
 
 df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
+df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df.perdist, by = c('Subject' = 'subjID'))
+df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df.q_scores.v, by = c('Subject' = 'subjID'))
 
 library(corrr)
-res.cor <- cor(df1a.v.cor.anal[,5:22])
+res.cor <- df1a.v.cor.anal %>%
+  dplyr::select(-c(Site:Age)) %>%
+  dplyr::select_if(~sum(!is.na(.)) > 0) %>%
+  cor()
 res.cor
 
 corrplot::corrplot(res.cor, method="circle")
@@ -3584,7 +3606,7 @@ df1a.v.cor.anal <- df1b.v %>%
 df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::right_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
 
 library(corrr)
-res.cor <- cor(df1a.v.cor.anal[,5:22])
+res.cor <- cor(df1a.v.cor.anal[,5:30])
 res.cor
 
 corrplot::corrplot(res.cor, method="circle")
