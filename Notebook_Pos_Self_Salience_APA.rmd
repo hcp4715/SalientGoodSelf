@@ -3304,13 +3304,21 @@ We also analyzed the relationship between behavioral response and self-reported 
 All data were collected after participants finished the behavioral tasks. In some experiments, the participants were also asked to re-filled the questionnaire after about 4 weeks. All the detailed information of these questionnaire data can be found in Liu et al. (2019, https://psyarxiv.com/7ngey/).
 
 ### Data Analysis
+#### Correlation Analysis
 We reported all the reliability of the questionnaires. Then we calculated the correlation between the data from behavioral task and the questionnaire data. 
 
 For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's *d*.
 
 The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires (e.g., moral-self identity, self-esteem etc.). Other questionnaires were not planned to correlated with behavioral data, but we explored the results that might be theoretically interest, e.g., self-esteem, moral identity.
+For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
+
+#### Representational Similarity Analysis
+To test the hypothesis that the valence effect of morality was driven by self-positivity, we conducted a representional similarity analysis on the behavioral data. which can (Kiani et al., 2007; Op de Beeck et al, 2001). The dissimilarity values could come from reaction times, accuracy, and the derived the indcies.  
+
+More specifically, we split experiments into two categories: explicitly included self-relevance or not. Experiments that didn't explicitly included self-relevance are: exp 1a ~ 1c, exp 2, 5, 6a; experiment that included self-relevance: exp 3a, 3b, 6b, 7a, 7b. For experiments that didn't include self-relevance, we will calculate the corrleation matrix of mean RT, sd of RT, d prime, and four parameters derived from HDDM across all three valence levels, which will result a 21 by 21 correlation matrix. For the experiment included the self-relevance, we do the same analysis for self condition and other conditions separately, result in one 21 by 21 matrix for self and 21 by 21 matrix for other condition. Then, we will compare the representational matrix of morality (without self-relevence) to the matrix of morality of the self and of the other.
+
+
 
 ```{r prepare correlational data,}
 library(mosaic) # using this library for its derivedFactor function
@@ -3338,22 +3346,17 @@ df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
 ## get the questionnaire names
-# big five inventory
-BFI_ANames <- c("BFI_A1","BFI_A2","BFI_A3","BFI_A4","BFI_A5","BFI_A6","BFI_A7","BFI_A8","BFI_A9")
-BFI_CNames <- c("BFI_C1","BFI_C2","BFI_C3","BFI_C4","BFI_C5","BFI_C6","BFI_C7","BFI_C8","BFI_C9")
-BFI_NNames <- c("BFI_N1","BFI_N2","BFI_N3","BFI_N4","BFI_N5","BFI_N6","BFI_N7","BFI_N8")
-BFI_ONames <- c("BFI_O1","BFI_O2","BFI_O3","BFI_O4","BFI_O5","BFI_O6","BFI_O7","BFI_O8","BFI_O9","BFI_O10")
-BFI_ENames <- c("BFI_E1","BFI_E2","BFI_E3","BFI_E4","BFI_E5","BFI_E6","BFI_E7","BFI_E8")
-
 # Self-esteem
 SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
-# Relational self-esteem
-RelSlfEstname <- c("Relat_SE_1","Relat_SE_2","Relat_SE_3","Relat_SE_4",
-                   "Relat_SE_5","Relat_SE_6","Relat_SE_7","Relat_SE_8") 
+
 # moral identity
 mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
                 "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
-                "morId_13","morId_14","morId_15")
+                "morId_13","morId_14","morId_15","morId_16")
+mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
+                   "morId_12","morId_13","morId_14")
+mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
+                   "morId_15", "morId_16")
 
 # moral self images
 mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
@@ -3372,16 +3375,11 @@ perDistNames <- c("SelfSelf",
 # calculate the average score of each relevant scale
 df.q_scores.v <- df.scales.v %>%
   dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
-                RelSlfEst = rowMeans(.[, RelSlfEstname], na.rm = F),
-                mrlId = rowMeans(.[, mrlIdNames], na.rm = F),
+                mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
+                mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),
                 mrlslfImg = rowMeans(.[, mrlslfImgNames], na.rm = F),
-                BFI_A = rowMeans(.[, BFI_ANames], na.rm = F),
-                BFI_C = rowMeans(.[, BFI_CNames], na.rm = F),
-                BFI_N = rowMeans(.[, BFI_NNames], na.rm = F),
-                BFI_O = rowMeans(.[, BFI_ONames], na.rm = F),
-                BFI_E = rowMeans(.[, BFI_ENames], na.rm = F)) %>%
-  dplyr::select(subjID, SlfEst, RelSlfEst, mrlId, mrlslfImg,
-                BFI_A, BFI_C, BFI_N, BFI_O, BFI_E)
+                ) %>%
+  dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
 
 
 df.perdist <- df.scales.v %>%
@@ -3419,16 +3417,10 @@ SESOmega <- psych::omega(df.scales.v[,SESNames])
 print(c(SESOmega$omega_h,SESOmega$omega.tot)) 
 # omega.tot = .90
 
-
-# Relational self-esteem
-RelSlfEstKeys <- c(1,2,3,4,5,6,7,8)
-RelSlfEstAlpha <-  psych::alpha(df.scales.v[,RelSlfEstname], keys=RelSlfEstKeys)  # calculate the alpha coefficient of Relational Self-Esteem
-print(RelSlfEstAlpha$total)  # print the alpha for Relational Self-Esteem
-RelSlfEstOmega <- psych::omega(df.scales.v[,RelSlfEstname])  
-print(c(RelSlfEstOmega$omega_h,RelSlfEstOmega$omega.tot)) 
-# omega.tot = .89
-
 # moral identity
+mrlIdKeys <- c(1:16)
+mrlIdIntKeys <- c(1:9)
+mrlIdExtKeys <- c(1:7)
 
 # moral self images
 
@@ -3564,8 +3556,6 @@ res.cor
 
 corrplot::corrplot(res.cor, method="circle")
 
-
-
 ### Exp1b
 
 # prepare the data for hddm for exp1a
@@ -3611,6 +3601,8 @@ res.cor
 
 corrplot::corrplot(res.cor, method="circle")
 ```
+
+
 
 # References
 ```{r create_r-references, echo=FALSE,results='hide'}
