@@ -1,6 +1,6 @@
 ---
 title             : "Open notebook of perpecptual salience of positive self"
-shorttitle        : "Salient Positive Self"
+shorttitle        : "Moral-self as the spontaneous self"
 
 author: 
   - name          : "Chuan-Peng Hu"
@@ -29,7 +29,7 @@ authornote: |
   Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  Perception is not just a passive process but actively constructing. There are rich literature on different factors that impact the processing efficiency of our perceptual system. One prominent example is the self-prioritization. However, the self is multifaceted and may include different aspsects and the moral self-concept pop out as the most importance one for people's identity. To examine whether the morally positive self facilitate the perceptual decision-making, we used a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust moral-self prioritization effect, which may drives self-priortization effect when the self was not explicitly separated into different aspects. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, people literally "see" the positive side of themselves better.
+  Self-prioritization had been studied in recent years. However, the self is multifaceted and may include different aspsects and the moral self-concept pop out as the most importance one for people's identity. To examine whether the morally positive self facilitate the perceptual decision-making, we used a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust moral-self prioritization effect, which may drives self-priortization effect when the self was not explicitly separated into different aspects. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, people literally "see" the positive side of themselves better.
   
   <!-- https://tinyurl.com/ybremelq -->
   
@@ -114,14 +114,20 @@ To assess the individual difference, we explored correlation between self-report
 # foreignStdID <- c(24,29,30,33)
 
 # data collected in Tsinghua U
-df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2014.csv", header = TRUE,
-                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
-        dplyr::mutate(Site = "THU", Subject = Subject + 1000)
+df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201404_2019_export.csv", header = TRUE,
+                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
+  dplyr::rename(Subject = 1) %>%
+  dplyr::mutate(Site = "THU", Subject = Subject + 1000,
+                Val_lab = ifelse(Label == "好人", "Good", 
+                                 ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_2017.csv",header = TRUE,
-                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-        dplyr::mutate(Site = "WZU")
+df1a_2 <- read.csv(".\\exp1a\\rawdata_exp1a_201704_added_2019_export.csv",header = TRUE,
+                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+  dplyr::rename(Subject = 1) %>%
+  dplyr::mutate(Site = "WZU",
+                Val_lab = ifelse(Label == "好人", "Good", 
+                                 ifelse(Label == "常人", "Neutral", "Bad")))
 
 # combine data and clean
 df1a   <- rbind(df1a_1,df1a_2) %>%
@@ -132,19 +138,20 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
                       TrialNo = SubTrial,
                       RESP = Target.RESP,
                       Matchness = YesNoResp,
-                      Valence = Shape) %>%
-        dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
+                      Val_sh = Shape) %>%
+        dplyr::mutate(Val_sh = ifelse(Val_sh == "Normal", "Neutral", Val_sh),   # recode values
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
-                      #Subject = factor(Subject),
-                      #Identity = NA,
-                      #ExpID = 'Exp1a',
-                      Site = factor(Site))%>%
-                      #Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        #dplyr::select(CommonColnames) %>%
-        dplyr::arrange(Subject)
+                      Site = factor(Site),
+                      Shape = ifelse(Target == "C.bmp", "circle",
+                                     ifelse(Target == "S.bmp", "square", 'triangle')))%>%
+        dplyr::arrange(Subject) %>%
+        dplyr::select(-Label, -Target)
 
 rm(df1a_1,df1a_2)
+tmp <- df1a %>% 
+  dplyr::filter(!is.na(BlockNo)) %>%
+  dplyr::group_by(Val_sh, Shape) %>% dplyr::summarise(N = length(unique(Subject))) %>% arrange(N)
 
 df1a.T.basic     <- df1a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -3295,9 +3302,37 @@ Figure \@ref(fig:meta-all-self-ref) shows meta-analytic results for the effect o
 
 As for the self-relevance effect, we found that there was no overall self-relevance effect on both *d* prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`]) and RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`]). When looking at different valence conditions, we found that self condition was performed better than the other condition for the good condition for *d* (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`]), and also marginal for RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`]). but not for neutral or bad conditions. see Figure \@ref(fig:meta-all-self-ref). 
 
-# Behavioral-Traits correlation analysis
+# Representational Similarity Analysis
+To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence shoudl be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
 
-We also analyzed the relationship between behavioral response and self-reported psychological traits. First, we conducted repeated measure ANOVAs for the psychological distance across all experiment, to check the validity of psychological distance. We predicted that the distance between self and good person should be the shortest, while self and bad-person would show longest distance. Second, we conducted a correlation analysis for behavioral data and score data, i.e., between psychological distance and the bias in perceptual matching task. 
+More specifically, we split all experiments into two categories: experiments that only concerned about the valence of morality and experiments with orthorgal design in which both self-relevance and moral valence were manipulated. The former included experiment 1a ~ 1c, experiment 2, and 6a; the later included: experiment 3a, 3b, 6b, 7a, 7b (see table X). 
+
+To qunatify the representational similarity, we used the standard way. First, we used the reation times to construct the disimilarity matrices. To get more nuanced picture, we included nine shape-label pairs: good-good, good-neutral, good-bad, neutral-good, neutral-neutral, neutral-bad, bad-good, bad-neutral, bad-bad. Then we calculated the median RT of correct trials for each participants, by combine all experiment that only included moral valence as IV, we calculated the correlation matrix, and used 1-r to get the dissimilarity matrix. Also, we constructed an error rate matrix in which the parttern used the error rate of each condition.
+
+Then we compared this matrix to the same matrix under self-relevant and other-relevant conditions in the experiments in which self-relevance were manipulated. based on the dissimilarity index, we can infer whether the moral valence condition is more similar to the self or to the other conditions.
+
+We used two indices to quantify the representation similarity: data from each condition and the difference between two conditions. The former index will focus on the drift rate decomposed from DDM, which may represent the processing speed for different conditions. For the later approach, we used the standardized effect size between different conditions. The latter approach can be further compared with the behavioral data in which participants reported the personal distance. We used the Good-Bad, Good-Neutral, Neutral-Bad distance.
+
+We hypothesize that for the firs index, the similarity between selfcondition and the moral valence condition is higher than the similarity between other condition and moral valence condition. For the second index, we also expect that the similarity will be higher for the self condition and moral valence condition than between other condition and valence condition. More interesting, we would expect the similar would also high between the personal rating.
+
+(mean RT, sd of RT, d prime, and three parameters derived from HDDM across all three valence levels, which will result a 20 by 20 correlation matrix. For the experiment included the self-relevance, we do the same analysis for self condition and other conditions separately, result in one 21 by 21 matrix for self and 21 by 21 matrix for other condition. Then, we will compare the representational matrix of morality (without self-relevence) to the matrix of morality of the self and of the other.
+
+The dissimilarity values could come from reaction times, accuracy, and the derived the indcies.  
+To test the We also analyzed the relationship between behavioral response and self-reported psychological traits. First, we conducted repeated measure ANOVAs for the psychological distance across all experiment, to check the validity of psychological distance. We predicted that the distance between self and good person should be the shortest, while self and bad-person would show longest distance. Second, we conducted a correlation analysis for behavioral data and score data, i.e., between psychological distance and the bias in perceptual matching task. 
+
+```{r RSA analysis,}
+# data for moral valence effect: 1a ~ 1c, experiment 2, 5, and 6a
+colnames(df1a.v)
+colnames(df1b.v)
+colnames(df1c.v)
+colnames(df2.v)
+head(df5.v)
+colnames(df6a.v)
+df.val <- 
+
+# data from conditions with self-reference
+
+```
 
 ## Methods
 ### Data
@@ -3313,10 +3348,6 @@ The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https:/
 
 For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
 
-#### Representational Similarity Analysis
-To test the hypothesis that the valence effect of morality was driven by self-positivity, we conducted a representional similarity analysis on the behavioral data. which can (Kiani et al., 2007; Op de Beeck et al, 2001). The dissimilarity values could come from reaction times, accuracy, and the derived the indcies.  
-
-More specifically, we split experiments into two categories: explicitly included self-relevance or not. Experiments that didn't explicitly included self-relevance are: exp 1a ~ 1c, exp 2, 5, 6a; experiment that included self-relevance: exp 3a, 3b, 6b, 7a, 7b. For experiments that didn't include self-relevance, we will calculate the corrleation matrix of mean RT, sd of RT, d prime, and four parameters derived from HDDM across all three valence levels, which will result a 21 by 21 correlation matrix. For the experiment included the self-relevance, we do the same analysis for self condition and other conditions separately, result in one 21 by 21 matrix for self and 21 by 21 matrix for other condition. Then, we will compare the representational matrix of morality (without self-relevence) to the matrix of morality of the self and of the other.
 
 
 
