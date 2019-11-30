@@ -191,6 +191,8 @@ CAplots <- function(saveDir = traDir, curDir = curDir,expName = 'exp7', task = '
 #### For Match task
 #Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp1', dData,rtData){
 Mplots <- function(expName = 'exp1', dData,rtData){
+      dData <- dData %>% dplyr::rename(Valence=Val_sh)
+      rtData <- rtData %>% dplyr::rename(Valence=Val_sh)
       dData$Valence <- factor(dData$Valence,levels = c("Good",'Neutral',"Bad"))
       rtData$Valence <- factor(rtData$Valence,levels = c("Good",'Neutral',"Bad"))
       if ('Identity' %in% colnames(dData)){

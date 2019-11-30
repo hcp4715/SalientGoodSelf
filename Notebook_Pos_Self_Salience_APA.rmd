@@ -19,7 +19,7 @@ affiliation:
   - id            : "2"
     institution   : "German Resilience Center, 55131 Mainz, Germany"
   - id            : "3"
-    institution   : "University of Bath, Bath, UK"
+    institution   : "University of Aberdeen, Aberdeen, Scotland"
 
 authornote: |
   Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Germany Resilience Center, 55131 Mainz, Germany.
@@ -72,8 +72,8 @@ knitr::opts_chunk$set(message = FALSE)
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
-CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
-CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
+CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Val_sh", "dprime")
+CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Val_sh", "RT")
 ```
 
 # General Methods
@@ -122,7 +122,7 @@ df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201404_2019_export.csv", heade
                                  ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1a_2 <- read.csv(".\\exp1a\\rawdata_exp1a_201704_added_2019_export.csv",header = TRUE,
+df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201704_2019_export.csv",header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
   dplyr::rename(Subject = 1) %>%
   dplyr::mutate(Site = "WZU",
@@ -162,7 +162,9 @@ df1a.T.basic     <- df1a %>%
                    Nf = length(Sex[Sex == "female"]),
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
-                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+                   Age_sd = round(sd(Age,na.rm=TRUE),2),
+                   Age_missing = sum(is.na(Age)),
+                   Sex_missing = sum(is.na(Sex)))
   
 # number of participant who didn't finished the experiment
 nQuit <- length(unique(df1a$Subject[is.na(df1a$BlockNo)])) - length(unique(df1a$Subject[!is.na(df1a$BlockNo)]))
@@ -198,16 +200,18 @@ df1a.v.basic     <- df1a.v %>%
                    Nf = length(Sex[Sex == "female"]),
                    Nm = length(Sex[Sex == "male"]),
                    Age_mean = round(mean(Age,na.rm=TRUE),2),
-                   Age_sd = round(sd(Age,na.rm=TRUE),2))
+                   Age_sd = round(sd(Age,na.rm=TRUE),2),
+                   Age_missing = sum(is.na(Age)),
+                   Sex_missing = sum(is.na(Sex)))
 
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),   # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),        # code as correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),         # code as miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),        # code as false alarm
                                     .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Val_sh, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
   tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
@@ -216,18 +220,57 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
                 FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+  dplyr::select(Site, Subject, Age, Sex, Val_sh, dprime) %>%                 # select relevant columns
+  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
 
 
 # get the mean RT for each particpant and each condition for ANOVA
 df1a.v.rt_m <- df1a.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Val_sh) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
+
+### trial LMM
+df1a.v.rt <- df1a.v %>% dplyr::filter(ACC == 1) %>% dplyr::mutate(logRT = ifelse(RT>0, log(RT),0)) 
+m1 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject) + (1|Shape), df1a.v.rt)
+m2 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject), df1a.v.rt)
+m3 <- lme4::lmer(logRT ~ Val_sh * Matchness, df1a.v.rt)
+summary(m1)
+anova(m1,m2)
+
+df1a.v.rt.m <- df1a.v.rt %>% dplyr::filter(Matchness == "Match")
+m4 <- lme4::lmer(RT ~ Val_sh + (1|Subject) + (1|Shape), df1a.v.rt.m)
+m5 <- lme4::lmer(RT ~ Val_sh + (1|Subject), df1a.v.rt.m)
+anova(m4,m5)
+summary(m4)
+summary(m5)
+
+library(brms)
+m6 <- brms::brm(RT ~ Val_sh + (1|Subject), df1a.v.rt.m, family = shifted_lognormal())
+m7 <- brms::brm(RT ~ Val_sh + (1 + Val_sh|Subject), 
+                df1a.v.rt.m, 
+                family = shifted_lognormal(), 
+                file = 'm7_slog')
+
+plot(m6)
+pp_check(m6)
+
+summary(m6)
+
+marginal_effects(m6)  # Back-transformed parameter estimates
+marginal_effects(m6, method='predict')  # Same, but for responses
+
+m7 <- brms::brm(formua = bf(RT ~ Val_sh + (1|Subject), ndt ~ Subject), df1a.v.rt.m, family = shifted_lognormal())
+summary(m7)
+
+marginal_effects(m7)  # Back-transformed parameter estimates
+marginal_effects(m7, method='predict')  # Same, but for responses
+
+loo(m6, m7)
+
 
 ### prepare for the later meta-analysis
 df1a.meta.d <- df1a.v.dprime_l %>% 
@@ -268,17 +311,17 @@ As we describe in the general method section.
 ```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
-Mplots(expName = 'exp1a', df1a.v.dprime_l,rtdata)
+Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 ```
 
 ### d prime
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
+df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Val_sh'))
 df1a_dprime_anova_apa <- df1a_dprime_anova$aov %>% papaja::apa_print()
 
-posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
+posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Val_sh") # compare each valence for both self and other condition
 #pairs(posthoc_1a_d)
 ```
 ```{r results='asis', echo = F, eval=F}
@@ -292,30 +335,30 @@ We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The pos
 
 ### Reaction time
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
+df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Val_sh')) # using afex's function
 
 df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
 df1a.v.rt_m1 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site,Subject,Matchness, Val_sh) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
 
-df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
+df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Val_sh'))
 
 df1a.v.rt_m2 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::group_by(Site,Subject,Matchness, Val_sh) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
-df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
+df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Val_sh'))
 
-posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
+posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Val_sh") # compare each valence for both self and other condition
 # pairs(posthoc_1a_rt)
 
 ```

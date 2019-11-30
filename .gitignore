@@ -1,4 +1,6 @@
 *.csv
+*.rds
+*.emrg2
 *_ddm*
 *.out
 *.xlsx
