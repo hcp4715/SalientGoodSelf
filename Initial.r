@@ -17,7 +17,8 @@ pkgTest <- function(x)
 
 pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "afex", 'emmeans', 
                 "BayesFactor","psych","corrplot",'plyr',"readr", 
-                "bootES","MBESS","Hmisc",'mosaic', 'here'))
+                "bootES","MBESS","Hmisc",'mosaic', 'here','brms',"bayesplot",
+                "rstanarm"))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
@@ -335,4 +336,16 @@ Mplots <- function(expName = 'exp1', dData,rtData){
               #setwd(curDir)
               return(multiplot(P.rt,P.dprime,cols = 2))
       }
+}
+
+
+make_table <- function(df, ali = "left", aw = 0.5){
+  t <- regulartable(data = df)
+  t <- fontsize(t, size = 18, part = "all")
+  t <- font(t, fontname = "Arial", part = "all")
+  t <- autofit(t, add_w = aw)
+  t <- align(t, align = ali, part = "all")
+  t <- theme_zebra(t)
+  t <- border(t, border = fp_border(), part = "all") 
+  return(t)
 }

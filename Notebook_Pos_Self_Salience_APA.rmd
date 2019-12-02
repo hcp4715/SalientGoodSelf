@@ -248,11 +248,13 @@ anova(m4,m5)
 summary(m4)
 summary(m5)
 
-library(brms)
-m6 <- brms::brm(RT ~ Val_sh + (1|Subject), df1a.v.rt.m, family = shifted_lognormal())
+m6 <- brms::brm(RT ~ Val_sh + (1|Subject), 
+                data = df1a.v.rt.m, 
+                family = shifted_lognormal())
 m7 <- brms::brm(RT ~ Val_sh + (1 + Val_sh|Subject), 
-                df1a.v.rt.m, 
+                data = df1a.v.rt.m, 
                 family = shifted_lognormal(), 
+                chains = 4, cores = 4, warmup = 1000, iter = 2000,
                 file = 'm7_slog')
 
 plot(m6)
@@ -263,11 +265,32 @@ summary(m6)
 marginal_effects(m6)  # Back-transformed parameter estimates
 marginal_effects(m6, method='predict')  # Same, but for responses
 
-m7 <- brms::brm(formua = bf(RT ~ Val_sh + (1|Subject), ndt ~ Subject), df1a.v.rt.m, family = shifted_lognormal())
+
+
+#m7 <- brms::brm(formua = bf(RT ~ Val_sh + (1|Subject), ndt ~ Subject), df1a.v.rt.m, family = shifted_lognormal())
 summary(m7)
 
 marginal_effects(m7)  # Back-transformed parameter estimates
 marginal_effects(m7, method='predict')  # Same, but for responses
+
+default_priors <- make_table(get_prior(RT ~ Val_sh + (1 + Val_sh|Subject),
+                                       data = df1a.v.rt.m))
+default_priors <- make_table(prior_summary(m7))
+default_priors
+
+# plot the priors
+set.seed(1234) # make the random sampling reproducible by setting a seed
+
+def_int_sim <- rstudent_t(1e5, 3, 7, 10)  # default intercept prior
+HDI95_def_int <- unname(quantile(def_int_sim, c(.025, .975)))
+
+ggplot() + geom_density(aes(x = def_int_sim)) + xlim(-80, 80) + geom_vline(xintercept = HDI95_def_int[1]) +  geom_vline(xintercept = HDI95_def_int[2])
+
+
+def_sd_sim <- rstudent_t(1e5, 3, 0, 10)  # default sd prior
+HDI95_def_sd <- unname(quantile(def_sd_sim, c(.025, .975)))
+
+ggplot() + geom_density(aes(x = def_sd_sim)) + xlim(-80, 80) + geom_vline(xintercept = HDI95_def_sd[1]) +  geom_vline(xintercept = HDI95_def_sd[2])
 
 loo(m6, m7)
 
