@@ -29,14 +29,16 @@ authornote: |
   Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  Self-prioritization had been studied in recent years. However, the self is multifaceted and may include different aspsects and the moral self-concept pop out as the most importance one for people's identity. To examine whether the morally positive self facilitate the perceptual decision-making, we used a social associative paradigm (Sui et al., 2012). Through 11 experiments, we found that there was an robust moral-self prioritization effect, which may drives self-priortization effect when the self was not explicitly separated into different aspects. These results was consistent with previous studies that good-self is core representation of the self and people's motivation to maitain a positive-self may influence perceptual process.These results suggested a positive self-bias in perception. That is, people literally "see" the positive side of themselves better.
+  To navigate in a complex social world, individual has learnt to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized (Anderson, Siegel, et al., 2011, Science; Gantman & Van Bavel, 2014, Cognition). Using social associative learning paradigm, we found that geometric shapes, without soical meaning, that associated with different moral valence (morally good, neutral, or bad) results in different process performance. More specifically, the shape associated with morally good were prioritized. This patterns of results were robust across three different procedures. Howver, this effect no simply reflect positive bias in perception, but rather a spontaneous self-referential process that relative subjective value. To test this hypothesis, we manipulated the self-referential factor explicitly (exp3a, 3b) and found that the positive bias showed a large effect when positive valued stimuli involved self. Even when we only implicitly mention self-referential (exp4a), there is small effect of facilitation effect for moral good condition; the same is true when we implicitly mention moral good in self-association task. Finally, we found that this perceptual self-referential positive bias is robust across different perceptual tasks. Interestingly, the better performance in reaction time is not correpsonding to self-rated psychological distance between self and a morally good-person, but with distance between self and morall bad-person. These results may suggest that our participants (College students in two different cities in China) have a positive moral self bias in perceptual processing, which drive the facilitated processing of morally good stimuli because of the spontaneous self-referential processing, and this trendency is not correlated with explicit rating of moral self.
   
   <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "Perceptual decision-making, Self, positive bias"
+keywords          : "Perceptual decision-making, Self, positive bias, morality"
 wordcount         : "X"
 
-bibliography      : ["r-references.bib"]
+bibliography      : 
+  - r-references.bib
+  - endnote.bib
 
 floatsintext      : no
 figurelist        : no
@@ -72,34 +74,34 @@ knitr::opts_chunk$set(message = FALSE)
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
-CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Val_sh", "dprime")
-CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Val_sh", "RT")
+CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
+CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
 ```
 
 # General Methods
 ## Participants.
-All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data (Simmons, Nelson, & Simonsohn, 2013) , we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments.
+All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments.
 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
 
 ## Material and Procedure
-In the current study, we used the social associative learning paradigm (or self-tagging paradigm)(Sui, He, & Humphreys, 2012), in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase.
+In the current study, we used the social associative learning paradigm (or self-tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase.
 
 If not noted, E-prime 2.0 was used in all experiments. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors, with a chin-rest brace. The visual angle of geometric shapes was about 3.7º × 3.7º, the finxation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. Participant fixed their head on a chin-fixation, about 60 cm from the screen. 
 
 For participants recruited in Wenzhou University, they finished the experiment in a group consist of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
 
-In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. More specificially, ....... All the questionnaire data are open (see, Liu et al., 2019)
+In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. More specificially, ....... All the questionnaire data are open [see, @Liu_2019_JOPD]
 
 
 ## Data analysis
-We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R `r cite_r("r-references.bib")`. The clean data were analyzed using JASP (0.8.6.0, www.jasp-stats.org, (Love et al., 2019)). Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R `r cite_r("r-references.bib")`. The clean data were analyzed using JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
-We analyzed accuracy performance using a signal detection approach, as in Sui et al. (2012). The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d’. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The d’ were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
+We analyzed accuracy performance using a signal detection approach, as in [Sui et al., -@Sui_2012_JEPHPP]. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d’. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The d’ were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
 
-The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment (Sui et al., 2012). 
+The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment [@Sui_2012_JEPHPP]. 
 
-We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP (Hu, Kong, Wagenmakers, Ly, & Peng, 2018; Wagenmakers et al., 2018). The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 great or equal to 10 means strong evidence for H1.
+We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 great or equal to 10 means strong evidence for H1.
 
 To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt & Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
@@ -138,8 +140,8 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
                       TrialNo = SubTrial,
                       RESP = Target.RESP,
                       Matchness = YesNoResp,
-                      Val_sh = Shape) %>%
-        dplyr::mutate(Val_sh = ifelse(Val_sh == "Normal", "Neutral", Val_sh),   # recode values
+                      Valence = Shape) %>%
+        dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
                       Site = factor(Site),
@@ -151,7 +153,7 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
 rm(df1a_1,df1a_2)
 tmp <- df1a %>% 
   dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::group_by(Val_sh, Shape) %>% dplyr::summarise(N = length(unique(Subject))) %>% arrange(N)
+  dplyr::group_by(Valence, Shape) %>% dplyr::summarise(N = length(unique(Subject))) %>% arrange(N)
 
 df1a.T.basic     <- df1a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -211,7 +213,7 @@ df1a.v.dprime_l <- df1a.v %>%
                                     "miss" = (ACC == 0 & Matchness == "Match"),         # code as miss
                                     "FA" = (ACC == 0 & Matchness == "Mismatch"),        # code as false alarm
                                     .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Val_sh, sdt) %>%
+  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
   tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
@@ -220,203 +222,18 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
                 FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Val_sh, dprime) %>%                 # select relevant columns
-  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                 # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
 
 # get the mean RT for each particpant and each condition for ANOVA
 df1a.v.rt_m <- df1a.v %>%
   dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Val_sh) %>%
+  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
-
-### trial LMM
-df1a.v.rt <- df1a.v %>% dplyr::filter(ACC == 1) %>% dplyr::mutate(logRT = ifelse(RT>0, log(RT),0)) 
-m1 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject) + (1|Shape), df1a.v.rt)
-m2 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject), df1a.v.rt)
-m3 <- lme4::lmer(logRT ~ Val_sh * Matchness, df1a.v.rt)
-summary(m1)
-anova(m1,m2)
-
-df1a.v.rt.m <- df1a.v.rt %>% dplyr::filter(Matchness == "Match")
-m4 <- lme4::lmer(RT ~ Val_sh + (1|Subject) + (1|Shape), df1a.v.rt.m)
-m5 <- lme4::lmer(RT ~ Val_sh + (1|Subject), df1a.v.rt.m)
-anova(m4,m5)
-summary(m4)
-summary(m5)
-
-### Bayesian LMM
-# without random items
-library(ggmcmc)
-library(mcmcplots) 
-
-df1a.v.rt$RT_sec <- df1a.v.rt$RT/1000
-df1a.v.rt$logRT_sec <- log(df1a.v.rt$RT_sec)
-
-
-# Define a weakly informed prior
-prior_null <- c(
-  set_prior('normal(-1, 0.5)', class = 'Intercept'),  # around exp(-1) = 0.36 secs, sd = exp(0.5) = 1.687
-  set_prior('normal(0.4, 0.3)', class = 'sigma'),     # SD of individual rts in log-units
-  set_prior('normal(0, 0.5)', class = 'b')#,           # around exp(-1) - exp(-1 + 0.5) = 0.2386 seconds effect in either direction
-#  set_prior('normal(0.3, 0.1)', class = 'sd')         # some variability between participants
-)
-
-# check prior
-prior_null_int <- exp(rnorm(n=1e5, mean=-1, sd=0.5))  # chosen intercept prior
-prior_null_sig <- exp(rnorm(n=1e5, mean=0.4, sd=0.3))      # chosen intercept prior
-prior_null_b <- exp(rnorm(n=1e5, mean=0, sd=0.5))          # chosen intercept prior
-
-HDI95_null_int <- unname(quantile(prior_null_int, c(.025, .975)))
-
-ggplot() + geom_density(aes(x = prior_null_int)) + xlim(-5, 5) + geom_vline(xintercept = HDI95_null_int[1]) +  geom_vline(xintercept = HDI95_null_int[2])
-
-HDI95_null_b <- unname(quantile(prior_null_b, c(.025, .975)))
-
-ggplot() + geom_density(aes(x = prior_null_b)) + xlim(-5, 5) + geom_vline(xintercept = HDI95_null_b[1]) +  geom_vline(xintercept = HDI95_null_b[2])
-
-
-get_prior(RT_sec ~ Val_sh * Matchness, 
-                data = df1a.v.rt, 
-                family = shifted_lognormal())
-
-m6 <- brms::brm(RT_sec ~ Val_sh * Matchness, 
-                data = df1a.v.rt, 
-                family = shifted_lognormal(),
-                chains = 4, cores = 4, warmup = 1000, iter = 2000,
-                prior = prior_null,
-                file = 'exp1a_null_log')
-
-# check convegence:
-m6_tranformed <- ggmcmc::ggs(m6) 
-
-ggplot2::ggplot(filter(m6_tranformed, Parameter %in% c("b_Intercept", "b_Val_shGood", "b_Val_shNeutral", "b_MatchnessMismatch", "b_Val_shGood:MatchnessMismatch", "b_Val_shNeutral:MatchnessMismatch", "sigma", "ndt"),
-              Iteration > 1000),
-       aes(x   = Iteration,
-           y   = value, 
-           col = as.factor(Chain)))+
-  geom_line() +
-  facet_grid(Parameter ~ . ,
-             scale  = 'free_y',
-             switch = 'y') +
-  labs(title = "Caterpillar Plots",
-       col   = "Chains")
-
-# obtain the disganosis
-modelposterior <- as.mcmc(m6) # with the as.mcmc() command we can use all the CODA package convergence statistics and plotting options
-gelman.diag(modelposterior[, 1:8])
-
-gelman.plot(modelposterior[, 1:8])
-
-#To obtain the Geweke diagnostic use:
-geweke.diag(modelposterior[, 1:5])
-
-# check posterior
-stanplot(m6, type = "hist")
-
-# To obtain information about autocorrelation the following syntax can be used:
-autocorr.diag(modelposterior[,1:8], lags = c(0, 1,2,3,4, 5, 10, 50))
-
-# 
-stanplot(m6, pars = 1:4, type = "dens")
-
-pp_check(m6)
-
-# with random intercept
-prior_int <- c(
-  set_prior('normal(-1, 0.5)', class = 'Intercept'),  # around exp(-1) = 0.36 secs
-  set_prior('normal(0.4, 0.3)', class = 'sigma'),     # SD of individual rts in log-units
-  set_prior('normal(0, 0.5)', class = 'b'),           # around exp(-1) - exp(-1 + 0.5) = 0.2386 seconds effect in either direction
-  set_prior('normal(0.3, 0.1)', class = 'sd')         # some variability between participants
-)
-
-m7 <- brms::brm(formula = bf(RT ~ Val_sh + Matchness + Val_sh:Matchness + (1|Subject), 
-                             ndt ~ Subject), 
-                data = df1a.v.rt, 
-                family = shifted_lognormal(),
-                chains = 4, cores = 4, warmup = 3000, iter = 5000,
-                prior = prior_int,
-                file = 'exp1a_int_log')
-
-#m7 <- brms::brm(RT ~ Val_sh + Matchness + Val_sh:Matchness + (1|Subject), 
-#                data = df1a.v.rt, 
-#                family = shifted_lognormal(),
-#                chains = 4, cores = 4, warmup = 3000, iter = 5000,
-#                prior = prior_int,
-#                file = 'exp1a_int_log')
-
-#formula = bf(rt ~ condition + (1|id), 
-#             ndt ~ id)
-
-pp_check(m7)
-
-m7_tranformed <- ggmcmc::ggs(m7) 
-
-ggplot2::ggplot(filter(m7_tranformed, Parameter %in% c("b_Intercept", "b_Val_shGood", "b_Val_shNeutral", "b_MatchnessMismatch", "b_Val_shGood:MatchnessMismatch", "b_Val_shNeutral:MatchnessMismatch", "sigma", "ndt"),
-              Iteration > 1000),
-       aes(x   = Iteration,
-           y   = value, 
-           col = as.factor(Chain)))+
-  geom_line() +
-  facet_grid(Parameter ~ . ,
-             scale  = 'free_y',
-             switch = 'y') +
-  labs(title = "Caterpillar Plots",
-       col   = "Chains")
-
-model_7_posterior <- as.mcmc(m7) # with the as.mcmc() command we can use all the CODA package convergence statistics and plotting options
-
-gelman.diag(model_7_posterior[, 1:8])  # the results is horrible!!
-gelman.plot(model_7_posterior[, 1:8])
-
-
-# with random intercept and random slope
-m8 <- brms::brm(RT ~ Val_sh + Matchness + Val_sh:Matchness + (1 + Val_sh * Matchness|Subject), 
-                data = df1a.v.rt.m, 
-                family = shifted_lognormal(), 
-                chains = 4, cores = 4, warmup = 1000, iter = 2000,
-                file = 'exp1a_inte_slop_log')
-
-
-marginal_effects(m6)  # Back-transformed parameter estimates
-marginal_effects(m6, method='predict')  # Same, but for responses
-
-#m7 <- brms::brm(formua = bf(RT ~ Val_sh + (1|Subject), ndt ~ Subject), df1a.v.rt.m, family = shifted_lognormal())
-summary(m7)
-
-marginal_effects(m7)  # Back-transformed parameter estimates
-marginal_effects(m7, method='predict')  # Same, but for responses
-
-default_priors <- make_table(get_prior(RT ~ Val_sh + (1 + Val_sh|Subject),
-                                       data = df1a.v.rt.m))
-default_priors <- make_table(prior_summary(m7))
-default_priors
-
-# plot the priors
-set.seed(1234) # make the random sampling reproducible by setting a seed
-
-def_int_sim <- rstudent_t(1e5, 3, 7, 10)  # default intercept prior
-HDI95_def_int <- unname(quantile(def_int_sim, c(.025, .975)))
-
-ggplot() + geom_density(aes(x = def_int_sim)) + xlim(-80, 80) + geom_vline(xintercept = HDI95_def_int[1]) +  geom_vline(xintercept = HDI95_def_int[2])
-
-
-def_sd_sim <- rstudent_t(1e5, 3, 0, 10)  # default sd prior
-HDI95_def_sd <- unname(quantile(def_sd_sim, c(.025, .975)))
-
-ggplot() + geom_density(aes(x = def_sd_sim)) + xlim(-80, 80) + geom_vline(xintercept = HDI95_def_sd[1]) +  geom_vline(xintercept = HDI95_def_sd[2])
-
-int_prior <- rnorm(n=1e5, mean=-1, sd=0.5)  # chosen intercept prior
-HDI95_int_prior <- unname(quantile(int_prior, c(.025, .975)))
-
-ggplot() + geom_density(aes(x = int_prior)) + xlim(-10, 10) + geom_vline(xintercept = HDI95_int_prior[1]) +  geom_vline(xintercept = HDI95_int_prior[2])
-
-
-
-loo(m6, m7)
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
 
 ### prepare for the later meta-analysis
@@ -465,10 +282,10 @@ Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Val_sh'))
+df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
 df1a_dprime_anova_apa <- df1a_dprime_anova$aov %>% papaja::apa_print()
 
-posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Val_sh") # compare each valence for both self and other condition
+posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1a_d)
 ```
 ```{r results='asis', echo = F, eval=F}
@@ -482,30 +299,30 @@ We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The pos
 
 ### Reaction time
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Val_sh')) # using afex's function
+df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
 
 df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
 
 df1a.v.rt_m1 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Val_sh) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(Val_sh = factor(Val_sh, levels = c("Good","Neutral","Bad")))
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
-df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Val_sh'))
+df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
 
 df1a.v.rt_m2 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Val_sh) %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
-df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Val_sh'))
+df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
 
-posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Val_sh") # compare each valence for both self and other condition
+posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1a_rt)
 
 ```
@@ -3516,9 +3333,9 @@ colnames(df1a.v)
 colnames(df1b.v)
 colnames(df1c.v)
 colnames(df2.v)
-head(df5.v)
+#head(df5.v)
 colnames(df6a.v)
-df.val <- 
+# df.val <- 
 
 # data from conditions with self-reference
 
@@ -3632,10 +3449,10 @@ df.perdist <- df.scales.v %>%
 ### Reliability of these scales
 # self-esteem
 #SESKeys <- c(1,2,-3,4,-5,6,7,8,-9,-10)   # original reverse coding
-SESKeys <- c(1,2,3,4,5,6,7,8,9,10)        # reverse coded as negative
-SlfEstAlpha <-  psych::alpha(df.scales.v[,SESNames], keys=SESKeys)  # calculate the alpha coefficient of SES
-SESOmega <- psych::omega(df.scales.v[,SESNames])  
-print(c(SESOmega$omega_h,SESOmega$omega.tot)) 
+SlfEstKeys <- c(1,2,3,4,5,6,7,8,9,10)        # reverse coded as negative
+SlfEstAlpha <-  psych::alpha(df.scales.v[,SlfEstNames], keys=SlfEstKeys)  # calculate the alpha coefficient of self esteem
+SlfEstOmega <- psych::omega(df.scales.v[,SlfEstNames])  
+print(c(SlfEstOmega$omega_h,SlfEstOmega$omega.tot)) 
 # omega.tot = .90
 
 # moral identity
@@ -3711,36 +3528,36 @@ params.expname <- data.frame(params.list) %>%
   dplyr::select(expName) %>%
   dplyr::pull()
 
-for (indx in 1:length(params.list)){
-  
-  df.params.tmp <- read.csv(paste('.\\HDDM\\', params.list[indx], sep = ''), header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-    #tidyr::separate(X, into = c("X", "subjects"), sep = '[)]') %>%
-    #tidyr::separate(X, into = c("paramName", "Condition"), sep = '[(]')
-    dplyr::select(subj_idx, match, id, val, knode_name, mean:map) %>%
-    tidyr::separate(knode_name, into = c('param_Name', 'postfix')) %>%
-    dplyr::filter(!is.na(mean))  %>%
-    tidyr::pivot_wider(id_cols = subj_idx, names_from = c(match, id, val, param_Name), values_from = mean) %>%
-    mutate(subj_idx = as.numeric(subj_idx)) %>%
-    dplyr::filter(subj_idx %in% subj.common)
+#for (indx in 1:length(params.list)){
+#  
+#  df.params.tmp <- read.csv(paste('.\\HDDM\\', params.list[indx], sep = ''), header = TRUE, sep = ",",
+#                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+#    #tidyr::separate(X, into = c("X", "subjects"), sep = '[)]') %>%
+#    #tidyr::separate(X, into = c("paramName", "Condition"), sep = '[(]')
+#    dplyr::select(subj_idx, match, id, val, knode_name, mean:map) %>%
+#    tidyr::separate(knode_name, into = c('param_Name', 'postfix')) %>%
+#    dplyr::filter(!is.na(mean))  %>%
+#    tidyr::pivot_wider(id_cols = subj_idx, names_from = c(match, id, val, param_Name), values_from = mean) %>%
+#    mutate(subj_idx = as.numeric(subj_idx)) %>%
+#    dplyr::filter(subj_idx %in% subj.common)
     
   
-  if (params.expname[indx] %in% c('df1a', 'df1b','df5')){
-    print(params.list[indx])
-    df.params.tmp <- df.params.tmp %>%
-      dplyr::mutate(ExpID = params.expname[indx]) %>%
-      dplyr::rename_("Subject" = "subj_idx", "Matchness" = "match", "Valence" = "val") %>%
-      dplyr::select(ExpID, Subject, Matchness, id, Valence, knode_name, mean) %>%
-      tidyr::drop_na() %>%
-      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-      tidyr::pivot_wider(., names_from = c('id','Valence', 'param'), values_from = 'mean')
+#  if (params.expname[indx] %in% c('df1a', 'df1b','df5')){
+#    print(params.list[indx])
+#    df.params.tmp <- df.params.tmp %>%
+#      dplyr::mutate(ExpID = params.expname[indx]) %>%
+#      dplyr::rename_("Subject" = "subj_idx", "Matchness" = "match", "Valence" = "val") %>%
+#      dplyr::select(ExpID, Subject, Matchness, id, Valence, knode_name, mean) %>%
+#      tidyr::drop_na() %>%
+#      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+#      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+#      tidyr::pivot_wider(., names_from = c('id','Valence', 'param'), values_from = 'mean')
 
-  }
+#  }
   
-  Sys.sleep(0.01)
-  flush.console()
-}
+#  Sys.sleep(0.01)
+#  flush.console()
+#}
 
 df1a.v.hddm_params <- read.csv(".\\HDDM\\df1a_hddm_params.csv",header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -3791,10 +3608,10 @@ df1b.v.hddm_stim <- df1b.v %>%
   dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
 
 # write csv for the HDDM analyses
-write.csv(df1b.v.hddm_stim, file = paste(curDir,'/HDDM/df1b.v.hddm_stim.csv', sep = ''), row.names = F)
+# write.csv(df1b.v.hddm_stim, file = paste(curDir,'/HDDM/df1b.v.hddm_stim.csv', sep = ''), row.names = F)
 
 # get the parameters from hddm
-df1b.v.hddm_params <- read.csv(".\\HDDM\\exp1b_hddm_params.csv",header = TRUE, sep = ",",
+df1b.v.hddm_params <- read.csv(".\\HDDM\\df1b_hddm_params.csv",header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
   dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
@@ -3804,17 +3621,17 @@ df1b.v.hddm_params <- read.csv(".\\HDDM\\exp1b_hddm_params.csv",header = TRUE, s
   tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
 
 # prepare behavioral task data for exp1b
-df1a.v.cor.anal <- df1b.v %>%
-  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
-  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
-  dplyr::group_by(Subject, Valence) %>%
-  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
-                   RT_SD   = sd(RT, na.rm = T)) %>%
-  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
-  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
-  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
+#df1b.v.cor.anal <- df1b.v %>%
+#  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
+#  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
+#  dplyr::group_by(Subject, Valence) %>%
+#  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
+#                   RT_SD   = sd(RT, na.rm = T)) %>%
+#  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
+#  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
+#  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
 
-df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::right_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
+#df1b.v.cor.anal <- df1b.v.cor.anal %>% dplyr::right_join(., df1b.v.hddm_params, by = 'Subject') # merge to cor dataframe
 
 library(corrr)
 res.cor <- cor(df1a.v.cor.anal[,5:30])
@@ -3827,7 +3644,7 @@ corrplot::corrplot(res.cor, method="circle")
 
 # References
 ```{r create_r-references, echo=FALSE,results='hide'}
-r_refs(file = "r-references.bib")
+#r_refs(file = "r-references.bib"))
 ```
 
 \begingroup
