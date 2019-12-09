@@ -91,19 +91,19 @@ If not noted, E-prime 2.0 was used in all experiments. For participants recruite
 
 For participants recruited in Wenzhou University, they finished the experiment in a group consist of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
 
-In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. More specificially, ....... All the questionnaire data are open [see, @Liu_2019_JOPD]
+In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2019_JOPD].
 
 
 ## Data analysis
-We reported all the measurements, analysis and results in all the experiments in the current study. All data were first pre-processed using R `r cite_r("r-references.bib")`. The clean data were analyzed using JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+We reported all the measurements, analyses and results in all the experiments in the current study. All data were first pre-processed using `r cite_r("r-references.bib")`. The clean data were analyzed using JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
-We analyzed accuracy performance using a signal detection approach, as in [Sui et al., -@Sui_2012_JEPHPP]. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of d’. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The d’ were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
+We analyzed accuracy performance using a signal detection approach, as in @Sui_2012_JEPHPP. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of *d’*. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The *d’* were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
 
 The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In both experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment [@Sui_2012_JEPHPP]. 
 
-We reported the effect size of repeated measures ANOVA (omega squared) (Bakeman, 2005; Lakens, 2013). Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 great or equal to 10 means strong evidence for H1.
+We reported the effect size of repeated measures ANOVA (omega squared) [@Bakeman_2015_eff_size; @Lakens_2013]. Also, we reported Cohen’s d and its 95% confidence intervals for the post-hoc comparisons. To provide more information about the results, we also reported the Bayes Factor using JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H1) and the probability of the current data pattern under null hypothesis (H0), which index the relative evidence for these two hypotheses from the current data. The BF10 represents the evidence for alternative hypothesis (H1) vs. evidence for null hypothesis (H0); in contrast, BF01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the BF10 > 3 means there are some evidence for H1 as compared with H0,  BF10 great or equal to 10 means strong evidence for H1.
 
-To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates (Schönbrodt & Perugini, 2013), we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+To assess the individual difference, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and d prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
 
 # Experiment 1a
@@ -112,7 +112,7 @@ To assess the individual difference, we explored correlation between self-report
 #### record from the meta-data:
 # One participant's ID changed from 26 to 261, because of duplication of subject id.
 # participant No. 14 finished two sessions of the experiment, only the first session were included in the analysis
-# # there are 4 foreign students, we didn't exclude them:
+# # there are 4 foreign students who might not be native Chinese speakers, but we didn't exclude them:
 # foreignStdID <- c(24,29,30,33)
 
 # data collected in Tsinghua U
@@ -120,7 +120,7 @@ df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201404_2019_export.csv", heade
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
   dplyr::rename(Subject = 1) %>%
   dplyr::mutate(Site = "THU", Subject = Subject + 1000,
-                Val_lab = ifelse(Label == "好人", "Good", 
+                Val_lab = ifelse(Label == "好人", "Good",                      # re-code the label
                                  ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
@@ -145,7 +145,7 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
                       Site = factor(Site),
-                      Shape = ifelse(Target == "C.bmp", "circle",
+                      Shape = ifelse(Target == "C.bmp", "circle",  # the shape of each target picture.
                                      ifelse(Target == "S.bmp", "square", 'triangle')))%>%
         dplyr::arrange(Subject) %>%
         dplyr::select(-Label, -Target)
@@ -174,7 +174,7 @@ nQuit <- length(unique(df1a$Subject[is.na(df1a$BlockNo)])) - length(unique(df1a$
 df1a.excld.sub <-  df1a %>%
   dplyr::filter(!is.na(BlockNo)) %>%
   dplyr::group_by(Subject) %>%
-  #dplyr::filter(RT > 200)  %>%                        # only use > 200 ms response (this standard will keep more participants)
+  #dplyr::filter(RT > 200)  %>%           # only use > 200 ms response (this standard will keep more participants)
   #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
   dplyr::summarise(N = length(ACC),                    # caculate the overall accuracy for each subject
                    N_crrct = sum(ACC),
@@ -216,13 +216,13 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
   dplyr::ungroup() %>%
-  tidyr::spread(key = sdt, value = N,fill = 0) %>%                           # long-to-wide format
+  tidyr::spread(key = sdt, value = N, fill = 0) %>%                          # long-to-wide format
   dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
                 FAR  = FA/(FA+CR)) %>%                                       # fa rate
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
                 FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                 # select relevant columns
+  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
 
@@ -262,10 +262,6 @@ Three geometric shapes were used in this experiment: triangle, square, and circl
 As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is represented by a square.” After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
 In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
 For pariticpants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matched, bad-person nonmatching, good-person matched, good-person nonmatching, neutral-person matched, and neutral-person nonmatching). For the participants from Wenzhou Univeristy, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
-
-### Questionnaires
-After the experiment, part of the participants in Tsinghua University also finished psychological distance, trait social justice (Bai, 2013), cognitive reflection test (Frederick, 2005), and disgust senstivity (Tan, Cong, & Lu, 2007). The psychological distance measurement finished by indicating the the psychological distance between self, good person, bad person and neutral person, through two points on a horizontal line. This procedure is presented by Matlab. This method had been proven been an effective way to measure the psychological distance (Enock, Sui, Hewstone, & Humphreys, 2018). 
-For all participants from Wenzhou University, they finished following questionnaires online immediately after the experiment: objective and subjective socioeconomic status (the objective SES measured by parents’ education and occupation (Shi & Shen, 2007), the subjective SES measured by ladder task (Ostrove, Adler, Kuppermann, & Washington, 2000)), psychological distance (Enock et al., 2018), sensitivity to justice (Wu et al., 2014), cognitive reflection test (Frederick, 2005), disgust senstivity scale (Tan et al., 2007), belief in just world (short) (Wu et al., 2011), a short version of big five personality (John & Srivastava, 1999), trait self-esteem (Rosenberg, 1965), locus of control (Levenson，1981), Free will and determinism plus (FAD+) (translated version) (Liu, Jian, Hu, & Peng, 2015; Paulhus & Carey, 2010), moral identity (Aquino & Reed II, 2002), and moral self image (translated version) (Jordan, Leliveld, & Tenbrunsel, 2015). Only the psychological distance data were analyized in the current study.  
 
 ### Data analysis
 As we describe in the general method section.
@@ -3327,7 +3323,7 @@ We hypothesize that for the firs index, the similarity between selfcondition and
 The dissimilarity values could come from reaction times, accuracy, and the derived the indcies.  
 To test the We also analyzed the relationship between behavioral response and self-reported psychological traits. First, we conducted repeated measure ANOVAs for the psychological distance across all experiment, to check the validity of psychological distance. We predicted that the distance between self and good person should be the shortest, while self and bad-person would show longest distance. Second, we conducted a correlation analysis for behavioral data and score data, i.e., between psychological distance and the bias in perceptual matching task. 
 
-```{r RSA analysis,}
+```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # data for moral valence effect: 1a ~ 1c, experiment 2, 5, and 6a
 colnames(df1a.v)
 colnames(df1b.v)
@@ -3358,7 +3354,7 @@ For the questinnaire part, we are most interested in the self-rated distance bet
 
 
 
-```{r prepare correlational data,}
+```{r prepare correlational data, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 library(mosaic) # using this library for its derivedFactor function
 # prepare questionnare data
 df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE, sep = ",",
