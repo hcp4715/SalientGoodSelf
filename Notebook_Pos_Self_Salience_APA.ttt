@@ -3,19 +3,34 @@
 [tbp]
 \begin{center}
 \begin{threeparttable}
-\caption{\label{tab:unnamed-chunk-4}A really beautiful ANOVA table.}
-\begin{tabular}{lllllll}
+\caption{\label{tab:Table1_exp_info}Information about all experiments.}
+\begin{tabular}{lllllllll}
 \toprule
-Effect & \multicolumn{1}{c}{$F$} & \multicolumn{1}{c}{$\mathit{df}_1^{GG}$} & \multicolumn{1}{c}{$\mathit{df}_2^{GG}$} & \multicolumn{1}{c}{$\mathit{MSE}$} & \multicolumn{1}{c}{$p$} & \multicolumn{1}{c}{$\hat{\eta}^2_G$}\\
+ExpID & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Month} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{DV} & \multicolumn{1}{c}{Design} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Valence} & \multicolumn{1}{c}{Presenting}\\
 \midrule
-Identity & 124.15 & 1 & 58 & 4,037.53 & < .001 & .257\\
-Valence & 0.94 & 1.98 & 114.82 & 606.30 & .392 & .001\\
-Identity $\times$ Valence & 4.41 & 1.9 & 110.18 & 465.91 & .016 & .003\\
+Exp\_1a\_1 & 2014 & 4 & NA & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1a\_2 & 2017 & 4 & NA & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1b\_1 & 2014 & 10 & NA & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1b\_2 & 2017 & 4 & NA & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1c & 2014 & 10 & NA & behav & 3 * 2 & explicit & descriptions & Simultaneously\\
+Exp\_2 & 2014 & 5 & NA & behav & 3 * 2 & explicit & words & Sequentially\\
+Exp\_3a\_1 & 2014 & 11 & NA & behav & 3 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_3a\_2 & 2015 & 8 & NA & behav & 3 * 2 * 2 & explicit & words & Sequentially\\
+Exp\_3b & 2017 & 4 & NA & behav & 3 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_4a\_1 & 2015 & 6 & NA & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4a\_2 & 2017 & 4 & NA & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4b & 2015 & 10 & NA & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4b\_2 & 2017 & 4 & NA & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_5 & 2016 & 1 & NA & behav & 3 * 2 * 4 & explicit & words & Simultaneously\\
+Exp\_6a & 2014 & 12 & NA & behav/EEG & 3 * 2 & explicit & words & Sequentially\\
+Exp\_6b & 2016 & 1 & NA & behav/EEG & 3 * 2 * 2 & explicit & words & Sequentially\\
+Exp\_7a & 2016 & 7 & NA & behav & 2 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_7b & 2018 & 5 & NA & behav & 2 * 2 * 2 & explicit & words & Simultaneously\\
 \bottomrule
 \addlinespace
 \end{tabular}
 \begin{tablenotes}[para]
-\normalsize{\textit{Note.} Note that the column names contain beautiful mathematical copy: This is because the table has variable labels.}
+\normalsize{\textit{Note.} DV = dependent variables; Valence = how valence was manipulated; Shape \& Label = how shapes \& labels were presented.}
 \end{tablenotes}
 \end{threeparttable}
 \end{center}

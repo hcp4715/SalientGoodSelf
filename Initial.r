@@ -16,9 +16,8 @@ pkgTest <- function(x)
 }
 
 pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "afex", 'emmeans', 
-                "BayesFactor","psych","corrplot",'plyr',"readr", 
-                "bootES","MBESS","Hmisc",'mosaic', 'here','brms',"bayesplot",
-                "rstanarm"))
+                "BayesFactor","psych","corrplot","readr", 'lme4',
+                "MBESS","Hmisc",'mosaic', 'here'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';

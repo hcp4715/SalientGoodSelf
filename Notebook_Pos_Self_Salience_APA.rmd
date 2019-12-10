@@ -91,7 +91,21 @@ If not noted, E-prime 2.0 was used in all experiments. For participants recruite
 
 For participants recruited in Wenzhou University, they finished the experiment in a group consist of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
 
-In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2019_JOPD].
+
+```{r 'Table1_exp_info', ehco = FALSE, results = 'asis'}
+exp_table <- read.csv('Exp_info_all.csv') %>%
+  dplyr::rename(ExpID = 1)
+# knitr::kable(exp_table, caption = "Information about all experiments")
+
+apa_table(
+  exp_table
+  , caption = "Information about all experiments."
+  , note = "DV = dependent variables; Valence = how valence was manipulated; Shape & Label = how shapes & labels were presented."
+  , escape = TRUE
+)
+
+```
+In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the cognitive tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2019_JOPD]. See Table 1 for a summary information about all the experiments reported here. 
 
 
 ## Data analysis
@@ -270,8 +284,14 @@ As we describe in the general method section.
 
 ```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
 Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
+
+#plotData <- dplyr::full_join(rtdata, df1a.v.dprime_l, by = c('Site','Subject','Age','Sex','Valence'))
+
+#p <- ggplot(plotData, aes(x = RT, y = dprime, color = Valence)) + geom_point()
+  
+#ggExtra::ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
+
 ```
 
 ### d prime
