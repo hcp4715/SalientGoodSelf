@@ -80,7 +80,7 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 
 # Methods
 ## Participants.
-All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments. In the meta-analysis, we also included the two experiment reported in @Hu_2019_GoodSelf.
+All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments. In the meta-analysis, we also included the two experiments (experiment 7a, 7b), which had been reported in @Hu_2019_GoodSelf.
 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
 
@@ -121,7 +121,17 @@ As in @Sui_2012_JEPHPP, we analyzed the accuracy performance using a signal dete
 
 The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In most experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment [@Sui_2012_JEPHPP]. 
 
-Based on our experimental design, we reported our results across experiments, while the results of individual experiment were reported in the supplementary materials, which included the significance test resuts, effect size [@Bakeman_2015_eff_size; @Lakens_2013], and Bayes factor calculated by JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. More specifically, we reported results in three parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a. The second part we synthesized the results from experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+Based on our experimental design, we reported our results across experiments using a meta-analytical apporach [@Goh_2016_mini], while the results of individual experiment were reported in the supplementary materials, which included the significance test resuts, effect size [@Bakeman_2015_eff_size; @Lakens_2013], and Bayes factor calculated by JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. More specifically, we reported results in four parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 4b, 5 and 6a. The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+
+Mini meta-analyses were carried out in R 3.6. As for the meta-analysis of the effect size of *d*’ and RTs, we used “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen'd and its variance were estimated using the following formula [@Cooper_2009_handbook]:
+
+$$d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
+
+$$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
+
+$M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants included in our research).
+
+To avoid the cases that some participants participated more than one experiments, we inspected the all available information about participants. For those participants who did take part in more than one experiments, only the results from their first participation were included. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the current meta-analysis.
 
 ```{r loadingData_All,echo=FALSE,results='hide'}
 # Experiemnt 1a ----
@@ -1207,41 +1217,27 @@ df5.meta.rt <- df5.v.rt_m %>%
                 Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
   dplyr::select(CommonColnames_rt)
 
-```
-
-# Results
-
-# Experiment 6a: EEG study 1
-Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
-
-## Method
-```{r loadingData_6a,echo=FALSE,results='hide'}
-df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+# Exp 6a ----
+df6a <- read.csv(".\\exp6a_erp1\\rawdata_ERP_exp6a_201412_export_2019.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+  dplyr::rename(Subject = 1) %>%
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = SubTrial,
                 Matchness = YesNoResp, 
                 Valence = Shape,
                 ACC = Target.ACC, 
-                CRESP = Target.CRESP,                   # rename the columns
+                CRESP = CorrectAnswer,                   # rename the columns
                 RESP = Target.RESP, RT = Target.RT) %>%    #
   dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),                   # re-code the data
+                Val_sh = ifelse(Label == "好人", 'Good',
+                                ifelse(Label == '常人', 'Neutral', 'Bad')),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
   dplyr::mutate(Site = "THU",
-                #ExpID = "Exp6a",        # add experiment id
-                #Domain = "Morality",    # add domain as morality (to be comparable with experiment 5)
-                #Identity = NA,
                 Subject = Subject + 6100) # here started with 61XX instead of 60XX, which is the id for anther project.
 
-#df6a_meta <- df6a %>% dplyr::select(CommonColnames)
-# show the number of trials for each condition
-# df6a_trials <- df6a %>%
-#   dplyr::group_by(Subject, Matchness, Valence) %>%
-#   dplyr::summarise(N_trial = length(TrialNo)) %>%
-#   dplyr::ungroup()
+# number of participant who practiced but not in the formal experiment
+nQuit <- length(unique(df6a$Subject[is.na(df6a$BlockNo)])) - length(unique(df6a$Subject[!is.na(df6a$BlockNo)]))
 
 df6a.T.basic     <- df6a %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1329,142 +1325,65 @@ df6a.meta.rt <- df6a.v.rt_m %>%
                 Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
   dplyr::select(CommonColnames_rt)
 
-```
-
-### Participants
-`r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua Universtiy in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
-
-### Experimental design
-The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
-
-### Stimuli
-Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (“坏人, HuaiRen”), good person (“好人, HaoRen”) or ordinary  person (“常人, ChangRen”) was counterbalanced across participants. The words bad person, good person or ordinary  person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
-We used backward masking to avoid over-processing of the moral words, in which a scrabmled picture were presented for 900 ms after the label. Also, to avoid the celling effect on accruacy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picutre of 3/4gray and ¼ white at resoluation of 2 × 2 pixel. 
-
-### Procedure
-The procedure was similar to Experiment 2. Participants finished 9 blocks of trial, each with 120 trials. In total, participants finished 180 trials for each combination of condition.
-
-As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
-
-All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
-
-## Results
-
-```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
-rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
-
-```
-
-Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt) shows *d* prime and reaction times of experiment 6a.
-
-### *d* prime
-```{r analyzing for d prime_e6a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime with 2*2 design
-df6a_dprime_anova <- afex::aov_ez('Subject','dprime',df6a.v.dprime_l,  # using afex's function 
-                                  within = c('Valence'))
-df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print()
-
-posthoc_6a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
-graphics::pairs(posthoc_6a_d)
-# plot(posthoc_5a_d, comparisons = TRUE)
-```
-We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (`r df6a_dprime_anova_apa$full$Valence`). Post-hoc anlaysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),*t* = 2.916, *df* = 24, *p* = 0.02, p-value adjusted by Tukey method, but the *d* prime between Good and bad (mean = 3.03, SE = 0.142) (*t* = 1.512, *df* = 24, *p* = 0.3034, p-value adjusted by Tukey method), bad and neutral (*t* = 1.599, *df* = 24, *p* = 0.2655, p-value adjusted by Tukey method) were not siginificant.
-
-### Analaysis of reaction time.
-The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
-```{r 6a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
-df6a_RT_anova <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Valence'))
-df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print()
-
-# match trials
-df6a.v.rt_m1 <- df6a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df6a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m1,     # using afex's function 
-                                  within = c('Valence'))
-df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print()
-
-posthoc_6a_rt <- emmeans::emmeans(df6a_RT_anova_m, "Valence") # compare each valence for both self and other condition
-# pairs(posthoc_6a_rt)
-
-# Mismatch trials
-df6a.v.rt_m2 <- df6a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df6a_RT_anova_nm <- afex::aov_ez('Subject','RT_m', df6a.v.rt_m2,     # using afex's function 
-                                  within = c('Valence'))
-df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print()
-
-```
-
-We found intercation between Matchness and Valence (`r df6a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 2. For matched trials, we found the effect of valence `r df6a_RT_anova_m_apa$full$Valence`. For non-matched trials, there was no significant effect of Valence (`r df6a_RT_anova_nm_apa$full$Valence`). Post-hoc *t*-tests revealed that shapes associated with Good Person (mean = 550, SE = 13.8) were responded faster than Neutral-Person (501, SE = 14.7), (*t*(24) = -5.171, *p* = 0.0001) and Bad Person (523, SE = 16.3), *t*(24) = -8.137, *p* < 0.0001)., and Neutral is faster than Bad-Person condition (*t*(32) = -3.282, *p* = 0.0085).
-
-
-# Experiment 6b: EEG study 2
-Experiment 6b was conducted to study the neural correlates of the prioritization effect of positive self, i.e., the neural underlying of the behavioral effect found int experiment 3a. However, as in experiment 5a, the procedure of this experiment was modified to adopted to ERP experiment. 
-
-## Method
-```{r loadingData_6b,echo=FALSE,results='hide'}
-df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+# Exp 6b ----
+df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016_export_2019.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+  dplyr::rename(Subject = 1) %>%
+  #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = SubTrial,
                 Matchness = YesNoResp,
                 Identity = identity,
                 Valence = morality,
-                ACC = Target.ACC, 
-                CRESP = Target.CRESP,                   # rename the columns
-                RESP = Target.RESP, RT = Target.RT) %>%    #
-  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
+                CRESP = CorrectAnswer) %>%                   # rename the columns
+  dplyr::mutate(RT = dplyr::coalesce(Target.RT, Targetprac.RT),
+                ACC = dplyr::coalesce(Target.ACC, Targetprac.ACC),
+                RESP = dplyr::coalesce(Target.RESP,Targetprac.RESP),
+                Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),     # re-code the data
+                Valence = derivedFactor("Bad" = (Valence == "bad" | Valence == "immoral"), 
+                                        "Good" = (Valence == "good" | Valence == 'moral'), 
+                                        "Neutral" = (Valence == "normal"), 
+                                        .method ="first", .default = NA),
+                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
+                Age = ifelse(Age == 0, NA, Age),
+                Val_lab = derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
+                                        "Good" = (Label == "GoodSelf.bmp" | Label == 'GoodOther.bmp'), 
+                                        "Neutral" = (Label == "NormalSelf.bmp" | Label == 'NormalOther.bmp'), 
+                                        .method ="first", .default = NA),
+                ID_lab = ifelse(Label == "BadSelf.bmp" | Label == "GoodSelf.bmp" | Label == "NormalSelf.bmp", 
+                                "Self", 'Other'),
+                Site = "THU")
+
+df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016_export_2019.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+  dplyr::rename(Subject = 1) %>%
+  #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+  dplyr::rename(BlockNo = BlockList.Sample,
+                TrialNo = SubTrial,
+                Matchness = YesNoResp,
+                Identity = identity,
+                Valence = morality,
+                CRESP = CorrectAnswer) %>%    #
+  dplyr::mutate(RT = dplyr::coalesce(Target.RT, Targetprac.RT),
+                ACC = dplyr::coalesce(Target.ACC, Targetprac.ACC),
+                RESP = dplyr::coalesce(Target.RESP,Targetprac.RESP),
+                Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),     # re-code the data
                 Valence = derivedFactor("Bad" = (Valence == "bad"), 
                                         "Good" = (Valence == "good"), 
                                         "Neutral" = (Valence == "normal"), 
                                         .method ="first", .default = NA),
                 Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age)) %>%
-  dplyr::mutate(Site = "THU")
-
-#df6b_meta <- df6b_d1 %>%
-#  dplyr::mutate(ExpID = "Exp6b",
-#                Domain = "Morality") %>%
-#  dplyr::select(CommonColnames)
-
-df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
-                TrialNo = SubTrial,
-                Matchness = YesNoResp,
-                Identity = identity,
-                Valence = morality,
-                ACC = Target.ACC, 
-                CRESP = Target.CRESP,                   # rename the columns
-                RESP = Target.RESP, RT = Target.RT) %>%    #
-  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
-                Valence = derivedFactor("Bad" = (Valence == "bad"), 
-                                        "Good" = (Valence == "good"), 
-                                        "Neutral" = (Valence == "normal"), 
+                Age = ifelse(Age == 0, NA, Age),
+                Val_lab = derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
+                                        "Good" = (Label == "GoodSelf.bmp" | Label == 'GoodOther.bmp'), 
+                                        "Neutral" = (Label == "NormalSelf.bmp" | Label == 'NormalOther.bmp'), 
                                         .method ="first", .default = NA),
-                Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                Age = ifelse(Age == 0, NA, Age)) %>%
-  dplyr::mutate(Site = "THU")
+                ID_lab = ifelse(Label == "BadSelf.bmp" | Label == "GoodSelf.bmp" | Label == "NormalSelf.bmp", 
+                                "Self", 'Other'),
+                Site = "THU")
 
+# number of participant who practiced but not in the formal experiment
+nQuit <- length(unique(df6b_d1$Subject[is.na(df6b_d1$BlockNo)])) - length(unique(df6b_d1$Subject[!is.na(df6b_d1$BlockNo)]))
 
 df6b_d1.T.basic     <- df6b_d1 %>%
   dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1589,280 +1508,7 @@ df6b.meta.rt <- df6b_d1.v.rt_m %>%
                 Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
   dplyr::select(CommonColnames_rt)
 
-```
-
-### Participants
-`r df6b_d1.T.basic$N` college students (`r df6b_d1.T.basic$Nf` female, age = `r df6b_d1.T.basic$Age_mean` $\pm$ `r df6b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df6b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy, remaining `r df6b_d1.v.basic$N` participants (`r df6b_d1.v.basic$Nf` female, age = `r df6b_d1.v.basic$Age_mean` $\pm$ `r df6b_d1.v.basic$Age_sd`). For day 2's data, one participant dropped out, leaving 22 participants  (`r df6b_d2.v.basic$Nf` female, age = `r df6b_d2.v.basic$Age_mean` $\pm$ `r df6b_d2.v.basic$Age_sd`), all of them has overall accuracy higher than 60%.
-
-### Experimental design
-The experimental design of this experiment is same as experiment 3:  a 2 × 3 × 2 within-subject design with self-relevance (self-relevant vs. other-relevant), moral valence (good, neutral, and bad) and matchness between shape and label (match vs. mismatch) as within-subject variables. 
-
-### Stimuli
-As in experiment 3a, 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
-
-### Procedure
-The procedure was similar to Experiment 2 and 6a. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
-
-All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
-
-Because learning 6 associations was more difficult than 3 associations and participant might have low accuracy (see experiment 3a), the current study had extended to a two-day paradigm to maximizing the accurate trials that can be used in EEG data. At the first day, participants learnt the associations and finished 9 blocks of the matching task, each had 120 trials, without EEG recording. That is, each condition has 90 trials.
-
-Participants came back to lab at the second day and finish the same task again, with EEG recorded. Before the EEG experiment, each participant finished a practice session again, if their accuracy is equal or higher than 85%, they start the experiment (one participant used lower threshold 75%). Each participant finished 18 blocks, each has 90 trials. One participant finished additional 6 blocks because of high error rate at the beginning, another two participant finished addition 3 blocks because of the technique failure in recording the EEG data. To increase the number of trials that can be used for EEG data analysis, matched trials has twice number as mismatched trials, therefore, for matched trials each participants finished 180 trials for each condition, for mismatched trials, each conditions has 90 trials.
-
-## Results
-
-```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
-
-rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-Mplots(expName = 'exp6b_d1', df6b_d1.v.dprime_l,rtdata)
-
-```
-
-Only the behavioral results were reported here.
-```{r 6b_dprime_d1, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime
-df6b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df6b_d1.v.dprime_l,  # using afex's function 
-                                  within = c('Identity','Valence'))
-df6b_d1_dprime_anova_apa <- df6b_d1_dprime_anova$aov %>% papaja::apa_print()
-
-# anova for self condition
-df6b_d1_dprime_s_anova <- df6b_d1.v.dprime_l %>%
-  dplyr::filter(Identity == "Self") %>%
-  afex::aov_ez('Subject','dprime',., within = c('Valence'))
-
-df6b_d1_dprime_s_anova_apa <- df6b_d1_dprime_s_anova$aov %>% papaja::apa_print()
-
-posthoc_6b_d1_s_d <- emmeans::emmeans(df6b_d1_dprime_s_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_6b_d1_s_d)
-
-# anova for Other condition
-df6b_d1_dprime_o_anova <- df6b_d1.v.dprime_l %>%
-  dplyr::filter(Identity == "Other") %>%
-  afex::aov_ez('Subject','dprime',., within = c('Valence'))
-
-df6b_d1_dprime_o_anova_apa <- df6b_d1_dprime_o_anova$aov %>% papaja::apa_print()
-```
-### Day one
-
-Figure \@ref(fig:ex6b-d1-dprime-rt) shows *d* prime and reaction times from day 1 of the experiment 6b. 
-
-#### *d* prime
-There was evidence for the interaction between identity and valence, `r df6b_d1_dprime_anova_apa$full$Identity_Valence`. We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d1_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), *t*(21) = 5.984, *p* < 0.001, and bad-self condition (2.07, SE = 0.154), *t*(21) = 6.555, *p* < 0.001. But there was no significant difference between bad-self and neutral-self, *t*(21) = -1.059, *p* = 0.549. For other trials, there was no significant effect of valuence, `r df6b_d1_dprime_o_anova_apa$full$Valence`.
-
-```{r 6b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df6b_d1_RT_anova <- afex::aov_ez('Subject','RT_m',df6b_d1.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Identity','Valence'))
-df6b_d1_RT_anova_apa <- df6b_d1_RT_anova %>% papaja::apa_print()
-
-# Day 1: match trials
-df6b_d1_RT_anova_m <- df6b_d1.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
-                Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d1_RT_anova_m_apa <- df6b_d1_RT_anova_m %>% papaja::apa_print()
-
-### For matched, self trials
-df6b_d1_RT_anova_m_s <- df6b_d1.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-
-df6b_d1_RT_anova_m_s_apa <- df6b_d1_RT_anova_m_s %>% papaja::apa_print()
-
-posthoc_6b_d1_rt_s <- emmeans::emmeans(df6b_d1_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
-# pairs(posthoc_6b_d1_rt_s)
-
-### For matched, other trials
-df6b_d1_RT_anova_m_o <- df6b_d1.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df6b_d1_RT_anova_m_o_apa <- df6b_d1_RT_anova_m_o %>% papaja::apa_print()
-
-# Day1: Mismatch trials
-df6b_d1_RT_anova_nm <- df6b_d1.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d1_RT_anova_nm_apa <- df6b_d1_RT_anova_nm %>% papaja::apa_print()
-```
-
-#### RT
-For the matched trials, there was interaction between identity and valence, `r df6b_d1_RT_anova_m_apa$full$Identity_Valence`. We split the self-relevant and other relevant trials separately. For the self condition, the valence effect is significant, `r df6b_d1_RT_anova_m_s_apa$full$Valence`. The Self-good (484, SE = 13.2) is faster than self-neutral (543, SE = 16.7) , *t* = -4.521, *p* = 0.0005, *df* = 21 and self-bad condition (535, SE = 18.4),  *t* = -4.489, *p* = 0.0006, *df* = 21. but not significant different between neutral and bad condition, *t* = 0.689, *p* = 0.772, *df* = 21. For other condition, there was no effect of valence, `r df6b_d1_RT_anova_m_o_apa$full$Valence`. 
-
-
-```{r 'ex6b-d2-dprime-rt', fig.cap="RT and *d* prime of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
-# calculate d prime
-df6b_d2.v.dprime_l <- df6b_d2.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
-  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
-  dplyr::ungroup() %>%
-  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
-  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
-                FAR  = FA/(FA+CR)) %>%                                      # fa rate
-  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
-  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
-                Identity = factor(Identity, levels = c('Self', 'Other')))
-
-# Day2: match trials
-df6b_d2.v.rt_m1 <- df6b_d2.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
-                Identity = factor(Identity, levels = c('Self', 'Other')))
-
-rtdata <- df6b_d2.v.rt_m1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-Mplots(expName = 'exp6b_d2', df6b_d2.v.dprime_l,rtdata)
-
-```
-
-### Day two
-
-Figure \@ref(fig:ex6b-d2-dprime-rt) shows *d* prime and reaction times from day 2 of the experiment 6b. 
-
-
-```{r 5b_dprime_d2, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df6b_d2_dprime_anova <- afex::aov_ez('Subject','dprime',df6b_d2.v.dprime_l,  # using afex's function 
-                                  within = c('Identity','Valence'))
-df6b_d2_dprime_anova_apa <- df6b_d2_dprime_anova$aov %>% papaja::apa_print()
-#posthoc_5b_d2_d <- emmeans::emmeans(df6b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_5b_d2_d)
-
-# anova for self condition
-df6b_d2_dprime_s_anova <- df6b_d2.v.dprime_l %>%
-  dplyr::filter(Identity == "Self") %>%
-  afex::aov_ez('Subject','dprime',., within = c('Valence'))
-
-df6b_d2_dprime_s_anova_apa <- df6b_d2_dprime_s_anova$aov %>% papaja::apa_print()
-
-posthoc_5b_d2_s_d <- emmeans::emmeans(df6b_d2_dprime_s_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_5b_d2_s_d)
-
-# anova for Other condition
-df6b_d2_dprime_o_anova <- df6b_d2.v.dprime_l %>%
-  dplyr::filter(Identity == "Other") %>%
-  afex::aov_ez('Subject','dprime',., within = c('Valence'))
-
-df6b_d2_dprime_o_anova_apa <- df6b_d2_dprime_o_anova$aov %>% papaja::apa_print()
-
-```
-#### *d* prime
-There was evidence for the interaction between identity and valence, `r df6b_d2_dprime_anova_apa$full$Identity_Valence`.  We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d2_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), *t*(21) = 2.98, *p* = 0.0189, and bad-self condition (2.43, SE = 0.199), *t*(21) = 3.93, *p* = 0.0021. But there was no significant difference between bad-self and neutral-self, *t*(21) = -0.097, *p* = 0.995. For other trials, there was no significant effect of valuence, `r df6b_d2_dprime_o_anova_apa$full$Valence`.
-
-```{r 5b_d2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
-df6b_d2.v.rt_m <- df6b_d2.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df6b_d2_RT_anova <- afex::aov_ez('Subject','RT_m',df6b_d2.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Identity','Valence'))
-df6b_d2_RT_anova_apa <- df6b_d2_RT_anova %>% papaja::apa_print()
-
-
-df6b_d2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6b_d2.v.rt_m1,     # using afex's function 
-                                  within = c('Identity','Valence'))
-df6b_d2_RT_anova_m_apa <- df6b_d2_RT_anova_m %>% papaja::apa_print()
-
-posthoc_5b_d2_rt <- emmeans::emmeans(df6b_d2_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
-# pairs(posthoc_5b_d2_rt)
-
-df6b_d2_RT_anova_m_s <- df6b_d2.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Self") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-
-df6b_d2_RT_anova_m_s_apa <- df6b_d2_RT_anova_m_s %>% papaja::apa_print()
-
-posthoc_5b_d2_rt_s <- emmeans::emmeans(df6b_d2_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
-# pairs(posthoc_5b_d2_rt_s)
-
-### For matched, other trials
-df6b_d2_RT_anova_m_o <- df6b_d2.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match" & Identity == "Other") %>%
-  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-
-df6b_d2_RT_anova_m_o_apa <- df6b_d2_RT_anova_m_o %>% papaja::apa_print()
-
-# Day2: Mismatch trials
-df6b_d2_RT_anova_nm <- df6b_d2.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d2_RT_anova_nm_apa <- df6b_d2_RT_anova_nm %>% papaja::apa_print()
-```
-
-#### RT
-For the matched trials, the interaction between identity and valence, `r df6b_d2_RT_anova_m_apa$full$Identity_Valence`. As in previous studies, we splited the self- and other-relevant trials. For the self condition, the valence effect is significant, `r df6b_d2_RT_anova_m_s_apa$full$Valence`. The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , *t* = -2.289, *p* = 0.0795, *df* = 21 and self-bad condition (508, SE = 17.9),  *t* = -4.342, *p* = 0.0008, *df* = 21. but not significant different between neutral and bad condition, *t* = -0.503, *p* = 0.871, *df* = 21. For other condition, there was no effect of valence, `r df6b_d2_RT_anova_m_o_apa$full$Valence`. 
-
-\newpage
-
-
-# Meta-analysis of the effect size
-
-To get a better estimation of the effect in the current study, we combined the data of the 11 experiments described above and 2 experiments from another study (Hu, Lan, Macrae, & Sui, 2019) by conducting a mini-meta-analysis (Goh, Hall, & Rosenthal, 2016). More specifically, we conducted random effect model meta-analyses of the effect size of *d*’ and RTs across our 13 experiments.  
-
-## Methods
-### Software
-Mini Meta-analysis was carried out in R 3.6. As for the meta-analysis of the effect size of *d*’ and RTs, we used “metafor” package (Viechtbauer, 2010). 
-
-### Data analysis
-We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen'd and its variance were estimated using the following formula (Cooper, Hedges, & Valentine, 2009):
-
-$$d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
-
-$$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
-
-$M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants).
-
-To avoid the cases that some participants participated more than one experiments, we inspected the all available information about participants. For those participants, only the results from their first participation were included. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the current meta-analysis.
-
-
-```{r prep exp7,echo=FALSE,results='hide'}
+# Exp 7a matching task ----
 ## load data and clean data of exp 7a (copy the code from Hu et al., 2019) 
 df7a_m <- read.csv(".\\exp7\\rawdata_behav_exp7a_2016.csv",header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -1873,7 +1519,7 @@ df7a_m <- read.csv(".\\exp7\\rawdata_behav_exp7a_2016.csv",header = TRUE, sep = 
                 Valence = Morality,
                 ACC = Accuracy, 
                 RESP = ResponseKey) %>%    #
-  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),                   # re-code the data
+  dplyr::mutate(Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),    # re-code the data
                 Valence = ifelse(Valence == "moral" | Valence == "Moral", "Good", "Bad"),
                 Matchness = ifelse(Matchness == "Match" | Matchness == "match", "Match", "Mismatch"),
                 Age = ifelse(Age == 0, NA, Age)) %>%
@@ -2043,6 +1689,11 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
   dplyr::select(CommonColnames_rt)
 
 ```
+
+# Results
+
+
+### Data analysis
 
 ```{r combine valid Data,echo=FALSE,results='hide'}
 
