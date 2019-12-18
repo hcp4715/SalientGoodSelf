@@ -80,22 +80,20 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 
 # Methods
 ## Participants.
-All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, participants of these experiments were recruited in Tsinghua University community. To increase the power by adding more data so that each experiment has 50 or more valid data [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017. Due to the limited time and resources, additional data were collected for experiment 1a, 1b, 4a, and 4b, but not other experiments. We report all the variables measured in our experiments. In the meta-analysis, we also included the two experiments (experiment 7a, 7b), which had been reported in @Hu_2019_GoodSelf.
+All experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing. Participants of these experiments were recruited in the local community. To increase the sample size so that each experiment has 50 or more valid data [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in @Hu_2019_GoodSelf (See Table 1 for overview of these experiments). 
 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
 
 ## Design and Procedure
-This series of experiment started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or self-tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finish a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label were matched. When participants can get 60% or higher accuracy at the end of the practicing session, they can start the experimental task which is the same as in the practice phase. Therefore, the design for first a few experiments were two (matchness: matched vs. mismatched) by three (moral valence: good vs. neutral vs. bad), and the dependent variables reported in this manuscript was reaction times and accuracy in the experimental phase, i.e., the perceptual matching task.
+This series of experiments started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or self-tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learn the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After learning phase, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they just learnt. When participants reached 60% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase. These experiments shared a similar two (matchness: matched vs. mismatched) by three (moral valence: good vs. neutral vs. bad) within-subject design. The dependent variables reported in this manuscript were reaction times and accuracy in the experimental task, i.e., the perceptual matching task. 
 
-Across all experiment, experiment 1a, 1b, 1c, 2, and 6a shared the same 2 by 3 within-subject design. Of which the experiment 1a was the first experiment and 1b, 1c, and 2 were conducted to exclude other confounding variable's effect. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occure with certain words. Experiment 1c manipulated the moral valence indirectly: participant first learnt to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating the names with different shapes. Experiment 2 tested whether the way we presented the stimuli influence the effect we observed by sequently presenting labels and shapes. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in this manuscript.
+Across all experiment, experiment 1a, 1b, 1c, 2, and 6a shared the two by three within-subject design. Of which the experiment 1a was the first experiment and 1b, 1c, and 2 were conducted to exclude other confounding variables' influence. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occure with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learnt to associate different moral behaviors with different names, which is neutral at begining, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 tested whether the way we presented the stimuli influence the effect of valence, by sequently presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
 
-For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we added self-referential as another within-subject variable. The experiment 3a directly extend the experiment 1a, with six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (). The experiment 6b was an EEG experiment extended from experiment 6a by adding the independent variable self-reference. That's, the difference between 6b and 3a is that 6b presented label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participant remember the associations between label and shape and finished perceptual matching task, and the second day, they finished the task again while the EEG signals were recorded. To further test the effect of working memory load, experiment 3b was design to separate the self-referential trials and other-referential trials. That is, participant first two different blocks: for the self-reference blocks, they only response to good-self, neutral-self, and bad-self, with half of the trials was matched and half was not; for the other-reference blocks, they only reponded to good-other, neutral-other, and bad-other. Experiment 4a and 4b were design to test the automaticity of the binding between self/other and moral valence. In 4a, we used only two labels (self vs. other) and two shapes (circle, square), to manipulate the moral valence, we added label within the shape and instructed participants to ignore the presence of these moral related words. In 4b, we did the reverse: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the word "self" or "other" was presented in the shape. as in 4a, participants were told to ignore the words inside the shape. Experiment 7a and 7b are almost identical, they are designed to test the cross task robustness of the effect we observed in the aforementioned experiments. As we found reliable effect that the neutral and bad conditions constantly show nonsignificant results, we only used two conditions in moral valence, i.e., good vs. bad.
+For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we added self-referential as another within-subject variable. The experiment 3a directly extend experiment 1a in to a two (matchness: matched vs. mismatched) by three (moral valence: good vs. neutral vs. bad) by two (reference: self vs. other) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezois). The experiment 6b was an EEG experiment extended from experiment 3a. The difference between 6b and 3a is that 6b presented label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different blocks: for the self-referential blocks, they only response to good-self, neutral-self, and bad-self, with half of the trials was matched and half was not; for the other-reference blocks, they only reponded to good-other, neutral-other, and bad-other. Experiment 4a and 4b were design to test the automaticity of the binding between self/other and moral valence. In 4a, we used only two labels (self vs. other) and two shapes (circle, square). To manipulate the moral valence, we added labels within the shape and instructed participants to ignore the presence of these moral related words. In 4b, we reversed self-referential and valence: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words "self" or "other" were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape. Experiment 7a and 7b are almost identical, they are designed to test the cross task robustness of the effect we observed in the aforementioned experiments [@Hu_2019_GoodSelf]. As we found that the neutral and bad conditions constantly show nonsignificant results, we only used two conditions of moral valence, i.e., good vs. bad, in experiment 7a and 7b.
 
 Finally, experiment 5 was design to test the specificity of the moral valence. We extended experiment 1a with an additional independnet variable: domains of the valence words. More specifically, besides the moral valence, we also added valence from other domains: appearance of person (beautiful, neutral, ugly), apperance of a scene (beautiful, neutral, ugly), and emotion (happy, neutral, and sad). Label-shape pairs from different domains were separated into different blocks. 
 
-If not noted, E-prime 2.0 was used for presenting stimuli and collecting behavioral responses. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors, with a chin-rest brace. The visual angle of geometric shapes was about 3.7º × 3.7º, the finxation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. Participant fixed their head on a chin-fixation, about 60 cm from the screen. 
-
-For participants recruited in Wenzhou University, they finished the experiment in a group consist of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
+If not noted, E-prime 2.0 was used for presenting stimuli and collecting behavioral responses. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about 3.7º × 3.7º, the finxation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
 
 
 ```{r 'Table1_exp_info', ehco = FALSE, results = 'asis'}
@@ -115,13 +113,11 @@ In most of these experiments, participant were also asked to fill a battery of q
 
 
 ## Data analysis
-We reported all the measurements, analyses, and results in all the experiments in the current study. All data were first pre-processed using `r cite_r("r-references.bib")`. The clean data were analyzed using JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
+We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
-As in @Sui_2012_JEPHPP, we analyzed the accuracy performance using a signal detection approach. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of *d’*. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The *d’* were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). 
+All data were first pre-processed using `r cite_r("r-references.bib")`. Individual experiment's results were analyzed as in @Sui_2012_JEPHPP. we analyzed the accuracy performance using a signal detection approach. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of *d’*. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The *d’* were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). The reaction times of accurate trials were also analyzed using repeated measures ANOVA. These analyses were based on the pre-processed data and finished byusing JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. See supplementary materials for the results of each experiment's method and results, which included the significance test resuts, effect size [@Bakeman_2015_eff_size; @Lakens_2013], and Bayes factor calculated by JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. 
 
-The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. Please note that in the first two experiment (experiment 1a and 1b), we included the variable matchness (matched vs. mismatched) in our ANOVA of reaction times and then examine matched trials and mismatched trials separately when the interaction between matchness and other variables are significant. In most experiments, we found significant interaction between matchness and valence. Then, as previous study, we focused on the matched trial for the rest of the experiment [@Sui_2012_JEPHPP]. 
-
-Based on our experimental design, we reported our results across experiments using a meta-analytical apporach [@Goh_2016_mini], while the results of individual experiment were reported in the supplementary materials, which included the significance test resuts, effect size [@Bakeman_2015_eff_size; @Lakens_2013], and Bayes factor calculated by JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. More specifically, we reported results in four parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 4b, 5 and 6a. The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+Based on our experimental design, here we reported our results across experiments using a meta-analytical apporach [@Goh_2016_mini]. More specifically, we reported results in four parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a. The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
 Mini meta-analyses were carried out in R 3.6. As for the meta-analysis of the effect size of *d*’ and RTs, we used “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen'd and its variance were estimated using the following formula [@Cooper_2009_handbook]:
 
@@ -131,7 +127,7 @@ $$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
 
 $M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants included in our research).
 
-To avoid the cases that some participants participated more than one experiments, we inspected the all available information about participants. For those participants who did take part in more than one experiments, only the results from their first participation were included. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the current meta-analysis.
+To avoid the cases that some participants participated more than one experiments, we inspected the all available information of participants and only included participants' results from their first participation. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the meta-analysis.
 
 ```{r loadingData_All,echo=FALSE,results='hide'}
 # Experiemnt 1a ----
@@ -1692,9 +1688,6 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
 
 # Results
 
-
-### Data analysis
-
 ```{r combine valid Data,echo=FALSE,results='hide'}
 
 ## exclude the repeating subjects
@@ -1722,7 +1715,128 @@ df6b.meta.rt <- df6b.meta.rt %>% dplyr::filter(!Subject %in% c(6217)) # exclude 
 df7a_m.meta.d <- df7a_m.meta.d %>% dplyr::filter(!Subject %in% c(7020))   # exclude participants from ex1b, 1c, and 2
 df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # exclude participants from ex1b, 1c, and 2
 
-# combine d prime data
+
+# Mini-meta of Valence effect -----
+df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df5.meta.d, df6a.meta.d) 
+
+df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df5.meta.rt, df6a.meta.rt)
+
+# calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
+effectList_1 <- c('Good_Bad','Good_Neut','Neut_Bad')
+
+df.ES_1 <- data.frame(matrix(, nrow=length(unique(df.meta_d_1$ExpID))*length(effectList_1)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d_1$ExpID))*length(effectList_1)),
+                ExpID  = rep(rep(unique(df.meta_d_1$ExpID), each = length(effectList_1)), 2),
+                Effect = rep(effectList_1, length(unique(df.meta_d_1$ExpID))*2),
+                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
+                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+
+for (DVName in c('RT','dprime')){
+  if (DVName == 'RT'){
+    metaData <- df.meta_rt_1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
+  } else{
+    metaData <- df.meta_d_1 %>% dplyr::rename(Value = dprime)
+  }
+  
+  for (expName in unique(metaData$ExpID)){
+    for (effectName in effectList_1){
+      tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+      
+      if (effectName == 'Good_Bad'){
+        #print(paste('processing Good_Bad of ', expName, sep = ''))
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        }
+      else if (effectName == 'Good_Neut'){
+        #print(paste('processing Good_Neut of ', expName, sep = ''))
+        #if ('Neutral' %in% tmpdata$Valence){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+        #  }
+        #else{
+          #print(paste('There is no Neutral condition in', expName, sepe=''))
+        #  next
+        #  }
+        }
+      else if (effectName == 'Neut_Bad'){
+        #if ('Neutral' %in% tmpdata$Valence)
+        #  {
+            dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+            dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+        #  }
+        #else{
+            #print(paste('There is no Neutral condition in', expName, sepe=''))
+        #    next
+        #  }
+        }
+      #}
+      M1  <- mean(dataCond1$Value) -> df.ES_1$M1[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES_1$SD1[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES_1$M2[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES_1$SD2[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES_1$N[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_1$r[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] 
+      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
+      df.ES_1$ES[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] <- tmp2[1,1]
+      df.ES_1$ES.var[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] <- tmp2[1,2]
+    }
+  }
+}
+
+df.ES_1_sum <- df.ES_1 %>% 
+  dplyr::group_by(DVtype, Effect) %>% 
+  tidyr::drop_na() %>% 
+  dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
+
+groupList_1 <- rep(c('Overall'), each = 3)
+#groupList[10:13] <- c('Self_Other', 'Self_Other_G', 'Self_Other_N', 'Self_Other_B')
+
+df.res.meta_1 <- data.frame(matrix(, nrow= 3*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = 3),
+                Group  = rep(groupList_1, 2),
+                Effect = rep(effectList_1, 2),
+                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
+                N_exp = NA, Cohen_d = NA, se = NA, CI_low = NA, CI_upp = NA, pval = NA)
+
+#magicfor::magic_for(silent = TRUE)
+p_meta_list_1 = list() # create a empty list to store the forest plot
+
+for (DVName in c('RT','dprime')){
+  for (effectName in effectList_1){
+    df.res.meta <- df.ES_1 %>%
+      dplyr::filter(DVtype == DVName & Effect == effectName) %>%
+      tidyr::drop_na()
+  
+    tmp.meta.res <- metafor::rma(yi = df.res.meta$ES,
+                           vi = df.res.meta$ES.var,
+                           slab = df.res.meta$ExpID)
+    df.res.meta_1$N_exp[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$k
+    df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$beta
+    df.res.meta_1$se[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$se
+    df.res.meta_1$CI_low[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$ci.lb
+    df.res.meta_1$CI_upp[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$ci.ub
+    df.res.meta_1$pval[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$pval
+  }
+}
+
+#magicfor::magic_result()
+#df.res.meta_1_val <- df.res.meta_1[c(1:9, 14:22),]
+#df.res.meta_1_val$EffectType <- rep(c('Good_Bad','Good_Neut','Neut_Bad'), 3*2)
+
+p_meta_val_1 <- ggplot(df.res.meta_1, aes(x=DVtype, y=Cohen_d, fill=Effect)) + 
+  geom_bar(stat="identity", color=NA, 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
+                 position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(-0.75, 0.75))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen' d of ",italic("d"), "prime", sep = ' ')))+
+  apatheme
+
+
+# Results part 2: with self-referential ----
+
 df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
                    df4b.meta.d, df5.meta.d, df6a.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
 
