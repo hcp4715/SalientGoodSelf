@@ -117,7 +117,13 @@ We reported all the measurements, analyses, and results in all the experiments i
 
 All data were first pre-processed using `r cite_r("r-references.bib")`. Individual experiment's results were analyzed as in @Sui_2012_JEPHPP. we analyzed the accuracy performance using a signal detection approach. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of *d’*. Trials without response were coded either as “miss” (matched trials) or “false alarm” (mismatched trials). The *d’* were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). The reaction times of accurate trials were also analyzed using repeated measures ANOVA. These analyses were based on the pre-processed data and finished byusing JASP [0.8.6.0, www.jasp-stats.org, @Love_etal_2019_JASP]. To control the false positive when conducting the post-hoc comparisons, we used Bonferroni correction. See supplementary materials for the results of each experiment's method and results, which included the significance test resuts, effect size [@Bakeman_2015_eff_size; @Lakens_2013], and Bayes factor calculated by JASP [@Hu_2018_JASP; @Wagenmakers_2018_JASP]. 
 
-Based on our experimental design, here we reported our results across experiments using a meta-analytical apporach [@Goh_2016_mini]. More specifically, we reported results in four parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a. The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
+Based on our experimental design, here we reported our results across experiments using a meta-analytical apporach [@Goh_2016_mini]. More specifically, we reported results in four parts. The first part of the results focused on the effect of moral valence on the performance of perceptual matching task. We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a. 
+
+The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. 
+
+In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. 
+
+Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
 Mini meta-analyses were carried out in R 3.6. As for the meta-analysis of the effect size of *d*’ and RTs, we used “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's d) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen'd and its variance were estimated using the following formula [@Cooper_2009_handbook]:
 
@@ -1687,8 +1693,6 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
 
 ```
 
-# Results
-
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}
 
 ## exclude the repeating subjects
@@ -1718,12 +1722,14 @@ df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # excl
 
 ```
 
+# Results
 ```{r first meta,echo=FALSE,results='hide'}
-# Mini-meta of Valence effect -----
+# Combine the data -----
 df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df5.meta.d, df6a.meta.d) 
 
 df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df5.meta.rt, df6a.meta.rt)
 
+# Prepare the data for meta ----
 # calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
 effectList_1 <- c('Good_Bad','Good_Neut','Neut_Bad')
 
@@ -1786,13 +1792,12 @@ for (DVName in c('RT','dprime')){
   }
 }
 
+
+# Do the meta-analysis in a for loop ----
 df.ES_1_sum <- df.ES_1 %>% 
   dplyr::group_by(DVtype, Effect) %>% 
   tidyr::drop_na() %>% 
   dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
-
-groupList_1 <- rep(c('Overall'), each = 3)
-#groupList[10:13] <- c('Self_Other', 'Self_Other_G', 'Self_Other_N', 'Self_Other_B')
 
 df.res.meta_1 <- data.frame(matrix(, nrow= 3*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = 3),
@@ -1801,15 +1806,12 @@ df.res.meta_1 <- data.frame(matrix(, nrow= 3*2, ncol=0)) %>%
                 #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
                 N_exp = NA, Cohen_d = NA, se = NA, CI_low = NA, CI_upp = NA, pval = NA)
 
-#magicfor::magic_for(silent = TRUE)
-p_meta_list_1 = list() # create a empty list to store the forest plot
-
 for (DVName in c('RT','dprime')){
   for (effectName in effectList_1){
     df.res.meta <- df.ES_1 %>%
       dplyr::filter(DVtype == DVName & Effect == effectName) %>%
       tidyr::drop_na()
-  
+    
     tmp.meta.res <- metafor::rma(yi = df.res.meta$ES,
                            vi = df.res.meta$ES.var,
                            slab = df.res.meta$ExpID)
@@ -1822,32 +1824,37 @@ for (DVName in c('RT','dprime')){
   }
 }
 
-#magicfor::magic_result()
-#df.res.meta_1_val <- df.res.meta_1[c(1:9, 14:22),]
-#df.res.meta_1_val$EffectType <- rep(c('Good_Bad','Good_Neut','Neut_Bad'), 3*2)
-
-p_meta_val_1 <- ggplot(df.res.meta_1, aes(x=DVtype, y=Cohen_d, fill=Effect)) + 
-  geom_bar(stat="identity", color=NA, 
-           position=position_dodge()) +
-  geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
-                 position=position_dodge(.9)) +
+# Plot the effect size ----
+p_meta_val_1 <- ggplot(df.res.meta_1, aes(x=DVtype, y=Cohen_d, color=Effect, fill=Effect)) + 
+  geom_pointrange(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('A: Valence effect (No-reference)') +
+  #ggplot(df.res.meta_1, aes(x=DVtype, y=Cohen_d, fill=Effect)) + 
+  #geom_bar(stat="identity", color=NA, 
+  #         position=position_dodge()) +
+  #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
+  #               position=position_dodge(.9)) +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's  ",italic("d"), sep = ' ')))+
+#  theme(plot.title = element_text(hjust = 0.5)) +
   apatheme
-
+  
 ```
 
 ```{r second meta,echo=FALSE,results='hide'}
-# Results part 2: with self-referential ----
+# Results part 2: with self-referential
 # included experiments: 3a, 3b, 6b, 7a, 7b
 
-# combine the data
+# Combine the data  ----
 df.meta_d_2 <- rbind(df3a.meta.d, df3b.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
 df.meta_rt_2 <- rbind(df3a.meta.rt, df3b.meta.rt, df6b.meta.rt, df7a_m.meta.rt, df7b_m.meta.rt)
 
-# calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
+# Calculate the mean, sd, n, and r ----
+# for estimating the effect size and SE of effect size.
 effectList_2 <- c('Good_Bad_S','Good_Neut_S','Neut_Bad_S',
                 'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
 
@@ -1940,24 +1947,19 @@ for (DVName in c('RT','dprime')){
   }
 }
 
+# Do the meta ----
+# info about participants
 df.ES_2_sum <- df.ES_2 %>% 
   dplyr::group_by(DVtype, Effect) %>% 
   tidyr::drop_na() %>% 
   dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
 
-groupList <- rep(c('Overall','Self','Other'), each = 3)
-groupList[10:13] <- c('Self_Other', 'Self_Other_G', 'Self_Other_N', 'Self_Other_B')
-
 df.res.meta_2 <- data.frame(matrix(, nrow= (2*3)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = (2*3)),
-                #Group  = rep(groupList, 2),
                 Effect = rep(effectList_2, 2),
-                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
                 N_exp = NA, Cohen_d = NA, se = NA, CI_low = NA, CI_upp = NA, pval = NA)
 
-#magicfor::magic_for(silent = TRUE)
-#p_meta_list = list() # create a empty list to store the forest plot
-
+# meta -analysis
 for (DVName in c('RT','dprime')){
   for (effectName in effectList_2){
     df.res.meta <- df.ES_2 %>%
@@ -1976,6 +1978,7 @@ for (DVName in c('RT','dprime')){
   }
 }
 
+# plot the effect size  ----
 df.res.meta_2 <- df.res.meta_2 %>%
   dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Neut_Bad_S",
                                   "Self", "Other"),
@@ -1984,11 +1987,16 @@ df.res.meta_2 <- df.res.meta_2 %>%
 
 p_meta_val_2_self <- df.res.meta_2 %>%
   dplyr::filter(Identity == "Self") %>%
-  ggplot(., aes(x=DVtype, y=Cohen_d, fill=EffectType)) + 
-  geom_bar(stat="identity", color=NA, 
-           position=position_dodge()) +
-  geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
-                 position=position_dodge(.9)) +
+  ggplot(., aes(x=DVtype, y=Cohen_d, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('B: Valence effect (Self-reference)') +
+  #geom_bar(stat="identity", color=NA, 
+  #         position=position_dodge()) +
+  #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
+  #               position=position_dodge(.9)) +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
@@ -1997,17 +2005,50 @@ p_meta_val_2_self <- df.res.meta_2 %>%
 
 p_meta_val_2_other <- df.res.meta_2 %>%
   dplyr::filter(Identity == "Other") %>%
-  ggplot(., aes(x=DVtype, y=Cohen_d, fill=EffectType)) + 
-  geom_bar(stat="identity", color=NA, 
-           position=position_dodge()) +
-  geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
-                 position=position_dodge(.9)) +
+  ggplot(., aes(x=DVtype, y=Cohen_d, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('C: Valence effect (Other-reference)') +
+  #geom_bar(stat="identity", color=NA, 
+  #         position=position_dodge()) +
+  #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
+  #               position=position_dodge(.9)) +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
   apatheme
 ```
+
+```{r 'plot_all_effect', fig.cap="Effect size (Cohen's d) across experiments.", fig.height=18, fig.width=6, warning=FALSE}
+multiplot(p_meta_val_1, p_meta_val_2_self,p_meta_val_2_other)
+```
+## Effect of moral valence
+
+In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analysis. We found differences between positive and negative conditions on RT was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`]; on *d'* was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`]. See Figure \@ref(fig:plot_all_effect) upper panel.
+
+## Interaction between valence and self-reference
+In this part, we combined the experiments that explicitly manipulated the self-reference and valence, which includes 3a, 3b, 6b, 7a, and 7b. For the positive versus negative contrast, data were from five experiments whith 178 participants; for positive versus neutral and neutral versus negative contrasts, data were from three experiments with 108 participants.
+
+In most of these experiments, the interaction between self-reference and valence was signficant (see results of each experiment in supplementary materials). In the mini-meta-analysis, we analyzed the valence effect for self-referential condition and other-referential condition separately.
+
+For the self-referential condition, we found the same pattern as in the first part of results. That is we found significant differences between positive and neutral as well as positive and negative, but not neutral and negative. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']`]. See Figure \@ref(fig:plot_all_effect) middle panel.
+
+For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`]. See Figure \@ref(fig:plot_all_effect) lower panel.
+
+## Generalizibility of the effect
+### Does this effect exist when reference manipulated implicitly?
+
+### Is this effect morality-specific?
+
+## Individual difference
+
+we conducted 13 meta-analyses for both reaction times and *d* prime for both valence effect and self-relevance effect. For the valence effect, we compared the differences between valences for over all effect as well as for self-referential and other-referential separately. The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
+
+The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
+
 
 ```{r third meta,echo=FALSE,results='hide'}
 df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
@@ -2268,9 +2309,6 @@ p_meta_id <- ggplot(df.res.meta.all_id, aes(x=DVtype, y=Cohen_d, fill=Group)) +
 
 ```
 
-In total, we conducted 13 meta-analyses for both reaction times and *d* prime for both valence effect and self-relevance effect. For the valence effect, we compared the differences between valences for over all effect as well as for self-referential and other-referential separately. The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
-
-The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
 
 
 ## Results

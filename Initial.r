@@ -39,6 +39,7 @@ apatheme = theme_bw()+
               legend.text = element_text(size =12),
               #legend.position='top',
               plot.title = element_text(lineheight=.8, face="bold", size = 16),
+#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
               axis.text = element_text (size = 14, color = 'black'),
 #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
               axis.title = element_text (size = 14),
