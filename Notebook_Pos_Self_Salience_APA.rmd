@@ -121,7 +121,9 @@ Based on our experimental design, here we reported our results across experiment
 
 The second part we synthesized the results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. 
 
-In the third part, we will examine the change of effect size brought by change of design, with a focus on 4a, 4b, and 5, which were designed to address the generalizibility problems. 
+In the third part, we examined the change of effect size brought by change of design, with a focus on 4a and 4b, which were designed to examine the implicit effect of the interaction between moral valence and self-referential processing. We are interested in one particular question: will self-referential and morally positive valence had a mutual facilitation effect. That is, when moral valence (experiment 4a) or self-referential (experiment 4a) was presented as task-irrelevant stimuli, whether they would facilitate self-referential or valence effect on perceptual decision-making. For experiment 4a, we report the comparisons between different valence conditions under the self-referential task, not the other-referential task; for experiment 4b, we reported the comparison between the self- vs. other-referential conditions for positive moral condition, not for the neutral or negative conditions. Note that the results were also analyzed in a standard repeated measure ANOVAs (see supplementary materials).
+
+We then reported the specificity of the valence effect. 
 
 Finally, we explored correlation between self-reported psychological distance and more objective responses bias (i.e., reaction times and *d* prime). To do this, we first normalized the personal distance by taking the percentage of the mean distance between each two persons in the sum of all 6 distances (self-good, self-normal, self-bad, good-normal, good-bad, normal-bad), and then calculated the bias score (indexed by the differences between good-normal, good-bad). Also, as exploratory analysis, we analyzed the correlation between behavioral response and moral identity, self-esteem, if data are available. As recent study showed that small size leads to unstable correlation estimates [@Schönbrodt_Perugini_2013], we only reported the correlation based on data pooled from all experiments, while the results of each experiment were reported in supplementary results.
 
@@ -1997,7 +1999,7 @@ p_meta_val_2_self <- df.res.meta_2 %>%
   #         position=position_dodge()) +
   #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
   #               position=position_dodge(.9)) +
-  coord_cartesian(ylim=c(-1.1, 1.1))+
+  coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
@@ -2039,9 +2041,143 @@ For the self-referential condition, we found the same pattern as in the first pa
 For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`]. See Figure \@ref(fig:plot_all_effect) lower panel.
 
 ## Generalizibility of the effect
-### Does this effect exist when reference manipulated implicitly?
+In this part, we reported the results from experiment 4 in which either moral valence or self-reference were manipulated as task-irrelevant stimuli. 
 
-### Is this effect morality-specific?
+```{r analyzing for d prime_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+#effectList_2 <- c('Good_Bad_S','Good_Neut_S','Neut_Bad_S',
+#                'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
+
+df.ES_4a <- data.frame(matrix(, nrow=length(unique(df4a.meta.d$ExpID))*length(effectList_2)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df4a.meta.d$ExpID))*length(effectList_2)),
+                ExpID  = rep(rep(unique(df4a.meta.d$ExpID), each = length(effectList_2)), 2),
+                Effect = rep(effectList_2, length(unique(df4a.meta.d$ExpID))*2),
+                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+
+for (DVName in c('RT','dprime')){
+  if (DVName == 'RT'){
+    metaData <- df4a.meta.rt %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
+  } else{
+    metaData <- df4a.meta.d %>% dplyr::rename(Value = dprime)
+  }
+  
+  for (expName in unique(metaData$ExpID)){
+    for (effectName in effectList_2){
+      tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+      
+      if (effectName == 'Good_Bad_S'){
+        
+        if (!all(is.na(tmpdata$Identity))){
+          #print(paste('processing Good_Bad_S of ', expName, sep = ''))
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          }
+        else{
+            #print(paste('Skip Good_Bad_S of ', expName, sep = ''))
+          next
+          }
+        }
+      else if (effectName == 'Good_Neut_S'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')  
+          }
+        else{
+          next
+          }
+        }  
+      else if (effectName == 'Neut_Bad_S'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          }
+        else{
+          next
+          }
+        }
+      else if (effectName == 'Good_Bad_O'){
+        if (!all(is.na(tmpdata$Identity))){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }
+      else if (effectName == 'Good_Neut_O'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence )
+          {
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }
+      else if (effectName == 'Neut_Bad_O'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+      }
+      
+      M1  <- mean(dataCond1$Value) -> df.ES_4a$M1[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES_4a$SD1[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES_4a$M2[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES_4a$SD2[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES_4a$N[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_4a$r[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName] 
+      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
+      df.ES_4a$ES[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName] <- tmp2[1,1]
+      df.ES_4a$ES.var[df.ES_4a$DVtype == DVName & df.ES_4a$ExpID == expName & df.ES_4a$Effect == effectName] <- tmp2[1,2]
+    }
+  }
+}
+
+df.ES_4a <- df.ES_4a %>%
+  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Neut_Bad_S",
+                                  "Self", "Other"),
+                EffectType = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Bad_O", "Good_Bad",
+                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Neut_Bad")))
+
+p_df_4a_self <- df.ES_4a %>%
+  dplyr::filter(Identity == "Self") %>%
+  ggplot(., aes(x=DVtype, y=ES, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('A: Valence effect (Self-ref.)') +
+  coord_cartesian(ylim=c(-1.1, 1.1))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
+  apatheme
+
+p_df_4a_other <- df.ES_4a %>%
+  dplyr::filter(Identity == "Other") %>%
+  ggplot(., aes(x=DVtype, y=ES, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('B: Valence effect (Other-ref.)') +
+  coord_cartesian(ylim=c(-1.1, 1.1))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
+  apatheme
+
+multiplot(p_df_4a_self, p_df_4a_other, cols=2)
+```
+
+For exmperiment 4a, we found that the main effect of valence for *d* prime under the self-referential condtions was marginally significant, `r df4a_dprime_s_anova_apa$full$Valence`. We comparied three conditions then, which showed that good-self condition () had higher *d* prime than bad-self condition (); good self condition was also higher than neutral self but there was not statistically significant. For reaction times, paired *t*-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), *t*(58) = -3.47, *p* = 0.0028, Cohen’s *d* = -0.451 CI [-0.718 -0.182], BF10 = 27.0, and  over neutral-self condition (664 ± 64), *t*(58) = -2.78, *p* = 0.013, Cohen’s  *d* = -0.362, 95% CI [-0.624 -0.097], BF10 = 4.63. The neutral-self and bad-self conditionsdid not differ, *t*(58) = -0.44, *p* = 0.89, Cohen’s *d* = 0.0499, CI [-0.305 0.206], BF10 = 0.153.
+
+For experiemnt 4b, we found that the d prime was not significant different between self- vs. other-referential condition for positive condition. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen’s d = -0.4999, 95%CI [-0.8075 -0.1872], BF10 = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen’s d = -0.3294, 95%CI [-6278 -0.0275], BF10 = 1.454. While there is is no strong evidence about the differences between bad-other vs. neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen’s d = -0.2723, 95%CI [-0.5685 0.0268], BF10 = 0.743.
+
+## Specificity of moral valence effect
 
 ## Individual difference
 
@@ -2384,8 +2520,6 @@ For the behavioral task part, we derived different indices. First, we used the m
 The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
-
-
 
 
 ```{r prepare correlational data, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
