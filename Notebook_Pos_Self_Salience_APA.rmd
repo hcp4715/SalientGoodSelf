@@ -2173,9 +2173,98 @@ p_df_4a_other <- df.ES_4a %>%
 multiplot(p_df_4a_self, p_df_4a_other, cols=2)
 ```
 
-For exmperiment 4a, we found that only under the implicit self-referential condition, i.e., when the moral words were presented as task irrelevant stimuli, there was the main effect of valence and interaction between valence and reference for both *d* prime and RT (See supplementary resuls for the detailed statistics). For *d* prime, we found good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`) had higher *d* prime than bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`); good self condition was also higher than neutral self (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']`) but there was not statistically significant, while the neutral-self condition was higher than bad self condition and not significant neither. For reaction times, good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`) were faster relative to bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`), and  over neutral-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']`). The difference between neutral-self and bad-self conditions were not significant. However, for the other-referential condition, there was no significant difference between different valence conditions.
+For exmperiment 4a, when self-reference was the target and moral valence was task-irrelevant, we found that only under the implicit self-referential condition, i.e., when the moral words were presented as task irrelevant stimuli, there was the main effect of valence and interaction between valence and reference for both *d* prime and RT (See supplementary resuls for the detailed statistics). For *d* prime, we found good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`) had higher *d* prime than bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`); good self condition was also higher than neutral self (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']`) but there was not statistically significant, while the neutral-self condition was higher than bad self condition and not significant neither. For reaction times, good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`) were faster relative to bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`), and  over neutral-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']`). The difference between neutral-self and bad-self conditions were not significant. However, for the other-referential condition, there was no significant differences between different valence conditions.
 
-For experiemnt 4b, when valence was the target and the reference was task-irrelevant, we found a strong valence effect (see supplementary results). In this experiment, the advantage of good-self conition can only be distangled by comparing the self-referential and other-referential conditions while controling the valence condition. The results revealed that Good-self condition is faster than good-other condition, *t*(44) = -2.165, *p* = 0.0358; neutral self is slower than neutral-other condition, *t*(44) = 3.064, *p* = 0.0037. Bad-self and bad-other did not show difference, *t*(44) = 0.623, *p* = 0.5363.
+```{r analyzing for d prime_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+effectList_3 <- c('Self_Other_G','Self_Other_N', 'Self_Other_B')
+
+df.ES_4b <- data.frame(matrix(, nrow=length(unique(df4b.meta.d$ExpID))*length(effectList_3)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df4b.meta.d$ExpID))*length(effectList_3)),
+                ExpID  = rep(rep(unique(df4b.meta.d$ExpID), each = length(effectList_3)), 2),
+                Effect = rep(effectList_3, length(unique(df4b.meta.d$ExpID))*2),
+                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+
+for (DVName in c('RT','dprime')){
+  if (DVName == 'RT'){
+    metaData <- df4b.meta.rt %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
+  } else{
+    metaData <- df4b.meta.d %>% dplyr::rename(Value = dprime)
+  }
+  
+  for (expName in unique(metaData$ExpID)){
+    for (effectName in effectList_3){
+      tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+      
+      if (effectName == 'Self_Other_G'){
+        
+        if (!all(is.na(tmpdata$Identity))){
+          #print(paste('processing Good_Bad_S of ', expName, sep = ''))
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Good" & Identity == 'Other')  
+          }
+        else{
+            #print(paste('Skip Good_Bad_S of ', expName, sep = ''))
+          next
+          }
+        }
+      else if (effectName == 'Self_Other_N'){
+        if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }  
+      else if (effectName == 'Self_Other_B'){
+        if (!all(is.na(tmpdata$Identity)) & 'Bad' %in% tmpdata$Valence ){
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          }
+        else{
+          next
+          }
+        }
+
+      
+      M1  <- mean(dataCond1$Value) -> df.ES_4b$M1[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES_4b$SD1[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES_4b$M2[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES_4b$SD2[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES_4b$N[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_4b$r[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName] 
+      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
+      df.ES_4b$ES[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName] <- tmp2[1,1]
+      df.ES_4b$ES.var[df.ES_4b$DVtype == DVName & df.ES_4b$ExpID == expName & df.ES_4b$Effect == effectName] <- tmp2[1,2]
+    }
+  }
+}
+
+df.ES_4b <- df.ES_4b %>%
+  dplyr::mutate(Val = ifelse(Effect == "Self_Other_G", "Good",
+                                  ifelse(Effect == "Self_Other_N", 'Neutral', 'Bad')),
+                EffectType = 'Self_Other',
+                Val = factor(Val, levels = c("Good", "Neutral", "Bad")))
+
+p_df_4b_val <- df.ES_4b %>%
+  #dplyr::filter(Identity == "Self") %>%
+  ggplot(., aes(x=DVtype, y=ES, color=Val, fill=Val)) + 
+  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('Self-ref effect') +
+  coord_cartesian(ylim=c(-1.1, 1.1))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
+  apatheme
+
+
+p_df_4b_val
+```
+
+For experiemnt 4b, when valence was the target and the reference was task-irrelevant, we found a strong valence effect (see supplementary results). In this experiment, the advantage of good-self conition can only be distangled by comparing the self-referential and other-referential conditions while controling the valence condition. We only found this modulation effect on RT. The RT of good-self (`r df.ES_4b$M1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']` $\pm$ `r df.ES_4b$SD1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`) were faster relative to good-other condition (`r df.ES_4b$M2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']` $\pm$ `r df.ES_4b$SD2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`), Cohen's *d* = `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`, 95% CI[`r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'] -  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'])` `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'] +  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'])`]. However, neutral-self (`r df.ES_4b$M1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']` $\pm$ `r df.ES_4b$SD1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`) were faster relative to good-other condition (`r df.ES_4b$M2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']` $\pm$ `r df.ES_4b$SD2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`), Cohen's *d* = `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`, 95% CI[`r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'] -  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'])` `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'] +  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'])`]. The difference between bad-self and bad-other was not significant. All the differences between self-referential and other-referential were not significant for *d* prime.
 
 ## Specificity of moral valence effect
 In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (matched trials). We found that the morality, aesthetics of human, and aesthetics of scene showed similar pattern: positive conditions had greater *d* prime and faster RT than both neutral and negative conditions while neutral and negative conditions didn't differ from each other. Emotion conditions showed a different pattern: both positive and neutral showed advantage to negative conditions, but positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics.
