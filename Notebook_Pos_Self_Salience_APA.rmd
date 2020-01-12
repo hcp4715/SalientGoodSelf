@@ -75,7 +75,7 @@ set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
-CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
+CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT", 'RT_SD')
 ```
 
 # Methods
@@ -249,6 +249,7 @@ df1a.v.rt_m <- df1a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
@@ -258,14 +259,14 @@ df1a.v.rt_m <- df1a.v %>%
 df1a.meta.d <- df1a.v.dprime_l %>% 
   dplyr::mutate(Identity = NA,
                 ExpID = 'Exp1a',
-                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+                Domain = "Morality") %>%  # add domain as morality, to be comparable with experiment 5.
   dplyr::select(CommonColnames_d)
 
 df1a.meta.rt <- df1a.v.rt_m %>% 
   dplyr::rename(RT = RT_m) %>%
   dplyr::mutate(Identity = NA,
                 ExpID = 'Exp1a',
-                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
+                Domain = "Morality") %>%  # add domain as morality, to be comparable with experiment 5.
   dplyr::select(CommonColnames_rt)
 
 # Exp 1b ====
@@ -379,6 +380,7 @@ df1b.v.rt_m <- df1b.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -497,6 +499,7 @@ df1c.v.rt_m <- df1c.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -606,6 +609,7 @@ df2.v.rt_m <- df2.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -724,6 +728,7 @@ df3a.v.rt_m <- df3a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -839,6 +844,7 @@ df3b.v.rt_m <- df3b.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site, Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -958,6 +964,7 @@ df4a.v.rt_m <- df4a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -1077,6 +1084,7 @@ df4b.v.rt_m <- df4b.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -1203,6 +1211,7 @@ df5.v.rt_m <- df5.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness,taskType,Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
@@ -1313,6 +1322,7 @@ df6a.v.rt_m <- df6a.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -1498,6 +1508,7 @@ df6b_d1.v.rt_m <- df6b_d1.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT),
+                   RT_SD = sd(RT),
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -1587,7 +1598,7 @@ df7a_m.v.dprime_l <- df7a_m.v %>%
 df7a_m.v.rt_m <- df7a_m.v %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT), Ntrial = length(RT)) %>%
+  dplyr::summarise(RT_m = mean(RT), RT_SD = sd(RT), Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
 ### prepare for the later meta-analysis
@@ -1678,6 +1689,7 @@ df7b_m.v.rt_m <- df7b_m.V %>%
   dplyr::filter(ACC == 1) %>%
   dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
   dplyr::summarise(RT_m = mean(RT)*1000,
+                   RT_SD = sd(RT)*1000,
                    Ntrial = length(RT)) %>%
   dplyr::ungroup()
 
@@ -1727,9 +1739,9 @@ df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # excl
 # Results
 ```{r first meta,echo=FALSE,results='hide'}
 # Combine the data -----
-df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df5.meta.d, df6a.meta.d) 
+df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df4b.meta.d , df5.meta.d, df6a.meta.d) 
 
-df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df5.meta.rt, df6a.meta.rt)
+df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df4b.meta.rt,df5.meta.rt, df6a.meta.rt)
 
 # Prepare the data for meta ----
 # calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
@@ -1838,7 +1850,7 @@ p_meta_val_1 <- ggplot(df.res.meta_1, aes(x=DVtype, y=Cohen_d, color=Effect, fil
   #         position=position_dodge()) +
   #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
   #               position=position_dodge(.9)) +
-  coord_cartesian(ylim=c(-1.1, 1.1))+
+  coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's  ",italic("d"), sep = ' ')))+
@@ -2017,7 +2029,7 @@ p_meta_val_2_other <- df.res.meta_2 %>%
   #         position=position_dodge()) +
   #geom_errorbar(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), width=.2,
   #               position=position_dodge(.9)) +
-  coord_cartesian(ylim=c(-1.1, 1.1))+
+  coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
@@ -2027,8 +2039,8 @@ p_meta_val_2_other <- df.res.meta_2 %>%
 ```{r 'plot_all_effect', fig.cap="Effect size (Cohen's d) across experiments.", fig.height=18, fig.width=6, warning=FALSE}
 multiplot(p_meta_val_1, p_meta_val_2_self,p_meta_val_2_other)
 ```
-## Effect of moral valence
 
+## Effect of moral valence
 In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analysis. We found differences between positive and negative conditions on RT was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`]; on *d'* was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`]. See Figure \@ref(fig:plot_all_effect) upper panel.
 
 ## Interaction between valence and self-reference
@@ -2267,7 +2279,148 @@ p_df_4b_val
 For experiemnt 4b, when valence was the target and the reference was task-irrelevant, we found a strong valence effect (see supplementary results). In this experiment, the advantage of good-self conition can only be distangled by comparing the self-referential and other-referential conditions while controling the valence condition. We only found this modulation effect on RT. The RT of good-self (`r df.ES_4b$M1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']` $\pm$ `r df.ES_4b$SD1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`) were faster relative to good-other condition (`r df.ES_4b$M2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']` $\pm$ `r df.ES_4b$SD2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`), Cohen's *d* = `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G']`, 95% CI[`r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'] -  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'])` `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'] +  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_G'])`]. However, neutral-self (`r df.ES_4b$M1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']` $\pm$ `r df.ES_4b$SD1[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`) were faster relative to good-other condition (`r df.ES_4b$M2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']` $\pm$ `r df.ES_4b$SD2[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`), Cohen's *d* = `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N']`, 95% CI[`r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'] -  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'])` `r df.ES_4b$ES[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'] +  1.96*sqrt(df.ES_4b$ES.var[df.ES_4b$DVtype == 'RT' & df.ES_4b$Effect == 'Self_Other_N'])`]. The difference between bad-self and bad-other was not significant. All the differences between self-referential and other-referential were not significant for *d* prime.
 
 ## Specificity of moral valence effect
-In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (matched trials). We found that the morality, aesthetics of human, and aesthetics of scene showed similar pattern: positive conditions had greater *d* prime and faster RT than both neutral and negative conditions while neutral and negative conditions didn't differ from each other. Emotion conditions showed a different pattern: both positive and neutral showed advantage to negative conditions, but positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics.
+
+```{r analyzing for d prime_exp5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+effectList_exp5 <- c('Good_Bad_Mrl','Good_Neut_Mrl','Neut_Bad_Mrl',
+                     'Good_Bad_BP','Good_Neut_BP','Neut_Bad_BP',
+                     'Good_Bad_BS','Good_Neut_BS','Neut_Bad_BS',
+                     'Good_Bad_Emo','Good_Neut_Emo','Neut_Bad_Emo')
+
+df.ES_5 <- data.frame(matrix(, nrow=length(unique(df5.meta.d$ExpID))*length(effectList_exp5)*2, ncol=0)) %>%
+  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df5.meta.d$ExpID))*length(effectList_exp5)),
+                ExpID  = rep(rep(unique(df5.meta.d$ExpID), each = length(effectList_exp5)), 2),
+                Effect = rep(effectList_exp5, length(unique(df4a.meta.d$ExpID))*2),
+                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+
+for (DVName in c('RT','dprime')){
+  if (DVName == 'RT'){
+    metaData <- df5.meta.rt %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
+  } else{
+    metaData <- df5.meta.d %>% dplyr::rename(Value = dprime)
+  }
+  
+  for (expName in unique(metaData$ExpID)){
+    for (effectName in effectList_exp5){
+      if (effectName == 'Good_Bad_Mrl'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+        }
+      else if (effectName == 'Good_Neut_Mrl'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
+        }  
+      else if (effectName == 'Neut_Bad_Mrl'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+      }
+      
+      else if (effectName == 'Good_Bad_BP'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+        }
+      else if (effectName == 'Good_Neut_BP'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
+        }  
+      else if (effectName == 'Neut_Bad_BP'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+      }
+      
+      else if (effectName == 'Good_Bad_BS'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+        }
+      else if (effectName == 'Good_Neut_BS'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
+        }  
+      else if (effectName == 'Neut_Bad_BS'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+      }
+      
+      else if (effectName == 'Good_Bad_Emo'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+        }
+      else if (effectName == 'Good_Neut_Emo'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
+        }  
+      else if (effectName == 'Neut_Bad_Emo'){
+        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        }
+      
+      M1  <- mean(dataCond1$Value) -> df.ES_5$M1[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
+      SD1 <- sd(dataCond1$Value)   -> df.ES_5$SD1[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] 
+      M2  <- mean(dataCond2$Value) -> df.ES_5$M2[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
+      SD2 <- sd(dataCond2$Value)   -> df.ES_5$SD2[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
+      N   <- length(unique(dataCond2$Subject)) -> df.ES_5$N[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
+      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_5$r[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] 
+      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
+      df.ES_5$ES[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] <- tmp2[1,1]
+      df.ES_5$ES.var[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] <- tmp2[1,2]
+    }
+  }
+}
+
+df.ES_5 <- df.ES_5 %>%
+  dplyr::mutate(Domain = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Neut_Mrl" | Effect == "Neut_Bad_Mrl",
+                                  "Mrl",
+                                ifelse(Effect == "Good_Bad_BP" | Effect == "Good_Neut_BP" | Effect == "Neut_Bad_BP",
+                                  "AP",
+                                  ifelse(Effect == "Good_Bad_BS" | Effect == "Good_Neut_BS" | Effect == "Neut_Bad_BS",
+                                  "AS", 'Emo'))),
+                Domain = factor(Domain, levels = c("Mrl", "AP", "AS", "Emo")),
+                EffectType = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Bad_BP"  | Effect == "Good_Bad_BS"  | Effect == "Good_Bad_Emo", "Pos_Neg",
+                                    ifelse(Effect == "Good_Neut_Mrl" | Effect == "Good_Neut_BP" | Effect == "Good_Neut_BS" | Effect == "Good_Neut_Emo", "Pos_Neut", "Neut_Neg")),
+                EffectType = factor(EffectType, levels = c("Pos_Neg", "Pos_Neut", "Neut_Neg")))
+
+p_df_5_dprime <- df.ES_5 %>%
+  dplyr::filter(DVtype == "dprime") %>%
+  ggplot(., aes(x=Domain, y=ES, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('A: Valence effect on d prime') +
+  coord_cartesian(ylim=c(-1.5, 1.5))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
+  apatheme
+
+p_df_5_RT <- df.ES_5 %>%
+  dplyr::filter(DVtype == "RT") %>%
+  ggplot(., aes(x=Domain, y=ES, color=EffectType, fill=EffectType)) + 
+  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
+                  position = position_dodge(width = 0.4),
+                  shape=18, size=1) +
+  geom_hline(yintercept=0, size=1, color='black') +
+  ggtitle('B: Valence effect on RT') +
+  coord_cartesian(ylim=c(-1.5, 1.5))+
+  scale_color_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
+  apatheme
+
+multiplot(p_df_5_dprime, p_df_5_RT, cols=2)
+```
+In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (matched trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradian on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater *d* prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene).
 
 ## Individual difference
 
@@ -2275,6 +2428,113 @@ we conducted 13 meta-analyses for both reaction times and *d* prime for both val
 
 The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
 
+# Representational Similarity Analysis
+To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence should be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
+
+More specifically, we split all experiments into two categories: experiments that only concerned about the valence of morality and experiments with orthorgal design in which both self-relevance and moral valence were manipulated. The former included experiment 1a ~ 1c, experiment 2, and 6a; the later included: experiment 3a, 3b, 6b, 7a, 7b (see table X). 
+
+To qunatify the pattern similarity between moral valence without referential processing and with referential, we used multiple ways. We used the mean RT, SD of RT, *d* prime, and drift rate derived from HDDM across all three valence levels, which will result a 12 variables.We then used the following three apporachs to estimate the similarity between moral valence without any referential and moral valence with self-referential, as well as between valence without reference with valence with other-reference. First, we estimated the geomatric of three valence by mapping all participants's data into four-demension space: mean RT, SD of RT, *d* prime, and drift rate, and then calculate the Euclidean distance. Then we calculate the Euculid distand between these condition. Second, we applied a Psychometric Network model, in which we construct a network in which each node represents a variable and the edge between node represent their partial correlation. We used LASSO penality so that the final network would be sparse. Three network will be constructed: without reference, self-reference, and other reference. Third, we adopted the classic representative similarity analysis, i.e., we constructed three disimilarity matrices for without reference, self-reference, and other-reference. And then we compare those three disimilarity matrices. 
+
+We also constructed a network based on the self-rated the psychological distance. (Impossible position of self).
+
+```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+## data for data without reference
+tmp1 <- df.meta_rt_1 %>%
+  dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
+  tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
+  
+
+tmp2 <- df.meta_d_1 %>%
+  dplyr::filter(Domain == 'Morality') %>%
+  tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
+  dplyr::rename(dprime_Good = Good,
+                dprime_Neut = Neutral,
+                dprime_Bad = Bad)
+  
+df.meta_1_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
+
+# read the hddm parameters
+# exp_ls_1 <- c('df1a', 'df1b', 'df1c', 'df2', 'df4b' , 'df5', 'df6a')
+
+df1a.v.hddm_params <- read.csv(".\\HDDM\\df1a_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
+  dplyr::mutate(ExpID = 'Exp1a')
+
+df1b.v.hddm_params <- read.csv(".\\HDDM\\df1b_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
+  dplyr::mutate(ExpID = 'Exp1b')
+
+df5.v.hddm_params <- read.csv(".\\HDDM\\df5_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
+  dplyr::mutate(ExpID = 'Exp5')
+
+df6a.v.hddm_params <- read.csv(".\\HDDM\\df6a_hddm_params.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+  tidyr::drop_na() %>%
+  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
+  dplyr::mutate(ExpID = 'Exp6a')
+
+df.meata_hddm_1 <- rbind(df1a.v.hddm_params, df1b.v.hddm_params, df5.v.hddm_params)
+
+df.meta_1_wide <- merge(df.meta_1_wide,df.meata_hddm_1)
+
+## Network analysis
+# group the items for later legend
+nodeNames <- colnames(df.meta_1_wide[,9:26])
+gr <- list(c(1, 2, 3),
+           c(4, 5, 6),
+           c(7, 8, 9),
+           c(10, 11, 12),
+           c(13, 14, 15),
+           c(16, 17, 18))
+df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[,9:26])
+df.meta_1_nw <- bootnet::estimateNetwork(df.meta_1_corr, default = "EBICglasso")
+
+#type <- rep('g', 9)                 #g=gaussian, 20 = number of nodes in the network
+
+#df.meta_1_fit  <- mgm::mgm(na.omit(df.meta_1_wide[,9:17]), type=type, lev=rep(1,20)) 
+#df.meta_1_pred <- predict(df.meta_1_fit, na.omit(df.meta_1_wide[,9:17]))
+
+### Plot networks
+# network of all data
+pdf("Network_1.pdf", width=10, height=7)
+network1_all_G <- plot(df.meta_1_nw,
+                       title="Without Reference", 
+                       maximum=.47,
+                       #labels = TRUE,
+                       nodeNames = nodeNames,
+                       #pie = df.meta_1_pred$error$R2,
+                       layout = 'spring',
+                       #groups = gr,
+                       #color = c("#d7191c", "#fdae61", "#abd9e9"), # , "#2c7bb6", "#aa00ff"),
+                       legend.cex = .35,
+                       border.width=2, border.color='#555555')       # max=0.47
+#qgraph(graph1)
+dev.off()
+```
 
 ```{r third meta,echo=FALSE,results='hide'}
 df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
@@ -2566,22 +2826,13 @@ Figure \@ref(fig:meta-all-self-ref) shows meta-analytic results for the effect o
 As for the self-relevance effect, we found that there was no overall self-relevance effect on both *d* prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`]) and RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`]). When looking at different valence conditions, we found that self condition was performed better than the other condition for the good condition for *d* (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`]), and also marginal for RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`]). but not for neutral or bad conditions. see Figure \@ref(fig:meta-all-self-ref). 
 
 # Representational Similarity Analysis
-To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence shoudl be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
+To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence should be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
 
 More specifically, we split all experiments into two categories: experiments that only concerned about the valence of morality and experiments with orthorgal design in which both self-relevance and moral valence were manipulated. The former included experiment 1a ~ 1c, experiment 2, and 6a; the later included: experiment 3a, 3b, 6b, 7a, 7b (see table X). 
 
-To qunatify the representational similarity, we used the standard way. First, we used the reation times to construct the disimilarity matrices. To get more nuanced picture, we included nine shape-label pairs: good-good, good-neutral, good-bad, neutral-good, neutral-neutral, neutral-bad, bad-good, bad-neutral, bad-bad. Then we calculated the median RT of correct trials for each participants, by combine all experiment that only included moral valence as IV, we calculated the correlation matrix, and used 1-r to get the dissimilarity matrix. Also, we constructed an error rate matrix in which the parttern used the error rate of each condition.
+To qunatify the pattern similarity between moral valence without referential processing and with referential, we used multiple ways. We used the mean RT, SD of RT, *d* prime, and drift rate derived from HDDM across all three valence levels, which will result a 12 variables.We then used the following three apporachs to estimate the similarity between moral valence without any referential and moral valence with self-referential, as well as between valence without reference with valence with other-reference. First, we estimated the geomatric of three valence by mapping all participants's data into four-demension space: mean RT, SD of RT, *d* prime, and drift rate, and then calculate the Euclidean distance. Then we calculate the Euculid distand between these condition. Second, we applied a Psychometric Network model, in which we construct a network in which each node represents a variable and the edge between node represent their partial correlation. We used LASSO penality so that the final network would be sparse. Three network will be constructed: without reference, self-reference, and other reference. Third, we adopted the classic representative similarity analysis, i.e., we constructed three disimilarity matrices for without reference, self-reference, and other-reference. And then we compare those three disimilarity matrices. 
 
-Then we compared this matrix to the same matrix under self-relevant and other-relevant conditions in the experiments in which self-relevance were manipulated. based on the dissimilarity index, we can infer whether the moral valence condition is more similar to the self or to the other conditions.
-
-We used two indices to quantify the representation similarity: data from each condition and the difference between two conditions. The former index will focus on the drift rate decomposed from DDM, which may represent the processing speed for different conditions. For the later approach, we used the standardized effect size between different conditions. The latter approach can be further compared with the behavioral data in which participants reported the personal distance. We used the Good-Bad, Good-Neutral, Neutral-Bad distance.
-
-We hypothesize that for the firs index, the similarity between selfcondition and the moral valence condition is higher than the similarity between other condition and moral valence condition. For the second index, we also expect that the similarity will be higher for the self condition and moral valence condition than between other condition and valence condition. More interesting, we would expect the similar would also high between the personal rating.
-
-(mean RT, sd of RT, d prime, and three parameters derived from HDDM across all three valence levels, which will result a 20 by 20 correlation matrix. For the experiment included the self-relevance, we do the same analysis for self condition and other conditions separately, result in one 21 by 21 matrix for self and 21 by 21 matrix for other condition. Then, we will compare the representational matrix of morality (without self-relevence) to the matrix of morality of the self and of the other.
-
-The dissimilarity values could come from reaction times, accuracy, and the derived the indcies.  
-To test the We also analyzed the relationship between behavioral response and self-reported psychological traits. First, we conducted repeated measure ANOVAs for the psychological distance across all experiment, to check the validity of psychological distance. We predicted that the distance between self and good person should be the shortest, while self and bad-person would show longest distance. Second, we conducted a correlation analysis for behavioral data and score data, i.e., between psychological distance and the bias in perceptual matching task. 
+We also constructed a network based on the self-rated the psychological distance. (Impossible position of self).
 
 ```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # data for moral valence effect: 1a ~ 1c, experiment 2, 5, and 6a
@@ -2718,10 +2969,10 @@ mrlIdExtKeys <- c(1:7)
 
 ### Prepare the data for hddm
 #expNameList <- unique(df.scales.v$expID)
-#dataList <- list(df1a.v, df1b.v, df4a.v, df4b.v, df5.v, df6b_d1.v, df7a_m.v, df7b_m.V, df3b.v)
+#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.V)
 #hddmNameList <- c('df1a.v', 'df1b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6b_d1.v', 'df7a_m.v', 'df7b_m.V', 'df3b.v')
 #for (indx in 1:length(unique(df.scales.v$expID))) {
-##for (dfname in hddmNameList){
+#for (dfname in hddmNameList){
 #  current.df <- dataList[[indx]]
 #  if ('Resp' %in% colnames(current.df)){
 #    current.df <- current.df %>% dplyr::rename(RESP = Resp)

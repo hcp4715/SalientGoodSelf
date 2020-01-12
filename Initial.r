@@ -15,7 +15,7 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "afex", 'emmeans', 
+pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "afex", 'emmeans','lsmeans',
                 "BayesFactor","psych","corrplot","readr", 'lme4',
                 "MBESS","Hmisc",'mosaic', 'here'))
 
