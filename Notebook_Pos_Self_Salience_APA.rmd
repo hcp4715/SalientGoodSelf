@@ -2438,8 +2438,67 @@ To qunatify the pattern similarity between moral valence without referential pro
 We also constructed a network based on the self-rated the psychological distance. (Impossible position of self).
 
 ```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# read the hddm parameters ----
+### Prepare the data for hddm
 
-## data for data without reference
+#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
+#hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
+#for (indx in 1:13) {
+ # for (dfname in hddmNameList){
+#  current.df <- dataList[[indx]]
+#  if ('Resp' %in% colnames(current.df)){
+#    current.df <- current.df %>% dplyr::rename(RESP = Resp)
+#  }
+#  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
+#  if (indx %in% c(1:4, 10)){                                           # for exp 1a and 1b, 2*3 design
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+#  } else if (indx == 9){    # exp5                                      # for exp 5, only select morality task
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(taskType == 'Morality') %>%
+      #dplyr::filter(Subject %in% subj.common) %>%      # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, taskType, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, domain = taskType, val = Valence, rt = RT) # rename columns
+    
+#  } 
+#    else if (indx %in% c(5:8, 10:12))             # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
+#      {
+#      cur.df.hddm_stim <- current.df %>%
+#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+#    else if (indx == 13)
+#    {                                                    # for exp7b,  three-way design, the RT already in seconds
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+# write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
+#}
+
+# rm(dataList)
+
+# get data for valence effect ---- 
+## mean RT, SD of RT, and d prime for data without reference
 tmp1 <- df.meta_rt_1 %>%
   dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
   tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
@@ -2454,66 +2513,7 @@ tmp2 <- df.meta_d_1 %>%
   
 df.meta_1_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
 
-# read the hddm parameters
-### Prepare the data for hddm
-#expNameList <- c("Exp1a", "Exp1b", "Exp1c", "Exp2", "Exp3a","Exp3b", "Exp4a", "Exp4b","Exp5","Exp6a","Exp6b","Exp7a","Exp7b")
-dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
-hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
-for (indx in 1:13) {
- # for (dfname in hddmNameList){
-  current.df <- dataList[[indx]]
-  if ('Resp' %in% colnames(current.df)){
-    current.df <- current.df %>% dplyr::rename(RESP = Resp)
-  }
-  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
-  if (indx %in% c(1:4, 10)){                                           # for exp 1a and 1b, 2*3 design
-      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
-      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
-      dplyr::mutate(RT = RT/1000,
-                    stim = ifelse(Matchness == "Match", 1, 0),          
-                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
-      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
-  } else if (indx == 9){    # exp5                                      # for exp 5, only select morality task
-      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(taskType == 'Morality') %>%
-      #dplyr::filter(Subject %in% subj.common) %>%      # only participants with Questionnaire data
-      dplyr::filter(!is.na(RESP)) %>%                   # exclude trials without response or with wrong keys
-      dplyr::mutate(RT = RT/1000,
-                    stim = ifelse(Matchness == "Match", 1, 0),          
-                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-      dplyr::select(Subject, Matchness, taskType, Valence, stim, response, RT) %>%           # select columns
-      dplyr::rename(subj_idx = Subject, match = Matchness, domain = taskType, val = Valence, rt = RT) # rename columns
-    
-  } 
-    else if (indx %in% c(5:8, 10:12))             # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
-      {
-      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-      dplyr::mutate(RT = RT/1000,
-                    stim = ifelse(Matchness == "Match", 1, 0),          
-                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-  } 
-    else if (indx == 13)
-    {                                                    # for exp7b,  three-way design, the RT already in seconds
-      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
-      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
-      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
-                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-  } 
- write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
-}
-
-# rm(dataList)
-
-# get the parameters from hddm
+## paramters of HDDM for the data without reference
 ## read all the file name.
 params.list <- list.files('.\\HDDM\\', pattern = '*_hddm_params.csv')
 params.expname <- data.frame(params.list) %>%
@@ -2521,63 +2521,57 @@ params.expname <- data.frame(params.list) %>%
   dplyr::select(expName) %>%
   dplyr::pull()
 
-# exp_ls_1 <- c('df1a', 'df1b', 'df1c', 'df2', 'df4b' , 'df5', 'df6a')
+df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
 
-df1a.v.hddm_params <- read.csv(".\\HDDM\\df1a_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
-  dplyr::mutate(ExpID = 'Exp1a')
+rm(df_hddm_param_1)
+for (indx in 1:6){
+  #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
+  if (indx == 5 ){
+    hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_1[indx], sep = ''), header = TRUE, sep = ",",
+                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+      dplyr::filter(domain == "Morality") %>%
+      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+      tidyr::drop_na() %>%
+      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')  
+    
+  } else {
+    
+    hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_1[indx], sep = ''), header = TRUE, sep = ",",
+                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+      tidyr::drop_na() %>%
+      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')   # %>%
+      #dplyr::mutate(ExpID = 'Exp1a')
+  }
+  
+  if (exists('df_hddm_param_1')) {
+    df_hddm_param_1 <- rbind(df_hddm_param_1, hddm_params_tmp) 
+  } else {
+    df_hddm_param_1 <- hddm_params_tmp
+  }
+  
+}
 
-df1b.v.hddm_params <- read.csv(".\\HDDM\\df1b_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
-  dplyr::mutate(ExpID = 'Exp1b')
-
-df5.v.hddm_params <- read.csv(".\\HDDM\\df5_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
-  dplyr::mutate(ExpID = 'Exp5')
-
-df6a.v.hddm_params <- read.csv(".\\HDDM\\df6a_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean') %>%
-  dplyr::mutate(ExpID = 'Exp6a')
-
-df.meata_hddm_1 <- rbind(df1a.v.hddm_params, df1b.v.hddm_params, df5.v.hddm_params)
-
-df.meta_1_wide <- merge(df.meta_1_wide,df.meata_hddm_1)
+df.meta_1_wide <- merge(df.meta_1_wide, df_hddm_param_1) %>%
+  dplyr::select(-c(Domain, Identity, Matchness))
 
 ## Network analysis
 # group the items for later legend
-nodeNames <- colnames(df.meta_1_wide[,9:26])
+nodeNames <- colnames(df.meta_1_wide[,15:23])
 gr <- list(c(1, 2, 3),
            c(4, 5, 6),
            c(7, 8, 9),
            c(10, 11, 12),
            c(13, 14, 15),
            c(16, 17, 18))
-df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[,9:26])
-df.meta_1_nw <- bootnet::estimateNetwork(df.meta_1_corr, default = "EBICglasso")
+#df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[, 6:23])
+df.meta_1_nw <- bootnet::estimateNetwork(df.meta_1_wide[, 15:23], default = "EBICglasso")
 
 #type <- rep('g', 9)                 #g=gaussian, 20 = number of nodes in the network
 
@@ -2587,7 +2581,7 @@ df.meta_1_nw <- bootnet::estimateNetwork(df.meta_1_corr, default = "EBICglasso")
 ### Plot networks
 # network of all data
 pdf("Network_1.pdf", width=10, height=7)
-network1_all_G <- plot(df.meta_1_nw,
+network_meta_1 <- plot(df.meta_1_nw,
                        title="Without Reference", 
                        maximum=.47,
                        #labels = TRUE,
@@ -2600,6 +2594,112 @@ network1_all_G <- plot(df.meta_1_nw,
                        border.width=2, border.color='#555555')       # max=0.47
 #qgraph(graph1)
 dev.off()
+
+## Get data for interaction between ID & Val ----
+## mean RT, SD of RT, and d prime for data without reference
+tmp1 <- df.meta_rt_2 %>%
+  dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
+  tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
+  
+
+tmp2 <- df.meta_d_2 %>%
+  dplyr::filter(Domain == 'Morality') %>%
+  tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
+  dplyr::rename(dprime_Good = Good,
+                dprime_Neut = Neutral,
+                dprime_Bad = Bad)
+  
+df.meta_2_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
+
+## paramters of HDDM 
+## read all the file name.
+#params.list <- list.files('.\\HDDM\\', pattern = '*_hddm_params.csv')
+
+df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
+
+rm(df_hddm_param_2)
+for (indx in 1:5){
+  #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
+  hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_2[indx], sep = ''), header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+    dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val, Identity = id) %>%
+    dplyr::select(Subject, Matchness, Identity, Valence, knode_name, mean) %>%
+    tidyr::drop_na() %>%
+    tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+    dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+    tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')   # %>%
+    #dplyr::mutate(ExpID = 'Exp1a')
+  if (indx == 4 | indx == 5){
+    hddm_params_tmp <- hddm_params_tmp %>%
+      dplyr::mutate(Neutral_a = NA,
+                    Neutral_t = NA,
+                    Neutral_v = NA) %>%
+      dplyr::select(Subject, Identity, Bad_a, Good_a, Neutral_a, Bad_v, Good_v, Neutral_v, Bad_t, Good_t,
+                    Neutral_t)
+  }
+  
+  if (exists('df_hddm_param_2')) {
+    df_hddm_param_2 <- rbind(df_hddm_param_2, hddm_params_tmp) 
+  } else {
+    df_hddm_param_2 <- hddm_params_tmp
+  }
+}
+
+df.meta_2_wide <- merge(df.meta_2_wide, df_hddm_param_2) %>%
+  dplyr::select(-c(Domain, Matchness))
+
+## Network analysis
+# group the items for later legend
+nodeNames2 <- colnames(df.meta_2_wide[,16:24])
+gr <- list(c(1, 2, 3),
+           c(4, 5, 6),
+           c(7, 8, 9),
+           c(10, 11, 12),
+           c(13, 14, 15),
+           c(16, 17, 18))
+#df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[, 6:23])
+df.meta_2_nw_self <- df.meta_2_wide %>%
+  dplyr::filter(Identity == "Self") %>%
+  dplyr::select(16:24) %>%
+  tidyr::drop_na() %>%
+  bootnet::estimateNetwork(., default = "EBICglasso")
+
+df.meta_2_nw_oth <- df.meta_2_wide %>%
+  dplyr::filter(Identity == "Other") %>%
+  dplyr::select(16:24) %>%
+  tidyr::drop_na() %>%
+  bootnet::estimateNetwork(., default = "EBICglasso")
+
+### Plot networks
+# network of all data
+#pdf("Network_1.pdf", width=10, height=7)
+network_meta_2_s <- plot(df.meta_2_nw_self,
+                       title="Self Reference", 
+                       maximum=.47,
+                       #labels = TRUE,
+                       nodeNames = nodeNames2,
+                       #pie = df.meta_1_pred$error$R2,
+                       layout = 'spring',
+                       #groups = gr,
+                       #color = c("#d7191c", "#fdae61", "#abd9e9"), # , "#2c7bb6", "#aa00ff"),
+                       legend.cex = .35,
+                       border.width=2, border.color='#555555')       # max=0.47
+#qgraph(graph1)
+#dev.off()
+
+network_meta_2_o <- plot(df.meta_2_nw_oth,
+                       title="Other Reference", 
+                       maximum=.47,
+                       #labels = TRUE,
+                       nodeNames = nodeNames2,
+                       #pie = df.meta_1_pred$error$R2,
+                       layout = 'spring',
+                       #groups = gr,
+                       #color = c("#d7191c", "#fdae61", "#abd9e9"), # , "#2c7bb6", "#aa00ff"),
+                       legend.cex = .35,
+                       border.width=2, border.color='#555555')       # max=0.47
+
+multiplot(network_meta_1,network_meta_2_s,network_meta_2_o)
 ```
 
 ```{r third meta,echo=FALSE,results='hide'}
