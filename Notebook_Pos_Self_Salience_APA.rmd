@@ -2648,6 +2648,14 @@ for (indx in 1:5){
 df.meta_2_wide <- merge(df.meta_2_wide, df_hddm_param_2) %>%
   dplyr::select(-c(Domain, Matchness))
 
+df.meta_1_wide <- df.meta_1_wide %>%
+  dplyr::mutate(Identity = NA) %>%
+  dplyr::select(colnames(df.meta_2_wide))
+
+df.meta_all_wide <- df.meta_2_wide %>%
+  dplyr::filter(Identity == "Self") %>%
+  rbind(df.meta_1_wide, .)
+
 ## Network analysis
 # group the items for later legend
 nodeNames2 <- colnames(df.meta_2_wide[,16:24])
@@ -2702,7 +2710,7 @@ network_meta_2_o <- plot(df.meta_2_nw_oth,
 multiplot(network_meta_1,network_meta_2_s,network_meta_2_o)
 ```
 
-```{r third meta,echo=FALSE,results='hide'}
+```{r overall_meta,echo=FALSE,results='hide'}
 df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
                    df4b.meta.d, df5.meta.d, df6a.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
 
@@ -2961,10 +2969,6 @@ p_meta_id <- ggplot(df.res.meta.all_id, aes(x=DVtype, y=Cohen_d, fill=Group)) +
 
 ```
 
-
-
-## Results
-
 ```{r 'meta-all-val', fig.cap="Meta-analysis of RT and *d* prime for valence effect.", fig.height=6, fig.width=15, fig.align="center", warning=FALSE}
 
 multiplot(p_meta_rt_val, p_meta_dprime_val, cols = 2)
@@ -3116,6 +3120,20 @@ df.perdist <- df.scales.v %>%
                 NeutBad = NeutBadraw/sumRaw) %>%
   dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
                 SelfStra, GoodNeut, GoodBad, NeutBad)
+
+df.q_scores.v <- merge(df.q_scores.v, df.perdist)
+
+df.corr <- merge(df.q_scores.v, df.meta_all_wide[c("Subject","Bad_v", "Good_v", "Neutral_v")], by.x = 'subjID', by.y = 'Subject')
+
+#library(corrr)
+res.cor <- df.corr %>%
+  dplyr::select(-c(subjID)) %>%
+  as.matrix(.) %>%
+  #dplyr::select_if(~sum(!is.na(.)) > 0) %>%
+  Hmisc::rcorr(.)
+#res.cor
+
+corrplot::corrplot(res.cor, method="circle", type = 'upper', sig.level = .05)
 
 ### Reliability of these scales
 # self-esteem
