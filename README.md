@@ -1,4 +1,4 @@
-# Notebook for perceptual salience of positive-Self
+# Notebook for perceptual salience of positive-self
 
 Purpose: this repository provides the notebook of analyzing the results from the series of experiments on perceptual salience of positive self. 
 
