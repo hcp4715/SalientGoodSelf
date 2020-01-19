@@ -1737,6 +1737,66 @@ df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # excl
 
 ```
 
+```{r prepare data for hddm, echo=FALSE, results='hide'}
+### Prepare the data for hddm
+
+#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
+#hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
+#for (indx in 1:13) {
+ # for (dfname in hddmNameList){
+#  current.df <- dataList[[indx]]
+#  if ('Resp' %in% colnames(current.df)){
+#    current.df <- current.df %>% dplyr::rename(RESP = Resp)
+#  }
+#  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
+#  if (indx %in% c(1:4, 10)){                                           # for exp 1a and 1b, 2*3 design
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+#  } else if (indx == 9){    # exp5                                      # for exp 5, only select morality task
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(taskType == 'Morality') %>%
+      #dplyr::filter(Subject %in% subj.common) %>%      # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, taskType, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, domain = taskType, val = Valence, rt = RT) # rename columns
+    
+#  } 
+#    else if (indx %in% c(5:8, 10:12))             # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
+#      {
+#      cur.df.hddm_stim <- current.df %>%
+#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+#    else if (indx == 13)
+#    {                                                    # for exp7b,  three-way design, the RT already in seconds
+#      cur.df.hddm_stim <- current.df %>%
+      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+# write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
+#}
+
+# rm(dataList)
+```
+
 # Results
 ```{r first meta,echo=FALSE,results='hide'}
 # Combine the data -----
@@ -2037,7 +2097,7 @@ p_meta_val_2_other <- df.res.meta_2 %>%
 ```
 
 ```{r 'plot_all_effect', fig.cap="Effect size (Cohen's d) across experiments.", fig.height=18, fig.width=6, warning=FALSE}
-multiplot(p_meta_val_1, p_meta_val_2_self,p_meta_val_2_other)
+multiplot(p_meta_val_1, p_meta_val_2_self,p_meta_val_2_other, cols = 3)
 ```
 
 ## Effect of moral valence
@@ -2390,119 +2450,34 @@ df.ES_5 <- df.ES_5 %>%
                                     ifelse(Effect == "Good_Neut_Mrl" | Effect == "Good_Neut_BP" | Effect == "Good_Neut_BS" | Effect == "Good_Neut_Emo", "Pos_Neut", "Neut_Neg")),
                 EffectType = factor(EffectType, levels = c("Pos_Neg", "Pos_Neut", "Neut_Neg")))
 
-p_df_5_dprime <- df.ES_5 %>%
-  dplyr::filter(DVtype == "dprime") %>%
-  ggplot(., aes(x=Domain, y=ES, color=EffectType, fill=EffectType)) + 
-  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
-                  position = position_dodge(width = 0.4),
-                  shape=18, size=1) +
-  geom_hline(yintercept=0, size=1, color='black') +
-  ggtitle('A: Valence effect on d prime') +
-  coord_cartesian(ylim=c(-1.5, 1.5))+
-  scale_color_brewer(palette = "Dark2")+
-  scale_fill_brewer(palette = "Dark2")+
-  ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
-  apatheme
-
 p_df_5_RT <- df.ES_5 %>%
-  dplyr::filter(DVtype == "RT") %>%
-  ggplot(., aes(x=Domain, y=ES, color=EffectType, fill=EffectType)) + 
+  #dplyr::filter(DVtype == "RT") %>%
+  ggplot(., aes(x=DVtype, y=ES, color=EffectType, fill=EffectType)) + 
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
                   position = position_dodge(width = 0.4),
                   shape=18, size=1) +
   geom_hline(yintercept=0, size=1, color='black') +
-  ggtitle('B: Valence effect on RT') +
+  ggtitle('Valence effect across different domains') +
   coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Cohen's ",italic("d"), sep = ' ')))+
-  apatheme
-
-multiplot(p_df_5_dprime, p_df_5_RT, cols=2)
+  facet_wrap( ~ Domain, ncol = 4) +
+  apatheme 
 ```
 In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (matched trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradian on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater *d* prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene).
 
 ## Correlation analyses
 As the reliability of the quesetionnaire can be found in [@Liu_2020_JOPD]. Then we calculated the correlation between the data from behavioral task and the questionnaire data. 
 
-For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
+For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's *d*.
+
+The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
 
-
-
-we conducted 13 meta-analyses for both reaction times and *d* prime for both valence effect and self-relevance effect. For the valence effect, we compared the differences between valences for over all effect as well as for self-referential and other-referential separately. The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
-
-The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
-
-# Representational Similarity Analysis
-To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence should be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
-
-More specifically, we split all experiments into two categories: experiments that only concerned about the valence of morality and experiments with orthorgal design in which both self-relevance and moral valence were manipulated. The former included experiment 1a ~ 1c, experiment 2, and 6a; the later included: experiment 3a, 3b, 6b, 7a, 7b (see table X). 
-
-To qunatify the pattern similarity between moral valence without referential processing and with referential, we used multiple ways. We used the mean RT, SD of RT, *d* prime, and drift rate derived from HDDM across all three valence levels, which will result a 12 variables.We then used the following three apporachs to estimate the similarity between moral valence without any referential and moral valence with self-referential, as well as between valence without reference with valence with other-reference. First, we estimated the geomatric of three valence by mapping all participants's data into four-demension space: mean RT, SD of RT, *d* prime, and drift rate, and then calculate the Euclidean distance. Then we calculate the Euculid distand between these condition. Second, we applied a Psychometric Network model, in which we construct a network in which each node represents a variable and the edge between node represent their partial correlation. We used LASSO penality so that the final network would be sparse. Three network will be constructed: without reference, self-reference, and other reference. Third, we adopted the classic representative similarity analysis, i.e., we constructed three disimilarity matrices for without reference, self-reference, and other-reference. And then we compare those three disimilarity matrices. 
-
-We also constructed a network based on the self-rated the psychological distance. (Impossible position of self).
-
-```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r correlation analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # read the hddm parameters ----
-### Prepare the data for hddm
-
-#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
-#hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
-#for (indx in 1:13) {
- # for (dfname in hddmNameList){
-#  current.df <- dataList[[indx]]
-#  if ('Resp' %in% colnames(current.df)){
-#    current.df <- current.df %>% dplyr::rename(RESP = Resp)
-#  }
-#  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
-#  if (indx %in% c(1:4, 10)){                                           # for exp 1a and 1b, 2*3 design
-#      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
-#  } else if (indx == 9){    # exp5                                      # for exp 5, only select morality task
-#      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(taskType == 'Morality') %>%
-      #dplyr::filter(Subject %in% subj.common) %>%      # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, taskType, Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, domain = taskType, val = Valence, rt = RT) # rename columns
-    
-#  } 
-#    else if (indx %in% c(5:8, 10:12))             # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
-#      {
-#      cur.df.hddm_stim <- current.df %>%
-#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-#  } 
-#    else if (indx == 13)
-#    {                                                    # for exp7b,  three-way design, the RT already in seconds
-#      cur.df.hddm_stim <- current.df %>%
-      #dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
-#      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-#  } 
-# write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
-#}
-
-# rm(dataList)
 
 # get data for valence effect ---- 
 ## mean RT, SD of RT, and d prime for data without reference
@@ -2510,7 +2485,6 @@ tmp1 <- df.meta_rt_1 %>%
   dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
   tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
   
-
 tmp2 <- df.meta_d_1 %>%
   dplyr::filter(Domain == 'Morality') %>%
   tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
@@ -2530,7 +2504,7 @@ params.expname <- data.frame(params.list) %>%
 
 df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
 
-rm(df_hddm_param_1)
+#rm(df_hddm_param_1)
 for (indx in 1:6){
   #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
   if (indx == 5 ){
@@ -2568,40 +2542,6 @@ for (indx in 1:6){
 df.meta_1_wide <- merge(df.meta_1_wide, df_hddm_param_1) %>%
   dplyr::select(-c(Domain, Identity, Matchness))
 
-## Network analysis
-# group the items for later legend
-nodeNames <- colnames(df.meta_1_wide[,15:23])
-gr <- list(c(1, 2, 3),
-           c(4, 5, 6),
-           c(7, 8, 9),
-           c(10, 11, 12),
-           c(13, 14, 15),
-           c(16, 17, 18))
-#df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[, 6:23])
-df.meta_1_nw <- bootnet::estimateNetwork(df.meta_1_wide[, 15:23], default = "EBICglasso")
-
-#type <- rep('g', 9)                 #g=gaussian, 20 = number of nodes in the network
-
-#df.meta_1_fit  <- mgm::mgm(na.omit(df.meta_1_wide[,9:17]), type=type, lev=rep(1,20)) 
-#df.meta_1_pred <- predict(df.meta_1_fit, na.omit(df.meta_1_wide[,9:17]))
-
-### Plot networks
-# network of all data
-pdf("Network_1.pdf", width=10, height=7)
-network_meta_1 <- plot(df.meta_1_nw,
-                       title="Without Reference", 
-                       maximum=.47,
-                       #labels = TRUE,
-                       nodeNames = nodeNames,
-                       #pie = df.meta_1_pred$error$R2,
-                       layout = 'spring',
-                       #groups = gr,
-                       #color = c("#d7191c", "#fdae61", "#abd9e9"), # , "#2c7bb6", "#aa00ff"),
-                       legend.cex = .35,
-                       border.width=2, border.color='#555555')       # max=0.47
-#qgraph(graph1)
-dev.off()
-
 ## Get data for interaction between ID & Val ----
 ## mean RT, SD of RT, and d prime for data without reference
 tmp1 <- df.meta_rt_2 %>%
@@ -2620,11 +2560,9 @@ df.meta_2_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
 
 ## paramters of HDDM 
 ## read all the file name.
-#params.list <- list.files('.\\HDDM\\', pattern = '*_hddm_params.csv')
-
 df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
 
-rm(df_hddm_param_2)
+#rm(df_hddm_param_2)  # in case the variable exist in the env.
 for (indx in 1:5){
   #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
   hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_2[indx], sep = ''), header = TRUE, sep = ",",
@@ -2663,33 +2601,125 @@ df.meta_all_wide <- df.meta_2_wide %>%
   dplyr::filter(Identity == "Self") %>%
   rbind(df.meta_1_wide, .)
 
+library(mosaic) # using this library for its derivedFactor function
+# prepare questionnare data
+df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
+                                      "Exp1b" = (expID == "exp1.1"),
+                                      "Exp3a" = (expID == "exp3"),
+                                      "Exp3b" = (expID == "exp3.1"),
+                                      "Exp4a" = (expID == "exp4.1"),
+                                      "Exp4b" = (expID == "exp4.2"),
+                                      "Exp5" = (expID == "exp5.2"),
+                                      "Exp6b" = (expID == "exp6.2"),
+                                      "Exp7a" = (expID == "exp7.1"),
+                                      "Exp7b" = (expID == "exp7r"),
+                                      "Exp_dpr" = (expID == "exp6"),
+                                      .method ="first", .default = NA),
+                expID = as.character(expID))
+
+# intersection between participant from behavioral task and scales and get the data
+subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253
+
+df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
+  dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
+
+## get the questionnaire names
+# Self-esteem
+SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
+
+# moral identity
+mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
+                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
+                "morId_13","morId_14","morId_15","morId_16")
+mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
+                   "morId_12","morId_13","morId_14")
+mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
+                   "morId_15", "morId_16")
+
+# moral self images
+mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
+                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
+
+# personal distance
+perDistNames <- c("SelfSelf", 
+                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
+                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
+                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
+                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
+                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
+                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
+                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
+
+# calculate the average score of each relevant scale
+df.q_scores.v <- df.scales.v %>%
+  dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
+                mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
+                mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),
+                mrlslfImg = rowMeans(.[, mrlslfImgNames], na.rm = F),
+                ) %>%
+  dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
+
+df.perdist <- df.scales.v %>%
+  dplyr::select(c(expID, subjID),perDistNames) %>%
+  #dplyr::rowwise() %>%
+  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
+                SelfSelfraw = SelfSelf,
+                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
+                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
+                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
+                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
+                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
+                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
+                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
+  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
+                SelfGoodraw, SelfNeutraw, SelfBadraw,
+                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
+  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
+                SelfGood = SelfGoodraw/sumRaw,
+                SelfNeut = SelfNeutraw/sumRaw,
+                SelfBad = SelfBadraw/sumRaw,
+                SelfStra = SelfStraraw/sumRaw, 
+                GoodNeut = GoodNeutraw/sumRaw, 
+                GoodBad = GoodBadraw/sumRaw, 
+                NeutBad = NeutBadraw/sumRaw) %>%
+  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
+                SelfStra, GoodNeut, GoodBad, NeutBad)
+
+df.q_scores.v <- merge(df.q_scores.v, df.perdist)
+
+df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
+  dplyr::select(-c(14:18)) %>%
+  dplyr::select(-c(SelfSelf, SelfStra)) %>%
+  dplyr::select(1:5, 8,6,7,10,9,11, 18:20, 24:26, 27:29, 12:17, 21:23) %>%
+  dplyr::na_if("NaN")
+
+#library(corrr)
+res.cor <- df.corr %>%
+  dplyr::select(-c(subjID)) %>%
+  as.matrix(.) %>%
+  #dplyr::select_if(~sum(!is.na(.)) > 0) %>%
+  Hmisc::rcorr(.)
+
+corrplot::corrplot(res.cor$r, method="color", sig.level = .2, order = "FPC")
+
 ## Network analysis
 # group the items for later legend
-nodeNames2 <- colnames(df.meta_2_wide[,16:24])
-gr <- list(c(1, 2, 3),
-           c(4, 5, 6),
-           c(7, 8, 9),
-           c(10, 11, 12),
-           c(13, 14, 15),
-           c(16, 17, 18))
-#df.meta_1_corr <- qgraph::cor_auto(df.meta_1_wide[, 6:23])
-df.meta_2_nw_self <- df.meta_2_wide %>%
-  dplyr::filter(Identity == "Self") %>%
-  dplyr::select(16:24) %>%
-  tidyr::drop_na() %>%
-  bootnet::estimateNetwork(., default = "EBICglasso")
+nodeNames2 <- colnames(df.corr[,2:29])
+gr <- list(c(1: 4),
+           c(5: 11),
+           c(12: 29))
 
-df.meta_2_nw_oth <- df.meta_2_wide %>%
-  dplyr::filter(Identity == "Other") %>%
-  dplyr::select(16:24) %>%
-  tidyr::drop_na() %>%
-  bootnet::estimateNetwork(., default = "EBICglasso")
+df.meta_nw <- df.corr %>%
+  #dplyr::select(-c(subjID)) %>%
+  dplyr::select(c(6:11)) %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", missing = 'pairwise')
 
 ### Plot networks
-# network of all data
 #pdf("Network_1.pdf", width=10, height=7)
-network_meta_2_s <- plot(df.meta_2_nw_self,
-                       title="Self Reference", 
+network_meta <- plot(df.meta_nw,
+                       title="network", 
                        maximum=.47,
                        #labels = TRUE,
                        nodeNames = nodeNames2,
@@ -2702,24 +2732,12 @@ network_meta_2_s <- plot(df.meta_2_nw_self,
 #qgraph(graph1)
 #dev.off()
 
-network_meta_2_o <- plot(df.meta_2_nw_oth,
-                       title="Other Reference", 
-                       maximum=.47,
-                       #labels = TRUE,
-                       nodeNames = nodeNames2,
-                       #pie = df.meta_1_pred$error$R2,
-                       layout = 'spring',
-                       #groups = gr,
-                       #color = c("#d7191c", "#fdae61", "#abd9e9"), # , "#2c7bb6", "#aa00ff"),
-                       legend.cex = .35,
-                       border.width=2, border.color='#555555')       # max=0.47
-
-multiplot(network_meta_1,network_meta_2_s,network_meta_2_o)
 ```
 
+
+
 ```{r overall_meta,echo=FALSE,results='hide'}
-df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d,
-                   df4b.meta.d, df5.meta.d, df6a.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
+df.meta_d <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df3a.meta.d, df3b.meta.d, df4a.meta.d, df4b.meta.d, df5.meta.d, df6a.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
 
 df.meta_rt <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df3a.meta.rt, df3b.meta.rt, df4a.meta.rt,
                    df4b.meta.rt, df5.meta.rt, df6a.meta.rt, df6b.meta.rt, df7a_m.meta.rt, df7b_m.meta.rt)
@@ -2981,7 +2999,9 @@ p_meta_id <- ggplot(df.res.meta.all_id, aes(x=DVtype, y=Cohen_d, fill=Group)) +
 multiplot(p_meta_rt_val, p_meta_dprime_val, cols = 2)
 
 ```
+we conducted 13 meta-analyses for both reaction times and *d* prime for both valence effect and self-relevance effect. For the valence effect, we compared the differences between valences for over all effect as well as for self-referential and other-referential separately. The Good-Bad contrast included 13 experiments (1a - 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad' & df.ES_sum$DVtype == 'dprime']`) while the Good-Neutral and Neutral-Bad contrasts included 11 experiments (1a ~ 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad' & df.ES_sum$DVtype == 'dprime']`). Then we combined the experiments with the variable of self-referential, and calculated the effect of valence for self-referential and other-referential separately. For the Good-Bad contrast, both self- and other-referential condition included 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Good_Bad_S' & df.ES_sum$DVtype == 'dprime']`), while for the Good-Neutral and Neutroal contrast, both conditions included 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Neut_Bad_S' & df.ES_sum$DVtype == 'dprime']`).
 
+The self-referential effect was also calculated overall as well as under three valence conditions. The overall self-referential effect and the self-referential effect under good and bad conditions was estimated from 7 experiments (3a, 3b, 4a, 4b, 6b, 7a, 7b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other' & df.ES_sum$DVtype == 'dprime']`), while the self-referential effect under the neutral condition were estimated from 5 experiments (3a, 3b, 4a, 4b, 6b, N = `r df.ES_sum$Nsubj[df.ES_sum$Effect == 'Self_Other_N' & df.ES_sum$DVtype == 'dprime']`)
 
 Figure \@ref(fig:meta-all-val) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
 
@@ -2997,346 +3017,9 @@ p_meta_id
 
 ```
 
-
 Figure \@ref(fig:meta-all-self-ref) shows meta-analytic results for the effect of *d* prime and reaction times from Good-Bad, Good-Neutral, and Neutral-Bad contrast. 
 
 As for the self-relevance effect, we found that there was no overall self-relevance effect on both *d* prime (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other']`]) and RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other']`]). When looking at different valence conditions, we found that self condition was performed better than the other condition for the good condition for *d* (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'dprime' & df.res.meta.all$Effect == 'Self_Other_G']`]), and also marginal for RT (Cohen's *d* = `r df.res.meta.all$Cohen_d[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`, 95%CI[`r df.res.meta.all$CI_low[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']` `r df.res.meta.all$CI_upp[df.res.meta.all$DVtype == 'RT' & df.res.meta.all$Effect == 'Self_Other_G']`]). but not for neutral or bad conditions. see Figure \@ref(fig:meta-all-self-ref). 
-
-# Representational Similarity Analysis
-To test the hypothesis that the valence effect of morality in the associative learning was driven by the spontaneous self-referential processing, we conducted a representional similarity analysis on the behavioral data (Kiani et al., 2007; Op de Beeck et al, 2001). The logic is as follow: if the valence effect in morality is driven by self-referential process, then it representations of different moral valence should be in a pattern that similar to the pattern of moral valence when self is explicitly activated, i.e., the self-relevant condition, but dissimilar to the pattern of moral valence when the self is explicit not referred.
-
-More specifically, we split all experiments into two categories: experiments that only concerned about the valence of morality and experiments with orthorgal design in which both self-relevance and moral valence were manipulated. The former included experiment 1a ~ 1c, experiment 2, and 6a; the later included: experiment 3a, 3b, 6b, 7a, 7b (see table X). 
-
-To qunatify the pattern similarity between moral valence without referential processing and with referential, we used multiple ways. We used the mean RT, SD of RT, *d* prime, and drift rate derived from HDDM across all three valence levels, which will result a 12 variables.We then used the following three apporachs to estimate the similarity between moral valence without any referential and moral valence with self-referential, as well as between valence without reference with valence with other-reference. First, we estimated the geomatric of three valence by mapping all participants's data into four-demension space: mean RT, SD of RT, *d* prime, and drift rate, and then calculate the Euclidean distance. Then we calculate the Euculid distand between these condition. Second, we applied a Psychometric Network model, in which we construct a network in which each node represents a variable and the edge between node represent their partial correlation. We used LASSO penality so that the final network would be sparse. Three network will be constructed: without reference, self-reference, and other reference. Third, we adopted the classic representative similarity analysis, i.e., we constructed three disimilarity matrices for without reference, self-reference, and other-reference. And then we compare those three disimilarity matrices. 
-
-We also constructed a network based on the self-rated the psychological distance. (Impossible position of self).
-
-```{r RSA analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# data for moral valence effect: 1a ~ 1c, experiment 2, 5, and 6a
-colnames(df1a.v)
-colnames(df1b.v)
-colnames(df1c.v)
-colnames(df2.v)
-#head(df5.v)
-colnames(df6a.v)
-# df.val <- 
-
-# data from conditions with self-reference
-
-```
-
-
-#### Correlation Analysis
-We reported all the reliability of the questionnaires. Then we calculated the correlation between the data from behavioral task and the questionnaire data. 
-
-For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's *d*.
-
-The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
-
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
-
-
-```{r prepare correlational data, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-library(mosaic) # using this library for its derivedFactor function
-# prepare questionnare data
-df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
-                                      "Exp1b" = (expID == "exp1.1"),
-                                      "Exp3a" = (expID == "exp3"),
-                                      "Exp3b" = (expID == "exp3.1"),
-                                      "Exp4a" = (expID == "exp4.1"),
-                                      "Exp4b" = (expID == "exp4.2"),
-                                      "Exp5" = (expID == "exp5.2"),
-                                      "Exp6b" = (expID == "exp6.2"),
-                                      "Exp7a" = (expID == "exp7.1"),
-                                      "Exp7b" = (expID == "exp7r"),
-                                      "Exp_dpr" = (expID == "exp6"),
-                                      .method ="first", .default = NA),
-                expID = as.character(expID))
-
-# intersection between participant from behavioral task and scales and get the data
-subj.common <- intersect(df.scales$subjID, unique(df.meta_d$Subject))  # 352
-
-df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
-  dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
-
-## get the questionnaire names
-# Self-esteem
-SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
-
-# moral identity
-mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
-                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
-                "morId_13","morId_14","morId_15","morId_16")
-mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
-                   "morId_12","morId_13","morId_14")
-mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
-                   "morId_15", "morId_16")
-
-# moral self images
-mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
-                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
-
-# personal distance
-perDistNames <- c("SelfSelf", 
-                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
-                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
-                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
-                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
-                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
-                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
-                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
-
-# calculate the average score of each relevant scale
-df.q_scores.v <- df.scales.v %>%
-  dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
-                mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
-                mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),
-                mrlslfImg = rowMeans(.[, mrlslfImgNames], na.rm = F),
-                ) %>%
-  dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
-
-
-df.perdist <- df.scales.v %>%
-  dplyr::select(c(expID, subjID),perDistNames) %>%
-  #dplyr::rowwise() %>%
-  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
-                SelfSelfraw = SelfSelf,
-                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
-                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
-                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
-                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
-                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
-                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
-                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
-  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
-                SelfGoodraw, SelfNeutraw, SelfBadraw,
-                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
-  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
-                SelfGood = SelfGoodraw/sumRaw,
-                SelfNeut = SelfNeutraw/sumRaw,
-                SelfBad = SelfBadraw/sumRaw,
-                SelfStra = SelfStraraw/sumRaw, 
-                GoodNeut = GoodNeutraw/sumRaw, 
-                GoodBad = GoodBadraw/sumRaw, 
-                NeutBad = NeutBadraw/sumRaw) %>%
-  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
-                SelfStra, GoodNeut, GoodBad, NeutBad)
-
-df.q_scores.v <- merge(df.q_scores.v, df.perdist)
-
-df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
-  dplyr::select(-c(14:18)) %>%
-  dplyr::select(-c(SelfSelf, SelfStra)) %>%
-  dplyr::select(1:5, 8,6,7,10,9,11, 18:20, 24:26, 27:29, 12:17, 21:23) %>%
-  dplyr::na_if("NaN")
-
-#library(corrr)
-res.cor <- df.corr %>%
-  dplyr::select(-c(subjID)) %>%
-  as.matrix(.) %>%
-  #dplyr::select_if(~sum(!is.na(.)) > 0) %>%
-  Hmisc::rcorr(.)
-#res.cor
-
-corrplot::corrplot(res.cor$r, method="color", sig.level = .2, order = "FPC")
-
-### Reliability of these scales
-# self-esteem
-#SESKeys <- c(1,2,-3,4,-5,6,7,8,-9,-10)   # original reverse coding
-SlfEstKeys <- c(1,2,3,4,5,6,7,8,9,10)        # reverse coded as negative
-SlfEstAlpha <-  psych::alpha(df.scales.v[,SlfEstNames], keys=SlfEstKeys)  # calculate the alpha coefficient of self esteem
-SlfEstOmega <- psych::omega(df.scales.v[,SlfEstNames])  
-print(c(SlfEstOmega$omega_h,SlfEstOmega$omega.tot)) 
-# omega.tot = .90
-
-# moral identity
-mrlIdKeys <- c(1:16)
-mrlIdIntKeys <- c(1:9)
-mrlIdExtKeys <- c(1:7)
-
-# moral self images
-
-### Prepare the data for hddm
-#expNameList <- unique(df.scales.v$expID)
-#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.V)
-#hddmNameList <- c('df1a.v', 'df1b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6b_d1.v', 'df7a_m.v', 'df7b_m.V', 'df3b.v')
-#for (indx in 1:length(unique(df.scales.v$expID))) {
-#for (dfname in hddmNameList){
-#  current.df <- dataList[[indx]]
-#  if ('Resp' %in% colnames(current.df)){
-#    current.df <- current.df %>% dplyr::rename(RESP = Resp)
-#  }
-#  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
-#  if (indx == 1 | indx == 2){                                           # for exp 1a and 1b, 2*3 design
-#      cur.df.hddm_stim <- current.df %>%
-#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
-#  } else if (indx == 5){    # exp5                                      # for exp 5, only select morality task
-#      cur.df.hddm_stim <- current.df %>%
-#      dplyr::filter(taskType == 'Morality') %>%
-#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
-#    
-#  } 
-#    else if (indx %in% c(3, 4, 6, 7, 9))                               # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
-#      {
-#      cur.df.hddm_stim <- current.df %>%
-#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(RT = RT/1000,
-#                    stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-#  } 
-#    else if (indx == 8)
-#    {                                                                   # for exp7b,  three-way design, the RT already in seconds
-#      cur.df.hddm_stim <- current.df %>%
-#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-#      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
-#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
-#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
-#  } 
-# write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
-#}
-
-# rm(dataList)
-
-# get the parameters from hddm
-## read all the file name.
-params.list <- list.files('.\\HDDM\\', pattern = '*_hddm_params.csv')
-params.expname <- data.frame(params.list) %>%
-  tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
-  dplyr::select(expName) %>%
-  dplyr::pull()
-
-#for (indx in 1:length(params.list)){
-#  
-#  df.params.tmp <- read.csv(paste('.\\HDDM\\', params.list[indx], sep = ''), header = TRUE, sep = ",",
-#                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-#    #tidyr::separate(X, into = c("X", "subjects"), sep = '[)]') %>%
-#    #tidyr::separate(X, into = c("paramName", "Condition"), sep = '[(]')
-#    dplyr::select(subj_idx, match, id, val, knode_name, mean:map) %>%
-#    tidyr::separate(knode_name, into = c('param_Name', 'postfix')) %>%
-#    dplyr::filter(!is.na(mean))  %>%
-#    tidyr::pivot_wider(id_cols = subj_idx, names_from = c(match, id, val, param_Name), values_from = mean) %>%
-#    mutate(subj_idx = as.numeric(subj_idx)) %>%
-#    dplyr::filter(subj_idx %in% subj.common)
-    
-  
-#  if (params.expname[indx] %in% c('df1a', 'df1b','df5')){
-#    print(params.list[indx])
-#    df.params.tmp <- df.params.tmp %>%
-#      dplyr::mutate(ExpID = params.expname[indx]) %>%
-#      dplyr::rename_("Subject" = "subj_idx", "Matchness" = "match", "Valence" = "val") %>%
-#      dplyr::select(ExpID, Subject, Matchness, id, Valence, knode_name, mean) %>%
-#      tidyr::drop_na() %>%
-#      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-#      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-#      tidyr::pivot_wider(., names_from = c('id','Valence', 'param'), values_from = 'mean')
-
-#  }
-  
-#  Sys.sleep(0.01)
-#  flush.console()
-#}
-
-df1a.v.hddm_params <- read.csv(".\\HDDM\\df1a_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
-
-# prepare behavioral task data for exp1b
-df1a.v.cor.anal <- df1a.v %>%
-  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
-  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
-  dplyr::group_by(Subject, Valence) %>%
-  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
-                   RT_SD   = sd(RT, na.rm = T)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = as.factor(Valence)) %>%
-  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
-  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
-  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
-
-df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df1a.v.hddm_params, by = 'Subject') # merge to cor dataframe
-df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df.perdist, by = c('Subject' = 'subjID'))
-df1a.v.cor.anal <- df1a.v.cor.anal %>% dplyr::inner_join(., df.q_scores.v, by = c('Subject' = 'subjID'))
-
-library(corrr)
-res.cor <- df1a.v.cor.anal %>%
-  dplyr::select(-c(Site:Age)) %>%
-  dplyr::select_if(~sum(!is.na(.)) > 0) %>%
-  cor()
-res.cor
-
-corrplot::corrplot(res.cor, method="circle")
-
-### Exp1b
-
-# prepare the data for hddm for exp1a
-# This data is for stim-coding. for both stimuli and resposne: match stim and button press for match is 1; for mismatch is 0;
-df1b.v.hddm_stim <- df1b.v %>%
-  dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
-  dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
-  dplyr::mutate(RT = RT/1000,
-                stim = ifelse(Matchness == "Match", 1, 0),          
-                response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-  dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
-  dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
-
-# write csv for the HDDM analyses
-# write.csv(df1b.v.hddm_stim, file = paste(curDir,'/HDDM/df1b.v.hddm_stim.csv', sep = ''), row.names = F)
-
-# get the parameters from hddm
-df1b.v.hddm_params <- read.csv(".\\HDDM\\df1b_hddm_params.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-  dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-  tidyr::drop_na() %>%
-  tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-  dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-  tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')
-
-# prepare behavioral task data for exp1b
-#df1b.v.cor.anal <- df1b.v %>%
-#  dplyr::filter(Subject %in% subj.common) %>%   # only participants with Questionnaire data
-#  dplyr::filter(ACC == 1 & Matchness == 'Match') %>%
-#  dplyr::group_by(Subject, Valence) %>%
-#  dplyr::summarise(RT_Mean = mean(RT, na.rm = T),
-#                   RT_SD   = sd(RT, na.rm = T)) %>%
-#  dplyr::inner_join(., df1a.v.dprime_l, by = c("Subject","Valence")) %>%  # merge with d prime
-#  dplyr::select("Site", "Subject", "Sex", "Age", "Valence", "RT_Mean", "RT_SD","dprime") %>%
-#  tidyr::pivot_wider(., names_from = 'Valence', values_from = c("RT_Mean", "RT_SD","dprime"))
-
-#df1b.v.cor.anal <- df1b.v.cor.anal %>% dplyr::right_join(., df1b.v.hddm_params, by = 'Subject') # merge to cor dataframe
-
-library(corrr)
-res.cor <- cor(df1a.v.cor.anal[,5:30])
-res.cor
-
-corrplot::corrplot(res.cor, method="circle")
-```
-
-
 
 # References
 ```{r create_r-references, echo=FALSE,results='hide'}

@@ -30,7 +30,9 @@ authornote: |
 
 wordcount         : "X"
 
-bibliography      : ["r-references.bib"]
+bibliography      :  
+  - r-references.bib
+  - endnote.bib
 
 floatsintext      : no
 figurelist        : no
