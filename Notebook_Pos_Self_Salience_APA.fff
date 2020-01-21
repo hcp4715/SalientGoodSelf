@@ -2,85 +2,8 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf}
-\caption{\label{fig:ex1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1b-dprime-rt-1.pdf}
-\caption{\label{fig:ex1b-dprime-rt}RT and \emph{d} prime of Experiment 1b.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1c-dprime-rt-1.pdf}
-\caption{\label{fig:ex1c-dprime-rt}RT and \emph{d} prime of Experiment 1c.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex2-dprime-rt-1.pdf}
-\caption{\label{fig:ex2-dprime-rt}RT and \emph{d} prime of Experiment 2.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex3a-dprime-rt-1.pdf}
-\caption{\label{fig:ex3a-dprime-rt}RT and \emph{d} prime of Experiment 3a.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex3b-dprime-rt-1.pdf}
-\caption{\label{fig:ex3b-dprime-rt}RT and \emph{d} prime of Experiment 3b.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex4a-dprime-rt-1.pdf}
-\caption{\label{fig:ex4a-dprime-rt}RT and \emph{d} prime of Experiment 4a.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex4b-dprime-rt-1.pdf}
-\caption{\label{fig:ex4b-dprime-rt}RT and \emph{d} prime of Experiment 4b.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex5-dprime-rt-1.pdf}
-\caption{\label{fig:ex5-dprime-rt}RT and \emph{d} prime of Experiment 5.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6a-dprime-rt-1.pdf}
-\caption{\label{fig:ex6a-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d1-dprime-rt-1.pdf}
-\caption{\label{fig:ex6b-d1-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
-\end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6b-d2-dprime-rt-1.pdf}
-\caption{\label{fig:ex6b-d2-dprime-rt}RT and \emph{d} prime of Experiment 6b.}
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_all_effect-1.pdf}
+\caption{(\#fig:plot\_all\_effect)Effect size (Cohen's d) across experiments.}
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
