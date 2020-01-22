@@ -1578,3 +1578,62 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
 # save all dataframes as 'data.rdata'
 dfs<-Filter(function(x) is.data.frame(get(x)) , ls())
 save(list=dfs[1:124], file="AllData.RData")
+
+
+# Prepare the data for hddm ----
+
+#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
+#hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
+#for (indx in 1:13) {
+# for (dfname in hddmNameList){
+#  current.df <- dataList[[indx]]
+#  if ('Resp' %in% colnames(current.df)){
+#    current.df <- current.df %>% dplyr::rename(RESP = Resp)
+#  }
+#  current.name <- paste(hddmNameList[indx],'.hddm_stim.csv', sep = '')
+#  if (indx %in% c(1:4, 10)){                                           # for exp 1a and 1b, 2*3 design
+#      cur.df.hddm_stim <- current.df %>%
+#dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) # rename columns
+#  } else if (indx == 9){    # exp5                                      # for exp 5, only select morality task
+#      cur.df.hddm_stim <- current.df %>%
+#dplyr::filter(taskType == 'Morality') %>%
+#dplyr::filter(Subject %in% subj.common) %>%      # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, taskType, Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, domain = taskType, val = Valence, rt = RT) # rename columns
+
+#  } 
+#    else if (indx %in% c(5:8, 10:12))             # for expa4a, 4b, 6b, 7a, 3b,  three-way design,
+#      {
+#      cur.df.hddm_stim <- current.df %>%
+#      #dplyr::filter(Subject %in% subj.common) %>%                       # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                                   # exclude trials without response or with wrong keys
+#      dplyr::mutate(RT = RT/1000,
+#                    stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+#    else if (indx == 13)
+#    {                                                    # for exp7b,  three-way design, the RT already in seconds
+#      cur.df.hddm_stim <- current.df %>%
+#dplyr::filter(Subject %in% subj.common) %>%          # only participants with Questionnaire data
+#      dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+#      dplyr::mutate(stim = ifelse(Matchness == "Match", 1, 0),          
+#                    response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+#      dplyr::select(Subject, Matchness, Identity,Valence, stim, response, RT) %>%           # select columns
+#      dplyr::rename(subj_idx = Subject, match = Matchness, id = Identity, val = Valence, rt = RT) # rename columns
+#  } 
+# write.csv(cur.df.hddm_stim, file = paste(curDir,'/HDDM/', current.name, sep = ''), row.names = F) 
+#}
+
+# rm(dataList)
