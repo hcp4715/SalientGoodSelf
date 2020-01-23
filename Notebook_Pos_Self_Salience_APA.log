@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  22 JAN 2020 08:14
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.10)  23 JAN 2020 08:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1031,48 +1031,60 @@ This may cause the page layout to be inconsistent, however.
 
 [1
 
-] [2] [3] [4]
-Underfull \vbox (badness 7649) has occurred while \output is active []
+] [2] [3]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[5]
+[4] [5]
 \openout3 = `Notebook_Pos_Self_Salience_APA.ttt'.
 
 (Notebook_Pos_Self_Salience_APA.ttt) [6]
-Underfull \vbox (badness 7649) has occurred while \output is active []
-
-[7] [8]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[9]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-[10]
-File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_all_effect-1.pdf G
+[7] [8] [9]
+File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-all-effect-1.pdf G
 raphic file (type pdf)
-<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_all_effect-1.pdf>
+<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-all-effect-1.pdf>
 
-Overfull \hbox (28.90636pt too wide) in paragraph at lines 245--247
+LaTeX Warning: Reference `fig:plot-all-effect' on page 10 undefined on input li
+ne 243.
+
+
+Overfull \hbox (28.91078pt too wide) in paragraph at lines 242--244
 [][] 
  []
 
-[11]
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[12]
+[10] [11]
+
+LaTeX Warning: Reference `fig:plot-all-effect' on page 12 undefined on input li
+ne 252.
+
+
+LaTeX Warning: Reference `fig:plot-all-effect' on page 12 undefined on input li
+ne 254.
+
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_exp4a_effect-1.pdf
  Graphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_exp4a_effect-1.pdf>
 
 
-Overfull \hbox (28.90639pt too wide) in paragraph at lines 264--266
+Overfull \hbox (28.90639pt too wide) in paragraph at lines 261--263
 [][] 
  []
 
-[13]
+
+Underfull \vbox (badness 6608) has occurred while \output is active []
+
+[12]
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/analyzing exp4b-1.pdf G
 raphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/analyzing exp4b-1.pdf>
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[13]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [14] [15]
@@ -1087,26 +1099,29 @@ Overfull \hbox (73.17317pt too wide) in paragraph at lines 6--35
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 462.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 459.
 [23
 
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 462.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 459.
 (./Notebook_Pos_Self_Salience_APA.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 462.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 462.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 459.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 459.
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 64B1C59E79A70A0C186B79ACDD705A98.
+(rerunfilecheck)             Checksum: A1821995F273532DE16DFBF94E0DD0D6.
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 25216 strings out of 494894
- 470003 string characters out of 6175663
- 571594 words of memory out of 5000000
+ 25214 strings out of 494894
+ 469896 string characters out of 6175663
+ 575517 words of memory out of 5000000
  28885 multiletter control sequences out of 15000+600000
- 559664 words of font info for 61 fonts, out of 8000000 for 9000
+ 559656 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 46i,10n,61p,3505b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,10n,61p,3511b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on Notebook_Pos_Self_Salience_APA.pdf (23 pages).
