@@ -185,7 +185,7 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
                 FAR  = FA/(FA+CR)) %>%                                       # fa rate
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%        # if FA rate is 0, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(FA + CA)), FAR)) %>%        # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
   dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
