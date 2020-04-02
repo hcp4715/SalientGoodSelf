@@ -91,7 +91,7 @@ fitglmm_2_1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch +
                        cores = parallel::detectCores(),
                        file = here::here("glmmModels/sdtmodel_2.1"))
 
-summary(fitglmm_2)
+summary(fitglmm_2_1)
 brms::posterior_summary(fitglmm_2)
 
 

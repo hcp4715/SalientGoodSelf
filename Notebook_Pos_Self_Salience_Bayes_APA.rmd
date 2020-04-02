@@ -177,17 +177,22 @@ $$ d' = \Phi^{-1}(HR) - \Phi^{-1}(FAR)$$
 
 $\Phi$ is the cumulative normal density function, and it used convert $z$ score into probabilities. Its inverse $\Phi^{-1}$, converts a proportion (such as hit rate or false alarm rate) into a $z$ score. Here the standardized hit and false alarm rates as $zHR$ and $zFAR$, respectively. The response criterion $c$ is given by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
 
-However, the maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters. Here we adopted a Bayesian generalized linear model, implemented by (Bürkner 2017; Stan Development Team 2016) to model the data. In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
+However, the maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters. Here we adopted a Bayesian generalized linear model, implemented by (Bürkner 2017; Stan Development Team 2016) to model the data. 
+
+In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+
+$$ y_{i} \sim Bernoulli(p_{i})$$
+We can then model this with the linear model
+
+$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
+The outcomes $y_{i}$ are 0 if the participant responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for the participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities.
+
+In each study, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierachical mode in which individual's paramter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
 the linear model
 $$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}$$
 The outcomes $y_{ij}$ are 0 if participant $j$ responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for subject $j$ is $p_{ij}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities.
-
-The nonlinear model
-$$p_{ij} = \Phi(d'_{j}IsMatch_{ij} - c) $$
-This nonlinear model gives us direct estimate of $c$ and $d'$. 
-
 
 The subjective-specific intercepts ($\beta_0 = -zFAR$) and slopes ($\beta_1 = d'$) are describe by multvariate normal with means and a covariance matrix for the parameters.
 $$\begin{bmatrix}\beta_{0j}\\
@@ -198,6 +203,27 @@ $$\begin{bmatrix}\beta_{0j}\\
 
 Given this parameterization, the intercept of the mode ($\beta_0$) is going to be the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another way of saying $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
 
+We can further consider the participant in each experiment may have different intercept and slope because of the experiment design. In this case, we have a higher level.
+
+$$ y_{ijk} \sim Bernoulli(p_{ijk})$$
+the linear model
+$$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
+The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "mismatch" on trial $i$, 1 if they responded "match". 
+
+$$\begin{bmatrix}\beta_{0jk}\\
+\beta_{1jk}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0k}\\
+\mu_{1k}\\
+\end{bmatrix}, \sum)$$
+
+and the experiment level parameter $mu_{0k}$ and $mu_{1k}$ is from a higher order distribution:
+
+$$\begin{bmatrix}\mu_{0k}\\
+\mu_{1k}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\mu_{p0}\\
+\mu_{p1}\\
+\end{bmatrix}, \sum)$$
+in which $mu_{p0}$ and $mu_{p1}$ means the population level parameter,
 
 To have a better estimation of the effect size, we reported the synthesized results in five parts: valence effect, valence-self-relevance interaction, generalizability, specificity of valence effect, and behavior-questionnaire correlation analysis. 
 
