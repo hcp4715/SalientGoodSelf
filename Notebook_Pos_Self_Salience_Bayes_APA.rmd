@@ -173,38 +173,34 @@ All data were first pre-processed using `r cite_r("r-references.bib")`. We appli
 We analyzed accuracy performanace using signal detection theory approach. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of *d’*, the match trials were regarded as signal while the mismatching trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the matching and mismatching trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here []. Trials without response were excluded from the analysis. 
 
 Previous, we used the maximum likelihood estimate of the EVSDT paramters, separately for each participant in the each experiment [@Hu_2020_GoodSelf, @Sui_2012_JEPHPP], and then used *d'* of each condition from each particiapnt as dependent variable for repeated measure ANOVAs. The *d'* is caculated as the difference of the standardized hit and false alarm rats [@Stanislaw_Todorov_1999]: 
-$$ d' = \Phi^{-1}(HR) - \Phi^{-1}(FAR)$$
+$$ d' = zHR - zFR = \Phi^{-1}(HR) - \Phi^{-1}(FAR)$$
+Here the standardized hit and false alarm rates as $zHR$ and $zFAR$, respectively. These two $z$-scores were converted from proportion (i.e., hit rate or false alarm rate) by inverse cumulative normal density function, $\Phi^{-1}$ ($\Phi$ is the cumulative normal density function, and is used convert $z$ score into probabilities). The response criterion $c$ is given by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
 
-$\Phi$ is the cumulative normal density function, and it used convert $z$ score into probabilities. Its inverse $\Phi^{-1}$, converts a proportion (such as hit rate or false alarm rate) into a $z$ score. Here the standardized hit and false alarm rates as $zHR$ and $zFAR$, respectively. The response criterion $c$ is given by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
-
-However, the maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters. Here we adopted a Bayesian generalized linear model, implemented by (Bürkner 2017; Stan Development Team 2016) to model the data. 
+However, the maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Here we adopted a hierarchical Bayesian generalized linear model (GLM), implemented by BRMs [@Bürkner_2017, @(Bürkner 2017; @Carpenter_2017_stan] to model the data. 
 
 In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
 
 $$ y_{i} \sim Bernoulli(p_{i})$$
-We can then model this with the linear model
+In a simple matching task, the probability $p_{i}$ can then be modelled as a function of the trial type:
 
 $$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
-The outcomes $y_{i}$ are 0 if the participant responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for the participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities.
+The outcomes $y_{i}$ are 0 if the participant responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the mode ($\beta_0$) is going to be the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another way of saying $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
 
-In each study, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierachical mode in which individual's paramter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
+In each experiment, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierachical mode in which individual's paramter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
-the linear model
+Similarly, the generalized linear model was extended to two levels:
 $$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}$$
-The outcomes $y_{ij}$ are 0 if participant $j$ responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for subject $j$ is $p_{ij}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities.
+The outcomes $y_{ij}$ are 0 if participant $j$ responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" resonse for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of ps. 
 
 The subjective-specific intercepts ($\beta_0 = -zFAR$) and slopes ($\beta_1 = d'$) are describe by multvariate normal with means and a covariance matrix for the parameters.
 $$\begin{bmatrix}\beta_{0j}\\
 \beta_{1j}\\
-\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
-\mu_{1}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0}\\
+\theta_{1}\\
 \end{bmatrix}, \sum)$$
 
-Given this parameterization, the intercept of the mode ($\beta_0$) is going to be the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another way of saying $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
-
-We can further consider the participant in each experiment may have different intercept and slope because of the experiment design. In this case, we have a higher level.
-
+We can further consider the participant is nested in each experiment, and each experiment, because of its variation in stimuli or stimuli presentation, may have different intercept and slope. In this case, we expand to a nested hierachical model:
 $$ y_{ijk} \sim Bernoulli(p_{ijk})$$
 the linear model
 $$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
@@ -212,22 +208,26 @@ The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "misma
 
 $$\begin{bmatrix}\beta_{0jk}\\
 \beta_{1jk}\\
-\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0k}\\
-\mu_{1k}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
 \end{bmatrix}, \sum)$$
 
 and the experiment level parameter $mu_{0k}$ and $mu_{1k}$ is from a higher order distribution:
 
-$$\begin{bmatrix}\mu_{0k}\\
-\mu_{1k}\\
-\end{bmatrix} \sim N(\begin{bmatrix}\mu_{p0}\\
-\mu_{p1}\\
+$$\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
+\mu_{1}\\
 \end{bmatrix}, \sum)$$
-in which $mu_{p0}$ and $mu_{p1}$ means the population level parameter,
+in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
+
+Using the Bayesian hierarchial model, we can directly estimate the over-all effect of valence on $d'$, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall. effect.
+
+For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better catpure a representative parameter for RTs, we used shifted log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has three parameters: shift, $\mu$, and $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution.
 
 To have a better estimation of the effect size, we reported the synthesized results in five parts: valence effect, valence-self-relevance interaction, generalizability, specificity of valence effect, and behavior-questionnaire correlation analysis. 
 
-For the first two parts, we synthesized results from individual results by mini-meta-analysis [@Goh_2016_mini]. The Mini meta-analyses were carried out in R 3.6, using the “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's *d*) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen's *d* and its variance were estimated using the following formula [@Cooper_2009_handbook]:
+The Mini meta-analyses were carried out in R 3.6, using the “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's *d*) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen's *d* and its variance were estimated using the following formula [@Cooper_2009_handbook]:
 
 $$d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
 
@@ -259,6 +259,48 @@ For the questinnaire part, we are most interested in the self-rated distance bet
 
 ```{r loadingData,echo=FALSE,results='hide'}
 load("AllData.RData")
+
+### expclude the repeated subj from the raw data
+
+# No repeating subj
+df1a.v_meta <- df1a.v
+
+# No repeating subj
+df1b.v_meta <- df1b.v
+
+# exclude participant from exp 1a
+df1c.v_meta <- df1c.v %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
+
+# exclude participant from exp 1a
+df2.v_meta <- df2.v %>% dplyr::filter(Subject > 2000)    
+
+# exclude participants from ex1b, 1c, and 2
+df3a.v_meta <- df3a.v %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) 
+
+# No repeating subj
+df3b.v_meta <- df3b.v
+
+# No repeating subj
+df4a.v_meta <- df4a.v
+
+# exclude participants from ex1b, 1c, and 2
+df4b.v_meta <- df4b.v %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   
+
+# exclude participants from ex1b, 1c, and 2
+df5.v_meta <- df5.v %>% dplyr::filter(!Subject %in% c(5201))   
+
+# exclude participants from ex1b, 1c, and 2
+df6a.v_meta <- df6a.v %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   
+
+# exclude participants from ex1b, 1c, and 2
+df6b.v_meta <- df6b_d1.v %>% dplyr::filter(!Subject %in% c(6217))   
+
+# exclude participants from ex1b, 1c, and 2
+df7a_m.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
+
+# No repeating subj
+df7b.v_meta <- df7b_m.v
+
 ```
 
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}

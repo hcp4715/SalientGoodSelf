@@ -151,7 +151,7 @@ df1b_1 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201410_2019_export.csv", heade
 df1b_2 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201705_2019_export.csv",header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
-        dplyr::mutate(Site = "WZU", Subject = Subject + 1100,
+        dplyr::mutate(Site = "WZU", Subject = Subject,
                       Val_lab = ifelse(Label == "善人", "Good",                      # re-code the label
                                        ifelse(Label == "常人", "Neutral", "Bad")))
 

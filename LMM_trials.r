@@ -3,6 +3,9 @@
 ### Bayesian Hierarchical model for Signal Detection Theory
 # here I will use the equal variance Gaussian SDT (EVSDT)
 # tutorial: https://vuorre.netlify.com/post/2017/10/12/bayesian-estimation-of-signal-detection-theory-models-part-2/
+
+Sys.setlocale("LC_ALL", "English")  # set local encoding to English
+Sys.setenv(LANG = "en") # set the feedback language to English
 library(tidyverse)
 library(brms)
 #library(bhsdtr2)
@@ -19,7 +22,6 @@ df1a.v.resp <- df1a.v %>%
   dplyr::select(Subject, Valence, Matchness, CRESP, RESP, ACC, ismatch, saymatch)
 
 # try bhsdtr2
-
 df1a.v.resp$resp_binary <- bhsdtr2::combined.response(df1a.v.resp$ismatch, 
                                                       accuracy = df1a.v.resp$ACC)
 #df1a.v.model.data <- bhsdtr2::aggregate_responses(df1a.v.resp, 'ismatch', 'resp_binary',
@@ -34,7 +36,7 @@ m_1 <- bhsdtr2::bhsdtr(c(dprim ~ Valence + (Valence | Subject),
 bhsdtr2::samples(m_1,'dprim')
 samples(m_1, 'thr')
 
-# fit a glmm
+# fit a glmm without the Valence
 fitglmm <- brms::brm(saymatch ~ 1 + ismatch + (1 + ismatch | Subject),
                      family = bernoulli(link="probit"),
                      data = df1a.v.resp,
@@ -44,7 +46,7 @@ fitglmm <- brms::brm(saymatch ~ 1 + ismatch + (1 + ismatch | Subject),
 summary(fitglmm)
 
 # add predictor valence
-# recode the matchness as effective coding
+# recode the matchness as effect coding
 # https://rstudio-pubs-static.s3.amazonaws.com/480255_9baa652276b540d0a239188b9513a026.html#(11)
 df1a.v.resp <- df1a.v.resp %>% 
   dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
@@ -82,7 +84,7 @@ fitglmm_2 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num +
 summary(fitglmm_2)
 brms::posterior_summary(fitglmm_2)
 
-# fit a glmm, GLMM, linear, effect coding
+# fit a glmm, GLMM, linear, dummy coding
 fitglmm_2_1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
                          (0 + Valence + Valence:ismatch | Subject),
                        family = bernoulli(link="probit"),
@@ -95,15 +97,46 @@ summary(fitglmm_2_1)
 brms::posterior_summary(fitglmm_2)
 
 
+# fit a glmm, GLMM, linear, effect coding, with intercept
+fitglmm_2_2 <- brms::brm(saymatch ~ Valence*ismatch_num + 
+                         (Valence*ismatch_num | Subject),
+                       family = bernoulli(link="probit"),
+                       data = df1a.v.resp,
+                       control = list(adapt_delta = .99),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdtmodel_2.2"))
+
+summary(fitglmm_2_2)
+
+# fit a glmm, GLMM, linear, dummy coding, with intercept
+fitglmm_2_3 <- brms::brm(saymatch ~ Valence*ismatch + 
+                           (Valence*ismatch | Subject),
+                         family = bernoulli(link="probit"),
+                         data = df1a.v.resp,
+                         control = list(adapt_delta = .99),
+                         cores = parallel::detectCores(),
+                         file = here::here("glmmModels/sdtmodel_2.3"))
+
+summary(fitglmm_2_3)
+stancode(fitglmm_2_3)
+
+make_stancode(saymatch ~ Valence*ismatch + 
+                (Valence*ismatch | Subject),
+              family = bernoulli(link="probit"),
+              data = df1a.v.resp,
+              control = list(adapt_delta = .99),
+              cores = parallel::detectCores(),
+              file = here::here("glmmModels/sdtmodel_2.3"))
+
 # fit a glmm, GLMM, nonlinear
-glmm3 <- bf(saymatch ~ Phi(dprime*ismatch - c),
+glmm2_4 <- bf(saymatch ~ Phi(dprime*ismatch - c),
             dprime ~ 1 + (1 |s| Subject),
             c ~ 1 + (1 |s| Subject),
-            nl = TRUE)
-Priors_glmm3 <- c(prior(normal(0, 3), nlpar = 'dprime', lb=0),
-                  prior(normal(0, 3), nlpar = 'c'),
-                  prior(student_t(10, 0, 1), class = 'sd', nlpar = 'dprime'),
-                  prior(student_t(10, 0, 1), class = 'sd', nlpar = 'c'),
+            nl = FALSE)
+Priors_glmm2_4 <- c(prior(normal(0, 3), par = 'dprime', lb=0),
+                  prior(normal(0, 3), par = 'c'),
+                  prior(student_t(10, 0, 1), class = 'sd', par = 'dprime'),
+                  prior(student_t(10, 0, 1), class = 'sd', par = 'c'),
                   prior(lkj(4), class = 'cor'))
 
 fitglmm_3 <- brms::brm(glmm3,
@@ -166,12 +199,133 @@ plot(hypothesis(fitglmm_2,
 plot(hypothesis(fitglmm_2,
                 "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
 
+### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
+#selected_columns <- c('Subject','Age', 'Sex')
+df1a.v_meta$ExpID <- 'Exp1a'
+df1b.v_meta$ExpID <- 'Exp1b'
+df1c.v_meta$ExpID <- 'Exp1c'
+df2.v_meta$ExpID <- 'Exp2'
+df5.v_meta$ExpID <- 'Exp5'
+df6a.v_meta$ExpID <- 'Exp6a'
+
+selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness','Valence', 'RESP', 'ACC','RT')
+df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
+                             df1b.v_meta[selected_columns],
+                             df1c.v_meta[selected_columns],
+                             df2.v_meta[selected_columns],
+                             df5.v_meta[selected_columns],
+                             df6a.v_meta[selected_columns]) %>%
+  dplyr::mutate(ExpID_new = paste(ExpID, Site, sep = "_")) %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good')))
+
+df_moral_subj <- df_moral %>%
+  dplyr::group_by(ExpID_new, Site) %>%
+  dplyr::summarize(N = n_distinct(Subject))
+
+# randomly select 20 participants from each study
+#tmp1 <- sample(unique(df1a.v$Subject), 15)
+#tmp2 <- sample(unique(df1b.v$Subject), 15)
+#tmp3 <- sample(unique(df1c.v$Subject), 15)
+#tmp4 <- sample(unique(df5.v$Subject), 15)
+#tmp <- c(tmp1, tmp2, tmp3, tmp4)
+
+df_moral <- df_moral %>%
+  # dplyr::filter(Subject %in% tmp) %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1,0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | (Matchness == 'Mismatch' & ACC == 0), 1,0)) %>%
+  dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, ismatch, saymatch) %>%
+  dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
+
+# plot the nested structure of the data
+with(df_moral, table(Subject, ExpID_new)) %>%
+  image(
+    col = grey.colors(80, start = 1, end = 0), 
+    axes = TRUE, 
+    xlab = "Subject", 
+    ylab = "ExpID"
+  )
+
+# fit the model for all valence effect
+fitglmm_6 <- brms::brm(saymatch ~ 1 + Valence*ismatch + 
+                         (1 + Valence*ismatch | ExpID_new) + 
+                         (1 + Valence*ismatch | ExpID_new:Subject),
+                       family = bernoulli(link="probit"),
+                       data = df_moral,
+                       control = list(adapt_delta = .90),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdtmodel6"))
+
+summary(fitglmm_6)
+stancode(fitglmm_6)
+
+plot(hypothesis(fitglmm_6,
+                "ValenceGood:ismatch > 0"))
+
+### multiple level BGLMM
+bf_1 <- bf(saymatch ~ Phi(dprime_indv*ismatch*Valence - c_indv*Valence),
+           dprime_indv ~ 1 + (1 | Subject),
+           c_indv ~ 1 + (1 | Subject),
+           
+           )
+
+
+glmm3 <- bf(saymatch ~ Phi(dprime*ismatch - c),
+            dprime ~ 1 + (1 |s| Subject),
+            c ~ 1 + (1 |s| Subject),
+            nl = TRUE)
+Priors_glmm3 <- c(prior(normal(0, 3), nlpar = 'dprime', lb=0),
+                  prior(normal(0, 3), nlpar = 'c'),
+                  prior(student_t(10, 0, 1), class = 'sd', nlpar = 'dprime'),
+                  prior(student_t(10, 0, 1), class = 'sd', nlpar = 'c'),
+                  prior(lkj(4), class = 'cor'))
+
+
+fitglmm_4 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+                         (0 + Valence + Valence:ismatch_num | Subject/ExpID),
+                       family = bernoulli(link="probit"),
+                       data = df_moral,
+                       control = list(adapt_delta = .99),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdtmodel4"))
+
+summary(fitglmm_4)
+
+fitglmm_5 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+                         (0 + Valence + Valence:ismatch_num | ExpID) + 
+                         (0 + Valence + Valence:ismatch_num | ExpID:Subject),
+                       family = bernoulli(link="probit"),
+                       data = df_moral,
+                       control = list(adapt_delta = .99),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdtmodel5"))
+
+summary(fitglmm_5)
+stancode(fitglmm_5)
+
+hypothesis(fitglmm_5, "ValenceGood:ismatch_num - ValenceBad:ismatch_num > 0") 
+hypothesis(fitglmm_5, "ValenceGood:ismatch_num - ValenceNeutral:ismatch_num > 0") 
+
+plot(hypothesis(fitglmm_5,
+                "ValenceGood:ismatch_num > ValenceBad:ismatch_num"))
+plot(hypothesis(fitglmm_5,
+                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
+plot(hypothesis(fitglmm_5,
+                "ValenceBad:ismatch_num > ValenceNeutral:ismatch_num"))
+
+plot(fitglmm_5, 'b_Valence')
+
+# effect size r^2
+bayes_R2(fitglmm_5)
+
+# Plot the d prime 'b_Valence' for each experiment.
+
+
 ### try LMM ---- exp1a
 df1a.v.rt <- df1a.v %>% dplyr::filter(ACC == 1) %>% dplyr::mutate(logRT = ifelse(RT>0, log(RT),0)) 
 m1 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject) + (1|Shape), df1a.v.rt)
 m2 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject), df1a.v.rt)
-m3 <- lme4::lmer(logRT ~ Val_sh * Matchness, df1a.v.rt)
-summary(m1)
+m3 <- lme4::lmer(logRT ~ Val_sh * Matchne
 anova(m1,m2)
 
 df1a.v.rt.m <- df1a.v.rt %>% dplyr::filter(Matchness == "Match")
