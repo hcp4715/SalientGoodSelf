@@ -68,14 +68,15 @@ pkgTest <- function(x)
 {
         if (!require(x,character.only = TRUE))
         {
-                install.packages(x,dep = TRUE)
+                install.packages(x, dep = TRUE)
                 if(!require(x,character.only = TRUE)) stop("Package not found")
         }
 }
 
 pkgNeeded <- (c("tidyverse", 'metafor',
                 "corrplot","readr", 
-                "Hmisc",'mosaic', 'here'))
+                "Hmisc",'mosaic', 'here',
+                'brms'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
@@ -322,7 +323,7 @@ df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
                              df5.v_meta[selected_columns],
                              df6a.v_meta[selected_columns]) %>%
   dplyr::mutate(ExpID_new = paste(ExpID, Site, sep = "_")) %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good')))
+  dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')))
 
 df_moral_subj <- df_moral %>%
   dplyr::group_by(ExpID_new, Site) %>%
@@ -332,7 +333,7 @@ df_moral <- df_moral %>%
   dplyr::filter(!is.na(RESP)) %>% # filter trials without response
   dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1,0),
                 saymatch = ifelse((Matchness == 'Match' & ACC == 1) | (Matchness == 'Mismatch' & ACC == 0), 1,0)) %>%
-  dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, ismatch, saymatch) %>%
+  dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, RT, ismatch, saymatch) %>%
   dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
 
 # plot the nested structure of the data
@@ -344,8 +345,8 @@ with(df_moral, table(Subject, ExpID_new)) %>%
     ylab = "ExpID"
   )
 
-library(brms)
-# fit the model for all valence effect, didn't specify the prior
+
+# fit a three-level hierarchical model for SDT, didn't specify the prior
 std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
                          (0 + Valence + Valence:ismatch_num | ExpID_new) + 
                          (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
@@ -367,59 +368,16 @@ plot(hypothesis(std_val_m1,
 # Get the variables in the model
 var_name_m1 <- tidybayes::get_variables(std_val_m1)
 
-df_m1_posterior_pop_1 <- std_val_m1 %>% 
-  tidybayes::spread_draws(b_ValenceBad) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceBad') %>%
-  dplyr::rename(value = b_ValenceBad)
-
-df_m1_posterior_pop_2 <- std_val_m1 %>% 
-  tidybayes::spread_draws(b_ValenceNeutral) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceNeutral') %>%
-  dplyr::rename(value = b_ValenceNeutral)
-
-df_m1_posterior_pop_3 <- std_val_m1 %>% 
-  tidybayes::spread_draws(b_ValenceGood) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceGood') %>%
-  dplyr::rename(value = b_ValenceGood)
-
-df_m1_posterior_pop_4 <- std_val_m1 %>% 
-  tidybayes::spread_draws(`b_ValenceBad:ismatch_num`) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceBad:ismatch_num') %>%
-  dplyr::rename(value = `b_ValenceBad:ismatch_num`)
-
-df_m1_posterior_pop_5 <- std_val_m1 %>% 
-  tidybayes::spread_draws(`b_ValenceNeutral:ismatch_num`) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceNeutral:ismatch_num') %>%
-  dplyr::rename(value = `b_ValenceNeutral:ismatch_num`)
-
-df_m1_posterior_pop_6 <- std_val_m1 %>% 
-  tidybayes::spread_draws(`b_ValenceGood:ismatch_num`) %>%
-  dplyr::mutate(condition = 'Population',
-                term = 'ValenceGood:ismatch_num') %>%
-  dplyr::rename(value = `b_ValenceGood:ismatch_num`)
-
-df_m1_posterior_pop <- rbind(df_m1_posterior_pop_1, df_m1_posterior_pop_2, df_m1_posterior_pop_3, df_m1_posterior_pop_4, df_m1_posterior_pop_5, df_m1_posterior_pop_6) %>%
-  dplyr::select(condition, term, value, everything())
-
 df_m1_posterior_exp <- std_val_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
-
-# combine the posterior for both exp and population
-df_m1_posterior <- rbind(as.data.frame(df_m1_posterior_pop), as.data.frame(df_m1_posterior_exp))
 
 pop_mean <- std_val_m1 %>%
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
                           `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
                           `b_ValenceGood:ismatch_num`) %>%
-  #head(10)
-  group_by(.variable) %>%    # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(.value)
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
 tmp <- std_val_m1 %>% 
@@ -434,12 +392,12 @@ tmp <- std_val_m1 %>%
 
 # Add the population mean to the experimental level and only keep the value after.
 tmp2 <- merge(tmp, df_m1_posterior_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>%
-  dplyr::rename(value = mean_value)
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
 
 # Merge the group parameter with experimetal level data 
-tmp3 <- tmp %>%
+df_m1_plot <- tmp %>%
   dplyr::mutate(condition = 'Overall') %>%
   dplyr::rename(value = pop_mean) %>%
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
@@ -458,12 +416,12 @@ tmp3 <- tmp %>%
                 term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
                                                "dprime_bad", "dprime_neutral", "dprime_good")))
 
-tmp3 %>% 
+df_m1_plot %>% 
   dplyr::group_by(condition, term, .chain) %>%
   dplyr::tally()
 
 # plot the posterior of c
-tmp3 %>%
+df_m1_plot %>%
   dplyr::filter(str_detect(term, 'c_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < -.09511|x > .06172))) +
   tidybayes::stat_halfeyeh() +
@@ -474,7 +432,7 @@ tmp3 %>%
                labeller = label_parsed)
 
 # plot the posterior of dprime
-tmp3 %>%
+df_m1_plot %>%
   dplyr::filter(str_detect(term, 'dprime_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 1.8309|x > 2.52905))) +
   tidybayes::stat_halfeyeh() +
@@ -485,17 +443,33 @@ tmp3 %>%
                labeller = label_parsed)
 
 # 
-mcmc_plot(std_val_m1, pars = 1:4, type = "dens")
+#mcmc_plot(std_val_m1, pars = 1:4, type = "dens")
 
 # posterior predictive check
-pp_check(std_val_m1)
-pp_std_val_m1 <- 
-  brms::pp_check(std_val_m1, nsamples = 1e2) + 
-  ggtitle("PPC std_val_m1") +
-  theme_bw (base_size = 10) + 
-  theme(legend.position = "none") +
-  xlim(-0.5, 1.5)
+#pp_check(std_val_m1)
+#pp_std_val_m1 <- 
+#  brms::pp_check(std_val_m1, nsamples = 1e2) + 
+#  ggtitle("PPC std_val_m1") +
+#  theme_bw (base_size = 10) + 
+#  theme(legend.position = "none") +
+#  xlim(-0.5, 1.5)
 
+# fit a three-level hierarchical model for RT, didn't specify the prior
+#df_moral_rt <- df_moral %>%
+#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#  dplyr::filter(ACC == 1) 
+
+RT_val_m1 <- df_moral %>%
+  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+  dplyr::filter(ACC == 1) %>%
+  brms::brm(RT_sec ~ Valence*ismatch_num + 
+              (Valence*ismatch_num | ExpID_new) +   
+              (Valence*ismatch_num  | ExpID_new:Subject),
+            family=shifted_lognormal(),
+            data = .,
+            control = list(adapt_delta = .95),
+            cores = parallel::detectCores(),
+            file = here::here("glmmModels/RT_val_EffectCode_3_level"))
 ```
 
 ```{r second meta,echo=FALSE,results='hide'}

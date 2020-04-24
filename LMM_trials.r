@@ -301,7 +301,6 @@ fitglmm_5 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num +
                        control = list(adapt_delta = .99),
                        cores = parallel::detectCores(),
                        file = here::here("glmmModels/sdtmodel5"))
-
 summary(fitglmm_5)
 stancode(fitglmm_5)
 
