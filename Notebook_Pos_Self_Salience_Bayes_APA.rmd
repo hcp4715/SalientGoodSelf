@@ -58,7 +58,7 @@ output            :
 ---
 
 ```{r setup, include = FALSE}
-rm(list = ls())
+#rm(list = ls())
 Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
@@ -73,14 +73,14 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c('papaja',"tidyverse", 'metafor',
+pkgNeeded <- (c("tidyverse", 'metafor',
                 "corrplot","readr", 
                 "Hmisc",'mosaic', 'here'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
-windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
+#windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
 apatheme = theme_bw()+
         theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
@@ -100,30 +100,8 @@ apatheme = theme_bw()+
               axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
               axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
 
-# define the d prime function
-dprime <- function(hit,fa) {
-  qnorm(hit) - qnorm(fa)
-}
-
-## below is the code from blog, and adapted from A C Del Re from email
-d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
-        # m.1 = mean at time 1
-        # m.2 = mean at time 2
-        # sd.1 = standard dev. at time 1
-        # sd.2 = standard dev. at time 2
-        # n = sample size
-        # r = correlation between time 1 and 2
-        s.within <- (sqrt((sd.1^2 + sd.2^2)-2*r*sd.1*sd.2))/(sqrt(2*(1-r))) 
-        d <- ((m.1 - m.2)/s.within)
-        var.d <- 2*(1-r) * (1/n + d^2/(2*n))
-        out <- cbind(d, var.d)
-        return(out)
-}
-
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
-#curDir = '.'#dirname(rstudioapi::getSourceEditorContext()$path)
 figDir = paste(curDir, '/figures', sep = '')
-
 
 # Seed for random number generation
 set.seed(42)
@@ -145,7 +123,7 @@ All participant received informed consent and compensated for their time. These 
 
 ## Design and Procedure
 This series of experiments started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or self-tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learned the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase. 
-The xperiment 1a, 1b, 1c, 2, and 6a shared a 2 (matchness: matched vs. mismatched) by 3 (moral valence: good vs. neutral vs. bad) within-subject design. The experiment 1a was the first one of the whole series studies and 1b, 1c, and 2 were conducted to exclude the potential confounding factors. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occure with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learnt to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequently presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
+The experiment 1a, 1b, 1c, 2, and 6a shared a 2 (matchness: matched vs. mismatched) by 3 (moral valence: good vs. neutral vs. bad) within-subject design. The experiment 1a was the first one of the whole series studies and 1b, 1c, and 2 were conducted to exclude the potential confounding factors. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occure with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learnt to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequently presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
 For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we included self-relevance as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the desing of experiment 1a into a 2 (matchness: matched vs. mismatched) by 2 (reference: self vs. other) by 3 (moral valence: good vs. neutral vs. bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezois). The experiment 6b was an EEG experiment extended from experiment 3a but presented the lable and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different blocks: in the self-referential blocks, they only response to good-self, neutral-self, and bad-self, with half of the trials was matched and half was not; for the other-reference blocks, they only reponded to good-other, neutral-other, and bad-other. Experiment 4a and 4b were design to test the automaticity of the binding between self/other and moral valence. In 4a, we used only two labels (self vs. other) and two shapes (circle, square). To manipulate the moral valence, we added labels within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-relevance and valence in the task: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words for self-relevance, "self" or "other", were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task. Experiment 7a and 7b were designed to test the cross task robustness of the effect we observed in the aforementioned experiments [@Hu_2020_GoodSelf]. As we found that the neutral and bad conditions constantly show nonsignificant results, we only used two conditions of moral valence, i.e., good vs. bad, in experiment 7a and 7b.
 
 Finally, experiment 5 was design to test the specificity of the moral valence. We extended experiment 1a with an additional independnet variable: domains of the valence words. More specifically, besides the moral valence, we also added valence from other domains: appearance of person (beautiful, neutral, ugly), apperance of a scene (beautiful, neutral, ugly), and emotion (happy, neutral, and sad). Label-shape pairs from different domains were separated into different blocks. 
@@ -221,24 +199,39 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix}, \sum)$$
 in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
 
-Using the Bayesian hierarchial model, we can directly estimate the over-all effect of valence on $d'$, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall. effect.
+Using the Bayesian hierarchial model, we can directly estimate the over-all effect of valence on $d'$ across all experiments, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall. effect.
 
-For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better catpure a representative parameter for RTs, we used shifted log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has three parameters: shift, $\mu$, and $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution.
+For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better catpure a representative parameter for RTs, we used shifted log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has three parameters: shift, $\mu$, and $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution, while shift is the earliest possible response.
 
-To have a better estimation of the effect size, we reported the synthesized results in five parts: valence effect, valence-self-relevance interaction, generalizability, specificity of valence effect, and behavior-questionnaire correlation analysis. 
+$$y_{i} = \beta_{0} + \beta_{1}*IsMatch_{i} * Valence_{i}$$
 
-The Mini meta-analyses were carried out in R 3.6, using the “metafor” package (Viechtbauer, 2010). We first calculated the mean of *d*' and RT of each condition for each participant, then calculate the effect size (Cohen's *d*) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs. other for the effect of self-relevance. Cohen's *d* and its variance were estimated using the following formula [@Cooper_2009_handbook]:
+Shifted log-normal distriubtion:
+$$ log(y_{ij} - \theta_{j}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
 
-$$d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}$$
+$$\mu_{j} \sim N(\mu, \sigma)$$
 
-$$var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})$$
+$$\sigma_{j} \sim Cauchy()$$
 
-$M_1$ is the mean of the first condition, $sd_1$ is the standard deviation of the first condition, while $M_2$ is the mean of the second condition, $sd_2$ is the standard deviation of the second condition. $r$ is the correlation coefficient between data from first and second condition. $n$ is the number of data point (in our case the number of participants included in our research).
+$$\theta_{j} \sim Cauchy()$$
 
-The effect size from each experiment were then synthesized by random effect model using metafor. Note that to avoid the cases that some participants participated more than one experiments, we inspected the all available information of participants and only included participants' results from their first participation. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the meta-analysis.
+This model can be easily expand to three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+$$ log(y_{ijk} - \theta_{jk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
+
+$y_{ijk}$ is the RT of the $i$th trial of the $j$th participants in the $k$th experiment.
+
+$$\mu_{jk} \sim N(\mu_{k}, \sigma_{k})$$
+
+$$\sigma_{jk} \sim Cauchy()$$
+
+$$\theta_{jk} \sim Cauchy()$$
+
+$$\mu_{k} \sim N(\mu, \sigma)$$
+
+We reported the synthesized results in five parts: valence effect, valence-self-relevance interaction, generalizability, specificity of valence effect, and behavior-questionnaire correlation analysis. The overall effect of each effect was estimated by hierarichal bayisan model. Note that to avoid the cases that some participants participated more than one experiments, we inspected the all available information of participants and only included participants' results from their first participation. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the meta-analysis.
 
 ### Valence effect
-We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach. 
+We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using Bayesian hierarchical model. 
 
 ### Valence-self-relevance interaction
 The results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference. 
@@ -296,145 +289,213 @@ df6a.v_meta <- df6a.v %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131
 df6b.v_meta <- df6b_d1.v %>% dplyr::filter(!Subject %in% c(6217))   
 
 # exclude participants from ex1b, 1c, and 2
-df7a_m.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
+df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
 
 # No repeating subj
 df7b.v_meta <- df7b_m.v
 
-```
-
-```{r remove repeated subj Data,echo=FALSE,results='hide'}
-## exclude the repeating subjects
-df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
-df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210)) # exclude participants who participated exp1a or 1b
-
-df2.meta.d <- df2.meta.d %>% dplyr::filter(Subject > 2000)    # exclude participant from exp 1a
-df2.meta.rt <- df2.meta.rt %>% dplyr::filter(Subject > 2000)
-
-df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
-df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
-
-df4b.meta.d <- df4b.meta.d %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   # exclude participants from ex1b, 1c, and 2
-df4b.meta.rt <- df4b.meta.rt %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201)) # exclude participants from ex1b, 1c, and 2
-
-df5.meta.d <- df5.meta.d %>% dplyr::filter(!Subject %in% c(5201))   # exclude participants from ex1b, 1c, and 2
-df5.meta.rt <- df5.meta.rt %>% dplyr::filter(!Subject %in% c(5201)) # exclude participants from ex1b, 1c, and 2
-
-df6a.meta.d <- df6a.meta.d %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   # exclude participants from ex1b, 1c, and 2
-df6a.meta.rt <- df6a.meta.rt %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131)) # exclude participants from ex1b, 1c, and 2
-
-df6b.meta.d <- df6b.meta.d %>% dplyr::filter(!Subject %in% c(6217))   # exclude participants from ex1b, 1c, and 2
-df6b.meta.rt <- df6b.meta.rt %>% dplyr::filter(!Subject %in% c(6217)) # exclude participants from ex1b, 1c, and 2
-
-df7a_m.meta.d <- df7a_m.meta.d %>% dplyr::filter(!Subject %in% c(7020))   # exclude participants from ex1b, 1c, and 2
-df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # exclude participants from ex1b, 1c, and 2
+# remove all unnecessary variables
+var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
+              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
+              'apatheme','exp_table', 'curDir', 'figDir')
+rm(list=ls()[! ls() %in% var_list])
 
 ```
 
 # Results
 ```{r first meta,echo=FALSE,results='hide'}
-# Combine the data -----
-df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df4b.meta.d , df5.meta.d, df6a.meta.d) 
-df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df4b.meta.rt,df5.meta.rt, df6a.meta.rt)
 
-# Prepare the data for meta ----
-# calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
-effectList_1 <- c('Good_Bad','Good_Neut','Neut_Bad')
+### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
+#selected_columns <- c('Subject','Age', 'Sex')
+df1a.v_meta$ExpID <- 'Exp1a'
+df1b.v_meta$ExpID <- 'Exp1b'
+df1c.v_meta$ExpID <- 'Exp1c'
+df2.v_meta$ExpID <- 'Exp2'
+df5.v_meta$ExpID <- 'Exp5'
+df6a.v_meta$ExpID <- 'Exp6a'
 
-df.ES_1 <- data.frame(matrix(, nrow=length(unique(df.meta_d_1$ExpID))*length(effectList_1)*2, ncol=0)) %>%
-  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d_1$ExpID))*length(effectList_1)),
-                ExpID  = rep(rep(unique(df.meta_d_1$ExpID), each = length(effectList_1)), 2),
-                Effect = rep(effectList_1, length(unique(df.meta_d_1$ExpID))*2),
-                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
-                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
+selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness','Valence', 'RESP', 'ACC','RT')
+df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
+                             df1b.v_meta[selected_columns],
+                             df1c.v_meta[selected_columns],
+                             df2.v_meta[selected_columns],
+                             df5.v_meta[selected_columns],
+                             df6a.v_meta[selected_columns]) %>%
+  dplyr::mutate(ExpID_new = paste(ExpID, Site, sep = "_")) %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good')))
 
-for (DVName in c('RT','dprime')){
-  if (DVName == 'RT'){
-    metaData <- df.meta_rt_1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
-  } else{
-    metaData <- df.meta_d_1 %>% dplyr::rename(Value = dprime)
-  }
-  
-  for (expName in unique(metaData$ExpID)){
-    for (effectName in effectList_1){
-      tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
-      
-      if (effectName == 'Good_Bad'){
-        #print(paste('processing Good_Bad of ', expName, sep = ''))
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-        }
-      else if (effectName == 'Good_Neut'){
-        #print(paste('processing Good_Neut of ', expName, sep = ''))
-        #if ('Neutral' %in% tmpdata$Valence){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        #  }
-        #else{
-          #print(paste('There is no Neutral condition in', expName, sepe=''))
-        #  next
-        #  }
-        }
-      else if (effectName == 'Neut_Bad'){
-        #if ('Neutral' %in% tmpdata$Valence)
-        #  {
-            dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-            dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
-        #  }
-        #else{
-            #print(paste('There is no Neutral condition in', expName, sepe=''))
-        #    next
-        #  }
-        }
-      #}
-      M1  <- mean(dataCond1$Value) -> df.ES_1$M1[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
-      SD1 <- sd(dataCond1$Value)   -> df.ES_1$SD1[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] 
-      M2  <- mean(dataCond2$Value) -> df.ES_1$M2[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
-      SD2 <- sd(dataCond2$Value)   -> df.ES_1$SD2[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
-      N   <- length(unique(dataCond2$Subject)) -> df.ES_1$N[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName]
-      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_1$r[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] 
-      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
-      df.ES_1$ES[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] <- tmp2[1,1]
-      df.ES_1$ES.var[df.ES_1$DVtype == DVName & df.ES_1$ExpID == expName & df.ES_1$Effect == effectName] <- tmp2[1,2]
-    }
-  }
-}
+df_moral_subj <- df_moral %>%
+  dplyr::group_by(ExpID_new, Site) %>%
+  dplyr::summarize(N = n_distinct(Subject))
 
-# Do the meta-analysis in a for loop ----
-df.ES_1_sum <- df.ES_1 %>% 
-  dplyr::group_by(DVtype, Effect) %>% 
-  tidyr::drop_na() %>% 
-  dplyr::summarise(Nexp = length(unique(ExpID)), Nsubj = sum(N, na.rm = T))
+df_moral <- df_moral %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1,0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | (Matchness == 'Mismatch' & ACC == 0), 1,0)) %>%
+  dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, ismatch, saymatch) %>%
+  dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
 
-df.res.meta_1 <- data.frame(matrix(, nrow= 3*2, ncol=0)) %>%
-  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = 3),
-                #Group  = rep(groupList_1, 2),
-                Effect = rep(effectList_1, 2),
-                #Group  = rep(groupList, length(unique(df.meta_d$ExpID))*2),
-                N_exp = NA, Cohen_d = NA, se = NA, CI_low = NA, CI_upp = NA, pval = NA)
+# plot the nested structure of the data
+with(df_moral, table(Subject, ExpID_new)) %>%
+  image(
+    col = grey.colors(80, start = 1, end = 0), 
+    axes = TRUE, 
+    xlab = "Subject", 
+    ylab = "ExpID"
+  )
 
-for (DVName in c('RT','dprime')){
-  for (effectName in effectList_1){
-    df.res.meta <- df.ES_1 %>%
-      dplyr::filter(DVtype == DVName & Effect == effectName) %>%
-      tidyr::drop_na()
-    
-    tmp.meta.res <- metafor::rma(yi = df.res.meta$ES,
-                           vi = df.res.meta$ES.var,
-                           slab = df.res.meta$ExpID)
-    df.res.meta_1$N_exp[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$k
-    df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$beta
-    df.res.meta_1$se[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$se
-    df.res.meta_1$CI_low[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$ci.lb
-    df.res.meta_1$CI_upp[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$ci.ub
-    df.res.meta_1$pval[df.res.meta_1$DVtype == DVName & df.res.meta_1$Effect == effectName] <- tmp.meta.res$pval
-  }
-}
+library(brms)
+# fit the model for all valence effect, didn't specify the prior
+std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+                         (0 + Valence + Valence:ismatch_num | ExpID_new) + 
+                         (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
+                       family = bernoulli(link="probit"),
+                       data = df_moral,
+                       control = list(adapt_delta = .95),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
 
-# Prepare data for plotting the effect size ----
-df.res.meta_1 <- df.res.meta_1 %>%
-  dplyr::mutate(Identity = "No-Ref.",
-                EffectType = Effect) 
+summary(std_val_m1)
+#stancode(fitglmm_6)
+
+plot(hypothesis(std_val_m1,
+                "ValenceBad:ismatch_num > ValenceNeutral:ismatch_num"))
+
+plot(hypothesis(std_val_m1,
+                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
+
+# Get the variables in the model
+var_name_m1 <- tidybayes::get_variables(std_val_m1)
+
+df_m1_posterior_pop_1 <- std_val_m1 %>% 
+  tidybayes::spread_draws(b_ValenceBad) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceBad') %>%
+  dplyr::rename(value = b_ValenceBad)
+
+df_m1_posterior_pop_2 <- std_val_m1 %>% 
+  tidybayes::spread_draws(b_ValenceNeutral) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceNeutral') %>%
+  dplyr::rename(value = b_ValenceNeutral)
+
+df_m1_posterior_pop_3 <- std_val_m1 %>% 
+  tidybayes::spread_draws(b_ValenceGood) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceGood') %>%
+  dplyr::rename(value = b_ValenceGood)
+
+df_m1_posterior_pop_4 <- std_val_m1 %>% 
+  tidybayes::spread_draws(`b_ValenceBad:ismatch_num`) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceBad:ismatch_num') %>%
+  dplyr::rename(value = `b_ValenceBad:ismatch_num`)
+
+df_m1_posterior_pop_5 <- std_val_m1 %>% 
+  tidybayes::spread_draws(`b_ValenceNeutral:ismatch_num`) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceNeutral:ismatch_num') %>%
+  dplyr::rename(value = `b_ValenceNeutral:ismatch_num`)
+
+df_m1_posterior_pop_6 <- std_val_m1 %>% 
+  tidybayes::spread_draws(`b_ValenceGood:ismatch_num`) %>%
+  dplyr::mutate(condition = 'Population',
+                term = 'ValenceGood:ismatch_num') %>%
+  dplyr::rename(value = `b_ValenceGood:ismatch_num`)
+
+df_m1_posterior_pop <- rbind(df_m1_posterior_pop_1, df_m1_posterior_pop_2, df_m1_posterior_pop_3, df_m1_posterior_pop_4, df_m1_posterior_pop_5, df_m1_posterior_pop_6) %>%
+  dplyr::select(condition, term, value, everything())
+
+df_m1_posterior_exp <- std_val_m1 %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+# combine the posterior for both exp and population
+df_m1_posterior <- rbind(as.data.frame(df_m1_posterior_pop), as.data.frame(df_m1_posterior_exp))
+
+pop_mean <- std_val_m1 %>%
+  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  #head(10)
+  group_by(.variable) %>%    # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)
+
+# extract the population level parameters
+tmp <- std_val_m1 %>% 
+  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+tmp2 <- merge(tmp, df_m1_posterior_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>%
+  dplyr::rename(value = mean_value)
+
+# Merge the group parameter with experimetal level data 
+tmp3 <- tmp %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>%
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., tmp2) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition),
+                term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
+                                             "c_neutral" = (term == "ValenceNeutral"),
+                                             "c_good" = (term == "ValenceGood"),
+                                             "dprime_bad" = (term == "ValenceBad:ismatch_num"),
+                                             "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
+                                             "dprime_good" = (term == "ValenceGood:ismatch_num"),
+                                             .method ="first", .default = NA),
+                term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
+                                               "dprime_bad", "dprime_neutral", "dprime_good")))
+
+tmp3 %>% 
+  dplyr::group_by(condition, term, .chain) %>%
+  dplyr::tally()
+
+# plot the posterior of c
+tmp3 %>%
+  dplyr::filter(str_detect(term, 'c_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < -.09511|x > .06172))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = c(-0.09511, 0.06172), linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
+
+# plot the posterior of dprime
+tmp3 %>%
+  dplyr::filter(str_detect(term, 'dprime_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 1.8309|x > 2.52905))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = c(1.8309, 2.52905), linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
+
+# 
+mcmc_plot(std_val_m1, pars = 1:4, type = "dens")
+
+# posterior predictive check
+pp_check(std_val_m1)
+pp_std_val_m1 <- 
+  brms::pp_check(std_val_m1, nsamples = 1e2) + 
+  ggtitle("PPC std_val_m1") +
+  theme_bw (base_size = 10) + 
+  theme(legend.position = "none") +
+  xlim(-0.5, 1.5)
+
 ```
 
 ```{r second meta,echo=FALSE,results='hide'}

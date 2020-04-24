@@ -262,6 +262,8 @@ stancode(fitglmm_6)
 plot(hypothesis(fitglmm_6,
                 "ValenceGood:ismatch > 0"))
 
+
+
 ### multiple level BGLMM
 bf_1 <- bf(saymatch ~ Phi(dprime_indv*ismatch*Valence - c_indv*Valence),
            dprime_indv ~ 1 + (1 | Subject),
@@ -325,7 +327,7 @@ bayes_R2(fitglmm_5)
 df1a.v.rt <- df1a.v %>% dplyr::filter(ACC == 1) %>% dplyr::mutate(logRT = ifelse(RT>0, log(RT),0)) 
 m1 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject) + (1|Shape), df1a.v.rt)
 m2 <- lme4::lmer(logRT ~ Val_sh * Matchness + (1|Subject), df1a.v.rt)
-m3 <- lme4::lmer(logRT ~ Val_sh * Matchne
+m3 <- lme4::lmer(logRT ~ Val_sh * Matchness)
 anova(m1,m2)
 
 df1a.v.rt.m <- df1a.v.rt %>% dplyr::filter(Matchness == "Match")
@@ -367,16 +369,16 @@ HDI95_null_b <- unname(quantile(prior_null_b, c(.025, .975)))
 ggplot() + geom_density(aes(x = prior_null_b)) + xlim(-5, 5) + geom_vline(xintercept = HDI95_null_b[1]) +  geom_vline(xintercept = HDI95_null_b[2])
 
 
-brms::get_prior(RT_sec ~ Val_sh * Matchness, 
+brms::get_prior(RT_sec ~ Valence * Matchness + (Valence * Matchness | Subject), 
           data = df1a.v.rt, 
           family = shifted_lognormal())
 
-m6 <- brms::brm(RT_sec ~ Val_sh * Matchness, 
+m6 <- brms::brm(RT_sec ~ Valence * Matchness + (Valence * Matchness | Subject), 
                 data = df1a.v.rt, 
                 family = shifted_lognormal(),
                 chains = 4, cores = 4, warmup = 1000, iter = 2000,
                 prior = prior_null,
-                file = 'exp1a_null_log')
+                file = here::here("glmmModels/rtmodel_m6"))
 
 # check convegence:
 m6_tranformed <- ggmcmc::ggs(m6) 
