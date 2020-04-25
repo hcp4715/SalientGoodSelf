@@ -345,7 +345,6 @@ with(df_moral, table(Subject, ExpID_new)) %>%
     ylab = "ExpID"
   )
 
-
 # fit a three-level hierarchical model for SDT, didn't specify the prior
 std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
                          (0 + Valence + Valence:ismatch_num | ExpID_new) + 
@@ -396,7 +395,7 @@ tmp2 <- merge(tmp, df_m1_posterior_exp, by = c('term','.chain','.iteration', '.d
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
 
-# Merge the group parameter with experimetal level data 
+# Plot the difference between conditions 
 df_m1_plot <- tmp %>%
   dplyr::mutate(condition = 'Overall') %>%
   dplyr::rename(value = pop_mean) %>%
@@ -405,7 +404,7 @@ df_m1_plot <- tmp %>%
   dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
                                                          "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
                                                          "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition),
+                condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
                 term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
                                              "c_neutral" = (term == "ValenceNeutral"),
                                              "c_good" = (term == "ValenceGood"),
@@ -414,31 +413,44 @@ df_m1_plot <- tmp %>%
                                              "dprime_good" = (term == "ValenceGood:ismatch_num"),
                                              .method ="first", .default = NA),
                 term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
-                                               "dprime_bad", "dprime_neutral", "dprime_good")))
+                                               "dprime_bad", "dprime_neutral", "dprime_good"))) %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between coditions
+                diff_GN_c = c_good - c_neutral,
+                diff_BN_c = c_bad - c_neutral,
+                diff_GB_dprm = dprime_good - dprime_bad,
+                diff_GN_dprm = dprime_good - dprime_neutral,
+                diff_BN_dprm = dprime_bad - dprime_neutral) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_c,diff_GN_c, diff_BN_c,
+               diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
+  tidyr::pivot_longer(cols = diff_GB_c:diff_BN_dprm, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
+                                                         'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
 df_m1_plot %>% 
   dplyr::group_by(condition, term, .chain) %>%
   dplyr::tally()
 
 # plot the posterior of c
-df_m1_plot %>%
-  dplyr::filter(str_detect(term, 'c_')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < -.09511|x > .06172))) +
+df_m1_plot  %>%
+  dplyr::filter(str_detect(term_diff, '_c')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = c(-0.09511, 0.06172), linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term,
+  facet_wrap( ~ term_diff,
                scales = "free_y", nrow = 1,
                labeller = label_parsed)
 
 # plot the posterior of dprime
 df_m1_plot %>%
-  dplyr::filter(str_detect(term, 'dprime_')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 1.8309|x > 2.52905))) +
+  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = c(1.8309, 2.52905), linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term,
+  facet_wrap( ~ term_diff,
                scales = "free_y", nrow = 1,
                labeller = label_parsed)
 
