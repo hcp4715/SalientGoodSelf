@@ -76,7 +76,7 @@ pkgTest <- function(x)
 pkgNeeded <- (c("tidyverse", 'metafor',
                 "corrplot","readr", 
                 "Hmisc",'mosaic', 'here',
-                'brms'))
+                'brms','papaja'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
@@ -202,22 +202,20 @@ in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
 
 Using the Bayesian hierarchial model, we can directly estimate the over-all effect of valence on $d'$ across all experiments, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall. effect.
 
-For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better catpure a representative parameter for RTs, we used shifted log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has three parameters: shift, $\mu$, and $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution, while shift is the earliest possible response.
+For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better catpure a representative parameter for RTs, we used log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has three parameters: $\mu$, and $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution, while shift is the earliest possible response.
 
 $$y_{i} = \beta_{0} + \beta_{1}*IsMatch_{i} * Valence_{i}$$
 
 Shifted log-normal distriubtion:
-$$ log(y_{ij} - \theta_{j}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
 $y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
 
 $$\mu_{j} \sim N(\mu, \sigma)$$
 
 $$\sigma_{j} \sim Cauchy()$$
 
-$$\theta_{j} \sim Cauchy()$$
-
 This model can be easily expand to three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
-$$ log(y_{ijk} - \theta_{jk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
+$$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
 
 $y_{ijk}$ is the RT of the $i$th trial of the $j$th participants in the $k$th experiment.
 
@@ -301,19 +299,25 @@ var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v
               'apatheme','exp_table', 'curDir', 'figDir')
 rm(list=ls()[! ls() %in% var_list])
 
-```
-
-# Results
-```{r first meta,echo=FALSE,results='hide'}
-
-### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
-#selected_columns <- c('Subject','Age', 'Sex')
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
 df1c.v_meta$ExpID <- 'Exp1c'
 df2.v_meta$ExpID <- 'Exp2'
+df3a.v_meta$ExpID <- 'Exp3a'
+df3b.v_meta$ExpID <- 'Exp3b'
+df4a.v_meta$ExpID <- 'Exp4a'
+df4b.v_meta$ExpID <- 'Exp4b'
 df5.v_meta$ExpID <- 'Exp5'
 df6a.v_meta$ExpID <- 'Exp6a'
+df6b.v_meta$ExpID <- 'Exp6b'
+df7a.v_meta$ExpID <- 'Exp7a'
+df7b.v_meta$ExpID <- 'Exp7b'
+```
+
+# Results
+```{r first meta,echo=FALSE,results='hide'}
+### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
+#selected_columns <- c('Subject','Age', 'Sex')
 
 selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness','Valence', 'RESP', 'ACC','RT')
 df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
@@ -327,12 +331,16 @@ df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
 
 df_moral_subj <- df_moral %>%
   dplyr::group_by(ExpID_new, Site) %>%
-  dplyr::summarize(N = n_distinct(Subject))
+  dplyr::summarize(N = n_distinct(Subject),
+                   N_trial = length(Subject),
+                   Exp_conds = 6,
+                   trial_per_cond = round((length(Subject)/6)/N, 0))
 
 df_moral <- df_moral %>%
   dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1,0),
-                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | (Matchness == 'Mismatch' & ACC == 0), 1,0)) %>%
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0)) %>%
   dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, RT, ismatch, saymatch) %>%
   dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
 
@@ -356,7 +364,7 @@ std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num +
                        file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
 
 summary(std_val_m1)
-#stancode(fitglmm_6)
+stancode(std_val_m1)
 
 plot(hypothesis(std_val_m1,
                 "ValenceBad:ismatch_num > ValenceNeutral:ismatch_num"))
@@ -367,7 +375,7 @@ plot(hypothesis(std_val_m1,
 # Get the variables in the model
 var_name_m1 <- tidybayes::get_variables(std_val_m1)
 
-df_m1_posterior_exp <- std_val_m1 %>% 
+df_m1_post_sdt_exp <- std_val_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
@@ -390,13 +398,13 @@ tmp <- std_val_m1 %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-tmp2 <- merge(tmp, df_m1_posterior_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+tmp2 <- merge(tmp, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_plot <- tmp %>%
+df_m1_plot_sdt <- tmp %>%
   dplyr::mutate(condition = 'Overall') %>%
   dplyr::rename(value = pop_mean) %>%
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
@@ -428,12 +436,12 @@ df_m1_plot <- tmp %>%
   dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
                                                          'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
-df_m1_plot %>% 
-  dplyr::group_by(condition, term, .chain) %>%
+df_m1_plot_sdt %>% 
+  dplyr::group_by(condition, term_diff, .chain) %>%
   dplyr::tally()
 
 # plot the posterior of c
-df_m1_plot  %>%
+df_m1_plot_sdt  %>%
   dplyr::filter(str_detect(term_diff, '_c')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeyeh() +
@@ -444,7 +452,7 @@ df_m1_plot  %>%
                labeller = label_parsed)
 
 # plot the posterior of dprime
-df_m1_plot %>%
+df_m1_plot_sdt %>%
   dplyr::filter(str_detect(term_diff, '_dprm')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeyeh() +
@@ -466,11 +474,24 @@ df_m1_plot %>%
 #  theme(legend.position = "none") +
 #  xlim(-0.5, 1.5)
 
-# fit a three-level hierarchical model for RT, didn't specify the prior
-#df_moral_rt <- df_moral %>%
-#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-#  dplyr::filter(ACC == 1) 
+# have a loot at a few participants' data
+set.seed(123)
+random_sub <- sample(unique(df_moral$Subject), 4)
+random_sub
 
+df_moral %>%
+  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+  dplyr::filter(ACC == 1) %>%
+  dplyr::filter(Subject %in% random_sub) %>%
+  dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
+                RT_log = log(RT_sec))%>%
+  ggplot2::ggplot(., aes(x=RT_log)) + 
+    geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
+    facet_grid(~Subject) +  # One panel per id
+    coord_cartesian(xlim=c(-2, 1))
+
+
+# fit a three-level hierarchical model for RT, didn't specify the prior
 RT_val_m1 <- df_moral %>%
   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
   dplyr::filter(ACC == 1) %>%
@@ -482,6 +503,157 @@ RT_val_m1 <- df_moral %>%
             control = list(adapt_delta = .95),
             cores = parallel::detectCores(),
             file = here::here("glmmModels/RT_val_EffectCode_3_level"))
+#plot(RT_val_m1, "b_")
+summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
+pp_check(RT_val_m1)
+
+#Population-Level Effects: 
+#                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+#Intercept                  -0.40      0.06    -0.52    -0.27 1.01      837     1301  # baseline: mismatch:neutral
+#ValenceBad                  0.01      0.00     0.00     0.02 1.00     1752     2540  # mismatch:bad - mismatch:neutral = 0.01
+#ValenceGood                -0.03      0.00    -0.04    -0.02 1.00     1237     2219  # mismatch:Good - mismatch:neutral = -0.03
+#ismatch_num                -0.07      0.01    -0.09    -0.06 1.00     1638     1957  # match:neutral - mismatch:neutral = -0.07
+#ValenceBad:ismatch_num      0.02      0.01     0.00     0.04 1.00     1597     2380  # match:bad - ValenceBad -ismatch_num = 0.02
+#ValenceGood:ismatch_num    -0.05      0.01    -0.07    -0.03 1.00     1424     1775  # match:good - ValenceGood- ismatch_num = -0.05
+
+# Mismatch:Neutral - Intercept
+# Mismatch:Bad     - Intercept  + ValenceBad
+# Mismatch:Good    - Intercept  + ValenceGood
+# Match: Neutral   - Intercept  + ismatch_num
+# Match: Bad       - Intercept  + ismatch_num + ValenceBad+ ValenceBad:ismatch_num 
+# Match: Good      - Intercept  + ismatch_num + ValenceGood+ ValenceGood:ismatch_num 
+
+# log normal distribution, dummy coding
+RT_val_m2 <- df_moral %>%
+  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+  dplyr::filter(ACC == 1) %>%
+  brms::brm(RT_sec ~ Valence*ismatch + 
+              (Valence*ismatch | ExpID_new) +   
+              (Valence*ismatch | ExpID_new:Subject),
+            family=lognormal(),
+            data = .,
+            control = list(adapt_delta = .98),
+            cores = parallel::detectCores(),
+            file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
+summary(RT_val_m2)
+
+
+# log normal distribution, with truncated distribution, , dummy coding
+RT_val_m3_trunc <- df_moral %>%
+  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+  dplyr::filter(ACC == 1) %>%
+  brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
+              (Valence*ismatch | ExpID_new) +   
+              (Valence*ismatch | ExpID_new:Subject),
+            family=lognormal(),
+            data = .,
+            control = list(adapt_delta = .98),
+            cores = parallel::detectCores(),
+            file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
+summary(RT_val_m3_trunc)
+
+
+# Get the variables in the model
+RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
+
+df_m1_post_rt_exp <- RT_val_m1 %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+rt_pop_mean <- RT_val_m1 %>%
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+rt_pop_post <- RT_val_m1 %>% 
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+rt_post_tmp <- merge(rt_pop_post, df_rt_m1_post_exp, 
+                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m1_rt_plot <- rt_pop_post %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>%
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., rt_post_tmp) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
+                #term = mosaic::derivedFactor("Neutral_NM" = (term == "Intercept"),
+                #                             "diff_BN_NM" = (term == "ValenceBad"),
+                #                             "diff_GN_NM" = (term == "ValenceGood"),
+                #                             "Neutral_M" = (term == "ismatch_num"),
+                #                             "Bad_M_int" = (term == "ValenceBad:ismatch_num"),
+                #                             "Good_M_int" = (term == "ValenceGood:ismatch_num"),
+                #                             .method ="first", .default = NA),
+                #term = factor(term, levels = c("Bad_NM", "Neutral_NM", "Good_NM",
+                 #                              "Bad_M", "Neutral_M", "Good_M"))
+                ) %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
+                diff_GN_NM = ValenceGood,
+                diff_BN_NM = ValenceBad,
+                diff_GN_M = ValenceGood + `ValenceGood:ismatch_num`,
+                diff_BN_M = ValenceBad + `ValenceBad:ismatch_num`,
+                diff_GB_M = diff_GN_M - diff_BN_M) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+
+df_m1_rt_plot %>% 
+  dplyr::group_by(condition, term_diff, .chain) %>%
+  dplyr::tally()
+
+df_m1_rt_mean <- df_m1_rt_plot %>%
+  #tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+  #                        `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+  #                        `b_ValenceGood:ismatch_num`) %>%
+  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(value)  # get the high density continuous intervals
+
+
+# plot the posterior of mismatch
+df_m1_rt_plot  %>%
+  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term_diff,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
+
+# plot the posterior of matching trials
+df_m1_rt_plot %>%
+  dplyr::filter(str_detect(term_diff, '_M')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term_diff,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
+
+
 ```
 
 ```{r second meta,echo=FALSE,results='hide'}
@@ -1156,12 +1328,6 @@ df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE,
                                       .method ="first", .default = NA),
                 expID = as.character(expID))
 
-# intersection between participant from behavioral task and scales and get the data
-subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253
-
-df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
-  dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
-
 ## get the questionnaire names
 # Self-esteem
 SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
@@ -1190,7 +1356,7 @@ perDistNames <- c("SelfSelf",
                   "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
 
 # calculate the average score of each relevant scale
-df.q_scores.v <- df.scales.v %>%
+df.q_scores <- df.scales %>%
   dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
                 mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
                 mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),
@@ -1198,9 +1364,17 @@ df.q_scores.v <- df.scales.v %>%
                 ) %>%
   dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
 
-df.perdist <- df.scales.v %>%
+df.scales %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
-  #dplyr::rowwise() %>%
+  head()
+
+# normalize the personal distance, way 1: 
+# (1) calculate the mean distance of all distance ratings, grand_mean
+# (2) calculate the mean distance of each pair, condition_mean
+# (3) normalize the condition_mean: condition_mean/grand_mean
+df.perdist <- df.scales %>%
+  dplyr::select(c(expID, subjID),perDistNames) %>%
+  
   dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
                 SelfSelfraw = SelfSelf,
                 SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
@@ -1213,16 +1387,106 @@ df.perdist <- df.scales.v %>%
   dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
                 SelfGoodraw, SelfNeutraw, SelfBadraw,
                 SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
-  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
-                SelfGood = SelfGoodraw/sumRaw,
-                SelfNeut = SelfNeutraw/sumRaw,
-                SelfBad = SelfBadraw/sumRaw,
-                SelfStra = SelfStraraw/sumRaw, 
-                GoodNeut = GoodNeutraw/sumRaw, 
-                GoodBad = GoodBadraw/sumRaw, 
-                NeutBad = NeutBadraw/sumRaw) %>%
-  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
-                SelfStra, GoodNeut, GoodBad, NeutBad)
+  dplyr::mutate(Self_Self = SelfSelfraw/sumRaw,
+                Self_Good = SelfGoodraw/sumRaw,
+                Self_Neut = SelfNeutraw/sumRaw,
+                Self_Bad = SelfBadraw/sumRaw,
+                Self_Stra = SelfStraraw/sumRaw, 
+                Good_Neut = GoodNeutraw/sumRaw, 
+                Good_Bad = GoodBadraw/sumRaw, 
+                Neut_Bad = NeutBadraw/sumRaw) %>%
+  dplyr::select(subjID, Self_Self, Self_Good, Self_Neut, Self_Bad,
+                Self_Stra, Good_Neut, Good_Bad, Neut_Bad) %>%
+  dplyr::select(-Self_Stra,-Self_Self)
+
+df.perdist.sum_p <- df.perdist %>%
+  tidyr::pivot_longer(cols = Self_Good:Neut_Bad, 
+                      names_to = "condition",
+                      values_to = "distance") %>%
+  #dplyr::mutate(condition = factor(condition,
+  #                                 levels = c("GoodNeut", "NeutBad", "GoodBad",
+  #                                            "SelfNeut", "SelfGood", "SelfBad"))) %>%
+  dplyr::filter(!is.na(distance)) %>%
+  dplyr::group_by(condition) %>%
+  dplyr::summarise_each(funs(mean, sd, se=sd(.)/sqrt(n())), distance) %>%
+  dplyr::select(condition, mean) %>%
+  dplyr::add_row(condition = c("Self_Self", "Good_Good",
+                                "Neut_Neut","Bad_Bad")) %>%
+  tidyr::separate(condition, c('var1','var2'), sep = '_')
+
+# create a distance matrix
+df.dist.mat <- data.frame(matrix(ncol = 4, nrow = 4))
+colnames(df.dist.mat) <- unique(df.perdist.sum_p$var1)
+rownames(df.dist.mat) <- unique(df.perdist.sum_p$var1)
+
+for (i in 1:6){
+  rname = df.perdist.sum_p$var1[i]
+  cname = df.perdist.sum_p$var2[i]
+  value = df.perdist.sum_p$mean[i]
+  df.dist.mat[rname, cname] = value
+  df.dist.mat[cname, rname] = value
+}
+df.dist.mat[is.na(df.dist.mat)] <- 0
+
+df.dist.mat_t <- 1/df.dist.mat #/max(df.dist.mat)
+
+library(qgraph)
+qgraph(df.dist.mat_t, layout='spring', vsize=3)
+
+pd1 <- position_dodge(0.5)
+df.perdist %>%
+  tidyr::pivot_longer(cols = SelfSelf:NeutBad, 
+                      names_to = "condition",
+                      values_to = "distance") %>%
+  dplyr::mutate(condition = factor(condition,
+                                   levels = c("GoodNeut", "NeutBad", "GoodBad",
+                                              "SelfSelf", "SelfNeut", "SelfGood", "SelfBad", "SelfStra"))) %>%
+  ggplot2::ggplot(., aes(x = condition, y = distance)) +
+   geom_point(aes(x = condition, y = distance, group = subjID),   # plot individual points
+              colour = "#000000",
+              size = 3, shape = 20, alpha = 0.06)+
+   geom_line(aes(x = condition, y = distance, group = subjID),         # link individual's points by transparent grey lines
+             linetype = 1, size = 0.8, colour = "#000000", alpha = 0.06) +   
+   geom_line(data = df.perdist.sum_p, aes(x = condition, # plot the group means  
+                                     y = mean, 
+                                     #group = Identity, 
+                                     #colour = Identity
+                                     ), 
+             linetype = 1, position = pd1, size = 2)+
+   geom_point(data = df.perdist.sum_p, aes(x = condition, # group mean
+                                      y = mean, 
+                                      #group = Identity, 
+                                      #colour = Identity
+                                      ), 
+              shape = 18, position = pd1, size = 8) +
+   geom_errorbar(data = df.perdist.sum_p, aes(x = condition,  # group error bar.
+                                         y = mean, #group = Identity, 
+                                         #colour = Identity,
+                                         ymin = mean - 1.96*se, 
+                                         ymax = mean + 1.96*se), 
+                 width = .05, position = pd1, size = 2, alpha = 0.75) 
+
+df.perdist.sum2_p <- df.perdist %>%
+  dplyr::mutate(Rang_est_err_s = SelfGood + SelfBad - GoodBad,
+                Rang_est_err_ns = GoodNeut + NeutBad - GoodBad) %>% #
+  dplyr::select(subjID, Rang_est_err_s, Rang_est_err_ns) %>%
+  tidyr::pivot_longer(cols = Rang_est_err_s:Rang_est_err_ns, 
+                      names_to = "condition",
+                      values_to = "distance") %>%
+  dplyr::mutate(condition = factor(condition,
+                                   levels = c('Rang_est_err_s', 'Rang_est_err_ns'))) %>%
+  dplyr::filter(!is.na(distance)) %>%
+  dplyr::group_by(condition) %>%
+  dplyr::summarise_each(funs(mean, sd, se=sd(.)/sqrt(n())), distance) 
+
+df.perdist %>% 
+  dplyr::mutate(Rang_est_err_s = SelfGood + SelfBad - Good
+
+# intersection between participant from behavioral task and scales and get the data
+subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253
+
+df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
+  dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
 df.q_scores.v <- merge(df.q_scores.v, df.perdist)
 
