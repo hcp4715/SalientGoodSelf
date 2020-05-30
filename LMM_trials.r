@@ -1,4 +1,4 @@
-### This is a temporary script for testing some codes.
+### This is a temporary script for testing both frequentists and bayesian generalized linear mixed model.
 
 ### Bayesian Hierarchical model for Signal Detection Theory
 # here I will use the equal variance Gaussian SDT (EVSDT)

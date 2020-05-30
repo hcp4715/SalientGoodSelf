@@ -50,12 +50,15 @@ output            :
 ---
 
 ```{r setup, include=FALSE}
+rm(list = ls())
+
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
 source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 #curDir = '.'#dirname(rstudioapi::getSourceEditorContext()$path)
-figDir = paste(curDir, '/figures', sep = '')
+figDir = here::here('figures')
+
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
 options(tinytex.verbose = F) # debug the tex
@@ -67,9 +70,13 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
 CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
 
+load("AllData.RData")
+
 ```
 
-The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (H_1) and the probability of the current data pattern under null hypothesis (H_0), which index the relative evidence for these two hypotheses from the current data. The BF_10 represents the evidence for alternative hypothesis (H_1) vs. evidence for null hypothesis (H_0); in contrast, BF_01 represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the BF_10 > 3 means there are some evidence for H_1 as compared with H_0,  BF_10 great or equal to 10 means strong evidence for H_1.
+We will use both Frequentist and Bayesian generalized linear mixed model (GLMM) to estimate the effect of moral valence and self-referential.
+
+The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis ($H_1$) and the probability of the current data pattern under null hypothesis (H_0), which index the relative evidence for these two hypotheses from the current data. The $BF_10$ represents the evidence for alternative hypothesis (H_1) vs. evidence for null hypothesis ($H_0$); in contrast, $BF_01$ represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the $BF_10$ > 3 means there are some evidence for $H_1$ as compared with $H_0$,  $BF_10$ great or equal to 10 means strong evidence for $H_1$.
 
 # Experiment 1a
 
@@ -81,26 +88,26 @@ The Bayes factor is the ratio of the probability of the current data pattern und
 # foreignStdID <- c(24,29,30,33)
 
 # data collected in Tsinghua U
-df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201404_2019_export.csv", header = TRUE,
-                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
-  dplyr::rename(Subject = 1) %>%
-  dplyr::mutate(Site = "THU", Subject = Subject + 1000,
-                Val_lab = ifelse(Label == "好人", "Good",                      # re-code the label
-                                 ifelse(Label == "常人", "Neutral", "Bad")))
+#df1a_1 <- read.csv(here::here('exp1a', 'rawdata_behav_exp1a_201404_2019_export.csv'), header = TRUE,
+#                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
+#  dplyr::rename(Subject = 1) %>%
+#  dplyr::mutate(Site = "THU", Subject = Subject + 1000,
+#                Val_lab = ifelse(Label == "好人", "Good",                      # re-code the label
+#                                 ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201704_2019_export.csv",header = TRUE,
-                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
-  dplyr::rename(Subject = 1) %>%
-  dplyr::mutate(Site = "WZU",
-                Val_lab = ifelse(Label == "好人", "Good", 
-                                 ifelse(Label == "常人", "Neutral", "Bad")))
+#df1a_2 <- read.csv(file.path('.', 'exp1a', 'rawdata_behav_exp1a_201704_2019_export.csv'), header = TRUE,
+#                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+#  dplyr::rename(Subject = 1) %>%
+#  dplyr::mutate(Site = "WZU",
+#                Val_lab = ifelse(Label == "好人", "Good", 
+#                                 ifelse(Label == "常人", "Neutral", "Bad")))
 
 # combine data and clean
-df1a   <- rbind(df1a_1,df1a_2) %>%
-        dplyr::rename(ACC = Target.ACC,           # rename columns
-                      RT  = Target.RT,
-                      CRESP = Target.CRESP,
+#df1a   <- rbind(df1a_1,df1a_2) %>%
+#        dplyr::rename(ACC = Target.ACC,           # rename columns
+#                      RT  = Target.RT,
+#                      CRESP = Target.CRESP,
                       BlockNo = BlockList.Sample,
                       TrialNo = SubTrial,
                       RESP = Target.RESP,
@@ -185,7 +192,7 @@ df1a.v.dprime_l <- df1a.v %>%
   dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
                 FAR  = FA/(FA+CR)) %>%                                       # fa rate
   dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(FA + CA)), FAR)) %>%        # if FA rate is 0, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(FA + CR)), FAR)) %>%        # if FA rate is 0, standardize it
   dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
   dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
@@ -206,14 +213,14 @@ df1a.meta.d <- df1a.v.dprime_l %>%
   dplyr::mutate(Identity = NA,
                 ExpID = 'Exp1a',
                 Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-  dplyr::select(CommonColnames_d)
+  dplyr::select(all_of(CommonColnames_d))
 
 df1a.meta.rt <- df1a.v.rt_m %>% 
   dplyr::rename(RT = RT_m) %>%
   dplyr::mutate(Identity = NA,
                 ExpID = 'Exp1a',
                 Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-  dplyr::select(CommonColnames_rt)
+  dplyr::select(all_of(CommonColnames_rt))
 
 ```
 ## Methods
@@ -250,16 +257,17 @@ Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the p
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
 df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
-df1a_dprime_anova_apa <- df1a_dprime_anova$aov %>% papaja::apa_print()
+df1a_dprime_anova_apa <- df1a_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1a_d)
 ```
 ```{r results='asis', echo = F, eval=F}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-apa_table(df1a_dprime_anova_apa$table
+papaja::apa_table(df1a_dprime_anova_apa$table
   , caption = "Repeated measure ANOVA of *d* prime from Experiment 1a"
   , note = "*d* prime was calculated in a signal detection way.")
+
 ```
 
 We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Netural-person condition (1.95, SE = 0.16), but didn't reach statical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person conditiona is significantly greater than the Bad-person conidition, *t*(50) = 2.109, *p* = .098.
@@ -268,7 +276,7 @@ We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The pos
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
 
-df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print()
+df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print.afex_aov()
 
 df1a.v.rt_m1 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
@@ -279,6 +287,7 @@ df1a.v.rt_m1 <- df1a.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
 df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
+df1a_RT_anova_m_apa <- df1a_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 df1a.v.rt_m2 <- df1a.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
@@ -288,6 +297,7 @@ df1a.v.rt_m2 <- df1a.v %>%
   dplyr::ungroup()
 
 df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
+df1a_RT_anova_nm_apa <- df1a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1a_rt)
@@ -297,7 +307,6 @@ We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad)
 
 We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
 
-
 # Experiment 1b
 In this study, we aimed at excluding the potential confouding factor of the familarity of words we used in experiment 1a, by matching the familiarity of the words.
 
@@ -305,12 +314,12 @@ In this study, we aimed at excluding the potential confouding factor of the fami
 
 ```{r loadingData_1b,echo=FALSE,results='hide'}
 # data collected in Tsinghua U
-df1b_1 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_2014.csv", header = TRUE,
+df1b_1 <- read.csv(file.path('.', 'exp1b', 'rawdata_behav_exp1b_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
         dplyr::mutate(Site = "THU", Subject = Subject + 1100)
 
 # data collected in Wenzhou U
-df1b_2 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201705.csv",header = TRUE,
+df1b_2 <- read.csv(file.path('.', 'exp1b', 'rawdata_behav_exp1b_201705.csv'), header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
         dplyr::mutate(Site = "WZU")
 
@@ -455,7 +464,7 @@ Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r 1b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df1b_dprime_anova <- afex::aov_ez('Subject','dprime',df1b.v.dprime_l, within = c('Valence'))
-df1b_dprime_anova_apa <- df1b_dprime_anova$aov %>% papaja::apa_print()
+df1b_dprime_anova_apa <- df1b_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1b_d)
@@ -466,7 +475,7 @@ Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_ap
 
 ```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m, within = c('Matchness','Valence'))
-df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print()
+df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print.afex_aov()
 
 df1b.v.rt_m1 <- df1b.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
@@ -476,9 +485,9 @@ df1b.v.rt_m1 <- df1b.v %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
 
-df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m1,     # using afex's function 
+df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m', df1b.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print()
+df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 df1b.v.rt_m2 <- df1b.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
@@ -489,7 +498,7 @@ df1b.v.rt_m2 <- df1b.v %>%
 
 df1b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print()
+df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print.afex_aov()
 posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1b_rt)
 ```
@@ -506,13 +515,13 @@ In this study, we further control the valence of words using in our experiment. 
 
 ```{r loadingData_1c,echo=FALSE,results='hide'}
 # data collected in Tsinghua U
-df1c <- read.csv(".\\exp1c\\rawdata_behav_exp1c_2014.csv", header = TRUE,
+df1c <- read.csv(file.path('.', 'exp1c', 'rawdata_behav_exp1c_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
-  dplyr::select(ï..Subject,Age, Handedness,Sex,TrialList1.Sample,BlockList.Sample,
+  dplyr::rename(Subject = 1) %>%
+  dplyr::select(Subject, Age, Handedness,Sex,TrialList1.Sample,BlockList.Sample,
                  Shape,YesNoResp,CorrectAnswer,                         # select necessary columns
                  Target1.ACC,Target1.RESP, Target1.RT) %>%
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = TrialList1.Sample,
                 ACC = Target1.ACC,                         # rename columns
                 CRESP = CorrectAnswer,
@@ -658,14 +667,14 @@ Mplots(expName = 'exp1c', df1c.v.dprime_l,rtdata)
 df1c_dprime_anova <- afex::aov_ez('Subject','dprime',df1c.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
 
-df1c_dprime_anova_apa <- df1c_dprime_anova$aov %>% papaja::apa_print()
+df1c_dprime_anova_apa <- df1c_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_1c_d <- emmeans::emmeans(df1c_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1c_d)
 
 df1c_RT_anova <- afex::aov_ez('Subject','RT_m',df1c.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
-df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print()
+df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print.afex_aov()
 
 ```
 
@@ -681,7 +690,7 @@ Experiment 2 was conducted for two purpose: (1) to further confirm the facilitat
 
 ```{r loadingData_2,echo=FALSE,results='hide'}
 # data collected in Tsinghua U
-df2 <- read.csv(".\\exp2\\rawdata_behav_exp2.csv", header = TRUE,
+df2 <- read.csv(file.path('.', 'exp2', 'rawdata_behav_exp2.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
   dplyr::rename(ACC = Target.ACC,           # rename columns
                 RT  = Target.RT,
@@ -818,7 +827,7 @@ Figure \@ref(fig:ex2-dprime-rt) shows *d* prime and reaction times of experiment
 ```{r 2_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df2_dprime_anova <- afex::aov_ez('Subject','dprime',df2.v.dprime_l, within = c('Valence'))
-df2_dprime_anova_apa <- df2_dprime_anova$aov %>% papaja::apa_print()
+df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_2_d)
@@ -830,7 +839,7 @@ The results of reaction times of matchness trials showed similiar pattern as the
 
 ```{r 2_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df2_RT_anova <- afex::aov_ez('Subject','RT_m',df2.v.rt_m, within = c('Matchness','Valence'))
-df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print()
+df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print.afex_aov()
 
 # match trials
 df2.v.rt_m1 <- df2.v %>%
@@ -843,7 +852,7 @@ df2.v.rt_m1 <- df2.v %>%
 
 df2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df2.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print()
+df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_2_rt <- emmeans::emmeans(df2_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_2_rt)
@@ -858,7 +867,7 @@ df2.v.rt_m2 <- df2.v %>%
 
 df2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df2.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print()
+df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 ```
 We found intercation between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (548 $\pm$ 9.4) were responded faster than Neutral-Person (582 $\pm$ 10.9), (*t*(33) = -3.95, *p* = 0.0011) and Bad Person (582 $\pm$ 10.2), *t*(33) = -3.9, *p* = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (*t*(33) = -0.01, *p* = 0.999).  For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).
@@ -873,7 +882,7 @@ To examine the modulation effect of positive valence was an intrinsic, self-refe
 ## Method
 ```{r loadingData_3a,echo=FALSE,results='hide'}
 # data collected in Tsinghua U
-df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014.csv", header = TRUE,
+df3a <- read.csv(file.path('.', 'exp3a', 'rawdata_behav_exp3a_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
   dplyr::mutate() %>%
   dplyr::rename(ACC = Target.ACC,           # rename columns
@@ -1023,7 +1032,7 @@ Figure \@ref(fig:ex3a-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r 3a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df3a_dprime_anova <- afex::aov_ez('Subject','dprime',df3a.v.dprime_l, within = c('Identity','Valence'))
-df3a_dprime_anova_apa <- df3a_dprime_anova$aov %>% papaja::apa_print()
+df3a_dprime_anova_apa <- df3a_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_3a_d <- emmeans::emmeans(df3a_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_3a_d)
@@ -1031,14 +1040,14 @@ posthoc_3a_d <- emmeans::emmeans(df3a_dprime_anova, "Valence") # compare each va
 df3a_dprime_s_anova <- df3a.v.dprime_l %>%
   dplyr::filter(Identity == 'Self') %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df3a_dprime_s_anova_apa <- df3a_dprime_s_anova$aov %>% papaja::apa_print()
+df3a_dprime_s_anova_apa <- df3a_dprime_s_anova %>% papaja::apa_print.afex_aov()
 posthoc_3a_d_s <- emmeans::emmeans(df3a_dprime_s_anova, "Valence")
 pairs(posthoc_3a_d_s)
 
 df3a_dprime_o_anova <- df3a.v.dprime_l %>%
   dplyr::filter(Identity == 'Other') %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df3a_dprime_o_anova_apa <- df3a_dprime_o_anova$aov %>% papaja::apa_print()
+df3a_dprime_o_anova_apa <- df3a_dprime_o_anova %>% papaja::apa_print.afex_aov()
 posthoc_3a_d_o <- emmeans::emmeans(df3a_dprime_s_anova, "Valence")
 pairs(posthoc_3a_d_o)
 
@@ -1052,7 +1061,7 @@ We then conducted separated ANOVA for self-referential and other-referential tri
 ```{r 3a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df3a_RT_anova <- afex::aov_ez('Subject','RT_m',df3a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
-df3a_RT_anova_apa <- df3a_RT_anova %>% papaja::apa_print()
+df3a_RT_anova_apa <- df3a_RT_anova %>% papaja::apa_print.afex_aov()
 ```
 We found intercation between Matchness and Valence (`r df3a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
@@ -1062,7 +1071,7 @@ df3a_RT_anova_m <- df3a.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Identity','Valence'))
 
-df3a_RT_anova_m_apa <- df3a_RT_anova_m %>% papaja::apa_print()
+df3a_RT_anova_m_apa <- df3a_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 #posthoc_3a_rt <- emmeans::emmeans(df3a_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_3a_rt)
@@ -1071,7 +1080,7 @@ df3a_RT_anova_m_s <- df3a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Valence'))
 
-df3a_RT_anova_m_s_apa <- df3a_RT_anova_m_s %>% papaja::apa_print()
+df3a_RT_anova_m_s_apa <- df3a_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
 posthoc_3a_rt_m_s <- emmeans::emmeans(df3a_RT_anova_m_s, 'Valence')
 pairs(posthoc_3a_rt_m_s)
@@ -1080,7 +1089,7 @@ df3a_RT_anova_m_o <- df3a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Valence'))
 
-df3a_RT_anova_m_o_apa <- df3a_RT_anova_m_o %>% papaja::apa_print()
+df3a_RT_anova_m_o_apa <- df3a_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
 
 # Mismatch trials
@@ -1088,7 +1097,7 @@ df3a_RT_anova_nm <- df3a.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
 
-df3a_RT_anova_nm_apa <- df3a_RT_anova_nm %>% papaja::apa_print()
+df3a_RT_anova_nm_apa <- df3a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
 For the matched trials, we found that the interaction between identity and valence, `r df3a_RT_anova_m_apa$full$Identity_Valence`, as well as the main effect of valence `r df3a_RT_anova_m_apa$full$Valence`, but not the effect of identity `r df3a_RT_anova_m_apa$full$Identity`. As for the *d* prime, we separated analyzed the self-referential and other-referential trials. For the Self-referential trials, we found the main effect of valence, `r df3a_RT_anova_m_s_apa$full$Valence`; for the other-referential trials, the effect of valence is weaker, `r df3a_RT_anova_m_o_apa$full$Valence`. We then focused on the self conditions: the good-self condition (713 $\pm$ 12) is faster than neutral- (776 $\pm$ 11.8), *t*(34) = -7.396, *p* < .0001 , and bad-self (772 $\pm$ 10.1) conditions,  *t*(34) = -5.66, *p* < .0001. But there is not difference between neutral- and bad-self conditions, *t*(34) = 0.481, *p* = 0.881.
 
@@ -1100,11 +1109,10 @@ In study 3a, participants had to remember 6 pairs of association, which cause hi
 ## Method
 ```{r loadingData_3b,echo=FALSE,results='hide'}
 # data collected in Tsinghua U
-df3b <- read.csv(".\\exp3b\\rawdata_behav_exp3b_2017.csv", header = TRUE,
+df3b <- read.csv(file.path('.','exp3b', 'rawdata_behav_exp3b_2017.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
   dplyr::mutate() %>%
-  dplyr::rename(Subject = ï..Subject,
-                ACC = Target.ACC,           # rename columns
+  dplyr::rename(ACC = Target.ACC,           # rename columns
                 RT  = Target.RT,
                 CRESP = CorrectAnswer,
                 #BlockNo = BlockList.Sample,
@@ -1248,20 +1256,21 @@ Figure \@ref(fig:ex3b-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r 3b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df3b_dprime_anova <- afex::aov_ez('Subject','dprime',df3b.v.dprime_l, within = c('Identity','Valence'))
-df3b_dprime_anova_apa <- df3b_dprime_anova$aov %>% papaja::apa_print()
+df3b_dprime_anova_apa <- df3b_dprime_anova %>% papaja::apa_print.afex_aov()
 
 # calculate d prime for self condition
 df3b_dprime_anova_s <- df3b.v.dprime_l %>%
   dplyr::filter(Identity == "Self") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 
-df3b_dprime_anova_s_apa <- df3b_dprime_anova_s$aov %>% papaja::apa_print()
+df3b_dprime_anova_s_apa <- df3b_dprime_anova_s %>% papaja::apa_print.afex_aov()
 
 df3b_dprime_anova_o <- df3b.v.dprime_l %>%
   dplyr::filter(Identity == "Other") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 
-df3b_dprime_anova_o_apa <- df3b_dprime_anova_o$aov %>% papaja::apa_print()
+df3b_dprime_anova_o_apa <- df3b_dprime_anova_o %>% papaja::apa_print.afex_aov()
+#df3b_dprime_anova_o_apa$full$Valence
 
 posthoc_3b_d_s <- emmeans::emmeans(df3b_dprime_anova_s, "Valence")  # main effect
 pairs(posthoc_3b_d_s)
@@ -1284,7 +1293,7 @@ We also tested the effect of personal association by comparing *d’* values for
 
 ```{r 3b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df3b_RT_anova <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m, within = c('Matchness','Identity','Valence'))
-df3b_RT_anova_apa <- df3b_RT_anova %>% papaja::apa_print()
+df3b_RT_anova_apa <- df3b_RT_anova %>% papaja::apa_print.afex_aov()
 ```
 The results of reaction times of matchness trials showed similiar pattern as the *d* prime data. We found three-way intercation between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
@@ -1293,7 +1302,7 @@ The results of reaction times of matchness trials showed similiar pattern as the
 df3b_RT_anova_m <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df3b_RT_anova_m_apa <- df3b_RT_anova_m %>% papaja::apa_print()
+df3b_RT_anova_m_apa <- df3b_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_3b_rt <- emmeans::emmeans(df3b_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_3b_rt)
@@ -1301,28 +1310,28 @@ posthoc_3b_rt <- emmeans::emmeans(df3b_RT_anova_m, c('Identity',"Valence")) # co
 df3b.v.rt_m1_s_anova <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df3b.v.rt_m1_s_anova_apa <- df3b.v.rt_m1_s_anova %>% papaja::apa_print()
+df3b.v.rt_m1_s_anova_apa <- df3b.v.rt_m1_s_anova %>% papaja::apa_print.afex_aov()
 
 df3b.v.rt_m1_o_anova <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df3b.v.rt_m1_o_anova_apa <- df3b.v.rt_m1_o_anova %>% papaja::apa_print()
+df3b.v.rt_m1_o_anova_apa <- df3b.v.rt_m1_o_anova %>% papaja::apa_print.afex_aov()
 
 # Mismatch trials
 df3b_RT_anova_nm <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df3b_RT_anova_nm_apa <- df3b_RT_anova_nm %>% papaja::apa_print()
+df3b_RT_anova_nm_apa <- df3b_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 df3b_RT_anova_nm_s <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch" & Identity == "Self") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df3b_RT_anova_nm_s_apa <- df3b_RT_anova_nm_s %>% papaja::apa_print()
+df3b_RT_anova_nm_s_apa <- df3b_RT_anova_nm_s %>% papaja::apa_print.afex_aov()
 
 df3b_RT_anova_nm_o <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch" & Identity == "Other") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df3b_RT_anova_nm_o_apa <- df3b_RT_anova_nm_o %>% papaja::apa_print()
+df3b_RT_anova_nm_o_apa <- df3b_RT_anova_nm_o %>% papaja::apa_print.afex_aov()
 
 posthoc_3b_rt_nm_o <- emmeans::emmeans(df3b_RT_anova_nm_o, 'Valence')
 pairs(posthoc_3b_rt_nm_o)
@@ -1344,13 +1353,14 @@ In study 1-3 participants made explicit judgements about moral associations. In 
 In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the instrinc binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
 
 ```{r loadingData_4a,echo=FALSE,results='hide'}
-df4a_1 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df4a_1 <- read.csv(file.path(".", "exp4a", "rawdata_behav_exp4a_2015.csv"), 
+                   header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality,
                 Identity = self) %>%
   dplyr::mutate(Site = "THU") %>%
   dplyr::mutate(Subject = Subject + 4100)  
 
-df4a_2 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df4a_2 <- read.csv(file.path(".", "exp4a", "rawdata_behav_exp4a_2017.csv"),header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::mutate(Site = "WZU")
 
 df4a <- rbind(df4a_1,df4a_2) %>%
@@ -1494,12 +1504,12 @@ Figure \@ref(fig:ex4a-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r analyzing for d prime_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
 df4a_dprime_anova <- afex::aov_ez('Subject','dprime',df4a.v.dprime_l, within = c('Identity','Valence'))
-df4a_dprime_anova_apa <- df4a_dprime_anova$aov %>% papaja::apa_print()
+df4a_dprime_anova_apa <- df4a_dprime_anova %>% papaja::apa_print.afex_aov()
 
 df4a_dprime_s_anova <- df4a.v.dprime_l %>%
   dplyr::filter(Identity == "Self")%>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df4a_dprime_s_anova_apa <- df4a_dprime_s_anova$aov %>% papaja::apa_print()
+df4a_dprime_s_anova_apa <- df4a_dprime_s_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_4a_d_s <- emmeans::emmeans(df4a_dprime_s_anova, "Valence")
 pairs(posthoc_4a_d_s)
@@ -1507,7 +1517,7 @@ pairs(posthoc_4a_d_s)
 df4a_dprime_o_anova <- df4a.v.dprime_l %>%
   dplyr::filter(Identity == "Other")%>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df4a_dprime_o_anova_apa <- df4a_dprime_o_anova$aov %>% papaja::apa_print()
+df4a_dprime_o_anova_apa <- df4a_dprime_o_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_4a_d_m1 <- emmeans::emmeans(df4a_dprime_anova, "Valence", by = "Identity") # compare each valence for both self and other condition
 #pairs(posthoc_4a_d_m1)
@@ -1522,13 +1532,13 @@ We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repe
 
 ```{r analyzing for RT_4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4a_RT_anova <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m, within = c('Matchness','Identity','Valence'))
-df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print()
+df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print.afex_aov()
 
 # match trials
 df4a_RT_anova_m <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print()
+df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_4a_rt <- emmeans::emmeans(df4a_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4a_rt)
@@ -1537,7 +1547,7 @@ posthoc_4a_rt <- emmeans::emmeans(df4a_RT_anova_m, c('Identity',"Valence")) # co
 df4a_RT_anova_m_s <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df4a_RT_anova_m_s_apa <- df4a_RT_anova_m_s %>% papaja::apa_print()
+df4a_RT_anova_m_s_apa <- df4a_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
 posthoc_4a_rt_s <- emmeans::emmeans(df4a_RT_anova_m_s, c("Valence")) # compare each valence for both self and other condition
 pairs(posthoc_4a_rt_s)
@@ -1546,13 +1556,13 @@ pairs(posthoc_4a_rt_s)
 df4a_RT_anova_m_o <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df4a_RT_anova_m_o_apa <- df4a_RT_anova_m_o %>% papaja::apa_print()
+df4a_RT_anova_m_o_apa <- df4a_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
 # Mismatch trials
 df4a_RT_anova_nm <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print()
+df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
 We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (`r df4a_RT_anova_apa$full$Matchness`) and intercation between Matchness and Identity(`r df4a_RT_anova_apa$full$Matchness_Identity`)
 
@@ -1564,10 +1574,10 @@ For non-matched trials, there was no significant effect. Morality (`r df4a_RT_an
 
 ```{r results='asis', echo = F, eval=FALSE}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-apa_table(df4a_RT_anova_m_apa$table
-  , caption = "A really beautiful ANOVA table."
-  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
-)
+#apa_table(df4a_RT_anova_m_apa$table
+#  , caption = "A really beautiful ANOVA table."
+#  , note = "Note that the column names contain beautiful mathematical copy: This is because the table has variable labels."
+#)
 ```
 
 # Experiment 4b
@@ -1575,11 +1585,13 @@ apa_table(df4a_RT_anova_m_apa$table
 ## Method
 
 ```{r loadingData_4b,echo=FALSE,results='hide'}
-df4b_1 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2015.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df4b_1 <- read.csv(file.path(".", "exp4b", "rawdata_behav_exp4b_2015.csv"), 
+                             header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality) %>%
   dplyr::mutate(Site = "THU")
 
-df4b_2 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2017.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df4b_2 <- read.csv(file.path(".", "exp4b", "rawdata_behav_exp4b_2017.csv"), 
+                             header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality) %>%
   dplyr::mutate(Site = "WZU")
 
@@ -1718,7 +1730,7 @@ Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r analyzing for d prime_e4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime with 2*2 design
 df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b.v.dprime_l, within = c('Identity','Valence'))
-df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print()
+df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print.afex_aov()
 #df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
 We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
@@ -1728,7 +1740,7 @@ We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3
 ```{r analyzing for RT_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4b_RT_anova <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
-df4b_RT_anova_apa <- df4b_RT_anova %>% papaja::apa_print()
+df4b_RT_anova_apa <- df4b_RT_anova %>% papaja::apa_print.afex_aov()
 ```
 There was a main effect of Matchness (`r df4b_RT_anova_apa$full$Matchness`), main effect of valence (`r df4b_RT_anova_apa$full$Valence`),  intercation between Matchness and Valence(`r df4b_RT_anova_apa$full$Matchness_Valence`), and three way interaction (`r df4b_RT_anova_apa$full$Matchness_Identity_Valence`).
 
@@ -1745,7 +1757,7 @@ df4b.v.rt_m1 <- df4b.v %>%
 
 df4b_RT_anova_m <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1,     # using afex's function 
                                   within = c('Identity','Valence'))
-df4b_RT_anova_m_apa <- df4b_RT_anova_m %>% papaja::apa_print()
+df4b_RT_anova_m_apa <- df4b_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_4b_rt <- emmeans::emmeans(df4b_RT_anova_m, 'Identity', by = "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_4b_rt)
@@ -1760,7 +1772,7 @@ df4b.v.rt_m2 <- df4b.v %>%
 
 df4b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m2,     # using afex's function 
                                   within = c('Identity','Valence'))
-df4b_RT_anova_nm_apa <- df4b_RT_anova_nm %>% papaja::apa_print()
+df4b_RT_anova_nm_apa <- df4b_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 # match trials: self condition
 df4b.v.rt_m1_s <- df4b.v %>%
@@ -1773,7 +1785,7 @@ df4b.v.rt_m1_s <- df4b.v %>%
 
 df4b_RT_anova_m_s <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1_s,     # using afex's function 
                                   within = c('Valence'))
-df4b_RT_anova_m_s_apa <- df4b_RT_anova_m_s %>% papaja::apa_print()
+df4b_RT_anova_m_s_apa <- df4b_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
 posthoc_4b_rt_s <- emmeans::emmeans(df4b_RT_anova_m_s, c("Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4b_rt_s)
@@ -1789,7 +1801,7 @@ df4b.v.rt_m1_o <- df4b.v %>%
 
 df4b_RT_anova_m_o <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m1_o,     # using afex's function 
                                   within = c('Valence'))
-df4b_RT_anova_m_o_apa <- df4b_RT_anova_m_o %>% papaja::apa_print()
+df4b_RT_anova_m_o_apa <- df4b_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
 posthoc_4b_rt_o <- emmeans::emmeans(df4b_RT_anova_m_o, c("Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4b_rt_o)
@@ -1810,7 +1822,8 @@ So far, we have considered the modulation effect of morality and found that the 
 ## Method
 
 ```{r loadingData_5,echo=FALSE,results='hide'}
-df5 <- read.csv(".\\exp5_specificity\\rawdata_behav_5_specificity_2016.csv",header = TRUE, sep = ",",
+df5 <- read.csv(file.path(".", "exp5_specificity", "rawdata_behav_5_specificity_2016.csv"),
+                header = TRUE, sep = ",",
                 stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
   dplyr::rename(BlockListM.Sample = BlockListMoral.Sample, 
                 Matchness = YesNoResp, CRESP = CorrectAnswer) %>%                            # rename the columns
@@ -2009,7 +2022,7 @@ Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment
 # anova for d prime with 2*2 design
 df5_dprime_anova <- afex::aov_ez('Subject','dprime',df5.v.dprime_l,  # using afex's function 
                                   within = c('taskType','Valence'))
-df5_dprime_anova_apa <- df5_dprime_anova %>% papaja::apa_print()
+df5_dprime_anova_apa <- df5_dprime_anova %>% papaja::apa_print.afex_aov()
 #df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
 
@@ -2019,21 +2032,21 @@ df5_dprime_anova_apa <- df5_dprime_anova %>% papaja::apa_print()
 df5.v.dprime_M_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Morality") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df5_dprime_M_anova_apa <- df5.v.dprime_M_anova %>% papaja::apa_print()
+df5_dprime_M_anova_apa <- df5.v.dprime_M_anova %>% papaja::apa_print.afex_aov()
 post_hoc_5_d_m <- emmeans::emmeans(df5.v.dprime_M_anova,'Valence')
 pairs(post_hoc_5_d_m)
 
 df5.v.dprime_E_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Emotion") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df5_dprime_E_anova_apa <- df5.v.dprime_E_anova %>% papaja::apa_print()
+df5_dprime_E_anova_apa <- df5.v.dprime_E_anova %>% papaja::apa_print.afex_aov()
 post_hoc_5_d_e <- emmeans::emmeans(df5.v.dprime_E_anova,'Valence')
 pairs(post_hoc_5_d_e)
 
 df5.v.dprime_P_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Person") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df5_dprime_P_anova_apa <- df5.v.dprime_P_anova %>% papaja::apa_print()
+df5_dprime_P_anova_apa <- df5.v.dprime_P_anova %>% papaja::apa_print.afex_aov()
 post_hoc_5_d_p <- emmeans::emmeans(df5.v.dprime_P_anova,'Valence')
 pairs(post_hoc_5_d_p)
 
@@ -2041,7 +2054,7 @@ pairs(post_hoc_5_d_p)
 df5.v.dprime_S_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Scene") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df5_dprime_S_anova_apa <- df5.v.dprime_S_anova %>% papaja::apa_print()
+df5_dprime_S_anova_apa <- df5.v.dprime_S_anova %>% papaja::apa_print.afex_aov()
 
 post_hoc_5_d_s <- emmeans::emmeans(df5.v.dprime_S_anova,'Valence')
 pairs(post_hoc_5_d_s)
@@ -2066,34 +2079,34 @@ As in previous experiment, we focused our analysis on the matched trials. We con
 
 df5_RT_anova <- afex::aov_ez('Subject','RT_m',df5.v.rt_m, within = c("Matchness",'taskType','Valence')) # using afex's function
 
-df5_RT_anova_apa <- df5_RT_anova %>% papaja::apa_print()
+df5_RT_anova_apa <- df5_RT_anova %>% papaja::apa_print.afex_aov()
 
 df5.v.rt_anova_m <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('taskType','Valence'))
-df5.v.rt_anova_m_apa <- df5.v.rt_anova_m %>% papaja::apa_print()
+df5.v.rt_anova_m_apa <- df5.v.rt_anova_m %>% papaja::apa_print.afex_aov()
 posthoc_5_rt_m <- emmeans::emmeans(df5.v.rt_anova_m, 'Valence', by = 'taskType')
 pairs(posthoc_5_rt_m)
 
 df5.v.rt_anova_m_M <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & taskType == "Morality") %>%     # task = morality
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df5.v.rt_anova_m_M_apa <- df5.v.rt_anova_m_M %>% papaja::apa_print()
+df5.v.rt_anova_m_M_apa <- df5.v.rt_anova_m_M %>% papaja::apa_print.afex_aov()
 
 df5.v.rt_anova_m_E <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & taskType == "Emotion") %>%     # task = emotion
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df5.v.rt_anova_m_E_apa <- df5.v.rt_anova_m_E %>% papaja::apa_print()
+df5.v.rt_anova_m_E_apa <- df5.v.rt_anova_m_E %>% papaja::apa_print.afex_aov()
 
 df5.v.rt_anova_m_P <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & taskType == "Person") %>%     # task = person
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df5.v.rt_anova_m_P_apa <- df5.v.rt_anova_m_P %>% papaja::apa_print()
+df5.v.rt_anova_m_P_apa <- df5.v.rt_anova_m_P %>% papaja::apa_print.afex_aov()
 
 df5.v.rt_anova_m_S <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & taskType == "Scene") %>%     # task = scene
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df5.v.rt_anova_m_S_apa <- df5.v.rt_anova_m_S %>% papaja::apa_print()
+df5.v.rt_anova_m_S_apa <- df5.v.rt_anova_m_S %>% papaja::apa_print.afex_aov()
 
 df5.v.rt_anova_nm <- df5.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
@@ -2129,11 +2142,11 @@ Experiment 6a was conducted to study the neural correlates of the positive prior
 
 ## Method
 ```{r loadingData_6a,echo=FALSE,results='hide'}
-df6a <- read.csv(".\\exp6a_erp1\\rawdata_erp_exp6a_2014.csv",header = TRUE, sep = ",",
+df6a <- read.csv(file.path(".", "exp6a_erp1", "rawdata_erp_exp6a_2014.csv"), 
+                 header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = SubTrial,
                 Matchness = YesNoResp, 
                 Valence = Shape,
@@ -2277,7 +2290,7 @@ Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt)
 # anova for d prime with 2*2 design
 df6a_dprime_anova <- afex::aov_ez('Subject','dprime',df6a.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
-df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print()
+df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_6a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
 graphics::pairs(posthoc_6a_d)
@@ -2291,7 +2304,7 @@ The results of reaction times of matchness trials showed similiar pattern as the
 
 df6a_RT_anova <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
-df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print()
+df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print.afex_aov()
 
 # match trials
 df6a.v.rt_m1 <- df6a.v %>%
@@ -2304,7 +2317,7 @@ df6a.v.rt_m1 <- df6a.v %>%
 
 df6a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print()
+df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_6a_rt <- emmeans::emmeans(df6a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_6a_rt)
@@ -2319,7 +2332,7 @@ df6a.v.rt_m2 <- df6a.v %>%
 
 df6a_RT_anova_nm <- afex::aov_ez('Subject','RT_m', df6a.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print()
+df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 ```
 
@@ -2331,11 +2344,11 @@ Experiment 6b was conducted to study the neural correlates of the prioritization
 
 ## Method
 ```{r loadingData_6b,echo=FALSE,results='hide'}
-df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df6b_d1 <- read.csv(file.path(".", "exp6b_erp2", "rawdata_erp_exp6b_d1_2016.csv"), 
+                    header = TRUE, sep = ",",
+                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = SubTrial,
                 Matchness = YesNoResp,
                 Identity = identity,
@@ -2357,11 +2370,11 @@ df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016.csv",header = TRUE
 #                Domain = "Morality") %>%
 #  dplyr::select(CommonColnames)
 
-df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016.csv",header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+df6b_d2 <- read.csv(file.path(".", "exp6b_erp2", "rawdata_erp_exp6b_d2_2016.csv"), 
+                    header = TRUE, sep = ",",
+                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
-  dplyr::rename(Subject = ï..Subject, 
-                BlockNo = BlockList.Sample,
+  dplyr::rename(BlockNo = BlockList.Sample,
                 TrialNo = SubTrial,
                 Matchness = YesNoResp,
                 Identity = identity,
@@ -2537,14 +2550,14 @@ Only the behavioral results were reported here.
 # anova for d prime
 df6b_d1_dprime_anova <- afex::aov_ez('Subject','dprime',df6b_d1.v.dprime_l,  # using afex's function 
                                   within = c('Identity','Valence'))
-df6b_d1_dprime_anova_apa <- df6b_d1_dprime_anova$aov %>% papaja::apa_print()
+df6b_d1_dprime_anova_apa <- df6b_d1_dprime_anova %>% papaja::apa_print.afex_aov()
 
 # anova for self condition
 df6b_d1_dprime_s_anova <- df6b_d1.v.dprime_l %>%
   dplyr::filter(Identity == "Self") %>%
   afex::aov_ez('Subject','dprime',., within = c('Valence'))
 
-df6b_d1_dprime_s_anova_apa <- df6b_d1_dprime_s_anova$aov %>% papaja::apa_print()
+df6b_d1_dprime_s_anova_apa <- df6b_d1_dprime_s_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_6b_d1_s_d <- emmeans::emmeans(df6b_d1_dprime_s_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_6b_d1_s_d)
@@ -2554,7 +2567,7 @@ df6b_d1_dprime_o_anova <- df6b_d1.v.dprime_l %>%
   dplyr::filter(Identity == "Other") %>%
   afex::aov_ez('Subject','dprime',., within = c('Valence'))
 
-df6b_d1_dprime_o_anova_apa <- df6b_d1_dprime_o_anova$aov %>% papaja::apa_print()
+df6b_d1_dprime_o_anova_apa <- df6b_d1_dprime_o_anova %>% papaja::apa_print.afex_aov()
 ```
 ### Day one
 
@@ -2566,7 +2579,7 @@ There was evidence for the interaction between identity and valence, `r df6b_d1_
 ```{r 6b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df6b_d1_RT_anova <- afex::aov_ez('Subject','RT_m',df6b_d1.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
-df6b_d1_RT_anova_apa <- df6b_d1_RT_anova %>% papaja::apa_print()
+df6b_d1_RT_anova_apa <- df6b_d1_RT_anova %>% papaja::apa_print.afex_aov()
 
 # Day 1: match trials
 df6b_d1_RT_anova_m <- df6b_d1.v %>%
@@ -2578,7 +2591,7 @@ df6b_d1_RT_anova_m <- df6b_d1.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d1_RT_anova_m_apa <- df6b_d1_RT_anova_m %>% papaja::apa_print()
+df6b_d1_RT_anova_m_apa <- df6b_d1_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 ### For matched, self trials
 df6b_d1_RT_anova_m_s <- df6b_d1.v %>%
@@ -2590,7 +2603,7 @@ df6b_d1_RT_anova_m_s <- df6b_d1.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
 
-df6b_d1_RT_anova_m_s_apa <- df6b_d1_RT_anova_m_s %>% papaja::apa_print()
+df6b_d1_RT_anova_m_s_apa <- df6b_d1_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
 posthoc_6b_d1_rt_s <- emmeans::emmeans(df6b_d1_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
 # pairs(posthoc_6b_d1_rt_s)
@@ -2604,7 +2617,7 @@ df6b_d1_RT_anova_m_o <- df6b_d1.v %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
-df6b_d1_RT_anova_m_o_apa <- df6b_d1_RT_anova_m_o %>% papaja::apa_print()
+df6b_d1_RT_anova_m_o_apa <- df6b_d1_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
 # Day1: Mismatch trials
 df6b_d1_RT_anova_nm <- df6b_d1.v %>%
@@ -2614,7 +2627,7 @@ df6b_d1_RT_anova_nm <- df6b_d1.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d1_RT_anova_nm_apa <- df6b_d1_RT_anova_nm %>% papaja::apa_print()
+df6b_d1_RT_anova_nm_apa <- df6b_d1_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
 
 #### RT
@@ -2666,7 +2679,7 @@ Figure \@ref(fig:ex6b-d2-dprime-rt) shows *d* prime and reaction times from day 
 ```{r 5b_dprime_d2, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df6b_d2_dprime_anova <- afex::aov_ez('Subject','dprime',df6b_d2.v.dprime_l,  # using afex's function 
                                   within = c('Identity','Valence'))
-df6b_d2_dprime_anova_apa <- df6b_d2_dprime_anova$aov %>% papaja::apa_print()
+df6b_d2_dprime_anova_apa <- df6b_d2_dprime_anova %>% papaja::apa_print.afex_aov()
 #posthoc_5b_d2_d <- emmeans::emmeans(df6b_d1_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_5b_d2_d)
 
@@ -2675,7 +2688,7 @@ df6b_d2_dprime_s_anova <- df6b_d2.v.dprime_l %>%
   dplyr::filter(Identity == "Self") %>%
   afex::aov_ez('Subject','dprime',., within = c('Valence'))
 
-df6b_d2_dprime_s_anova_apa <- df6b_d2_dprime_s_anova$aov %>% papaja::apa_print()
+df6b_d2_dprime_s_anova_apa <- df6b_d2_dprime_s_anova %>% papaja::apa_print.afex_aov()
 
 posthoc_5b_d2_s_d <- emmeans::emmeans(df6b_d2_dprime_s_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_5b_d2_s_d)
@@ -2685,7 +2698,7 @@ df6b_d2_dprime_o_anova <- df6b_d2.v.dprime_l %>%
   dplyr::filter(Identity == "Other") %>%
   afex::aov_ez('Subject','dprime',., within = c('Valence'))
 
-df6b_d2_dprime_o_anova_apa <- df6b_d2_dprime_o_anova$aov %>% papaja::apa_print()
+df6b_d2_dprime_o_anova_apa <- df6b_d2_dprime_o_anova %>% papaja::apa_print.afex_aov()
 
 ```
 #### *d* prime
@@ -2702,12 +2715,12 @@ df6b_d2.v.rt_m <- df6b_d2.v %>%
 
 df6b_d2_RT_anova <- afex::aov_ez('Subject','RT_m',df6b_d2.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
-df6b_d2_RT_anova_apa <- df6b_d2_RT_anova %>% papaja::apa_print()
+df6b_d2_RT_anova_apa <- df6b_d2_RT_anova %>% papaja::apa_print.afex_aov()
 
 
 df6b_d2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6b_d2.v.rt_m1,     # using afex's function 
                                   within = c('Identity','Valence'))
-df6b_d2_RT_anova_m_apa <- df6b_d2_RT_anova_m %>% papaja::apa_print()
+df6b_d2_RT_anova_m_apa <- df6b_d2_RT_anova_m %>% papaja::apa_print.afex_aov()
 
 posthoc_5b_d2_rt <- emmeans::emmeans(df6b_d2_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_5b_d2_rt)
@@ -2721,7 +2734,7 @@ df6b_d2_RT_anova_m_s <- df6b_d2.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
 
-df6b_d2_RT_anova_m_s_apa <- df6b_d2_RT_anova_m_s %>% papaja::apa_print()
+df6b_d2_RT_anova_m_s_apa <- df6b_d2_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
 posthoc_5b_d2_rt_s <- emmeans::emmeans(df6b_d2_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
 # pairs(posthoc_5b_d2_rt_s)
@@ -2736,7 +2749,7 @@ df6b_d2_RT_anova_m_o <- df6b_d2.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad"))) %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Valence'))
 
-df6b_d2_RT_anova_m_o_apa <- df6b_d2_RT_anova_m_o %>% papaja::apa_print()
+df6b_d2_RT_anova_m_o_apa <- df6b_d2_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
 # Day2: Mismatch trials
 df6b_d2_RT_anova_nm <- df6b_d2.v %>%
@@ -2746,7 +2759,7 @@ df6b_d2_RT_anova_nm <- df6b_d2.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
-df6b_d2_RT_anova_nm_apa <- df6b_d2_RT_anova_nm %>% papaja::apa_print()
+df6b_d2_RT_anova_nm_apa <- df6b_d2_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
 
 #### RT
@@ -2756,7 +2769,7 @@ For the matched trials, the interaction between identity and valence, `r df6b_d2
 
 # References
 ```{r create_r-references}
-r_refs(file = "r-references.bib")
+papaja::r_refs(file = "r-references.bib")
 ```
 
 \begingroup

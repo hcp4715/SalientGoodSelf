@@ -58,7 +58,7 @@ output            :
 ---
 
 ```{r setup, include = FALSE}
-#rm(list = ls())
+rm(list = ls())
 Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
@@ -75,11 +75,22 @@ pkgTest <- function(x)
 
 pkgNeeded <- (c("tidyverse", 'metafor',
                 "corrplot","readr", 
-                "Hmisc",'mosaic', 'here',
-                'brms','papaja'))
+                'mosaic', 'here',
+                'brms'
+                ))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
+
+
+if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
+if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
+
+# Install devtools package if necessary
+if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+
+# Install the stable development verions from GitHub
+if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 #windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
 apatheme = theme_bw()+
@@ -102,7 +113,7 @@ apatheme = theme_bw()+
               axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
 
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
-figDir = paste(curDir, '/figures', sep = '')
+figDir = here::here('figures')
 
 # Seed for random number generation
 set.seed(42)
@@ -135,7 +146,7 @@ E-prime 2.0 was used for presenting stimuli and collecting behavioral responses,
 exp_table <- read.csv('Exp_info_all.csv') %>%
   dplyr::rename(ExpID = 1)
 # knitr::kable(exp_table, caption = "Information about all experiments")
-apa_table(
+papaja::apa_table(
   exp_table
   , caption = "Information about all experiments."
   , note = "DV = dependent variables; Valence = how valence was manipulated; Shape & Label = how shapes & labels were presented."
@@ -551,9 +562,24 @@ RT_val_m3_trunc <- df_moral %>%
             cores = parallel::detectCores(),
             file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
 summary(RT_val_m3_trunc)
+pp_check(RT_val_m3_trunc)
+#plot(RT_val_m3_trunc, "b_")
 
+# compare three models
+loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc)
+bayes_factor(RT_val_m1,RT_val_m2)
+#Monte Carlo SE of elpd_loo is 0.4.
 
-# Get the variables in the model
+#All Pareto k estimates are good (k < 0.5).
+#See help('pareto-k-diagnostic') for details.
+
+#Model comparisons:
+#                elpd_diff se_diff
+#RT_val_m1          0.0       0.0 
+#RT_val_m2         -5.6       3.3 
+#RT_val_m3_trunc -590.6      34.8 
+
+# Get the variables in the model 1
 RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
 
 df_m1_post_rt_exp <- RT_val_m1 %>% 
@@ -653,6 +679,93 @@ df_m1_rt_plot %>%
                scales = "free_y", nrow = 1,
                labeller = label_parsed)
 
+# Get the variables in the model 3
+RT_var_name_m3 <- tidybayes::get_variables(RT_val_m3_trunc)
+
+df_m3_post_rt_exp <- RT_val_m3_trunc %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+rt_pop_mean <- RT_val_m3_trunc %>%
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch`, `b_ValenceBad:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+rt_pop_post <- RT_val_m3_trunc %>% 
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch`, `b_ValenceBad:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+rt_post_tmp <- merge(rt_pop_post, df_m3_post_rt_exp, 
+                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m3_rt_plot <- rt_pop_post %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>%
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., rt_post_tmp) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
+                ) %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
+                diff_GN_NM = ValenceGood,
+                diff_BN_NM = ValenceBad,
+                diff_GN_M = ValenceGood + `ValenceGood:ismatch`,
+                diff_BN_M = ValenceBad + `ValenceBad:ismatch`,
+                diff_GB_M = diff_GN_M - diff_BN_M) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+
+df_m3_rt_plot %>% 
+  dplyr::group_by(condition, term_diff, .chain) %>%
+  dplyr::tally()
+
+df_m3_rt_mean <- df_m3_rt_plot %>%
+  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(value)  # get the high density continuous intervals
+
+
+# plot the posterior of mismatch
+df_m3_rt_plot  %>%
+  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term_diff,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
+
+# plot the posterior of matching trials
+df_m3_rt_plot %>%
+  dplyr::filter(str_detect(term_diff, '_M')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  facet_wrap( ~ term_diff,
+               scales = "free_y", nrow = 1,
+               labeller = label_parsed)
 
 ```
 
@@ -1205,7 +1318,7 @@ df.meta_1_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
 
 ## paramters of HDDM for the data without reference
 ## read all the file name.
-params.list <- list.files('.\\HDDM\\', pattern = '*_hddm_params.csv')
+params.list <- list.files(file.path('.', 'HDDM'), pattern = '*_hddm_params.csv')
 params.expname <- data.frame(params.list) %>%
   tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
   dplyr::select(expName) %>%
@@ -1310,9 +1423,9 @@ df.meta_all_wide <- df.meta_2_wide %>%
   dplyr::filter(Identity == "Self") %>%
   rbind(df.meta_1_wide, .)
 
-library(mosaic) # using this library for its derivedFactor function
+#library(mosaic) # using this library for its derivedFactor function
 # prepare questionnare data
-df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE, sep = ",",
+df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
                                       "Exp1b" = (expID == "exp1.1"),
@@ -1331,6 +1444,9 @@ df.scales <- read.csv(".\\Scale_data\\FADGS_dataset4_1_clean.csv",header = TRUE,
 ## get the questionnaire names
 # Self-esteem
 SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
+df.scales %>%
+  dplyr::select(SlfEstNames) %>%
+  psych::omega(.)
 
 # moral identity
 mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
@@ -1341,9 +1457,17 @@ mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11
 mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
                    "morId_15", "morId_16")
 
+df.scales %>%
+  dplyr::select(mrlIdNames) %>%
+  psych::omega(.)
+
 # moral self images
 mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
                     "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
+
+df.scales %>%
+  dplyr::select(mrlslfImgNames) %>%
+  psych::omega(.)
 
 # personal distance
 perDistNames <- c("SelfSelf", 
@@ -1374,7 +1498,6 @@ df.scales %>%
 # (3) normalize the condition_mean: condition_mean/grand_mean
 df.perdist <- df.scales %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
-  
   dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
                 SelfSelfraw = SelfSelf,
                 SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
@@ -1398,6 +1521,117 @@ df.perdist <- df.scales %>%
   dplyr::select(subjID, Self_Self, Self_Good, Self_Neut, Self_Bad,
                 Self_Stra, Good_Neut, Good_Bad, Neut_Bad) %>%
   dplyr::select(-Self_Stra,-Self_Self)
+
+#------------------- try RSA: start ------------------------------
+# select data from exp1a
+df.perdist_part1 <- df.perdist %>%
+      dplyr::filter(subjID %in% df_moral$Subject)
+
+# select the first participants
+# personal distance matrix
+#df.perdist_exp1a.sub1_dist0 <- df.perdist_exp1a %>%
+#      dplyr::filter(subjID == 1051) %>%
+#      dplyr::select(Good_Neut:Neut_Bad) %>%
+#      tidyr::pivot_longer(cols = Good_Neut:Neut_Bad, 
+#                      names_to = "condition",
+#                      values_to = "distance_rate") 
+
+dist_mental <- function(df_perdist_subj){
+  df.perdist_subj <- df_perdist_subj %>%
+      dplyr::select(Good_Neut:Neut_Bad) %>%
+      tidyr::pivot_longer(cols = Good_Neut:Neut_Bad, 
+                      names_to = "condition",
+                      values_to = "distance_rate") 
+}
+
+#tmp <- dist_mental(df.perdist_exp1a[df.perdist_exp1a$subjID == 1051,])
+
+tmp <- df.perdist_part1 %>%
+  split(.$subjID) %>%
+  map(., dist_mental)  %>%
+  dplyr::bind_rows(., .id = "Subject")
+
+# reaction times matrix
+#df.rt_exp1a.sub1_dist0 <- df1a.v_meta %>%
+#      dplyr::filter(Subject == 1051 & Matchness == 'Match' & ACC == 1) %>%
+#      dplyr::mutate(SD_RT = sd(RT)) %>% 
+#      dplyr::group_by(Valence, SD_RT) %>%
+#      dplyr::summarise(meanRT = mean(RT)) %>%
+#      dplyr::ungroup() %>%
+#      tidyr::pivot_wider(names_from = Valence, values_from = meanRT) %>%
+#      dplyr::mutate(Good_Neut = abs((Neutral - Good)/SD_RT),
+#                    Good_Bad = abs((Bad - Good)/SD_RT),
+#                    Neut_Bad = abs((Bad - Neutral)/SD_RT)) %>%
+#      dplyr::select(Good_Neut:Neut_Bad) %>%
+#      tidyr::pivot_longer(cols = Good_Neut:Neut_Bad, 
+#                      names_to = "condition",
+#                      values_to = "distance_rt") 
+
+dist_rt <- function(df_subj) {
+  dist_subj <- df_subj  %>%
+      dplyr::filter(Matchness == 'Match' & ACC == 1) %>%
+      dplyr::mutate(SD_RT = sd(RT)) %>% 
+      dplyr::group_by(Valence, SD_RT) %>%
+      dplyr::summarise(meanRT = mean(RT)) %>%
+      dplyr::ungroup() %>%
+      tidyr::pivot_wider(names_from = Valence, values_from = meanRT) %>%
+      dplyr::mutate(Good_Neut = abs((Neutral - Good)/SD_RT),
+                    Good_Bad = abs((Bad - Good)/SD_RT),
+                    Neut_Bad = abs((Bad - Neutral)/SD_RT)) %>%
+      dplyr::select(Good_Neut:Neut_Bad) %>%
+      tidyr::pivot_longer(cols = Good_Neut:Neut_Bad, 
+                      names_to = "condition",
+                      values_to = "distance_rt") 
+}
+
+#tmp <- dist_rt(df1a.v_meta[df1a.v_meta$Subject == 1051,])
+
+tmp2 <- df_moral %>%
+  split(.$Subject) %>%
+  map(., dist_rt) %>%
+  dplyr::bind_rows(., .id = "Subject")
+
+tmp3 <- tmp %>%
+  dplyr::left_join(., tmp2, by = c('Subject','condition'))  %>%
+  dplyr::group_by(Subject) %>%
+  dplyr::summarise(cor_coef =  cor(distance_rt, distance_rate)) %>%
+  dplyr::ungroup()
+
+hist(tmp3$cor_coef)
+
+rsa_sub1 <- df.rt_exp1a.sub1_dist0 %>%
+      dplyr::full_join(., df.perdist_exp1a.sub1_dist0) #%>%
+      
+tmp <- stats::cor.test(rsa_sub1$distance_rt, rsa_sub1$distance_rate, method = 'pearson')$estimate
+
+# visualization of the graph
+df.perdist_exp1a.sub1_dist1 <- df.perdist_exp1a %>%
+      dplyr::filter(subjID == 1050) %>%
+      dplyr::select(Good_Neut:Neut_Bad) %>%
+      tidyr::pivot_longer(cols = Good_Neut:Neut_Bad, 
+                      names_to = "condition",
+                      values_to = "distance") %>%
+      #dplyr::filter(!is.na(distance)) %>%
+      dplyr::add_row(condition = c("Good_Good",
+                                "Neut_Neut","Bad_Bad")) %>%
+      tidyr::separate(condition, c('var1','var2'), sep = '_') 
+
+df.dist.mat1 <- data.frame(matrix(ncol = 3, nrow = 3))
+colnames(df.dist.mat1) <- unique(df.perdist_exp1a.sub1_dist1$var1)
+rownames(df.dist.mat1) <- unique(df.perdist_exp1a.sub1_dist1$var1)
+
+for (i in 1:3){
+  rname = df.perdist_exp1a.sub1_dist1$var1[i]
+  cname = df.perdist_exp1a.sub1_dist1$var2[i]
+  value = df.perdist_exp1a.sub1_dist1$distance[i]
+  df.dist.mat1[rname, cname] = value
+  df.dist.mat1[cname, rname] = value
+}
+
+library(qgraph)
+qgraph::qgraph(df.dist.mat1, layout='spring', vsize=9)
+#------------------- try RSA: end --------------------------------
+
 
 df.perdist.sum_p <- df.perdist %>%
   tidyr::pivot_longer(cols = Self_Good:Neut_Bad, 
@@ -1431,7 +1665,7 @@ df.dist.mat[is.na(df.dist.mat)] <- 0
 df.dist.mat_t <- 1/df.dist.mat #/max(df.dist.mat)
 
 library(qgraph)
-qgraph(df.dist.mat_t, layout='spring', vsize=3)
+qgraph(df.dist.mat_t, layout='spring', vsize=9)
 
 pd1 <- position_dodge(0.5)
 df.perdist %>%
@@ -1480,7 +1714,7 @@ df.perdist.sum2_p <- df.perdist %>%
   dplyr::summarise_each(funs(mean, sd, se=sd(.)/sqrt(n())), distance) 
 
 df.perdist %>% 
-  dplyr::mutate(Rang_est_err_s = SelfGood + SelfBad - Good
+  dplyr::mutate(Rang_est_err_s = SelfGood + SelfBad - Good)
 
 # intersection between participant from behavioral task and scales and get the data
 subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253

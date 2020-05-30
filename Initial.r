@@ -1,7 +1,7 @@
 # this script is used for initializing the analysis
 # preparing necessary functions used in current analysis
 
-Sys.setlocale("LC_ALL", "English")  # set local encoding to English
+#Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
@@ -15,12 +15,18 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c('papaja',"tidyverse","ggplot2", "afex", 'emmeans','lsmeans',
+pkgNeeded <- (c("tidyverse","ggplot2", "afex", 'emmeans','lsmeans',
                 "BayesFactor","psych","corrplot","readr", 'lme4',
-                "MBESS","Hmisc",'mosaic', 'here'))
+                'mosaic', 'here'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
+
+# Install devtools package if necessary
+if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+
+# Install the stable development verions from GitHub
+if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 # run the geo_flat_violin.r, which is from:https://gist.githubusercontent.com/
 # benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R
@@ -28,7 +34,7 @@ source("geom_flat_violin.R")
 
 # Save some time and stor APA format-related code in an object so you can easily
 # use it in multiple plots
-windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
+#windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
 apatheme = theme_bw()+
         theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),

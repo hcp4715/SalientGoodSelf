@@ -2,22 +2,27 @@
 ###### Script for loading and preparing data ######
 rm(list = ls())
 
+if(!"tidyverse" %in% rownames(installed.packages())) install.packages("tidyverse")
+if(!"here" %in% rownames(installed.packages())) install.packages("here")
+if(!"mosaic" %in% rownames(installed.packages())) install.packages("mosaic")
 library(tidyverse)
+library(here)
 
 set.seed(42)
 CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
 CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT", 'RT_SD')
+
 # Exp 1a ----
 # data from THU
-df1a_1 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201404_2019_export.csv", header = TRUE,
+df1a_1 <- read.csv(here::here('exp1a','rawdata_behav_exp1a_201404_2019_export.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
-        dplyr::rename(Subject = 1) %>%
+        dplyr::rename(Subject = 1) %>%  # using 'fileEncoding="UTF-8-BOM"' can solve the 1st column issue but make other issues
         dplyr::mutate(Site = "THU", Subject = Subject + 1000,
                       Val_lab = ifelse(Label == "好人", "Good",                      # re-code the label
                                        ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1a_2 <- read.csv(".\\exp1a\\rawdata_behav_exp1a_201704_2019_export.csv",header = TRUE,
+df1a_2 <- read.csv(here::here('exp1a', 'rawdata_behav_exp1a_201704_2019_export.csv'),header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "WZU",
@@ -36,6 +41,7 @@ df1a   <- rbind(df1a_1,df1a_2) %>%
         dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
+                      Identity = NA,
                       Site = factor(Site),
                       Shape = ifelse(Target == "C.bmp", "circle",  # the shape of each target picture.
                                      ifelse(Target == "S.bmp", "square", 'triangle')))%>%
@@ -129,18 +135,18 @@ df1a.meta.d <- df1a.v.dprime_l %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1a',
                       Domain = "Morality") %>%  # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df1a.meta.rt <- df1a.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1a',
                       Domain = "Morality") %>%  # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 1b ====
 # data collected in Tsinghua U
-df1b_1 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201410_2019_export.csv", header = TRUE,
+df1b_1 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201410_2019_export.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "THU", Subject = Subject + 1100,
@@ -148,7 +154,7 @@ df1b_1 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201410_2019_export.csv", heade
                                        ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1b_2 <- read.csv(".\\exp1b\\rawdata_behav_exp1b_201705_2019_export.csv",header = TRUE,
+df1b_2 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201705_2019_export.csv'),header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "WZU", Subject = Subject,
@@ -168,12 +174,8 @@ df1b   <- rbind(df1b_1,df1b_2) %>%
         dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age),
-                      #Subject = factor(Subject),
-                      #ExpID = 'Exp_1b',
                       Identity = NA,
-                      #Domain = "Morality",
                       Site = factor(Site)) %>% # if the min age is 0, that age is missing
-        #dplyr::select(CommonColnames)%>%
         dplyr::arrange(Subject)
 
 rm(df1b_1,df1b_2)
@@ -258,17 +260,17 @@ df1b.meta.d <- df1b.v.dprime_l %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df1b.meta.rt <- df1b.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 1c ====
-df1c <- read.csv(".\\exp1c\\rawdata_behav_exp1c_export2019.csv", header = TRUE,
+df1c <- read.csv(here::here('exp1c', 'rawdata_behav_exp1c_export2019.csv'), header = TRUE,
                  sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "THU", Subject = Subject + 1200,
@@ -377,18 +379,18 @@ df1c.meta.d <- df1c.v.dprime_l %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1c',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df1c.meta.rt <- df1c.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp1c',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 2 ----
 # data collected in Tsinghua U
-df2 <- read.csv(".\\exp2\\rawdata_behav_exp2_201405_2019_export.csv", header = TRUE,
+df2 <- read.csv(here::here('exp2', 'rawdata_behav_exp2_201405_2019_export.csv'), header = TRUE,
                 sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(ACC = Target.ACC,           # rename columns
@@ -487,18 +489,18 @@ df2.meta.d <- df2.v.dprime_l %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp2',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df2.meta.rt <- df2.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(Identity = NA,
                       ExpID = 'Exp2',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 3a ----
 # data collected in Tsinghua U
-df3a <- read.csv(".\\exp3a\\rawdata_behav_exp3a_2014_export_2019.csv", header = TRUE,
+df3a <- read.csv(here::here('exp3a', 'rawdata_behav_exp3a_2014_export_2019.csv'), header = TRUE,
                  sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(ACC = Target.ACC,           # rename columns
@@ -605,17 +607,17 @@ df3a.v.rt_m <- df3a.v %>%
 df3a.meta.d <- df3a.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp3a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df3a.meta.rt <- df3a.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp3a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 3b ----
 # data collected in Wenzhou U
-df3b <- read.csv(".\\exp3b\\rawdata_behav_exp3b_201704_export_2019.csv", header = TRUE,
+df3b <- read.csv(here::here('exp3b', 'rawdata_behav_exp3b_201704_export_2019.csv'), header = TRUE,
                  sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(ACC = Target.ACC,           # rename columns
@@ -721,24 +723,24 @@ df3b.v.rt_m <- df3b.v %>%
 df3b.meta.d <- df3b.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp3b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df3b.meta.rt <- df3b.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp3b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 4a ----
 
-df4a_1 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2015_export_2019.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+df4a_1 <- read.csv(here::here('exp4a', 'rawdata_behav_exp4a_2015_export_2019.csv'),header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(Morality = morality,
                       Identity = self) %>%
         dplyr::mutate(Site = "THU") %>%
         dplyr::mutate(Subject = Subject + 4100)  
 
-df4a_2 <- read.csv(".\\exp4a\\rawdata_behav_exp4a_2017_export_2019.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+df4a_2 <- read.csv(here::here('exp4a', 'rawdata_behav_exp4a_2017_export_2019.csv'),header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "WZU")
 
@@ -841,22 +843,24 @@ df4a.v.rt_m <- df4a.v %>%
 df4a.meta.d <- df4a.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp4a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df4a.meta.rt <- df4a.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp4a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 4b ----
 
-df4b_1 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2015_export_2019.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+df4b_1 <- read.csv(here::here('exp4b', 'rawdata_behav_exp4b_2015_export_2019.csv'),header = TRUE, 
+                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(Morality = morality) %>%
         dplyr::mutate(Site = "THU")
 
-df4b_2 <- read.csv(".\\exp4b\\rawdata_behav_exp4b_2017_export_2019.csv",header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
+df4b_2 <- read.csv(here::here('exp4b', 'rawdata_behav_exp4b_2017_export_2019.csv'),header = TRUE, 
+                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(Morality = morality) %>%
         dplyr::mutate(Site = "WZU")
@@ -961,33 +965,35 @@ df4b.v.rt_m <- df4b.v %>%
 df4b.meta.d <- df4b.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp4b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df4b.meta.rt <- df4b.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp4b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 5 ----
-
-df5 <- read.csv(".\\exp5_specificity\\rawdata_behav_exp5_2016_export2019.csv",header = TRUE, sep = ",",
-                stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
+#df5 <- xlsx::read.xlsx(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export2019.xlsx'), 1)
+df5 <- read.csv(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export2019_2.csv'), header = TRUE, 
+                sep = ",",
+                stringsAsFactors=FALSE, na.strings=c(""), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(BlockListM.Sample = BlockListMoral.Sample, 
                       Matchness = YesNoResp, CRESP = CorrectAnswer) %>%                            # rename the columns
         dplyr::mutate(Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                      taskType = derivedFactor("Emotion"  = (Label == "sad" | Label == "happy" | Label == "neutral"),
+                      taskType = mosaic::derivedFactor("Emotion"  = (Label == "sad" | Label == "happy" | Label == "neutral"),
                                                "Morality" = (Label == "bad" | Label == "good" | Label == "ordinary"),
                                                "Person"   = (Label == "uglyP" | Label == "beautyP" | Label == "normalP"),
                                                "Scene"    = (Label == "uglyS" | Label == "beautyS" | Label == "normalS"), 
                                                .method ="first", .default = NA),
-                      Valence = derivedFactor("Good"= (Label ==  "good" | Label == "happy" | Label == "beautyP"  | Label == "beautyS"),
+                      Valence = mosaic::derivedFactor("Good"= (Label ==  "good" | Label == "happy" | Label == "beautyP"  | Label == "beautyS"),
                                               "Bad" = (Label == "bad"  | Label == "sad"   | Label == "uglyP"    | Label == "uglyS"),
                                               "Neutral" = (Label == "ordinary" | Label == "neutral" | Label == "normalP" | Label == "normalS"),
                                               .method ="first", .default = NA)) %>%
         tidyr::replace_na(list(PracListE="",    PracListM="",    PracListP="",    PracListS="")) %>%          # replace NA with "" for later unite
         tidyr::unite("PracList", PracListE,PracListM,PracListP,PracListS, sep = "")  %>%                # unite all praclist
+        dplyr::mutate_at(c('TargetE.ACC',  'TargetM.ACC',  'TargetP.ACC',  'TargetS.ACC'), as.integer) %>%
         dplyr::mutate(Site = "THU", 
                       ExpID = "Exp5",
                       RESP = dplyr::coalesce(TargetE.RESP,  TargetM.RESP,  TargetP.RESP,  TargetS.RESP),
@@ -1091,17 +1097,17 @@ df5.meta.d <- df5.v.dprime_l %>%
         dplyr::rename(Domain = taskType) %>%
         dplyr::mutate(ExpID = 'Exp5',
                       Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df5.meta.rt <- df5.v.rt_m %>% 
         dplyr::rename(Domain = taskType,
                       RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp5',
                       Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 6a ----
-df6a <- read.csv(".\\exp6a_erp1\\rawdata_ERP_exp6a_201412_export_2019.csv",header = TRUE, sep = ",",
+df6a <- read.csv(here::here('exp6a_erp1', 'rawdata_ERP_exp6a_201412_export_2019.csv'),header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(BlockNo = BlockList.Sample,
@@ -1200,20 +1206,19 @@ df6a.meta.d <- df6a.v.dprime_l %>%
         dplyr::mutate(ExpID = 'Exp6a',
                       Domain = "Morality",
                       Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df6a.meta.rt <- df6a.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp6a',
                       Domain = "Morality",
                       Identity = NA) %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 6b ----
-df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016_export_2019.csv",header = TRUE, sep = ",",
+df6b_d1 <- read.csv(here::here('exp6b_erp2', 'rawdata_erp_exp6b_d1_2016_export_2019.csv'),header = TRUE, sep = ",",
                     stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
-        dplyr::rename(Subject = 1) %>%
-        #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
+        dplyr::rename(Subject = 1) %>%                                                # select only form exp
         dplyr::rename(BlockNo = BlockList.Sample,
                       TrialNo = SubTrial,
                       Matchness = YesNoResp,
@@ -1224,13 +1229,13 @@ df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016_export_2019.csv",h
                       ACC = dplyr::coalesce(Target.ACC, Targetprac.ACC),
                       RESP = dplyr::coalesce(Target.RESP,Targetprac.RESP),
                       Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),     # re-code the data
-                      Valence = derivedFactor("Bad" = (Valence == "bad" | Valence == "immoral"), 
+                      Valence = mosaic::derivedFactor("Bad" = (Valence == "bad" | Valence == "immoral"), 
                                               "Good" = (Valence == "good" | Valence == 'moral'), 
                                               "Neutral" = (Valence == "normal"), 
                                               .method ="first", .default = NA),
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age),
-                      Val_lab = derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
+                      Val_lab = mosaic::derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
                                               "Good" = (Label == "GoodSelf.bmp" | Label == 'GoodOther.bmp'), 
                                               "Neutral" = (Label == "NormalSelf.bmp" | Label == 'NormalOther.bmp'), 
                                               .method ="first", .default = NA),
@@ -1238,7 +1243,7 @@ df6b_d1 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d1_2016_export_2019.csv",h
                                       "Self", 'Other'),
                       Site = "THU")
 
-df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016_export_2019.csv",header = TRUE, sep = ",",
+df6b_d2 <- read.csv(here::here('exp6b_erp2', 'rawdata_erp_exp6b_d2_2016_export_2019.csv'),header = TRUE, sep = ",",
                     stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
@@ -1252,13 +1257,13 @@ df6b_d2 <- read.csv(".\\exp6b_erp2\\rawdata_erp_exp6b_d2_2016_export_2019.csv",h
                       ACC = dplyr::coalesce(Target.ACC, Targetprac.ACC),
                       RESP = dplyr::coalesce(Target.RESP,Targetprac.RESP),
                       Identity = ifelse(Identity == "self" | Identity == 'Self', "Self", 'Other'),     # re-code the data
-                      Valence = derivedFactor("Bad" = (Valence == "bad"), 
+                      Valence = mosaic::derivedFactor("Bad" = (Valence == "bad"), 
                                               "Good" = (Valence == "good"), 
                                               "Neutral" = (Valence == "normal"), 
                                               .method ="first", .default = NA),
                       Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
                       Age = ifelse(Age == 0, NA, Age),
-                      Val_lab = derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
+                      Val_lab = mosaic::derivedFactor("Bad" = (Label == "BadSelf.bmp" | Label == "BadOther.bmp"), 
                                               "Good" = (Label == "GoodSelf.bmp" | Label == 'GoodOther.bmp'), 
                                               "Neutral" = (Label == "NormalSelf.bmp" | Label == 'NormalOther.bmp'), 
                                               .method ="first", .default = NA),
@@ -1385,17 +1390,17 @@ df6b_d1.v.rt_m <- df6b_d1.v %>%
 df6b.meta.d <- df6b_d1.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp6b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df6b.meta.rt <- df6b_d1.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp6b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 7a matching task ----
 ## load data and clean data of exp 7a (copy the code from Hu et al., 2019) 
-df7a_m <- read.csv(".\\exp7\\rawdata_behav_exp7a_2016.csv",header = TRUE, sep = ",",
+df7a_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7a_2016.csv'),header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
         dplyr::rename(Subject = SubjectID, 
@@ -1474,17 +1479,17 @@ df7a_m.v.rt_m <- df7a_m.v %>%
 df7a_m.meta.d <- df7a_m.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp7a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df7a_m.meta.rt <- df7a_m.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp7a',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 7b matching task ----
 ## Load and prepare for exp7b
-df7b_m <- read.csv(".\\exp7\\rawdata_behav_exp7b_2018.csv",header = TRUE, sep = ",",
+df7b_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7b_2018.csv'),header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA"))
 
 ### Rule 1: wrong trials numbers because of procedure errors
@@ -1567,13 +1572,13 @@ df7b_m.v.rt_m <- df7b_m.v %>%
 df7b_m.meta.d <- df7b_m.v.dprime_l %>% 
         dplyr::mutate(ExpID = 'Exp7b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_d)
+        dplyr::select(all_of(CommonColnames_d))
 
 df7b_m.meta.rt <- df7b_m.v.rt_m %>% 
         dplyr::rename(RT = RT_m) %>%
         dplyr::mutate(ExpID = 'Exp7b',
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-        dplyr::select(CommonColnames_rt)
+        dplyr::select(all_of(CommonColnames_rt))
 
 # save all dataframes as 'data.rdata'
 dfs<-Filter(function(x) is.data.frame(get(x)) , ls())
@@ -1582,9 +1587,9 @@ save(list=dfs[1:124], file="AllData.RData")
 
 # Prepare the data for hddm ----
 
-#dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
-#hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
-#for (indx in 1:13) {
+# dataList <- list(df1a.v, df1b.v, df1c.v, df2.v, df3a.v, df3b.v, df4a.v, df4b.v, df5.v, df6a.v, df6b_d1.v, df7a_m.v, df7b_m.v)
+# hddmNameList <- c('df1a.v', 'df1b.v', 'df1c.v', 'df2.v', 'df3a.v', 'df3b.v', 'df4a.v', 'df4b.v', 'df5.v', 'df6a.v' ,'df6b_d1.v', 'df7a_m.v', 'df7b_m.v')
+# for (indx in 1:13) {
 # for (dfname in hddmNameList){
 #  current.df <- dataList[[indx]]
 #  if ('Resp' %in% colnames(current.df)){
