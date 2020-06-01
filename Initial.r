@@ -1,6 +1,12 @@
 # this script is used for initializing the analysis
 # preparing necessary functions used in current analysis
 
+if (.Platform$OS.type == 'windows') {
+  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
+} else {
+  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+}
+
 #Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
@@ -15,7 +21,7 @@ pkgTest <- function(x)
         }
 }
 
-pkgNeeded <- (c("tidyverse","ggplot2", "afex", 'emmeans','lsmeans',
+pkgNeeded <- (c("tidyverse","ggplot2", "afex", 'emmeans',
                 "BayesFactor","psych","corrplot","readr", 'lme4',
                 'mosaic', 'here'))
 
@@ -24,9 +30,6 @@ rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
 # Install devtools package if necessary
 if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
-
-# Install the stable development verions from GitHub
-if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 # run the geo_flat_violin.r, which is from:https://gist.githubusercontent.com/
 # benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R
@@ -62,8 +65,7 @@ dprime <- function(hit,fa) {
 
 
 ## below is the code from blog, and adapted from A C Del Re from email
-d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5)
-{
+d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
         # m.1 = mean at time 1
         # m.2 = mean at time 2
         # sd.1 = standard dev. at time 1

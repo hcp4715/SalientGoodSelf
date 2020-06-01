@@ -58,8 +58,14 @@ output            :
 ---
 
 ```{r setup, include = FALSE}
-rm(list = ls())
-Sys.setlocale("LC_ALL", "English")  # set local encoding to English
+#rm(list = ls())
+if (.Platform$OS.type == 'windows') {
+  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
+} else {
+  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+}
+
+#Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
@@ -81,7 +87,6 @@ pkgNeeded <- (c("tidyverse", 'metafor',
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
-
 
 if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
 if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
@@ -1387,7 +1392,7 @@ df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
 #rm(df_hddm_param_2)  # in case the variable exist in the env.
 for (indx in 1:5){
   #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
-  hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_2[indx], sep = ''), header = TRUE, sep = ",",
+  hddm_params_tmp <- read.csv(file.path("HDDM", df_hddm_ls_2[indx], sep = ''), header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
     dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val, Identity = id) %>%
     dplyr::select(Subject, Matchness, Identity, Valence, knode_name, mean) %>%
@@ -1425,21 +1430,21 @@ df.meta_all_wide <- df.meta_2_wide %>%
 
 #library(mosaic) # using this library for its derivedFactor function
 # prepare questionnare data
-df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
-                                      "Exp1b" = (expID == "exp1.1"),
-                                      "Exp3a" = (expID == "exp3"),
-                                      "Exp3b" = (expID == "exp3.1"),
-                                      "Exp4a" = (expID == "exp4.1"),
-                                      "Exp4b" = (expID == "exp4.2"),
-                                      "Exp5" = (expID == "exp5.2"),
-                                      "Exp6b" = (expID == "exp6.2"),
-                                      "Exp7a" = (expID == "exp7.1"),
-                                      "Exp7b" = (expID == "exp7r"),
-                                      "Exp_dpr" = (expID == "exp6"),
-                                      .method ="first", .default = NA),
-                expID = as.character(expID))
+#df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
+#                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+#  dplyr::mutate(expID = mosaic::derivedFactor("Exp1a" = (expID == "exp1.0"), 
+#                                      "Exp1b" = (expID == "exp1.1"),
+#                                      "Exp3a" = (expID == "exp3"),
+#                                      "Exp3b" = (expID == "exp3.1"),
+#                                      "Exp4a" = (expID == "exp4.1"),
+#                                      "Exp4b" = (expID == "exp4.2"),
+#                                      "Exp5" = (expID == "exp5.2"),
+#                                      "Exp6b" = (expID == "exp6.2"),
+#                                      "Exp7a" = (expID == "exp7.1"),
+#                                      "Exp7b" = (expID == "exp7r"),
+#                                      "Exp_dpr" = (expID == "exp6"),
+#                                      .method ="first", .default = NA),
+#                expID = as.character(expID))
 
 ## get the questionnaire names
 # Self-esteem

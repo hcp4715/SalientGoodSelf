@@ -537,7 +537,7 @@ df3a.T.basic     <- df3a %>%
                          Age_sd = round(sd(Age,na.rm=TRUE),2))
 
 # number of participant who practiced but not in the formal experiment
-nQuit <- length(unique(df3a$Subject[is.na(df3a$BlockNo)])) - length(unique(df3a$Subject[!is.na(df3a$BlockNo)]))
+df3a.nQuit <- length(unique(df3a$Subject[is.na(df3a$BlockNo)])) - length(unique(df3a$Subject[!is.na(df3a$BlockNo)]))
 
 # participants should be excluded
 df3a.excld.sub <-  df3a %>%
@@ -658,10 +658,10 @@ df3b.excld.sub <-  df3b %>%
         dplyr::group_by(Subject) %>%
         #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
         #dplyr::filter(!(ACC == 1 & RT <= 200)) %>%
-        dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+        dplyr::summarise(N = length(ACC),                   # calculate the overall accuracy for each subject
                          N_crrct = sum(ACC),
                          ACC = sum(ACC)/length(ACC)) %>%
-        dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
+        dplyr::filter(ACC < 0.6) %>%                        # exclude the participants with less than 60% overall accuracy
         dplyr::select(Subject)
 
 df3b.excld.sub2 <- df3b.excld.sub
@@ -1024,7 +1024,7 @@ df5.T.basic     <- df5 %>%
 # find the participants who practiced but not finish experiment
 subjPrac <- df5 %>% dplyr::filter(is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
 subjFinish <- df5 %>% dplyr::filter(!is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
-subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
+df5.nQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
 
 # participants should be excluded
 df5.excld.sub <-  df5 %>%
@@ -1046,7 +1046,7 @@ df5.invalid_trial_rate   <- df5 %>%
 
 df5.v   <- df5 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% subjQuit)) %>%                 # exclude the invalid subjects
+        dplyr::filter(!(Subject %in% df5.nQuit)) %>%                 # exclude the invalid subjects
         dplyr::filter(!(Subject %in% df5.excld.sub$Subject)) %>%   # exclude the invalid subjects
         dplyr::filter(!(RT <= 200 & ACC == 1)) %>%                      # exclude < 200 trials
         dplyr::arrange(Subject)
@@ -1399,7 +1399,7 @@ df6b.meta.rt <- df6b_d1.v.rt_m %>%
         dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 7a matching task ----
-## load data and clean data of exp 7a (copy the code from Hu et al., 2019) 
+## load data and clean data of exp 7a (copy the code from Hu et al., 2020, collabra) 
 df7a_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7a_2016.csv'),header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
@@ -1430,7 +1430,8 @@ for (subj in subNo) {
 
 df7a_m <- df.M.fm %>%          # all the experimental trials
         dplyr::mutate(ACC = ifelse(ACC == -1, 0, ACC))
-rm(subNo,df.M.fm,df.tmp) # remove the intermedia variables
+
+rm(subNo,df.M.fm,df.tmp, subj) # remove the intermediate variables
 
 # calculate the overall accuracy for matching task
 df7a_m.M.acc.g <-  df7a_m %>%
@@ -1536,7 +1537,7 @@ df7b_m.v <- df7b_m %>%
         dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0),                  # no response as wrong
                       Site = "THU",
                       Matchness = ifelse(Matchness == 'match', 'Match', 'Mismatch'))  %>% 
-        dplyr::filter(Subject,!Subject %in% df7b.excldSub_M)    # exclude the invalid subjects
+        dplyr::filter(!Subject %in% df7b.excldSub_M)    # exclude the invalid subjects
 
 
 # calculate d prime
@@ -1580,10 +1581,29 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
                       Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
         dplyr::select(all_of(CommonColnames_rt))
 
-# save all dataframes as 'data.rdata'
-dfs<-Filter(function(x) is.data.frame(get(x)) , ls())
-save(list=dfs[1:124], file="AllData.RData")
 
+# ---- for questionnaire data -----
+# prepare questionnare data
+df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
+                      stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+        dplyr::mutate(expID = mosaic::derivedFactor("Exp1a" = (expID == "exp1.0"), 
+                                                    "Exp1b" = (expID == "exp1.1"),
+                                                    "Exp3a" = (expID == "exp3"),
+                                                    "Exp3b" = (expID == "exp3.1"),
+                                                    "Exp4a" = (expID == "exp4.1"),
+                                                    "Exp4b" = (expID == "exp4.2"),
+                                                    "Exp5" = (expID == "exp5.2"),
+                                                    "Exp6b" = (expID == "exp6.2"),
+                                                    "Exp7a" = (expID == "exp7.1"),
+                                                    "Exp7b" = (expID == "exp7r"),
+                                                    "Exp_dpr" = (expID == "exp6"),
+                                                    .method ="first", .default = NA),
+                      expID = as.character(expID))
+
+# ---------- save all dataframes as 'data.rdata' -----
+#dfs <- Filter(function(x) is.data.frame(get(x)) , ls())
+rdata_save <- Filter(function(x) length(get(x)) !=0 , ls())
+save(list=rdata_save, file="AllData.RData")
 
 # Prepare the data for hddm ----
 
@@ -1642,3 +1662,5 @@ save(list=dfs[1:124], file="AllData.RData")
 #}
 
 # rm(dataList)
+
+

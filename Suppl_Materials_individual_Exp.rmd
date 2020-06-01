@@ -58,6 +58,8 @@ source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 #curDir = '.'#dirname(rstudioapi::getSourceEditorContext()$path)
 figDir = here::here('figures')
+# Install the stable development verions from GitHub
+if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
@@ -80,149 +82,6 @@ The Bayes factor is the ratio of the probability of the current data pattern und
 
 # Experiment 1a
 
-```{r loadingData_1a,echo=FALSE,results='hide'}
-#### record from the meta-data:
-# One participant's ID changed from 26 to 261, because of duplication of subject id.
-# participant No. 14 finished two sessions of the experiment, only the first session were included in the analysis
-# # there are 4 foreign students who might not be native Chinese speakers, but we didn't exclude them:
-# foreignStdID <- c(24,29,30,33)
-
-# data collected in Tsinghua U
-#df1a_1 <- read.csv(here::here('exp1a', 'rawdata_behav_exp1a_201404_2019_export.csv'), header = TRUE,
-#                   sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
-#  dplyr::rename(Subject = 1) %>%
-#  dplyr::mutate(Site = "THU", Subject = Subject + 1000,
-#                Val_lab = ifelse(Label == "好人", "Good",                      # re-code the label
-#                                 ifelse(Label == "常人", "Neutral", "Bad")))
-
-# data collected in Wenzhou U
-#df1a_2 <- read.csv(file.path('.', 'exp1a', 'rawdata_behav_exp1a_201704_2019_export.csv'), header = TRUE,
-#                   sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
-#  dplyr::rename(Subject = 1) %>%
-#  dplyr::mutate(Site = "WZU",
-#                Val_lab = ifelse(Label == "好人", "Good", 
-#                                 ifelse(Label == "常人", "Neutral", "Bad")))
-
-# combine data and clean
-#df1a   <- rbind(df1a_1,df1a_2) %>%
-#        dplyr::rename(ACC = Target.ACC,           # rename columns
-#                      RT  = Target.RT,
-#                      CRESP = Target.CRESP,
-                      BlockNo = BlockList.Sample,
-                      TrialNo = SubTrial,
-                      RESP = Target.RESP,
-                      Matchness = YesNoResp,
-                      Valence = Shape) %>%
-        dplyr::mutate(Valence = ifelse(Valence == "Normal", "Neutral", Valence),   # recode values
-                      Matchness = ifelse(Matchness == "Yes", "Match", "Mismatch"),
-                      Age = ifelse(Age == 0, NA, Age), # if the min age is 0, that age is missing
-                      Site = factor(Site),
-                      Shape = ifelse(Target == "C.bmp", "circle",  # the shape of each target picture.
-                                     ifelse(Target == "S.bmp", "square", 'triangle')))%>%
-        dplyr::arrange(Subject) %>%
-        dplyr::select(-Label, -Target)
-
-rm(df1a_1,df1a_2)
-tmp <- df1a %>% 
-  dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::group_by(Valence, Shape) %>% dplyr::summarise(N = length(unique(Subject))) %>% arrange(N)
-
-df1a.T.basic     <- df1a %>%
-  dplyr::select(Site, Subject, Age, Sex) %>%
-  dplyr::distinct(Subject, .keep_all = TRUE) %>%
-  dplyr::summarise(N = length(Subject),
-                   N_thu = length(Site[Site == "THU"]),
-                   N_wzu = length(Site[Site == "WZU"]),
-                   Nf = length(Sex[Sex == "female"]),
-                   Nm = length(Sex[Sex == "male"]),
-                   Age_mean = round(mean(Age,na.rm=TRUE),2),
-                   Age_sd = round(sd(Age,na.rm=TRUE),2),
-                   Age_missing = sum(is.na(Age)),
-                   Sex_missing = sum(is.na(Sex)))
-  
-# number of participant who didn't finished the experiment
-nQuit <- length(unique(df1a$Subject[is.na(df1a$BlockNo)])) - length(unique(df1a$Subject[!is.na(df1a$BlockNo)]))
-
-df1a.excld.sub <-  df1a %>%
-  dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::group_by(Subject) %>%
-  #dplyr::filter(RT > 200)  %>%           # only use > 200 ms response (this standard will keep more participants)
-  #dplyr::mutate(ACC = ifelse(RT <= 200, 0, ACC)) %>%  # set less than 200 ms response as wrong
-  dplyr::summarise(N = length(ACC),                    # caculate the overall accuracy for each subject
-                   N_crrct = sum(ACC),
-                   ACC = sum(ACC)/length(ACC)) %>%
-  dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
-  dplyr::select(Subject)
-
-# The rate of excluded trials in valid data
-df1a.invalid_trial_rate   <- df1a %>%
-  dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-  dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT))
-
-df1a.v   <- df1a %>%
-  dplyr::filter(!is.na(BlockNo)) %>%
-  dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-  dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
-
-df1a.v.basic     <- df1a.v %>%
-  dplyr::select(Site, Subject, Age, Sex) %>%
-  dplyr::distinct(Subject, .keep_all = TRUE) %>%
-  dplyr::summarise(N = length(Subject),
-                   N_thu = length(Site[Site == "THU"]),
-                   N_wzu = length(Site[Site == "WZU"]),
-                   Nf = length(Sex[Sex == "female"]),
-                   Nm = length(Sex[Sex == "male"]),
-                   Age_mean = round(mean(Age,na.rm=TRUE),2),
-                   Age_sd = round(sd(Age,na.rm=TRUE),2),
-                   Age_missing = sum(is.na(Age)),
-                   Sex_missing = sum(is.na(Sex)))
-
-# calculate d prime
-df1a.v.dprime_l <- df1a.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),   # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),        # code as correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),         # code as miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),        # code as false alarm
-                                    .method ="first",  .default = NA)) %>% 
-  dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
-  dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
-  dplyr::ungroup() %>%
-  tidyr::spread(key = sdt, value = N, fill = 0) %>%                          # long-to-wide format
-  dplyr::mutate(hitR = hit/(hit + miss),                                     # hit rate
-                FAR  = FA/(FA+CR)) %>%                                       # fa rate
-  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),      # if hit rate is 1, standardize it
-                FAR  = ifelse(FAR == 0, 1/(2*(FA + CR)), FAR)) %>%        # if FA rate is 0, standardize it
-  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
-  dplyr::select(Site, Subject, Age, Sex, Valence, dprime) %>%                # select relevant columns
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-
-# get the mean RT for each particpant and each condition for ANOVA
-df1a.v.rt_m <- df1a.v %>%
-  dplyr::filter(ACC == 1) %>%
-  dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-
-### prepare for the later meta-analysis
-df1a.meta.d <- df1a.v.dprime_l %>% 
-  dplyr::mutate(Identity = NA,
-                ExpID = 'Exp1a',
-                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-  dplyr::select(all_of(CommonColnames_d))
-
-df1a.meta.rt <- df1a.v.rt_m %>% 
-  dplyr::rename(RT = RT_m) %>%
-  dplyr::mutate(Identity = NA,
-                ExpID = 'Exp1a',
-                Domain = "Morality") %>%        # add domain as morality, to be comparable with experiment 5.
-  dplyr::select(all_of(CommonColnames_rt))
-
-```
 ## Methods
 ### Participants
 `r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1a.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
@@ -255,6 +114,17 @@ Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 ### d prime
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# fit a three-level hierarchical model for SDT, didn't specify the prior
+std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+                         (0 + Valence + Valence:ismatch_num | ExpID_new) + 
+                         (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
+                       family = bernoulli(link="probit"),
+                       data = df_moral,
+                       control = list(adapt_delta = .95),
+                       cores = parallel::detectCores(),
+                       file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
+
+
 # anova for d prime with 2*2 design
 df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
 df1a_dprime_anova_apa <- df1a_dprime_anova %>% papaja::apa_print.afex_aov()
@@ -312,7 +182,7 @@ In this study, we aimed at excluding the potential confouding factor of the fami
 
 ## Method
 
-```{r loadingData_1b,echo=FALSE,results='hide'}
+```{r loadingData_1b,echo=FALSE,results='hide', eval = FALSE}
 # data collected in Tsinghua U
 df1b_1 <- read.csv(file.path('.', 'exp1b', 'rawdata_behav_exp1b_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -513,7 +383,7 @@ In this study, we further control the valence of words using in our experiment. 
 
 ## Method
 
-```{r loadingData_1c,echo=FALSE,results='hide'}
+```{r loadingData_1c,echo=FALSE,results='hide', eval = FALSE}
 # data collected in Tsinghua U
 df1c <- read.csv(file.path('.', 'exp1c', 'rawdata_behav_exp1c_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -642,7 +512,7 @@ df1c.meta.rt <- df1c.v.rt_m %>%
 
 ### Stimuli and Tasks
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
-Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions *t*(33) = 13.9, *p* < .001 (See supplementary materials).
+Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions $t(33) = 13.9$, $p < .001$ (See supplementary materials).
 
 ### Procedure
 After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
@@ -688,7 +558,7 @@ Experiment 2 was conducted for two purpose: (1) to further confirm the facilitat
 
 ## Method
 
-```{r loadingData_2,echo=FALSE,results='hide'}
+```{r loadingData_2,echo=FALSE,results='hide', eval = FALSE}
 # data collected in Tsinghua U
 df2 <- read.csv(file.path('.', 'exp2', 'rawdata_behav_exp2.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -880,7 +750,7 @@ These findings suggested that the facilitation effect of positive moral valence 
 To examine the modulation effect of positive valence was an intrinsic, self-referential process, we designed study 3. In this study, moral valence was assigned to both self and a stranger. We hypothesized that the modulation effect of moral valence will be stronger for the self than for a stranger.
 
 ## Method
-```{r loadingData_3a,echo=FALSE,results='hide'}
+```{r loadingData_3a,echo=FALSE,results='hide', , eval = FALSE}
 # data collected in Tsinghua U
 df3a <- read.csv(file.path('.', 'exp3a', 'rawdata_behav_exp3a_2014.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -1107,7 +977,7 @@ For the mismatched trials, we didn't found any strong effect: identity, `r df3a_
 In study 3a, participants had to remember 6 pairs of association, which cause high cogitive load during the whole exepriment. To eliminate the influence of cognitive load, we conducted study 3b, in which participant learn three aspect of self and stranger seperately in to consecutive task. We hypothesize that we will replicate the pattern of study 3a, i.e., the effect of moral valence only occurs for self-relevant conditions.
 
 ## Method
-```{r loadingData_3b,echo=FALSE,results='hide'}
+```{r loadingData_3b,echo=FALSE,results='hide', eval = FALSE}
 # data collected in Tsinghua U
 df3b <- read.csv(file.path('.','exp3b', 'rawdata_behav_exp3b_2017.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -1352,7 +1222,7 @@ In study 1-3 participants made explicit judgements about moral associations. In 
 
 In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the instrinc binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
 
-```{r loadingData_4a,echo=FALSE,results='hide'}
+```{r loadingData_4a,echo=FALSE,results='hide', eval = FALSE}
 df4a_1 <- read.csv(file.path(".", "exp4a", "rawdata_behav_exp4a_2015.csv"), 
                    header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality,
@@ -1584,7 +1454,7 @@ For non-matched trials, there was no significant effect. Morality (`r df4a_RT_an
 
 ## Method
 
-```{r loadingData_4b,echo=FALSE,results='hide'}
+```{r loadingData_4b,echo=FALSE,results='hide', eval = FALSE}
 df4b_1 <- read.csv(file.path(".", "exp4b", "rawdata_behav_exp4b_2015.csv"), 
                              header = TRUE, sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
   dplyr::rename(Morality = morality) %>%
@@ -1821,7 +1691,7 @@ So far, we have considered the modulation effect of morality and found that the 
 
 ## Method
 
-```{r loadingData_5,echo=FALSE,results='hide'}
+```{r loadingData_5,echo=FALSE,results='hide', eval = FALSE}
 df5 <- read.csv(file.path(".", "exp5_specificity", "rawdata_behav_5_specificity_2016.csv"),
                 header = TRUE, sep = ",",
                 stringsAsFactors=FALSE, na.strings=c("","NA")) %>%
@@ -1962,7 +1832,7 @@ df5.meta.rt <- df5.v.rt_m %>%
 ```
 
 ### Participants
-`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(subjQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
+`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.nQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
 
 ### Experimental design
 A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, atttractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
@@ -2141,7 +2011,7 @@ Morality is not specific but reflected an general positive effect. However, this
 Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
 
 ## Method
-```{r loadingData_6a,echo=FALSE,results='hide'}
+```{r loadingData_6a,echo=FALSE,results='hide', eval = FALSE}
 df6a <- read.csv(file.path(".", "exp6a_erp1", "rawdata_erp_exp6a_2014.csv"), 
                  header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -2343,7 +2213,7 @@ We found intercation between Matchness and Valence (`r df6a_RT_anova_apa$full$Ma
 Experiment 6b was conducted to study the neural correlates of the prioritization effect of positive self, i.e., the neural underlying of the behavioral effect found int experiment 3a. However, as in experiment 5a, the procedure of this experiment was modified to adopted to ERP experiment. 
 
 ## Method
-```{r loadingData_6b,echo=FALSE,results='hide'}
+```{r loadingData_6b,echo=FALSE,results='hide', eval = FALSE}
 df6b_d1 <- read.csv(file.path(".", "exp6b_erp2", "rawdata_erp_exp6b_d1_2016.csv"), 
                     header = TRUE, sep = ",",
                     stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
