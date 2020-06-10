@@ -17,7 +17,7 @@ affiliation:
   - id            : "1"
     institution   : "Tsinghua University, 100084 Beijing, China"
   - id            : "2"
-    institution   : "German Resilience Center, 55131 Mainz, Germany"
+    institution   : "Leibniz Institute for Resilience Research, 55131 Mainz, Germany"
   - id            : "3"
     institution   : "University of Aberdeen, Aberdeen, Scotland"
     
@@ -50,7 +50,7 @@ output            :
 ---
 
 ```{r setup, include=FALSE}
-rm(list = ls())
+#rm(list = ls())
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
@@ -60,6 +60,8 @@ curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
 # Install the stable development verions from GitHub
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
+
+library(brms)
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
@@ -76,9 +78,18 @@ load("AllData.RData")
 
 ```
 
+
+Instead of using the mean of reaction or the Frequentist way to calculate the sensitivity under signal detection theory, We analyzed our data using Hierarchical Bayesian Drift Diffusion Model (HDDM). This was done for a few reasons: first, either mean or median of RTs are representative to the RT distribution, which is usually highly skewed; second, sequential sampling models have a concrete assumption about the generative process of RTs and accurate, provide stronger framework for testing hypothesis. Also, these models had been widely used in two alternative forced choice (TAFC) task, including perceptual matching task [van_zandt_comparison_2000].
+
+Using HDDM to extract the dependent variable allow us to infer the perceptual process, at least better than we can infer when using mean or median-based GLM. Previous studies have showed that each parameter of the DDM is influence by different way. The initial bias is largely influenced by the proportion of each type of trial, the boundary is influenced by the instruction about the accuracy, while the drift rate is mainly related to relative perceptual salience or easiness of the perceptual decision-making.
+
+Before analyzing the real data, we did parameter recovery to test the sanity of the model.
+
+First, we simulated the data using the `hddm.generate.gen_rand_data` in HDDM model. To emulate the previous study on the perceptual matching task (same-faster-different-slow) and self-tagging task (manipulated effect only occur at the matched trials), we simulated six conditions. For the mismatching trials, we ....; For the matching trials, we simulated three levels, we varied drift rate ($v$) at three level: $1.5$, $2.5$, and $3.5$, while kept the other parameters fixed ($a = 1$, $t=0.4$, $z=0.5$).
+
 We will use both Frequentist and Bayesian generalized linear mixed model (GLMM) to estimate the effect of moral valence and self-referential.
 
-The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis ($H_1$) and the probability of the current data pattern under null hypothesis (H_0), which index the relative evidence for these two hypotheses from the current data. The $BF_10$ represents the evidence for alternative hypothesis (H_1) vs. evidence for null hypothesis ($H_0$); in contrast, $BF_01$ represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the $BF_10$ > 3 means there are some evidence for $H_1$ as compared with $H_0$,  $BF_10$ great or equal to 10 means strong evidence for $H_1$.
+The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis ($H_1$) and the probability of the current data pattern under null hypothesis ($H_0$), which index the relative evidence for these two hypotheses from the current data. The $BF_10$ represents the evidence for alternative hypothesis ($H_1$) vs. evidence for null hypothesis ($H_0$); in contrast, $BF_01$ represents that evidence for null hypothesis over the evidence for alternative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the $BF_10$ > 3 means there are some evidence for $H_1$ as compared with $H_0$,  $BF_10$ great or equal to 10 means strong evidence for $H_1$.
 
 # Experiment 1a
 
@@ -114,18 +125,30 @@ Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 ### d prime
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# fit a three-level hierarchical model for SDT, didn't specify the prior
-std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
-                         (0 + Valence + Valence:ismatch_num | ExpID_new) + 
-                         (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
+df1a.sdt <- df1a.v %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+                ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
+
+# fit a two-level hierarchical model for SDT, didn't specify the prior
+exp1a_std_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+                         (0 + Valence + Valence:ismatch_num | Subject),
                        family = bernoulli(link="probit"),
-                       data = df_moral,
-                       control = list(adapt_delta = .95),
+                       data = df1a.sdt,
+                       #control = list(adapt_delta = .95),
                        cores = parallel::detectCores(),
-                       file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
+                       file = here::here("glmmModels/exp1a_std_m1_EffectCode"))
+summary(exp1a_std_m1)
 
+plot(hypothesis(exp1a_std_m1,
+                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
 
-# anova for d prime with 2*2 design
+plot(hypothesis(exp1a_std_m1,
+                "ValenceGood:ismatch_num > ValenceBad:ismatch_num"))
+
+  # anova for d prime with 2*2 design
 df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
 df1a_dprime_anova_apa <- df1a_dprime_anova %>% papaja::apa_print.afex_aov()
 
@@ -354,6 +377,11 @@ df1b.v.rt_m1 <- df1b.v %>%
                    Ntrial = length(RT)) %>%
   dplyr::ungroup() %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df1b.v.rt_m %>%
+  dplyr::group_by(Matchness, Valence) %>%
+  dplyr::summarise(mean = mean(RT_m),
+                   sd = sd(RT_m))
 
 df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m', df1b.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
@@ -1165,9 +1193,14 @@ We also tested the effect of personal association by comparing *d’* values for
 df3b_RT_anova <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m, within = c('Matchness','Identity','Valence'))
 df3b_RT_anova_apa <- df3b_RT_anova %>% papaja::apa_print.afex_aov()
 ```
-The results of reaction times of matchness trials showed similiar pattern as the *d* prime data. We found three-way intercation between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+The results of reaction times of matchness trials showed similar pattern as the *d* prime data. We found three-way intercation between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
 ```{r 3b_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df3b.v.rt_m %>% 
+  dplyr::group_by(Matchness, Identity, Valence) %>%
+  dplyr::summarise(rt_mean = mean(RT_m),
+                   rt_sd = sd(RT_m))
+
 # match trials
 df3b_RT_anova_m <- df3b.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%

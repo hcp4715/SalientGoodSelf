@@ -1,7 +1,9 @@
 *.csv
 *.rds
 *.emrg2
-*_ddm*
+*ddm
+*_chain_*
+*.db
 *.out
 *.xlsx
 *.xls
