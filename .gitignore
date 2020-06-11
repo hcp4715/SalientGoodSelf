@@ -1,7 +1,6 @@
 *.csv
 *.rds
 *.emrg2
-*ddm
 *_chain_*
 *.db
 *.out
