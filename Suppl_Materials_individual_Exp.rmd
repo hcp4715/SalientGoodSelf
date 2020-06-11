@@ -87,10 +87,6 @@ Before analyzing the real data, we did parameter recovery to test the sanity of 
 
 First, we simulated the data using the `hddm.generate.gen_rand_data` in HDDM model. To emulate the previous study on the perceptual matching task (same-faster-different-slow) and self-tagging task (manipulated effect only occur at the matched trials), we simulated six conditions. For the mismatching trials, we ....; For the matching trials, we simulated three levels, we varied drift rate ($v$) at three level: $1.5$, $2.5$, and $3.5$, while kept the other parameters fixed ($a = 1$, $t=0.4$, $z=0.5$).
 
-We will use both Frequentist and Bayesian generalized linear mixed model (GLMM) to estimate the effect of moral valence and self-referential.
-
-The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis ($H_1$) and the probability of the current data pattern under null hypothesis ($H_0$), which index the relative evidence for these two hypotheses from the current data. The $BF_10$ represents the evidence for alternative hypothesis ($H_1$) vs. evidence for null hypothesis ($H_0$); in contrast, $BF_01$ represents that evidence for null hypothesis over the evidence for alternative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used @Jeffreys_1961’s convention for the strength of evidence: the $BF_10$ > 3 means there are some evidence for $H_1$ as compared with $H_0$,  $BF_10$ great or equal to 10 means strong evidence for $H_1$.
-
 # Experiment 1a
 
 ## Methods
