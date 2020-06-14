@@ -109,7 +109,7 @@
 \author{Chuan-Peng Hu\textsuperscript{1,2}, Kaiping Peng\textsuperscript{1}, \& Jie Sui\textsuperscript{1,3}}
 \affiliation{
 \vspace{0.5cm}
-\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} German Resilience Center, 55131 Mainz, Germany\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
+\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} Leibniz Institute for Resilience Research, 55131 Mainz, Germany\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
 \authornote{Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Germany Resilience Center, 55131 Mainz, Germany.
 Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
 Jie Sui, Department of Psychology, the University of Bath, Bath, UK.
@@ -144,9 +144,13 @@ Correspondence concerning this article should be addressed to Chuan-Peng Hu, Lan
 \begin{document}
 \maketitle
 
-We will use both Frequentist and Bayesian generalized linear mixed model (GLMM) to estimate the effect of moral valence and self-referential.
+Instead of using the mean of reaction or the Frequentist way to calculate the sensitivity under signal detection theory, We analyzed our data using Hierarchical Bayesian Drift Diffusion Model (HDDM). This was done for a few reasons: first, either mean or median of RTs are representative to the RT distribution, which is usually highly skewed; second, sequential sampling models have a concrete assumption about the generative process of RTs and accurate, provide stronger framework for testing hypothesis. Also, these models had been widely used in two alternative forced choice (TAFC) task, including perceptual matching task {[}van\_zandt\_comparison\_2000{]}.
 
-The Bayes factor is the ratio of the probability of the current data pattern under alternative hypothesis (\(H_1\)) and the probability of the current data pattern under null hypothesis (H\_0), which index the relative evidence for these two hypotheses from the current data. The \(BF_10\) represents the evidence for alternative hypothesis (H\_1) vs.~evidence for null hypothesis (\(H_0\)); in contrast, \(BF_01\) represents that evidence for null hypothesis over the evidence for althernative hypothesis. We used the default prior in JASP for all the Bayes Factor analyses, and used Jeffreys (1961)'s convention for the strength of evidence: the \(BF_10\) \textgreater{} 3 means there are some evidence for \(H_1\) as compared with \(H_0\), \(BF_10\) great or equal to 10 means strong evidence for \(H_1\).
+Using HDDM to extract the dependent variable allow us to infer the perceptual process, at least better than we can infer when using mean or median-based GLM. Previous studies have showed that each parameter of the DDM is influence by different way. The initial bias is largely influenced by the proportion of each type of trial, the boundary is influenced by the instruction about the accuracy, while the drift rate is mainly related to relative perceptual salience or easiness of the perceptual decision-making.
+
+Before analyzing the real data, we did parameter recovery to test the sanity of the model.
+
+First, we simulated the data using the \texttt{hddm.generate.gen\_rand\_data} in HDDM model. To emulate the previous study on the perceptual matching task (same-faster-different-slow) and self-tagging task (manipulated effect only occur at the matched trials), we simulated six conditions. For the mismatching trials, we \ldots.; For the matching trials, we simulated three levels, we varied drift rate (\(v\)) at three level: \(1.5\), \(2.5\), and \(3.5\), while kept the other parameters fixed (\(a = 1\), \(t=0.4\), \(z=0.5\)).
 
 \hypertarget{experiment-1a}{%
 \section{Experiment 1a}\label{experiment-1a}}
@@ -189,6 +193,7 @@ As we describe in the general method section.
 \subsubsection{d prime}\label{d-prime}}
 
 Figure \ref{fig:ex1a-dprime-rt} shows \emph{d} prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA.
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/1a_dprime-1.pdf} \includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/1a_dprime-2.pdf}
 
 We found the effect of Valence (\(F(1.96, 97.84) = 6.19\), \(\mathit{MSE} = 0.27\), \(p = .003\), \(\hat{\eta}^2_G = .020\)). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater \emph{d} prime than shapes associated with Bad-person (1.75, SE = 0.14), \emph{t}(50) = 3.304, \emph{p} = 0.0049. The Good-person condition was also greater than the Netural-person condition (1.95, SE = 0.16), but didn't reach statical significant, \emph{t}(50) = 1.54, \emph{p} = 0.28. Neither the Neutral-person conditiona is significantly greater than the Bad-person conidition, \emph{t}(50) = 2.109, \emph{p} = .098.
 
@@ -466,7 +471,7 @@ We also tested the effect of personal association by comparing \emph{d'} values 
 \hypertarget{reaction-time-4}{%
 \subsubsection{Reaction time}\label{reaction-time-4}}
 
-The results of reaction times of matchness trials showed similiar pattern as the \emph{d} prime data. We found three-way intercation between matchness, and valence (\(F(1.86, 102.47) = 15.44\), \(\mathit{MSE} = 3,112.78\), \(p < .001\), \(\hat{\eta}^2_G = .006\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data. We found three-way intercation between matchness, and valence (\(F(1.86, 102.47) = 15.44\), \(\mathit{MSE} = 3,112.78\), \(p < .001\), \(\hat{\eta}^2_G = .006\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
 For the matched trials, we found that interaction between of valence and identity, \(F(1.67, 92.11) = 6.14\), \(\mathit{MSE} = 6,472.48\), \(p = .005\), \(\hat{\eta}^2_G = .009\), BF10 = 1.17. Then, the matched trials were analyzed for the self-relevance and other-relevance pairs separately. The results showed a significant effect of moral valence for the self condition, \(F(1.66, 91.38) = 23.98\), \(\mathit{MSE} = 6,965.61\), \(p < .001\), \(\hat{\eta}^2_G = .100\), BF10 = 4.54e+6. Paired \emph{t}-tests showed that responses to the good-self association (817 ± 119) were faster than to bad-self associations (915 ± 132), \emph{t}(55) = -8.78, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -1.173, 95\% CI {[}-1.511 -0.828{]}, BF10 = 1.84e+9, and to neutral-self association (880 ± 116), \emph{t}(55) = 3.748, \emph{p} \textless{} 0.0001, Cohen's \emph{d} = -0.501, 95\% CI {[}-0.777 -0.221{]}, BF10 = 58.7. The neutral-self was faster than the bad-self associations, \emph{t}(55) = -2.41, \emph{p} = 0.019 , Cohen's \emph{d} = -0.321, 95\% CI {[}-0.589 -0.051{]}, BF10 = 2.03.
 
@@ -819,8 +824,6 @@ For the matched trials, the interaction between identity and valence, \(F(1.62, 
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Jeffreys_1961}{}%
-Jeffreys, H. (1961). \emph{Theory of probability} (3rd ed.). Book, Oxford, UK: Oxford University Press.
 
 \endgroup
 

@@ -3,6 +3,7 @@
 *.emrg2
 *_chain_*
 *.db
+*.zip
 *.out
 *.xlsx
 *.xls

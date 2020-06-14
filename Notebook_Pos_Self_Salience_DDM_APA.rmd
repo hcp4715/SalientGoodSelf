@@ -130,14 +130,28 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 # Introduction
 XXXX
-In perceptual matching, same is faster than different [Krueger_1978; Farell_1985].
+In perceptual matching, same is faster than different [@Krueger_1978; @Farell_1985].
 Automatic processing [Spruyt_de_Houwer_2017]
+
 
 Trisha Van Zandt, Hans Colonius, Robert W. Proctor: A comparison of two response time models applied to perceptual matching
 
 Yakushijin, ReikoJacobs, Robert A (2020), Are People Successful at Learning Sequential Decisions on a Perceptual Matching Task?
 
 Schooler, L. J., Shiffrin, R. M., & Raaijmakers, J. G. W. (2001). A Bayesian model for implicit effects in perceptual identification. Psychological Review, 108(1), 257–272. https://doi.org/10.1037/0033-295X.108.1.257
+
+
+Main findings:
+(1) Morally good is prioritized;
+(2) Moral self is prioritized;
+(3) Moral self bias is relative (to neutral and bad self), especially when the task is not a speedy (time-limited)
+(4) Task irrelevant coupling (weak)
+
+What we should exclude:
+(1) familiarization effect (exp 1b)
+(2) content is really related to moral? (exp 1c)
+(3) memory effect or perceptual effect?
+(4) how can we test it is the binding that matters?
 
 # Methods
 ## Participants.
@@ -176,8 +190,9 @@ papaja::apa_table(
 ## Data analysis
 We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200 ms reaction times were excluded from the analysis.
 
-All data were first pre-processed using `r cite_r("r-references.bib")`. We then applied Bayesian hierarchical Drift Diffusion Model to the reaction times (RTs) and accuracy. We used python package HDDM [wiecki_hddm_2013] to fit the model and generated the posterior of each parameter. Then we used the posterior for statistical inferences.
+All data were first pre-processed using `r cite_r("r-references.bib")`. We then applied Bayesian hierarchical Drift Diffusion Model to the reaction times (RTs) and accuracy. We used python package HDDM [wiecki_hddm_2013] to fit the model and use the posterior of the parameters for statistical inferences. The drift diffusion model was chosen because it's a better generative model of the reaction time and accuracy than traditional repeated measure ANOVA or generalized mixed effect linear models (e.g., log-normal), therefore provide a better description of the data. Also, in the past decades, many theoretical works has been done to verify the validity of DDM, by model-based experiments. These studies found that each parameter may reflect different psychological process. For instance, Voss & Voss (2009) found that the drift rate is modulated by the difficulty of task, the boundary separation is modulated by the criterion for each choice, the initial bias was modulated by the percentage of each options.
 
+Previous studies using self-tagging paradigm also found that the shapes tagged by self were primarily have higher drift rate [@golubickis_self-prioritization_2017; @golubickis_valence_2019], or the self condition has both higher drift rate and higher boundary separation [reuther_does_2017].
 
 ### Valence effect
 We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using Bayesian hierarchical model. 
