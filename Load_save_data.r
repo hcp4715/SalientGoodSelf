@@ -101,10 +101,10 @@ df1a.v.basic <- df1a.v %>%
 
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),   # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),        # code as correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),         # code as miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),        # code as false alarm
+        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),      # code as hit
+                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),   # code as correct reject
+                                                  "miss" = (ACC == 0 & Matchness == "Match"),    # code as miss
+                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),   # code as false alarm
                                                   .method ="first",  .default = NA)) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 

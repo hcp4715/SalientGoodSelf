@@ -22,7 +22,7 @@ affiliation:
     institution   : "University of Aberdeen, Aberdeen, Scotland"
     
 authornote: |
-  Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Germany Resilience Center, 55131 Mainz, Germany.
+  Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Leibniz Intitute for Resilience Research, 55131 Mainz, Germany.
   Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
   Jie Sui, Department of Psychology, the University of Bath, Bath, UK.
 

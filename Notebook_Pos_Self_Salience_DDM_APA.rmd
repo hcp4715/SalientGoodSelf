@@ -72,18 +72,17 @@ options(digits=5)       # limit the number of reporting
 
 pkgTest <- function(x)
 {
-        if (!require(x,character.only = TRUE))
+        if (!require(x, character.only = TRUE))
         {
                 install.packages(x, dep = TRUE)
-                if(!require(x,character.only = TRUE)) stop("Package not found")
+                if(!require(x, character.only = TRUE)) stop("Package not found")
         }
 }
 
 pkgNeeded <- (c("tidyverse", 'metafor',
                 "corrplot","readr", 
                 'mosaic', 'here',
-                'brms'
-                ))
+                'brms'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
@@ -94,7 +93,7 @@ if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes
 # Install devtools package if necessary
 if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
 
-# Install the stable development verions from GitHub
+# Install the stable development versions from GitHub
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 #windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
@@ -133,10 +132,9 @@ XXXX
 In perceptual matching, same is faster than different [@Krueger_1978; @Farell_1985].
 Automatic processing [Spruyt_de_Houwer_2017]
 
+@van_zandt_comparison_2000: A comparison of two response time models applied to perceptual matching
 
-Trisha Van Zandt, Hans Colonius, Robert W. Proctor: A comparison of two response time models applied to perceptual matching
-
-Yakushijin, ReikoJacobs, Robert A (2020), Are People Successful at Learning Sequential Decisions on a Perceptual Matching Task?
+Yakushijin, ReikoJacobs, Robert A (2010), Are People Successful at Learning Sequential Decisions on a Perceptual Matching Task?
 
 Schooler, L. J., Shiffrin, R. M., & Raaijmakers, J. G. W. (2001). A Bayesian model for implicit effects in perceptual identification. Psychological Review, 108(1), 257–272. https://doi.org/10.1037/0033-295X.108.1.257
 
@@ -217,7 +215,7 @@ For the questinnaire part, we are most interested in the self-rated distance bet
 ```{r loadingData,echo=FALSE,results='hide'}
 load("AllData.RData")
 
-### expclude the repeated subj from the raw data
+### exclude the repeated subj from the raw data (only for meta-analysis)
 
 # No repeating subj
 df1a.v_meta <- df1a.v
@@ -1249,12 +1247,46 @@ As the reliability of the quesetionnaire can be found in [@Liu_2020_JOPD]. Then 
 
 For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's d and se of Cohen's *d*.
 
-The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
+The DDM analyses were finished by HDDM, as reported in @Hu_2020_GoodSelf (2020). That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
-
+For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
 
 ```{r correlation analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# Get the meta-analytic results:
+
+## exclude the repeating subjects
+df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
+df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210)) # exclude participants who participated exp1a or 1b
+
+df2.meta.d <- df2.meta.d %>% dplyr::filter(Subject > 2000)    # exclude participant from exp 1a
+df2.meta.rt <- df2.meta.rt %>% dplyr::filter(Subject > 2000)
+
+df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
+df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
+
+df4b.meta.d <- df4b.meta.d %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   # exclude participants from ex1b, 1c, and 2
+df4b.meta.rt <- df4b.meta.rt %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201)) # exclude participants from ex1b, 1c, and 2
+
+df5.meta.d <- df5.meta.d %>% dplyr::filter(!Subject %in% c(5201))   # exclude participants from ex1b, 1c, and 2
+df5.meta.rt <- df5.meta.rt %>% dplyr::filter(!Subject %in% c(5201)) # exclude participants from ex1b, 1c, and 2
+
+df6a.meta.d <- df6a.meta.d %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   # exclude participants from ex1b, 1c, and 2
+df6a.meta.rt <- df6a.meta.rt %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131)) # exclude participants from ex1b, 1c, and 2
+
+df6b.meta.d <- df6b.meta.d %>% dplyr::filter(!Subject %in% c(6217))   # exclude participants from ex1b, 1c, and 2
+df6b.meta.rt <- df6b.meta.rt %>% dplyr::filter(!Subject %in% c(6217)) # exclude participants from ex1b, 1c, and 2
+
+df7a_m.meta.d <- df7a_m.meta.d %>% dplyr::filter(!Subject %in% c(7020))   # exclude participants from ex1b, 1c, and 2
+df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # exclude participants from ex1b, 1c, and 2
+
+# Combine the data -----
+df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df4b.meta.d , df5.meta.d, df6a.meta.d) 
+df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df4b.meta.rt,df5.meta.rt, df6a.meta.rt)
+
+df.meta_d_2 <- rbind(df3a.meta.d, df3b.meta.d, df6b.meta.d, df7a_m.meta.d, df7b_m.meta.d) 
+df.meta_rt_2 <- rbind(df3a.meta.rt, df3b.meta.rt, df6b.meta.rt, df7a_m.meta.rt, df7b_m.meta.rt)
+# Prepare the data for meta ----
+
 # get data for valence effect ---- 
 ## mean RT, SD of RT, and d prime for data without reference
 tmp1 <- df.meta_rt_1 %>%
@@ -1284,7 +1316,7 @@ df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
 for (indx in 1:6){
   #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
   if (indx == 5 ){
-    hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_1[indx], sep = ''), header = TRUE, sep = ",",
+    hddm_params_tmp <- read.csv(file.path("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
       dplyr::filter(domain == "Morality") %>%
       dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
@@ -1296,7 +1328,7 @@ for (indx in 1:6){
     
   } else {
     
-    hddm_params_tmp <- read.csv(paste(".\\HDDM\\", df_hddm_ls_1[indx], sep = ''), header = TRUE, sep = ",",
+    hddm_params_tmp <- read.csv(file.path("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
       dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
       dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
@@ -1341,7 +1373,7 @@ df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
 #rm(df_hddm_param_2)  # in case the variable exist in the env.
 for (indx in 1:5){
   #expName_tmp <- strsplit(df_hddm_ls_1[indx], '[_]')[[1]][1]
-  hddm_params_tmp <- read.csv(file.path("HDDM", df_hddm_ls_2[indx], sep = ''), header = TRUE, sep = ",",
+  hddm_params_tmp <- read.csv(file.path("HDDM", df_hddm_ls_2[indx]), header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
     dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val, Identity = id) %>%
     dplyr::select(Subject, Matchness, Identity, Valence, knode_name, mean) %>%
@@ -1475,6 +1507,8 @@ df.perdist <- df.scales %>%
   dplyr::select(subjID, Self_Self, Self_Good, Self_Neut, Self_Bad,
                 Self_Stra, Good_Neut, Good_Bad, Neut_Bad) %>%
   dplyr::select(-Self_Stra,-Self_Self)
+
+
 
 #------------------- try RSA: start ------------------------------
 # select data from exp1a
@@ -1676,13 +1710,13 @@ subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 
 df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
-df.q_scores.v <- merge(df.q_scores.v, df.perdist)
+df.q_scores.v <- merge(df.q_scores, df.perdist)
 
 ## calculate correlation ----
 df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
-  dplyr::select(-c(14:18)) %>%
-  dplyr::select(-c(SelfSelf, SelfStra)) %>%
-  dplyr::select(1:5, 8,6,7,10,9,11, 18:20, 24:26, 27:29, 12:17, 21:23) %>%
+  dplyr::select(-c(Identity, ExpID, Site, Age, Sex)) %>%
+  #dplyr::select(-c(SelfSelf, SelfStra)) %>%
+  #dplyr::select(1:5, 8,6,7,10,9,11, 18:20, 24:26, 27:29, 12:17, 21:23) %>%
   dplyr::na_if("NaN")
 
 #library(corrr)
@@ -1692,7 +1726,25 @@ res.cor <- df.corr %>%
   #dplyr::select_if(~sum(!is.na(.)) > 0) %>%
   Hmisc::rcorr(.)
 
-corrplot::corrplot(res.cor$r, method="color", sig.level = .2, order = "FPC")
+corrplot::corrplot(res.cor$r, method="color", sig.level = .25, order = "FPC")
+
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+    )
+}
+
+cor_pairs <- flattenCorrMatrix(res.cor$r, res.cor$P) %>%
+  dplyr::filter(row %in% colnames(df.q_scores.v)) %>%
+  dplyr::filter(column %in% colnames(df.meta_all_wide[7:24])) %>%
+  dplyr::filter(p <= 0.05) %>%
+  dplyr::arrange(row, p)
+
+write.csv(cor_pairs, 'sig_behav_quest_corr_pairs.csv', row.names = F)
 
 ```
 We found that data from behavioral task are closely related, but not with self-reported questionnaire data.
