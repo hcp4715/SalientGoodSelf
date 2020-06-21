@@ -59,15 +59,13 @@ output            :
 
 ```{r setup, include = FALSE}
 #rm(list = ls())
-if (.Platform$OS.type == 'windows') {
-  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
+if (.Platform$OS.type=='windows') {
+  Sys.setlocale(category='LC_ALL','English_United States.1250')
 } else {
-  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+  Sys.setlocale(category='LC_ALL','en_US.UTF-8')
 }
-
-#Sys.setlocale("LC_ALL", "English")  # set local encoding to English
-Sys.setenv(LANG = "en") # set the feedback language to English
-options(scipen = 999)   # force R to output in decimal instead of scientific notion
+Sys.setenv(LANG="en") # set the feedback language to English
+options(scipen=999)   # force R to output in decimal instead of scientific notion
 options(digits=5)       # limit the number of reporting
 
 pkgTest <- function(x)
@@ -428,7 +426,7 @@ tmp <- std_val_m1 %>%
 
 # Add the population mean to the experimental level and only keep the value after.
 tmp2 <- merge(tmp, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population level value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
 

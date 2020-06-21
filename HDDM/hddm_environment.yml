@@ -1,4 +1,4 @@
-name: py_ddm
+name: hddm
 channels:
   - conda-forge
   - defaults
@@ -116,5 +116,5 @@ dependencies:
     - patsy==0.5.1
     - pymc==2.3.8
     - six==1.15.0
-prefix: /home/hcp4715/miniconda3/envs/py_ddm
+prefix: /home/hcp4715/miniconda3/envs/hddm
 

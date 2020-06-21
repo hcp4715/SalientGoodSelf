@@ -64,27 +64,20 @@ if (.Platform$OS.type == 'windows') {
 } else {
   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 }
-
-#Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientific notion
 options(digits=5)       # limit the number of reporting
 
-pkgTest <- function(x)
-{
-        if (!require(x, character.only = TRUE))
-        {
+pkgTest <- function(x){
+        if (!require(x, character.only = TRUE)){
                 install.packages(x, dep = TRUE)
                 if(!require(x, character.only = TRUE)) stop("Package not found")
         }
 }
 
-pkgNeeded <- (c("tidyverse", 'metafor',
-                "corrplot","readr", 
-                'mosaic', 'here',
-                'brms'))
+pkgNeeded <- (c('here', 'mosaic', 'tidyverse', 'brms', 'tidybayes', 'patchwork', 'metafor', 'corrplot',"readr", "patchwork"))
 
-lapply(pkgNeeded,pkgTest)
+lapply(pkgNeeded, pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
 if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
@@ -116,7 +109,7 @@ apatheme = theme_bw()+
               axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
               axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
 
-curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
+curDir = here::here() # dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
 
 # Seed for random number generation
@@ -143,9 +136,10 @@ Main findings:
 (1) Morally good is prioritized;
 (2) Moral self is prioritized;
 (3) Moral self bias is relative (to neutral and bad self), especially when the task is not a speedy (time-limited)
-(4) Task irrelevant coupling (weak)
+(4) Task irrelevant coupling (weak effect)
+(5) Correlation between behavioral performance and questionnaire.
 
-What we should exclude:
+What we controlled:
 (1) familiarization effect (exp 1b)
 (2) content is really related to moral? (exp 1c)
 (3) memory effect or perceptual effect?
@@ -188,7 +182,9 @@ papaja::apa_table(
 ## Data analysis
 We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200 ms reaction times were excluded from the analysis.
 
-All data were first pre-processed using `r cite_r("r-references.bib")`. We then applied Bayesian hierarchical Drift Diffusion Model to the reaction times (RTs) and accuracy. We used python package HDDM [wiecki_hddm_2013] to fit the model and use the posterior of the parameters for statistical inferences. The drift diffusion model was chosen because it's a better generative model of the reaction time and accuracy than traditional repeated measure ANOVA or generalized mixed effect linear models (e.g., log-normal), therefore provide a better description of the data. Also, in the past decades, many theoretical works has been done to verify the validity of DDM, by model-based experiments. These studies found that each parameter may reflect different psychological process. For instance, Voss & Voss (2009) found that the drift rate is modulated by the difficulty of task, the boundary separation is modulated by the criterion for each choice, the initial bias was modulated by the percentage of each options.
+All data were first pre-processed using r cite_r("r-references.bib"). We first analyzed the reaction time and accuracy using Bayesian hierarchical generalized linear models, which is similar to the repeated measurement ANOVAs but can provide more information about the uncertainty. For the accuracy, we applied a signal detection theory approach. The performance in each match condition was combined with that in the non-matching condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the mismatching trials were regarded as noise [@Hu_2020_GoodSelf, @Sui_2012_JEPHPP]. Given that the matching and mismatching trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [Rouder_2005_BHM_SDT]. Trials without response were excluded from the analysis. Instead of using maximum likelihood function to estimate a single estimate for the $d'$ prime, we used the Bayesian hierarchical GLM model to estimate the sensitivity ($d'$) and criteria ($c'$) (see more details in supplementary methods). For the reaction time (RTs), we also used Bayesian hierarchical GLM to estimate the effect of our experimental manipulation. More specifically, we used the log-normal as the likelihood function for the GLM, which is equavelant to generalized linear mixed model  in Frequentists' approach, yet with more information about uncertainty in our inference. Either Bayesian generalized hierarchical model or Frequentists' generalized hierarchical model is better than taking the mean or median for each participant and then using ANOVAs [@Rousselet_2019]. 
+
+To further understand the potential psychological processes under the perceptual decision-making task, we applied Bayesian hierarchical Drift Diffusion Model (HDDM) to the reaction times (RTs) and accuracy. We used python package HDDM [wiecki_hddm_2013] to fit the model and use the posterior of the parameters for statistical inferences. The drift diffusion model (DDM) was chosen because it's a generative model of the reaction time and accuracy, which means DDM has assumption about how the perceptual decision is made. In a simple form, DDM assume there are four psychological processes during a perceptual decision-making task, which can be captured by four parameters of the model. First, the behavior of the perceptual decision-making task consistent of non-decision process and decision process. Second, the decision process has three parameters: drift rate, which reflect the how fast the evidence is accumulated; boundary separation (a), which reflect the distance between two choices; and initial bias ($z$), which reflect how participant are bias toward each options. In the past decades, many works has been done and supported the model, from both human and animal studies.. These studies found that each parameter may reflect different psychological process. For instance, Voss & Voss (2009) found that the drift rate is modulated by the difficulty of task, the boundary separation is modulated by the criterion for each choice, the initial bias was modulated by the percentage of each options.
 
 Previous studies using self-tagging paradigm also found that the shapes tagged by self were primarily have higher drift rate [@golubickis_self-prioritization_2017; @golubickis_valence_2019], or the self condition has both higher drift rate and higher boundary separation [reuther_does_2017].
 
@@ -197,7 +193,6 @@ We synthesized effect size of *d* prime and RT from experiment 1a, 1b, 1c, 2, 5 
 
 ### Valence-self-relevance interaction
 The results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitly included both moral valence and self-reference. 
-
 ### Implicit coupling between valence and self-relevance
 In the third part, we examined the change of effect size brought by change of design, with a focus on 4a and 4b, which were designed to examine the implicit effect of the interaction between moral valence and self-referential processing. We are interested in one particular question: will self-referential and morally positive valence had a mutual facilitation effect. That is, when moral valence (experiment 4a) or self-referential (experiment 4a) was presented as task-irrelevant stimuli, whether they would facilitate self-referential or valence effect on perceptual decision-making. For experiment 4a, we report the comparisons between different valence conditions under the self-referential task, not the other-referential task; for experiment 4b, we reported the comparison between the self- vs. other-referential conditions for positive moral condition, not for the neutral or negative conditions. Note that the results were also analyzed in a standard repeated measure ANOVAs (see supplementary materials).
 
@@ -210,11 +205,396 @@ Finally, we explored correlation between results from behavioral results and sel
 For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. 
 The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in [@Liu_2020_JOPD].
+For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in [@Liu_2020_JOPD].
 
 ```{r loadingData,echo=FALSE,results='hide'}
 load("AllData.RData")
+```
 
+```{r define_funs,echo=FALSE,results='hide'}
+
+# define a function to run the sdt GLMM for all exp with Matchness * Valence design
+fun_sdt_val <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  
+  m <- df %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+  brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
+              (0 + Valence + Valence:ismatch | Subject),
+            family = bernoulli(link="probit"),
+            data = .,
+            control = list(adapt_delta = .99),
+            cores = parallel::detectCores(),
+            file = here::here(m_name))
+  return(m)
+}
+
+fun_plot_sdt_val <- function(m_sdt) {
+    # extract c
+    tmp_c <- m_sdt %>% 
+      tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood) %>%
+      dplyr::rename(Valence = .variable, sdt_c = .value) %>% dplyr::ungroup() %>%
+      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
+      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
+                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
+    
+    # dprime
+    tmp_d <- m_sdt %>% 
+      tidybayes::gather_draws(`b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                              `b_ValenceGood:ismatch`) %>%
+      dplyr::rename(Valence = .variable, sdt_d = .value) %>% dplyr::ungroup() %>%
+      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
+      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
+                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
+    
+    # plot summaries with densities
+    p_sdt_d_sum <- tmp_d %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      ggplot2::ggplot(aes(x = sdt_d, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "sensitivity (d')", y = 'Posterior') +
+      theme_classic()
+    
+    p_sdt_c_sum <- tmp_c %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      ggplot2::ggplot(aes(x = sdt_c, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "criteria (c)", y = 'Posterior') +
+      theme_classic()
+    
+    # plot comparison
+    p_sdt_d <- tmp_d %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      tidybayes::compare_levels(sdt_d, by = Valence) %>%
+      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = stat(x > 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(x = "sensitivity (d')", y = 'Comparison') +
+      theme_classic()
+    
+    p_sdt_c <- tmp_c %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      tidybayes::compare_levels(sdt_c, by = Valence) %>%
+      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = stat(x > 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(x = "criteria (c)", y = 'Comparison') +
+      theme_classic()
+    
+    return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
+}
+
+# define a function to run the RT GLMM for all exp with Matchness * Valence design
+fun_rt_val <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  m <- df %>%
+    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+    dplyr::filter(ACC == 1) %>%
+    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+    brms::brm(RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject),
+              family = shifted_lognormal(),
+              data = ., control = list(adapt_delta = .99),
+              cores = parallel::detectCores(),
+              file = here::here(m_name))
+  return(m)
+}
+
+fun_plot_rt_val <- function(m_rt) {
+    tmp_rt <- m_rt %>% 
+      tidybayes::spread_draws(b_Intercept, b_ValenceBad, b_ValenceGood, 
+                              b_ismatch,   `b_ValenceBad:ismatch`, `b_ValenceGood:ismatch`) %>%
+      dplyr::mutate(Neut_MM = b_Intercept,
+                    Bad_MM = Neut_MM + b_ValenceBad,
+                    Good_MM = Neut_MM + b_ValenceGood,
+                    Neut_M = Neut_MM + b_ismatch,
+                    Bad_M = Neut_MM + b_ismatch + `b_ValenceBad:ismatch`,
+                    Good_M = Neut_MM + b_ismatch + `b_ValenceGood:ismatch`) %>%
+      dplyr::select(-contains('b_')) %>%
+      tidyr::pivot_longer(cols = Neut_MM:Good_M,
+                          names_to = 'cond',
+                          values_to = 'logRT') %>%
+      dplyr::mutate(RT = exp(logRT)*1000,
+                    Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
+                                                 cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
+                    Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
+                                               cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
+                                               cond == 'Good_MM' | cond == 'Good_M' ~ 'Good'))
+    p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Match') %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "RTs (Matching, ms)", y = 'Posterior') +
+      theme_classic()
+    p_exp1b_rt_mm_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Mismatch') %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
+      theme_classic()
+    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Match') %>%
+      tidybayes::compare_levels(RT, by = Valence) %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
+      theme_classic()
+    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Mismatch') %>%
+      tidybayes::compare_levels(RT, by = Valence) %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
+      theme_classic()
+    return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
+}
+
+```
+
+# Experiment 1a
+
+## Methods
+### Participants
+`r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1a.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
+
+### Stimuli and Tasks
+Three geometric shapes were used in this experiment: triangle, square, and circle. These shapes were paired with three labels (bad person, good person or neutral person). The pairs were counterbalanced across participants. 
+
+### Procedure
+As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is represented by a square.” After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
+In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
+For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matching, bad-person mismatching, good-person matching, good-person mismatching, neutral-person matching, and neutral-person mismatching). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
+
+### Data analysis
+As we describe in the general method section.
+
+## Results
+### GLM 
+#### Signal detection theory analysis of accuracy
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+```{r 1a_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp1a_sdt_m1 <- fun_sdt_val('1a')
+
+summary(exp1a_sdt_m1)    # check summary
+pp_check(exp1a_sdt_m1)  # posterior predictive check
+
+hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.97
+hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
+hypothesis(exp1a_sdt_m1, "ValenceNeutral:ismatch > ValenceBad:ismatch")   # 0.92
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.81
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .94
+hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.79
+
+exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
+```
+
+#### Reaction time
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition (), $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = 99$. However, the mismatched trials are largely overlapped. 
+
+```{r 1a_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# fit a three-level hierarchical model for RT, didn't specify the prior
+exp1a_rt_m1 <- fun_rt_val('1a')
+#plot(exp1a_rt_m1, "b_")
+summary(exp1a_rt_m1)  # n
+pp_check(exp1a_rt_m1)
+
+# Population-Level Effects: 
+#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
+# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
+# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
+# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
+# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
+# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
+
+hypothesis(exp1a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
+hypothesis(exp1a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
+hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
+
+exp1a_sdt_p[[1]] + exp1a_sdt_p[[2]] + exp1a_sdt_p[[3]] + exp1a_sdt_p[[4]] + exp1a_rt_p[[1]] + exp1a_rt_p[[2]] + exp1a_rt_p[[3]] + exp1a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+### HDDM
+We fitted our data with HDDM, using the response-coding [also see Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+![Alternate Name](HDDM/exp1a_hddm_vta_pairplot.pdf){width=500px}
+
+# Experiment 1b 
+In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
+
+## Method
+### Participants
+`r df1b.T.basic$N` college students (`r df1b.T.basic$Nf` female, age = `r df1b.T.basic$Age_mean` $\pm$ `r df1b.T.basic$Age_sd` years) participated. `r df1b.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1b.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1b.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1b.v.basic$N` participants (`r df1b.v.basic$Nf` female, age = `r df1b.v.basic$Age_mean` $\pm$ `r df1b.v.basic$Age_sd` years).
+
+### Stimuli and Tasks
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
+Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positive, neutral, and negative person. 
+
+### Procedure
+For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust sensitivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
+
+## Data Analysis
+Data was analyzed as in experiment 1a. 
+
+## Results
+### GLM 
+#### Signal detection theory analysis of accuracy
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+```{r 1b_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp1b_sdt_m1 <- fun_sdt_val('1b')
+
+summary(exp1b_sdt_m1)    # check summary
+#pp_check(exp1b_sdt_m1)   # posterior predictive check
+
+hypothesis(exp1b_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 1
+hypothesis(exp1b_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # .97
+hypothesis(exp1b_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.99
+hypothesis(exp1b_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.97
+hypothesis(exp1b_sdt_m1, "ValenceGood > ValenceBad")      # 1
+hypothesis(exp1b_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.99
+
+# extract the population level parameters
+# criteria
+exp1b_sdt_p <- fun_plot_sdt_val(exp1b_sdt_m1)
+```
+
+#### Reaction time
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition (), $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = 99$. However, the mismatched trials are largely overlapped. 
+
+```{r 1b_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# fit a three-level hierarchical model for RT, didn't specify the prior
+
+exp1b_rt_m1 <- fun_rt_val('1b')
+#plot(exp1b_rt_m1, "b_")
+summary(exp1b_rt_m1)  # n
+pp_check(exp1b_rt_m1)
+
+# Population-Level Effects: 
+#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
+# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
+# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
+# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
+# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
+# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
+
+hypothesis(exp1b_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1b_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
+hypothesis(exp1b_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
+hypothesis(exp1b_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp1b_rt_p <- fun_plot_rt_val(exp1b_rt_m1)
+
+exp1b_sdt_p[[1]] + exp1b_sdt_p[[2]] + exp1b_sdt_p[[3]] + exp1b_sdt_p[[4]] + exp1b_rt_p[[1]] + exp1b_rt_p[[2]] + exp1b_rt_p[[3]] + exp1b_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+### HDDM
+We fitted our data with HDDM, using the response-coding [also see Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+
+# Experiment 1c 
+In this study, we further control the valence of words using in our experiment. Instead of using label with moral valence, we used valence-neutral names in China. Participant first learn behaviors of the different person, then, they associate the names and shapes. And then they perform a name-shape matching task.
+
+## Method
+### Participants
+`r df1c.T.basic$N` college students (`r df1c.T.basic$Nf` female, age = `r df1c.T.basic$Age_mean` $\pm$ `r df1c.T.basic$Age_sd` years) participated. All of them were recruited from Tsinghua University community in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. No participant was excluded because they overall accuracy were above 0.6.
+
+### Stimuli and Tasks
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
+Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic information and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiveness, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions $t(33) = 13.9$, $p < .001$ (See supplementary materials).
+
+### Procedure
+After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
+In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95% accuracy before preceding to matching task.
+The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing util they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
+
+## Data Analysis
+Data was analyzed as in experiment 1a. 
+
+## Results
+### GLM 
+#### Signal detection theory analysis of accuracy
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+```{r 1c_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+exp1c_sdt_m1 <- fun_sdt_val('1c')
+summary(exp1c_sdt_m1)    # check summary
+#pp_check(exp1c_sdt_m1)   # posterior predictive check
+
+hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.73
+hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # .79
+hypothesis(exp1c_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.99
+hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.4
+hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceBad")      # 0.73
+hypothesis(exp1c_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.79
+
+# extract the population level parameters
+# criteria
+
+exp1c_sdt_p <- fun_plot_sdt_val(exp1c_sdt_m1)
+```
+
+#### Reaction time
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition (), $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = 99$. However, the mismatched trials are largely overlapped. 
+
+```{r 1c_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp1c_rt_m1 <- fun_rt_val('3a')
+
+#plot(exp1b_rt_m1, "b_")
+summary(exp1c_rt_m1)  # n
+pp_check(exp1c_rt_m1)
+
+# Population-Level Effects: 
+#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
+# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
+# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
+# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
+# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
+# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
+
+hypothesis(exp1c_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1c_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
+hypothesis(exp1c_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.74
+hypothesis(exp1c_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp1c_rt_p <- fun_plot_rt_val(exp1c_rt_m1)
+
+exp1c_sdt_p[[1]] + exp1c_sdt_p[[2]] + exp1c_sdt_p[[3]] + exp1c_sdt_p[[4]] + exp1c_rt_p[[1]] + exp1c_rt_p[[2]] + exp1c_rt_p[[3]] + exp1c_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+### HDDM
+We fitted our data with HDDM, using the response-coding [also see Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+
+# Results
+```{r first meta,echo=FALSE,results='hide'}
 ### exclude the repeated subj from the raw data (only for meta-analysis)
 
 # No repeating subj
@@ -257,10 +637,10 @@ df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))
 df7b.v_meta <- df7b_m.v
 
 # remove all unnecessary variables
-var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
-              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
-              'apatheme','exp_table', 'curDir', 'figDir')
-rm(list=ls()[! ls() %in% var_list])
+#var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
+#              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
+#              'apatheme','exp_table', 'curDir', 'figDir')
+#rm(list=ls()[! ls() %in% var_list])
 
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
@@ -275,10 +655,7 @@ df6a.v_meta$ExpID <- 'Exp6a'
 df6b.v_meta$ExpID <- 'Exp6b'
 df7a.v_meta$ExpID <- 'Exp7a'
 df7b.v_meta$ExpID <- 'Exp7b'
-```
 
-# Results
-```{r first meta,echo=FALSE,results='hide'}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
 #selected_columns <- c('Subject','Age', 'Sex')
 
@@ -317,113 +694,113 @@ with(df_moral, table(Subject, ExpID_new)) %>%
   )
 
 # fit a three-level hierarchical model for SDT, didn't specify the prior; effect coding
-std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
-                         (0 + Valence + Valence:ismatch_num | ExpID_new) + 
-                         (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
-                       family = bernoulli(link="probit"),
-                       data = df_moral,
-                       control = list(adapt_delta = .95),
-                       cores = parallel::detectCores(),
-                       file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
+#std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+#                         (0 + Valence + Valence:ismatch_num | ExpID_new) + 
+#                         (0 + Valence + Valence:ismatch_num  | ExpID_new:Subject),
+#                       family = bernoulli(link="probit"),
+#                       data = df_moral,
+#                       control = list(adapt_delta = .95),
+#                       cores = parallel::detectCores(),
+#                       file = here::here("glmmModels/sdt_val_EffectCode_3_level"))
 
-summary(std_val_m1)
-stancode(std_val_m1)
+#summary(std_val_m1)
+#stancode(std_val_m1)
 
-plot(hypothesis(std_val_m1,
-                "ValenceBad:ismatch_num > ValenceNeutral:ismatch_num"))
+#plot(hypothesis(std_val_m1,
+#                "ValenceBad:ismatch_num > ValenceNeutral:ismatch_num"))
 
-plot(hypothesis(std_val_m1,
-                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
+#plot(hypothesis(std_val_m1,
+#                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
 
 # Get the variables in the model
-var_name_m1 <- tidybayes::get_variables(std_val_m1)
+#var_name_m1 <- tidybayes::get_variables(std_val_m1)
 
-df_m1_post_sdt_exp <- std_val_m1 %>% 
-  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
-  dplyr::rename(value = r_ExpID_new)
+#df_m1_post_sdt_exp <- std_val_m1 %>% 
+#  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+#  dplyr::rename(value = r_ExpID_new)
 
-pop_mean <- std_val_m1 %>%
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+#pop_mean <- std_val_m1 %>%
+#  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+#                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
+#                          `b_ValenceGood:ismatch_num`) %>%
+#  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+#  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-tmp <- std_val_m1 %>% 
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  dplyr::rename(term = .variable,
-                pop_mean = .value) %>%
+#tmp <- std_val_m1 %>% 
+#  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+#                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
+#                          `b_ValenceGood:ismatch_num`) %>%
+#  dplyr::rename(term = .variable,
+#                pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
-  dplyr::ungroup() %>%
-  dplyr::mutate(term = gsub("b_", "", term))
+#  dplyr::ungroup() %>%
+#  dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-tmp2 <- merge(tmp, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
-  dplyr::rename(value = mean_value)  # rename the value
+#tmp2 <- merge(tmp, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+#  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+#  dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_plot_sdt <- tmp %>%
-  dplyr::mutate(condition = 'Overall') %>%
-  dplyr::rename(value = pop_mean) %>%
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., tmp2) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
-                term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
-                                             "c_neutral" = (term == "ValenceNeutral"),
-                                             "c_good" = (term == "ValenceGood"),
-                                             "dprime_bad" = (term == "ValenceBad:ismatch_num"),
-                                             "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
-                                             "dprime_good" = (term == "ValenceGood:ismatch_num"),
-                                             .method ="first", .default = NA),
-                term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
-                                               "dprime_bad", "dprime_neutral", "dprime_good"))) %>%
-  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between coditions
-                diff_GN_c = c_good - c_neutral,
-                diff_BN_c = c_bad - c_neutral,
-                diff_GB_dprm = dprime_good - dprime_bad,
-                diff_GN_dprm = dprime_good - dprime_neutral,
-                diff_BN_dprm = dprime_bad - dprime_neutral) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GB_c,diff_GN_c, diff_BN_c,
-               diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
-  tidyr::pivot_longer(cols = diff_GB_c:diff_BN_dprm, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
-                                                         'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
+#df_m1_plot_sdt <- tmp %>%
+#  dplyr::mutate(condition = 'Overall') %>%
+#  dplyr::rename(value = pop_mean) %>%
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+#  dplyr::bind_rows(., tmp2) %>%
+#  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+#                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+#                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+#                condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
+#                term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
+#                                             "c_neutral" = (term == "ValenceNeutral"),
+#                                             "c_good" = (term == "ValenceGood"),
+#                                             "dprime_bad" = (term == "ValenceBad:ismatch_num"),
+#                                             "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
+#                                             "dprime_good" = (term == "ValenceGood:ismatch_num"),
+#                                             .method ="first", .default = NA),
+#                term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
+#                                               "dprime_bad", "dprime_neutral", "dprime_good"))) %>%
+#  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+#  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between coditions
+#                diff_GN_c = c_good - c_neutral,
+#                diff_BN_c = c_bad - c_neutral,
+#                diff_GB_dprm = dprime_good - dprime_bad,
+#                diff_GN_dprm = dprime_good - dprime_neutral,
+#                diff_BN_dprm = dprime_bad - dprime_neutral) %>%
+#  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+#               diff_GB_c,diff_GN_c, diff_BN_c,
+#               diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
+#  tidyr::pivot_longer(cols = diff_GB_c:diff_BN_dprm, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+#  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
+#                                                         'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
-df_m1_plot_sdt %>% 
-  dplyr::group_by(condition, term_diff, .chain) %>%
-  dplyr::tally()
+#df_m1_plot_sdt %>% 
+#  dplyr::group_by(condition, term_diff, .chain) %>%
+#  dplyr::tally()
 
 # plot the posterior of c
-df_m1_plot_sdt  %>%
-  dplyr::filter(str_detect(term_diff, '_c')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+#df_m1_plot_sdt  %>%
+#  dplyr::filter(str_detect(term_diff, '_c')) %>%
+#  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+#  tidybayes::stat_halfeyeh() +
+#  geom_vline(xintercept = 0, linetype = "dashed") +
+#  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#  facet_wrap( ~ term_diff,
+#               scales = "free_y", nrow = 1,
+#               labeller = label_parsed)
 
 # plot the posterior of dprime
-df_m1_plot_sdt %>%
-  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+#df_m1_plot_sdt %>%
+#  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+#  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+#  tidybayes::stat_halfeyeh() +
+#  geom_vline(xintercept = 0, linetype = "dashed") +
+#  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#  facet_wrap( ~ term_diff,
+#               scales = "free_y", nrow = 1,
+#               labeller = label_parsed)
 
 # 
 #mcmc_plot(std_val_m1, pars = 1:4, type = "dens")
@@ -438,37 +815,37 @@ df_m1_plot_sdt %>%
 #  xlim(-0.5, 1.5)
 
 # have a look at a few participants' data
-set.seed(123)
-random_sub <- sample(unique(df_moral$Subject), 4)
-random_sub
+#set.seed(123)
+#random_sub <- sample(unique(df_moral$Subject), 4)
+#random_sub
 
-df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  dplyr::filter(Subject %in% random_sub) %>%
-  dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
-                RT_log = log(RT_sec))%>%
-  ggplot2::ggplot(., aes(x=RT_log)) + 
-    geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
-    facet_grid(~Subject) +  # One panel per id
-    coord_cartesian(xlim=c(-2, 1))
+#df_moral %>%
+#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#  dplyr::filter(ACC == 1) %>%
+#  dplyr::filter(Subject %in% random_sub) %>%
+#  dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
+#                RT_log = log(RT_sec))%>%
+#  ggplot2::ggplot(., aes(x=RT_log)) + 
+#    geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
+#    facet_grid(~Subject) +  # One panel per id
+#    coord_cartesian(xlim=c(-2, 1))
 
 
 # fit a three-level hierarchical model for RT, didn't specify the prior
-RT_val_m1 <- df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  brms::brm(RT_sec ~ Valence*ismatch_num + 
-              (Valence*ismatch_num | ExpID_new) +   
-              (Valence*ismatch_num  | ExpID_new:Subject),
-            family=shifted_lognormal(),
-            data = .,
-            control = list(adapt_delta = .95),
-            cores = parallel::detectCores(),
-            file = here::here("glmmModels/RT_val_EffectCode_3_level"))
+#RT_val_m1 <- df_moral %>%
+#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#  dplyr::filter(ACC == 1) %>%
+#  brms::brm(RT_sec ~ Valence*ismatch_num + 
+#              (Valence*ismatch_num | ExpID_new) +   
+#              (Valence*ismatch_num  | ExpID_new:Subject),
+#            family=shifted_lognormal(),
+#            data = .,
+#            control = list(adapt_delta = .95),
+#            cores = parallel::detectCores(),
+#            file = here::here("glmmModels/RT_val_EffectCode_3_level"))
 #plot(RT_val_m1, "b_")
-summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
-pp_check(RT_val_m1)
+#summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
+#pp_check(RT_val_m1)
 
 #Population-Level Effects: 
 #                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
@@ -487,39 +864,39 @@ pp_check(RT_val_m1)
 # Match: Good      - Intercept  + ismatch_num + ValenceGood+ ValenceGood:ismatch_num = -0.4 + (-0.03) + (-0.05) = -0.48
 
 # log normal distribution, dummy coding
-RT_val_m2 <- df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  brms::brm(RT_sec ~ Valence*ismatch + 
-              (Valence*ismatch | ExpID_new) +   
-              (Valence*ismatch | ExpID_new:Subject),
-            family=lognormal(),
-            data = .,
-            control = list(adapt_delta = .98),
-            cores = parallel::detectCores(),
-            file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
-summary(RT_val_m2)
+#RT_val_m2 <- df_moral %>%
+#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#  dplyr::filter(ACC == 1) %>%
+#  brms::brm(RT_sec ~ Valence*ismatch + 
+#              (Valence*ismatch | ExpID_new) +   
+#              (Valence*ismatch | ExpID_new:Subject),
+#            family=lognormal(),
+#            data = .,
+#            control = list(adapt_delta = .98),
+#            cores = parallel::detectCores(),
+#            file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
+#summary(RT_val_m2)
 
 
 # log normal distribution, with truncated distribution, , dummy coding
-RT_val_m3_trunc <- df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
-              (Valence*ismatch | ExpID_new) +   
-              (Valence*ismatch | ExpID_new:Subject),
-            family=lognormal(),
-            data = .,
-            control = list(adapt_delta = .98),
-            cores = parallel::detectCores(),
-            file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
-summary(RT_val_m3_trunc)
-pp_check(RT_val_m3_trunc)
+#RT_val_m3_trunc <- df_moral %>%
+#  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#  dplyr::filter(ACC == 1) %>%
+#  brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
+#              (Valence*ismatch | ExpID_new) +   
+#              (Valence*ismatch | ExpID_new:Subject),
+#            family=lognormal(),
+#            data = .,
+#            control = list(adapt_delta = .98),
+#            cores = parallel::detectCores(),
+#            file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
+#summary(RT_val_m3_trunc)
+#pp_check(RT_val_m3_trunc)
 #plot(RT_val_m3_trunc, "b_")
 
 # compare three models
-loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc)
-bayes_factor(RT_val_m1,RT_val_m2)
+#loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc)
+#bayes_factor(RT_val_m1,RT_val_m2)
 #Monte Carlo SE of elpd_loo is 0.4.
 
 #All Pareto k estimates are good (k < 0.5).
@@ -532,47 +909,47 @@ bayes_factor(RT_val_m1,RT_val_m2)
 #RT_val_m3_trunc -590.6      34.8 
 
 # Get the variables in the model 1
-RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
+#RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
 
-df_m1_post_rt_exp <- RT_val_m1 %>% 
-  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
-  dplyr::rename(value = r_ExpID_new)
+#df_m1_post_rt_exp <- RT_val_m1 %>% 
+#  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+#  dplyr::rename(value = r_ExpID_new)
 
-rt_pop_mean <- RT_val_m1 %>%
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+#rt_pop_mean <- RT_val_m1 %>%
+#  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+#                          `b_ValenceGood:ismatch_num`) %>%
+#  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+#  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-rt_pop_post <- RT_val_m1 %>% 
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  dplyr::rename(term = .variable,
-                pop_mean = .value) %>%
+#rt_pop_post <- RT_val_m1 %>% 
+#  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+#                          `b_ValenceGood:ismatch_num`) %>%
+#  dplyr::rename(term = .variable,
+#                pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
-  dplyr::ungroup() %>%
-  dplyr::mutate(term = gsub("b_", "", term))
+#  dplyr::ungroup() %>%
+#  dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-rt_post_tmp <- merge(rt_pop_post, df_rt_m1_post_exp, 
-                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
-  dplyr::rename(value = mean_value)  # rename the value
+#rt_post_tmp <- merge(rt_pop_post, df_rt_m1_post_exp, 
+#                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+#  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+#  dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_rt_plot <- rt_pop_post %>%
-  dplyr::mutate(condition = 'Overall') %>%
-  dplyr::rename(value = pop_mean) %>%
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., rt_post_tmp) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
+#df_m1_rt_plot <- rt_pop_post %>%
+#  dplyr::mutate(condition = 'Overall') %>%
+#  dplyr::rename(value = pop_mean) %>%
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+#  dplyr::bind_rows(., rt_post_tmp) %>%
+#  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+#                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+#                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+#                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
                 #term = mosaic::derivedFactor("Neutral_NM" = (term == "Intercept"),
                 #                             "diff_BN_NM" = (term == "ValenceBad"),
                 #                             "diff_GN_NM" = (term == "ValenceGood"),
@@ -583,141 +960,141 @@ df_m1_rt_plot <- rt_pop_post %>%
                 #term = factor(term, levels = c("Bad_NM", "Neutral_NM", "Good_NM",
                  #                              "Bad_M", "Neutral_M", "Good_M"))
                 ) %>%
-  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
-                diff_GN_NM = ValenceGood,
-                diff_BN_NM = ValenceBad,
-                diff_GN_M = ValenceGood + `ValenceGood:ismatch_num`,
-                diff_BN_M = ValenceBad + `ValenceBad:ismatch_num`,
-                diff_GB_M = diff_GN_M - diff_BN_M) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GB_NM,diff_GN_NM, diff_BN_NM,
-               diff_GB_M, diff_GN_M, diff_BN_M) %>%
-  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
-                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+#  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+#  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
+#                diff_GN_NM = ValenceGood,
+#                diff_BN_NM = ValenceBad,
+#                diff_GN_M = ValenceGood + `ValenceGood:ismatch_num`,
+#                diff_BN_M = ValenceBad + `ValenceBad:ismatch_num`,
+#                diff_GB_M = diff_GN_M - diff_BN_M) %>%
+#  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+#               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+#               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+#  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+#  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+#                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
 
-df_m1_rt_plot %>% 
-  dplyr::group_by(condition, term_diff, .chain) %>%
-  dplyr::tally()
+#df_m1_rt_plot %>% 
+#  dplyr::group_by(condition, term_diff, .chain) %>%
+#  dplyr::tally()
 
-df_m1_rt_mean <- df_m1_rt_plot %>%
+#df_m1_rt_mean <- df_m1_rt_plot %>%
   #tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
   #                        `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
   #                        `b_ValenceGood:ismatch_num`) %>%
-  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(value)  # get the high density continuous intervals
+#  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+#  tidybayes::mean_hdci(value)  # get the high density continuous intervals
 
 
 # plot the posterior of mismatch
-df_m1_rt_plot  %>%
-  dplyr::filter(str_detect(term_diff, '_NM')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+#df_m1_rt_plot  %>%
+#  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+#  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#  tidybayes::stat_halfeyeh() +
+#  geom_vline(xintercept = 0, linetype = "dashed") +
+#  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#  facet_wrap( ~ term_diff,
+#               scales = "free_y", nrow = 1,
+#               labeller = label_parsed)
 
 # plot the posterior of matching trials
-df_m1_rt_plot %>%
-  dplyr::filter(str_detect(term_diff, '_M')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+#df_m1_rt_plot %>%
+#  dplyr::filter(str_detect(term_diff, '_M')) %>%
+#  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#  tidybayes::stat_halfeyeh() +
+#  geom_vline(xintercept = 0, linetype = "dashed") +
+#  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#  facet_wrap( ~ term_diff,
+#               scales = "free_y", nrow = 1,
+#               labeller = label_parsed)
 
 # Get the variables in the model 3
-RT_var_name_m3 <- tidybayes::get_variables(RT_val_m3_trunc)
+#RT_var_name_m3 <- tidybayes::get_variables(RT_val_m3_trunc)
 
-df_m3_post_rt_exp <- RT_val_m3_trunc %>% 
-  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
-  dplyr::rename(value = r_ExpID_new)
+#df_m3_post_rt_exp <- RT_val_m3_trunc %>% 
+#  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+#  dplyr::rename(value = r_ExpID_new)
 
-rt_pop_mean <- RT_val_m3_trunc %>%
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch`, `b_ValenceBad:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
-  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+#rt_pop_mean <- RT_val_m3_trunc %>%
+#  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#                          `b_ismatch`, `b_ValenceBad:ismatch`, 
+#                          `b_ValenceGood:ismatch`) %>%
+#  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+#  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-rt_pop_post <- RT_val_m3_trunc %>% 
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch`, `b_ValenceBad:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
-  dplyr::rename(term = .variable,
-                pop_mean = .value) %>%
+#rt_pop_post <- RT_val_m3_trunc %>% 
+#  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#                          `b_ismatch`, `b_ValenceBad:ismatch`, 
+#                          `b_ValenceGood:ismatch`) %>%
+#  dplyr::rename(term = .variable,
+#                pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
-  dplyr::ungroup() %>%
-  dplyr::mutate(term = gsub("b_", "", term))
+#  dplyr::ungroup() %>%
+#  dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-rt_post_tmp <- merge(rt_pop_post, df_m3_post_rt_exp, 
-                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
-  dplyr::rename(value = mean_value)  # rename the value
+#rt_post_tmp <- merge(rt_pop_post, df_m3_post_rt_exp, 
+#                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+#  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+#  dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m3_rt_plot <- rt_pop_post %>%
-  dplyr::mutate(condition = 'Overall') %>%
-  dplyr::rename(value = pop_mean) %>%
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., rt_post_tmp) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
-                ) %>%
-  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
-                diff_GN_NM = ValenceGood,
-                diff_BN_NM = ValenceBad,
-                diff_GN_M = ValenceGood + `ValenceGood:ismatch`,
-                diff_BN_M = ValenceBad + `ValenceBad:ismatch`,
-                diff_GB_M = diff_GN_M - diff_BN_M) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GB_NM,diff_GN_NM, diff_BN_NM,
-               diff_GB_M, diff_GN_M, diff_BN_M) %>%
-  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
-                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+#df_m3_rt_plot <- rt_pop_post %>%
+#  dplyr::mutate(condition = 'Overall') %>%
+#  dplyr::rename(value = pop_mean) %>%
+#  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+#  dplyr::bind_rows(., rt_post_tmp) %>%
+#  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+#                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+#                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+#                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
+#                ) %>%
+#  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+#  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
+#                diff_GN_NM = ValenceGood,
+#                diff_BN_NM = ValenceBad,
+#                diff_GN_M = ValenceGood + `ValenceGood:ismatch`,
+#                diff_BN_M = ValenceBad + `ValenceBad:ismatch`,
+#                diff_GB_M = diff_GN_M - diff_BN_M) %>%
+#  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+#               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+#               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+#  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+#  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+#                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
 
-df_m3_rt_plot %>% 
-  dplyr::group_by(condition, term_diff, .chain) %>%
-  dplyr::tally()
+#df_m3_rt_plot %>% 
+#  dplyr::group_by(condition, term_diff, .chain) %>%
+#  dplyr::tally()
 
-df_m3_rt_mean <- df_m3_rt_plot %>%
-  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(value)  # get the high density continuous intervals
+#df_m3_rt_mean <- df_m3_rt_plot %>%
+#  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+#  tidybayes::mean_hdci(value)  # get the high density continuous intervals
 
 
 # plot the posterior of mismatch
-df_m3_rt_plot  %>%
-  dplyr::filter(str_detect(term_diff, '_NM')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+#df_m3_rt_plot  %>%
+#  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+#  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#  tidybayes::stat_halfeyeh() +
+#  geom_vline(xintercept = 0, linetype = "dashed") +
+#  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#  facet_wrap( ~ term_diff,
+#               scales = "free_y", nrow = 1,
+#               labeller = label_parsed)
 
 # plot the posterior of matching trials
-df_m3_rt_plot %>%
-  dplyr::filter(str_detect(term_diff, '_M')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
+# df_m3_rt_plot %>%
+#   dplyr::filter(str_detect(term_diff, '_M')) %>%
+#   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#   tidybayes::stat_halfeyeh() +
+#   geom_vline(xintercept = 0, linetype = "dashed") +
+#   scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#   facet_wrap( ~ term_diff,
+#                scales = "free_y", nrow = 1,
+#                labeller = label_parsed)
 
 ```
 
