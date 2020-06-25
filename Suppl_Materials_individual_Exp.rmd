@@ -3,7 +3,7 @@ title             : "Supplementary Materials for Perpecptual Salience of Positiv
 shorttitle        : "Supplementary Materials"
 
 author: 
-  - name          : "Chuan-Peng Hu"
+  - name          : "Hu Chuan-Peng"
     affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
     address       : "Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany"
@@ -22,11 +22,11 @@ affiliation:
     institution   : "University of Aberdeen, Aberdeen, Scotland"
     
 authornote: |
-  Chuan-Peng Hu, Department of Psychology, Tsinghua University, 100084 Beijing, China; Leibniz Intitute for Resilience Research, 55131 Mainz, Germany.
+  Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China; Leibniz Intitute for Resilience Research, 55131 Mainz, Germany.
   Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
   Jie Sui, Department of Psychology, the University of Bath, Bath, UK.
 
-  Authors contriubtion: CPH, JS, & KP design the study, CPH collected the data, CPH analyzed the data and drafted the manuscript. KP & JS supported this project.
+  Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 wordcount         : "X"
 
@@ -56,7 +56,6 @@ output            :
 #knitr::opts_chunk$set(echo = TRUE)
 source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
-#curDir = '.'#dirname(rstudioapi::getSourceEditorContext()$path)
 figDir = here::here('figures')
 # Install the stable development verions from GitHub
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
@@ -78,15 +77,6 @@ load("AllData.RData")
 
 ```
 
-
-Instead of using the mean of reaction or the Frequentist way to calculate the sensitivity under signal detection theory, We analyzed our data using Hierarchical Bayesian Drift Diffusion Model (HDDM). This was done for a few reasons: first, either mean or median of RTs are representative to the RT distribution, which is usually highly skewed; second, sequential sampling models have a concrete assumption about the generative process of RTs and accurate, provide stronger framework for testing hypothesis. Also, these models had been widely used in two alternative forced choice (TAFC) task, including perceptual matching task [van_zandt_comparison_2000].
-
-Using HDDM to extract the dependent variable allow us to infer the perceptual process, at least better than we can infer when using mean or median-based GLM. Previous studies have showed that each parameter of the DDM is influence by different way. The initial bias is largely influenced by the proportion of each type of trial, the boundary is influenced by the instruction about the accuracy, while the drift rate is mainly related to relative perceptual salience or easiness of the perceptual decision-making.
-
-Before analyzing the real data, we did parameter recovery to test the sanity of the model.
-
-First, we simulated the data using the `hddm.generate.gen_rand_data` in HDDM model. To emulate the previous study on the perceptual matching task (same-faster-different-slow) and self-tagging task (manipulated effect only occur at the matched trials), we simulated six conditions. For the mismatching trials, we ....; For the matching trials, we simulated three levels, we varied drift rate ($v$) at three level: $1.5$, $2.5$, and $3.5$, while kept the other parameters fixed ($a = 1$, $t=0.4$, $z=0.5$).
-
 # Experiment 1a
 
 ## Methods
@@ -99,7 +89,7 @@ Three geometric shapes were used in this experiment: triangle, square, and circl
 ### Procedure
 As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is represented by a square.” After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
 In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
-For pariticpants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matched, bad-person nonmatching, good-person matched, good-person nonmatching, neutral-person matched, and neutral-person nonmatching). For the participants from Wenzhou Univeristy, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
+For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matched, bad-person nonmatching, good-person matched, good-person nonmatching, neutral-person matched, and neutral-person nonmatching). For the participants from Wenzhou Univeristy, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 ### Data analysis
 As we describe in the general method section.
@@ -121,28 +111,28 @@ Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 ### d prime
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1a.sdt <- df1a.v %>%
-  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
-                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
-                ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
+# df1a.sdt <- df1a.v %>%
+#  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+#  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+#                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+#                                     (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+#                 ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
+# 
+# # fit a two-level hierarchical model for SDT, didn't specify the prior
+# exp1a_std_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
+#                          (0 + Valence + Valence:ismatch_num | Subject),
+#                        family = bernoulli(link="probit"),
+#                        data = df1a.sdt,
+#                        #control = list(adapt_delta = .95),
+#                        cores = parallel::detectCores(),
+#                        file = here::here("glmmModels/exp1a_std_m1_EffectCode"))
+# summary(exp1a_std_m1)
+# 
+# plot(hypothesis(exp1a_std_m1,
+#                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
 
-# fit a two-level hierarchical model for SDT, didn't specify the prior
-exp1a_std_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch_num + 
-                         (0 + Valence + Valence:ismatch_num | Subject),
-                       family = bernoulli(link="probit"),
-                       data = df1a.sdt,
-                       #control = list(adapt_delta = .95),
-                       cores = parallel::detectCores(),
-                       file = here::here("glmmModels/exp1a_std_m1_EffectCode"))
-summary(exp1a_std_m1)
-
-plot(hypothesis(exp1a_std_m1,
-                "ValenceGood:ismatch_num > ValenceNeutral:ismatch_num"))
-
-plot(hypothesis(exp1a_std_m1,
-                "ValenceGood:ismatch_num > ValenceBad:ismatch_num"))
+#plot(hypothesis(exp1a_std_m1,
+#                "ValenceGood:ismatch_num > ValenceBad:ismatch_num"))
 
   # anova for d prime with 2*2 design
 df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
@@ -159,7 +149,7 @@ papaja::apa_table(df1a_dprime_anova_apa$table
 
 ```
 
-We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Netural-person condition (1.95, SE = 0.16), but didn't reach statical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person conditiona is significantly greater than the Bad-person conidition, *t*(50) = 2.109, *p* = .098.
+We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, *t*(50) = 2.109, *p* = .098.
 
 ### Reaction time
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -192,12 +182,12 @@ posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each val
 # pairs(posthoc_1a_rt)
 
 ```
-We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and intercation between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
+We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and interaction between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
 
-We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for mached trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
+We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
 
 # Experiment 1b
-In this study, we aimed at excluding the potential confouding factor of the familarity of words we used in experiment 1a, by matching the familiarity of the words.
+In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
 
 ## Method
 
@@ -333,7 +323,7 @@ Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of vis
 Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
 
 ### Procedure
-For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust senstivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
+For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust sensitivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
 
 ## Data Analysis
 Data was analyzed as in experiment 1a. 
@@ -358,7 +348,7 @@ df1b_dprime_anova_apa <- df1b_dprime_anova %>% papaja::apa_print.afex_aov()
 posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1b_d)
 ```
-Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.87 $\pm$ 0.102) was with greater *d* prime than Netural condition (1.44 $\pm$ 0.101, *t*(51) = 5.945, *p* < 0.001). We also found that the Bad-Person condition (1.67 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(51) = 3.132, *p* = 0.008). There Good-person condition was also slightly greater than the bad conidition, *t*(51) = 2.265, *p* = 0.0701.
+Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.87 $\pm$ 0.102) was with greater *d* prime than Neutral condition (1.44 $\pm$ 0.101, *t*(51) = 5.945, *p* < 0.001). We also found that the Bad-Person condition (1.67 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(51) = 3.132, *p* = 0.008). There Good-person condition was also slightly greater than the bad condition, *t*(51) = 2.265, *p* = 0.0701.
 
 ### Reaction time
 
@@ -396,10 +386,10 @@ df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print.afex_aov()
 posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1b_rt)
 ```
-We found intercation between Matchness and Valence (`r df1b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df1b_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (684 $\pm$ 8.77) were responded faster than Neutral-Person (740 $\pm$ 9.84), (*t*(51) = -8.167, *p* < 0.001) and Bad Person (728 $\pm$ 9.15), *t*(51) = -5.724, *p* < 0.0001). While there was no significant differences between Neutral and Bad-Person condition (*t*(51) = 1.686, *p* = 0.221). For non-matched trials, there was no significant effect of Valence (`r df1b_RT_anova_nm_apa$full$Valence`).
+We found interaction between Matchness and Valence (`r df1b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df1b_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (684 $\pm$ 8.77) were responded faster than Neutral-Person (740 $\pm$ 9.84), (*t*(51) = -8.167, *p* < 0.001) and Bad Person (728 $\pm$ 9.15), *t*(51) = -5.724, *p* < 0.0001). While there was no significant differences between Neutral and Bad-Person condition (*t*(51) = 1.686, *p* = 0.221). For non-matched trials, there was no significant effect of Valence (`r df1b_RT_anova_nm_apa$full$Valence`).
 
 ## Discussion
-These results confirmed the facilitation effect of positive moral valence on the perceptual matching task. This pattern of results mimic prior results demonstrating self-bias effect on perceptual matching (Sui et al., 2012) and in line with previous studies that indirect learning of other’s moral reputation do have influence on our subsequence behavior (Fouragnan et al., 2013). 
+These results confirmed the facilitation effect of positive moral valence on the perceptual matching task. This pattern of results mimic prior results demonstrating self-bias effect on perceptual matching (Sui et al., 2012) and in line with previous studies that indirect learning of other’s moral reputation do have influence on our subsequent behavior (Fouragnan et al., 2013). 
 
 
 # Experiment 1c
@@ -536,7 +526,7 @@ df1c.meta.rt <- df1c.v.rt_m %>%
 
 ### Stimuli and Tasks
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three most common names were chosen, which are neutral in moral valence before the manipulation.
-Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic infomration and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions $t(33) = 13.9$, $p < .001$ (See supplementary materials).
+Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavioral description. Each description includes one sentence of biographic information and four sentences that describing the moral behavioral under that name. To assess the that these three descriptions represented good, neutral, and bad valence, we collected the ratings of three person on six dimensions: morality, likability, trustworthiness, dominance, competence, and aggressiviess, from an independent sample (n = 34, 18 female, age = 19.6 ± 2.05). The rating results showed that the person with morally good behavioral description has higher score on morality (M = 3.59, SD = 0.66) than neutral (M = 0.88, SD = 1.1), *t*(33) = 12.94, *p* < .001, and bad conditions (M = -3.4, SD = 1.1), *t*(33) = 30.78, *p* < .001. Neutral condition was also significant higher than bad conditions $t(33) = 13.9$, $p < .001$ (See supplementary materials).
 
 ### Procedure
 After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task. 
@@ -578,7 +568,7 @@ Figure \@ref(fig:ex1c-dprime-rt) shows *d* prime and reaction times of experimen
 Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-signficant results. (move this experiment to supplementary?) 
 
 # Experiment 2: Sequential presenting
-Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the assocation between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of postive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect ocured because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
+Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the association between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of positive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect occurred because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
 
 ## Method
 
@@ -700,7 +690,7 @@ df2.meta.rt <- df2.v.rt_m %>%
 
 ### Procedure
 In Experiment 2, the sequential presenting makes the matching task much easier than experiment 1. To avoid ceiling effect on behavioral data, we did a few pilot experiments to get optimal parameters, i.e., the conditions under which participant have similar accuracy as in Experiment 1 (around 70 ~ 80% accuracy). 
-In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with ¾ gray area and ¼ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
+In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with $¾$ gray area and $¼$ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
 
 ### Analysis
 Data was analyzed as in study 1a. 
@@ -714,7 +704,7 @@ Mplots(expName = 'exp2', df2.v.dprime_l,rtdata)
 
 ```
 
-Figure \@ref(fig:ex2-dprime-rt) shows *d* prime and reaction times of experiment 2. Less than 0.2% correct trials with less than 200ms reaction times were exlucded. 
+Figure \@ref(fig:ex2-dprime-rt) shows *d* prime and reaction times of experiment 2. Less than 0.2% correct trials with less than 200ms reaction times were excluded. 
 
 ### *d* prime.
 
@@ -729,7 +719,7 @@ posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each vale
 There was evidence for the main effect of valence, `r df2_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (2.79 $\pm$ 0.17) was with greater *d* prime than Netural condition (2.21 $\pm$ 0.16, *t*(33) = 4.723, *p* = 0.001) and Bad-person condition (2.41 $\pm$ 0.14), *t*(33) = 4.067, *p* = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, *t*(33) = -1,802, *p* = 0.185.
 
 ### Reaction time
-The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+The results of reaction times of matchness trials showed similar pattern as the *d* prime data.
 
 ```{r 2_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df2_RT_anova <- afex::aov_ez('Subject','RT_m',df2.v.rt_m, within = c('Matchness','Valence'))
@@ -764,10 +754,10 @@ df2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df2.v.rt_m2,     # using afex's
 df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 ```
-We found intercation between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (548 $\pm$ 9.4) were responded faster than Neutral-Person (582 $\pm$ 10.9), (*t*(33) = -3.95, *p* = 0.0011) and Bad Person (582 $\pm$ 10.2), *t*(33) = -3.9, *p* = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (*t*(33) = -0.01, *p* = 0.999).  For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).
+We found interaction between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (548 $\pm$ 9.4) were responded faster than Neutral-Person (582 $\pm$ 10.9), (*t*(33) = -3.95, *p* = 0.0011) and Bad Person (582 $\pm$ 10.2), *t*(33) = -3.9, *p* = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (*t*(33) = -0.01, *p* = 0.999).  For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).
 
 ## Discussion
-In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valenced association. Moreover, with a croass task analysis, we didn’t found evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
+In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valence association. Moreover, with a cross-task analysis, we didn’t found evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
 These findings suggested that the facilitation effect of positive moral valence is robust and not affected by task. This robust effect detected by the associative learning is unexpected. 
 
 # Experiment 3a
@@ -919,7 +909,7 @@ Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
 
 ```
 
-Figure \@ref(fig:ex3a-dprime-rt) shows *d* prime and reaction times of experiment 3a. Less than 5% correct trials with less than 200ms reaction times were exlucded.
+Figure \@ref(fig:ex3a-dprime-rt) shows *d* prime and reaction times of experiment 3a. Less than 5% correct trials with less than 200ms reaction times were excluded.
 
 ### *d* prime
 
@@ -985,7 +975,6 @@ df3a_RT_anova_m_o <- df3a.v.rt_m %>%
 
 df3a_RT_anova_m_o_apa <- df3a_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 
-
 # Mismatch trials
 df3a_RT_anova_nm <- df3a.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
@@ -998,7 +987,7 @@ For the matched trials, we found that the interaction between identity and valen
 For the mismatched trials, we didn't found any strong effect: identity, `r df3a_RT_anova_nm_apa$full$Identity`, valence `r df3a_RT_anova_nm_apa$full$Valence`, or interaction between the two `r df3a_RT_anova_nm_apa$full$Identity_Valence`.
 
 # Experiment 3b
-In study 3a, participants had to remember 6 pairs of association, which cause high cogitive load during the whole exepriment. To eliminate the influence of cognitive load, we conducted study 3b, in which participant learn three aspect of self and stranger seperately in to consecutive task. We hypothesize that we will replicate the pattern of study 3a, i.e., the effect of moral valence only occurs for self-relevant conditions.
+In study 3a, participants had to remember 6 pairs of association, which cause high cognitive load during the whole experiment. To eliminate the influence of cognitive load, we conducted study 3b, in which participant learn three aspect of self and stranger separately in to consecutive task. We hypothesize that we will replicate the pattern of study 3a, i.e., the effect of moral valence only occurs for self-relevant conditions.
 
 ## Method
 ```{r loadingData_3b,echo=FALSE,results='hide', eval = FALSE}
@@ -1119,17 +1108,17 @@ df3b.meta.rt <- df3b.v.rt_m %>%
 ```
 
 ### Participants
-Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s d) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effec size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normalneutral or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
+Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s $d$) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effec size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
 
 
 ### Design
 Study 3b has the same experimental design as 3a, with a 2× 3× 2 within-subject design. The first variable was self-relevance, include two levels: self-relevant vs. stranger-relevant; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. mismatch.
- Stimuli.	The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to “good self”, “neutral self”, “bad self”, “good him/her”, bad him/her”, “neutral him/her”, the stranger’s label is consistent with participants’ gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data didn’t collect for this experiment.
+ Stimuli.	The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to “good self”, “neutral self”, “bad self”, “good him/her”, bad him/her”, “neutral him/her”, the stranger’s label is consistent with participants’ gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data did not collect for this experiment.
  
 ### Procedure
 In this experiment, participants finished two matching tasks, i.e., self-matching task, and other-matching task. In the self-matching task, participants first associate the three aspects of self to three different shapes, and then perform the matching task. In the other-matching task, participants first associate the three aspects of the stranger to three different shapes, and then perform the matching task. The order of self-task and other-task are counter-balanced among participants.
-Different from experiment 3a, after presenting the stimuli pair for 100ms, participant has 1900 ms to response, and they were feedbacked with both accuracy and reaction time.
-As in study 3a, before each task, the intruction showed the meaning of each label to participants. The self-matching task and other-matching task were randomized between participants. Each participant finished 6 blocks, each have 120 trials.
+Different from experiment 3a, after presenting the stimuli pair for 100ms, participant has 1900 ms to response, and they feedback with both accuracy and reaction time.
+As in study 3a, before each task, the instruction showed the meaning of each label to participants. The self-matching task and other-matching task were randomized between participants. Each participant finished 6 blocks, each have 120 trials.
 
 ### Data Analysis
 Data analysis is the same as study 3a.
@@ -1172,7 +1161,7 @@ pairs(posthoc_3b_d_s)
 posthoc_3b_d_o <- emmeans::emmeans(df3b_dprime_anova_o, "Valence")  # main effect
 pairs(posthoc_3b_d_o)
 ```
-There was evidence for the main effect of valence, `r df3b_dprime_anova_apa$full$Valence`, and main effect of self-relevance, `r df3b_dprime_anova_apa$full$Identity`, as well as the intercation, `r df3b_dprime_anova_apa$full$Identity_Valence`. Therefore we conducted repeated measure ANOVA for self and other conditions separately. We found the valence effect for self-referential condition (`r df3b_dprime_anova_s_apa$full$Valence`) and other-referential condition (`r df3b_dprime_anova_o_apa$full$Valence`). Post-hoc comparison for the self-referential conditions revealed that *d*’ was larger for good self (2.23 $\pm$ 0.1087) than for bad self (1.66 $\pm$ 0.098), *t*(55) = 6.11, *p* < 0.0001, Cohen’s *d* = 0.817, 95% CI [0.511 1.117] , BF10 = 8.43, and neutral self (1.91 $\pm$ 0.088), *t*(55) = 3.03, *p* = 0.0104, Cohen’s *d*  = 0.404, 95%CI [0.13 0.675] , BF10 = 1.33e+5. There was also higher d’ for neutral-self condition than bad-self conditions, *t*(55) = 3.02, *p* = 0.0106, Cohen’s *d*  = 0.403, 95% CI [0.129 0.674], BF10 = 8.22. For other-referential conditions, good-other (2.03 $\pm$ 0.12) was smaller than neutral-other (2.28 $\pm$ 0.133), *t*(55) = -2.262, *p* = 0.0699, but not the bad-other condition (2.19 $\pm$ 0.122), *t*(55) = -1.559, *p* = 0.272. Neither evidence for the neutral and bad-other condition *t*(55) = 1.11, *p* = 0.51.
+There was evidence for the main effect of valence, `r df3b_dprime_anova_apa$full$Valence`, and main effect of self-relevance, `r df3b_dprime_anova_apa$full$Identity`, as well as the interaction, `r df3b_dprime_anova_apa$full$Identity_Valence`. Therefore we conducted repeated measure ANOVA for self and other conditions separately. We found the valence effect for self-referential condition (`r df3b_dprime_anova_s_apa$full$Valence`) and other-referential condition (`r df3b_dprime_anova_o_apa$full$Valence`). Post-hoc comparison for the self-referential conditions revealed that *d*’ was larger for good self (2.23 $\pm$ 0.1087) than for bad self (1.66 $\pm$ 0.098), *t*(55) = 6.11, *p* < 0.0001, Cohen’s *d* = 0.817, 95% CI [0.511 1.117] , BF10 = 8.43, and neutral self (1.91 $\pm$ 0.088), *t*(55) = 3.03, *p* = 0.0104, Cohen’s *d*  = 0.404, 95%CI [0.13 0.675] , BF10 = 1.33e+5. There was also higher d’ for neutral-self condition than bad-self conditions, *t*(55) = 3.02, *p* = 0.0106, Cohen’s *d*  = 0.403, 95% CI [0.129 0.674], BF10 = 8.22. For other-referential conditions, good-other (2.03 $\pm$ 0.12) was smaller than neutral-other (2.28 $\pm$ 0.133), *t*(55) = -2.262, *p* = 0.0699, but not the bad-other condition (2.19 $\pm$ 0.122), *t*(55) = -1.559, *p* = 0.272. Neither evidence for the neutral and bad-other condition *t*(55) = 1.11, *p* = 0.51.
 
 ```{r 3b_dprime_id, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
@@ -1189,7 +1178,7 @@ We also tested the effect of personal association by comparing *d’* values for
 df3b_RT_anova <- afex::aov_ez('Subject','RT_m',df3b.v.rt_m, within = c('Matchness','Identity','Valence'))
 df3b_RT_anova_apa <- df3b_RT_anova %>% papaja::apa_print.afex_aov()
 ```
-The results of reaction times of matchness trials showed similar pattern as the *d* prime data. We found three-way intercation between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+The results of reaction times of matchness trials showed similar pattern as the *d* prime data. We found three-way interaction between matchness, and valence (`r df3b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
 ```{r 3b_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df3b.v.rt_m %>% 
@@ -1247,9 +1236,9 @@ For the mismacthed trials, we also found interaction between of valence and iden
 In experiment 3b, we separated the self-referential and other-referential tasks into different blocks so that participants had lower cognitive load when finish the task. We replicated the pattern from experiment 3a that the valence effect is stronger when the stimuli were self-referential. Contrast to experiment 3a, however, we found that the self-referential condition is out-performed by other-referential conditions. This pattern suggest that the self-referential enhanced the valence effect, and the advantage to self might be relative instead of absolute.
 
 # Experiment 4a
-In study 1-3 participants made explicit judgements about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevent to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgements only about the self or other conditions labels and shapes (cf. Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
+In study 1-3 participants made explicit judgments about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf. Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
 
-In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgements to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the instrinc binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
+In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgments to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the intrinsic binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
 
 ```{r loadingData_4a,echo=FALSE,results='hide', eval = FALSE}
 df4a_1 <- read.csv(file.path(".", "exp4a", "rawdata_behav_exp4a_2015.csv"), 
@@ -1370,10 +1359,10 @@ df4a.meta.rt <- df4a.v.rt_m %>%
 ```
 ## Methods
 ### Participants
-`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
+`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua University in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University participated in 2017. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
 
 ### Experimental design
-As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, normalneutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
+As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, neutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
 However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
 
 ### Stimuli
@@ -1425,7 +1414,7 @@ posthoc_4a_d_m2 <- emmeans(df4a_dprime_anova, "Identity", by = "Valence") # comp
 #pairs(posthoc_4a_d_m2)
 
 ```
-We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measures ANOVA. The effect of identity (`r df4a_dprime_anova_apa$full$Identity`), also the interaction between identity and valence, (`r df4a_dprime_anova_apa$full$Identity_Valence`). But not the effect of valence was not found, `r df4a_dprime_anova_apa$full$Valence`. We further examined the effect of valence for both self and other. For the self-referential trials,  there was a weak effect of valence `r df4a_dprime_s_anova_apa$full$Valence`. Post-hoc analysis showed that good self condition (2.55 $\pm$ 0.111) is slightly higher than bad self condition (2.38 $\pm$ 0.105) , *t*(58) = 2.339, *p* = .0583. But there was no differences between good-self and neutral self (2.45 $\pm$ 0.101), *t*(58) = 1.575, *p* = .264, neither between neutral-self and bad-self, *t*(58) = 0.966, *p* = .601. As for the other-referential conditions, the result didn't show effect of valence `r df4a_dprime_o_anova_apa$full$Valence`.
+We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measures ANOVA. The effect of identity (`r df4a_dprime_anova_apa$full$Identity`), also the interaction between identity and valence, (`r df4a_dprime_anova_apa$full$Identity_Valence`). But not the effect of valence was not found, `r df4a_dprime_anova_apa$full$Valence`. We further examined the effect of valence for both self and other. For the self-referential trials,  there was a weak effect of valence `r df4a_dprime_s_anova_apa$full$Valence`. Post-hoc analysis showed that good self condition (2.55 $\pm$ 0.111) is slightly higher than bad self condition (2.38 $\pm$ 0.105) , *t*(58) = 2.339, *p* = .0583. But there was no differences between good-self and neutral self (2.45 $\pm$ 0.101), *t*(58) = 1.575, *p* = .264, neither between neutral-self and bad-self, *t*(58) = 0.966, *p* = .601. As for the other-referential conditions, the result didn't show effect of valence `r df4a_dprime_o_anova_apa$full$Valence`.
 
 ### Reaction times
 
@@ -1463,13 +1452,11 @@ df4a_RT_anova_nm <- df4a.v.rt_m %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
 df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
-We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (`r df4a_RT_anova_apa$full$Matchness`) and intercation between Matchness and Identity(`r df4a_RT_anova_apa$full$Matchness_Identity`)
+We conducted 2 (Matchness: match v. mismatch) by 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (`r df4a_RT_anova_apa$full$Matchness`) and interaction between Matchness and Identity(`r df4a_RT_anova_apa$full$Matchness_Identity`)
 
-We carried out two separate ANOVA for both matched and mismatched trials. The results showed that for matched trials, there was an interaction between valence and identity, `r df4a_RT_anova_m_apa$full$Identity_Valence`. However, there is no main effect of valence (`r df4a_RT_anova_m_apa$full$Valence`). We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4a_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired *t*-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), *t*(58) = -3.47, *p* = 0.0028, Cohen’s *d* = -0.451 CI [-0.718 -0.182], BF10 = 27.0, and  over neutral-self condition (664 ± 64), *t*(58) = -2.78, *p* = 0.013, Cohen’s  *d* = -0.362, 95% CI [-0.624 -0.097], BF10 = 4.63. The neutral-self and bad-self conditionsdid not differ, *t*(58) = -0.44, *p* = 0.89, Cohen’s *d* = 0.0499, CI [-0.305 0.206], BF10 = 0.153. For the stranger condition, the results showed that there was no difference among these conditions, `r df4a_RT_anova_m_o_apa$full$Valence`, BF10 = 0.077.
+We carried out two separate ANOVA for both matched and mismatched trials. The results showed that for matched trials, there was an interaction between valence and identity, `r df4a_RT_anova_m_apa$full$Identity_Valence`. However, there is no main effect of valence (`r df4a_RT_anova_m_apa$full$Valence`). We further broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4a_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired *t*-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), *t*(58) = -3.47, *p* = 0.0028, Cohen’s *d* = -0.451 CI [-0.718 -0.182],  $BF_{10}$ = 27.0, and  over neutral-self condition (664 ± 64), *t*(58) = -2.78, *p* = 0.013, Cohen’s  *d* = -0.362, 95% CI [-0.624 -0.097],  $BF_{10}$ = 4.63. The neutral-self and bad-self conditions did not differ, *t*(58) = -0.44, *p* = 0.89, Cohen’s *d* = 0.0499, CI [-0.305 0.206],  $BF_{10}$ = 0.153. For the stranger condition, the results showed that there was no difference among these conditions, `r df4a_RT_anova_m_o_apa$full$Valence`, $BF_{10}$ = 0.077.
 
 For non-matched trials, there was no significant effect. Morality (`r df4a_RT_anova_nm_apa$full$Identity`), Identity(`r df4a_RT_anova_nm_apa$full$Valence`), interaction (`r df4a_RT_anova_nm_apa$full$Identity_Valence`).
-
-
 
 ```{r results='asis', echo = F, eval=FALSE}
 #knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
@@ -1601,13 +1588,13 @@ df4b.meta.rt <- df4b.v.rt_m %>%
 
 ```
 ### Participants
-`r df4b.T.basic$N` college students (`r df4b.T.basic$Nf` female, age = `r df4b.T.basic$Age_mean` $\pm$ `r df4b.T.basic$Age_sd`) participated the current study, `r df4b.T.basic$N_thu` of them were from Tsinghua Universtiy in 2015 `r df4b.T.basic$N_wzu` were from Wenzhou University parpticipated in 2017. All participants were right-handed, and all had normalneutral or corrected-to-normalneutral vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4b.excld.sub)` participants were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4b.v.basic$N` participants (`r df4b.v.basic$Nf` female, age = `r df4b.v.basic$Age_mean` $\pm$ `r df4b.v.basic$Age_sd`) were analyzed and reported.
+`r df4b.T.basic$N` college students (`r df4b.T.basic$Nf` female, age = `r df4b.T.basic$Age_mean` $\pm$ `r df4b.T.basic$Age_sd`) participated the current study, `r df4b.T.basic$N_thu` of them were from Tsinghua University in 2015 `r df4b.T.basic$N_wzu` were from Wenzhou University participated in 2017. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4b.excld.sub)` participants were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4b.v.basic$N` participants (`r df4b.v.basic$Nf` female, age = `r df4b.v.basic$Age_mean` $\pm$ `r df4b.v.basic$Age_sd`) were analyzed and reported.
 
 ### Experimental design
-The experimental design of this experiment is same as experiment 4a:  a 3× 2 × 2 within-subject design with moral valence (good, normalneutral and bad associations), self-relatedness (self vs. other), and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word “self” or “other” were presented in the shapes (see below).
+The experimental design of this experiment is same as experiment 4a:  a 3× 2 × 2 within-subject design with moral valence (good, neutral and bad associations), self-relatedness (self vs. other), and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word “self” or “other” were presented in the shapes (see below).
 
 ### Stimuli
-In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments.  Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels “self” and “other”. Before the experiment, we informed participants only response to the relationship between shapes’shapes configure and the labels below the fixation, ignoring the wordswithin each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
+In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments.  Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels “self” and “other”. Before the experiment, we informed participants only response to the relationship between shapes’shapes configure and the labels below the fixation, ignoring the words within each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
 
 ### Procedure
 The procedure was similar to Experiment 4 a. Both samples of participants finished 6 blocks of trial, each with 120 trials.
@@ -1632,16 +1619,16 @@ df4b_dprime_anova <- afex::aov_ez('Subject','dprime',df4b.v.dprime_l, within = c
 df4b_dprime_anova_apa <- df4b_dprime_anova %>% papaja::apa_print.afex_aov()
 #df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
-We conducted 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
+We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (`r df4b_dprime_anova_apa$full$Valence`), or identity, `r df4b_dprime_anova_apa$full$Identity`, or their interactions, `r df4b_dprime_anova_apa$full$Identity_Valence`.
 
 ### Reaction times
-We conducted 2 (Matchness: match v. mismatch) by 2 (Idenity: self v. other) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA:
+We conducted 2 (Matchness: match v. mismatch) by 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA:
 ```{r analyzing for RT_4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4b_RT_anova <- afex::aov_ez('Subject','RT_m',df4b.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
 df4b_RT_anova_apa <- df4b_RT_anova %>% papaja::apa_print.afex_aov()
 ```
-There was a main effect of Matchness (`r df4b_RT_anova_apa$full$Matchness`), main effect of valence (`r df4b_RT_anova_apa$full$Valence`),  intercation between Matchness and Valence(`r df4b_RT_anova_apa$full$Matchness_Valence`), and three way interaction (`r df4b_RT_anova_apa$full$Matchness_Identity_Valence`).
+There was a main effect of Matchness (`r df4b_RT_anova_apa$full$Matchness`), main effect of valence (`r df4b_RT_anova_apa$full$Valence`),  interaction between Matchness and Valence(`r df4b_RT_anova_apa$full$Matchness_Valence`), and three way interaction (`r df4b_RT_anova_apa$full$Matchness_Identity_Valence`).
 
 ```{r analyzing for RT_4b_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # match trials
@@ -1705,18 +1692,18 @@ df4b_RT_anova_m_o_apa <- df4b_RT_anova_m_o %>% papaja::apa_print.afex_aov()
 posthoc_4b_rt_o <- emmeans::emmeans(df4b_RT_anova_m_o, c("Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4b_rt_o)
 ```
-We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4b_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired *t* tests showed that good-self association (680 ± 9.79) were faster than bad-self associations (721  ± 8.97), *t*(44) = -4.22, *p* < .001, Cohen’s *d* = -0.629 CI [-0.947 -0.306], BF10 = 200, and  neutral-self association (713 $\pm$ 8.19), *t*(44) = -4.67, *p* < 0.001, Cohen’s *d* = -0.696, 95% CI [-1.019 -0.367], BF10 = 745.3. The neutral-self and bad-self associations did not differ, *t*(44) = -1.04, *p* = .31, Cohen’s *d* = -0.155, 95%CI [-0.448 0.14], BF10 = 0.267. RTs in good-self condition were facilitated but without performance being impaired for bad-self associations (relative to the normal neutral self)(see Figure 5). 
-For other-association condition, the main effect of moral valence was  also significant, `r df4b_RT_anova_m_o_apa$full$Valence`, BF10 = 21. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen’s d = -0.4999, 95%CI [-0.8075 -0.1872], BF10 = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen’s d = -0.3294, 95%CI [-6278 -0.0275], BF10 = 1.454. While there is is no strong evidence about the differences between bad-other vs. neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen’s d = -0.2723, 95%CI [-0.5685 0.0268], BF10 = 0.743.
+We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, `r df4b_RT_anova_m_s_apa$full$Valence`, BF10 = 11.16. Paired *t* tests showed that good-self association (680 ± 9.79) were faster than bad-self associations (721  ± 8.97), *t*(44) = -4.22, *p* < .001, Cohen’s *d* = -0.629 CI [-0.947 -0.306],  $BF_{10}$ = 200, and  neutral-self association (713 $\pm$ 8.19), *t*(44) = -4.67, *p* < 0.001, Cohen’s *d* = -0.696, 95% CI [-1.019 -0.367],  $BF_{10}$ = 745.3. The neutral-self and bad-self associations did not differ, *t*(44) = -1.04, *p* = .31, Cohen’s *d* = -0.155, 95%CI [-0.448 0.14],  $BF_{10}$ = 0.267. RTs in good-self condition were facilitated but without performance being impaired for bad-self associations (relative to the normal neutral self)(see Figure 5). 
+For other-association condition, the main effect of moral valence was  also significant, `r df4b_RT_anova_m_o_apa$full$Valence`, BF10 = 21. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen’s d = -0.4999, 95%CI [-0.8075 -0.1872],  $BF_{10}$ = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen’s d = -0.3294, 95%CI [-6278 -0.0275], $BF_{10}$ = 1.454. While there is is no strong evidence about the differences between bad-other vs. neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen’s d = -0.2723, 95%CI [-0.5685 0.0268],  $BF_{10}$ = 0.743.
 
-We also comparied the reaction times for self- and other- association in different valence condition. we found that Good-self condition is faster than good-other condition, *t*(44) = -2.165, *p* = 0.0358; neutral self is slower than neutral-other condition, *t*(44) = 3.064, *p* = 0.0037. Bad-self and bad-other did not show difference, *t*(44) = 0.623, *p* = 0.5363.
+We also compared the reaction times for self- and other- association in different valence condition. we found that Good-self condition is faster than good-other condition, *t*(44) = -2.165, *p* = 0.0358; neutral self is slower than neutral-other condition, *t*(44) = 3.064, *p* = 0.0037. Bad-self and bad-other did not show difference, *t*(44) = 0.623, *p* = 0.5363.
 
 For non-matched trials, there was no significant effect. Identity (`r df4b_RT_anova_nm_apa$full$Identity`), interaction (`r df4b_RT_anova_nm_apa$full$Identity_Valence`). But here are effect of Valence (`r df4b_RT_anova_nm_apa$full$Valence`)
 
 ## Discussion
-In experiment 4, we manipulated the task so that the moral valence (experiment 4a) or the self-relatedness (experiment 4b) become irrelevant to the task. We found robust effects of the tasks: when the self-relatedness is task related, the results showed a strong effect of self-relatedness; in contrast, when moral valence become task related the main effect of moral valence was strong. However, the task irrelevant stimuli in the shape also had influence on the performance. The good self conditions (the shape associated the self and with a “good person” within the shape) performed better than bad self conditions even when the self was the only task relevant stimuli. Also, good-self showed advantage over good-other when valence is the only task relevant variable while idenity was not. Together, these results suggest that moral valence and self-referential can still couple together and facilitated the perceptual decision making even one feature of them is implicit.
+In experiment 4, we manipulated the task so that the moral valence (experiment 4a) or the self-relatedness (experiment 4b) become irrelevant to the task. We found robust effects of the tasks: when the self-relatedness is task related, the results showed a strong effect of self-relatedness; in contrast, when moral valence become task related the main effect of moral valence was strong. However, the task irrelevant stimuli in the shape also had influence on the performance. The good self conditions (the shape associated the self and with a “good person” within the shape) performed better than bad self conditions even when the self was the only task relevant stimuli. Also, good-self showed advantage over good-other when valence is the only task relevant variable while identity was not. Together, these results suggest that moral valence and self-referential can still couple together and facilitated the perceptual decision making even one feature of them is implicit.
 
 # Experiment 5: Generalization of positive effect
-So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of diffenent attractivness, and emotional words with different valence). In this study, participants finished 4 session of association task, each with different categories of stimuli.
+So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of different attractivness, and emotional words with different valence). In this study, participants finished 4 session of association task, each with different categories of stimuli.
 
 ## Method
 
@@ -1861,16 +1848,16 @@ df5.meta.rt <- df5.v.rt_m %>%
 ```
 
 ### Participants
-`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.nQuit)` participant didn’t finished the experiment, and the other `r nrow(df5.excld.sub)` were exclued because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
+`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.nQuit)` participant did not finished the experiment, and the other `r nrow(df5.excld.sub)` were excluded because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
 
 ### Experimental design
-A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, atttractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
+A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, attractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
 
 ### Stimuli
-4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires XXXXXXXX.
+4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires.
 
 ### Procedure
-Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomnized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
+Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
 
 ## Results
 
@@ -1925,7 +1912,6 @@ df5_dprime_anova_apa <- df5_dprime_anova %>% papaja::apa_print.afex_aov()
 #df4b_dprime_anova <- apa_print(df4b_dprime_anova)
 ```
 
-
 ```{r analyzing for d prime_e5_tasks, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # calculating the dprime 
 df5.v.dprime_M_anova <- df5.v.dprime_l %>%
@@ -1949,7 +1935,6 @@ df5_dprime_P_anova_apa <- df5.v.dprime_P_anova %>% papaja::apa_print.afex_aov()
 post_hoc_5_d_p <- emmeans::emmeans(df5.v.dprime_P_anova,'Valence')
 pairs(post_hoc_5_d_p)
 
-
 df5.v.dprime_S_anova <- df5.v.dprime_l %>%
   dplyr::filter(taskType == "Scene") %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
@@ -1957,21 +1942,19 @@ df5_dprime_S_anova_apa <- df5.v.dprime_S_anova %>% papaja::apa_print.afex_aov()
 
 post_hoc_5_d_s <- emmeans::emmeans(df5.v.dprime_S_anova,'Valence')
 pairs(post_hoc_5_d_s)
-
 ```
 
-We conducted 4 (task type: morality, emotion, person, scene) by 3 (morlaity: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (`r df5_dprime_anova_apa$full$taskType`), but revealed effect of valence, `r df5_dprime_anova_apa$full$Valence`, and their interactions, `r df5_dprime_anova_apa$full$taskType_Valence`. 
+We conducted 4 (task type: morality, emotion, person, scene) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (`r df5_dprime_anova_apa$full$taskType`), but revealed effect of valence, `r df5_dprime_anova_apa$full$Valence`, and their interactions, `r df5_dprime_anova_apa$full$taskType_Valence`. 
 
 We then conducted ANOVA separately for four different tasks. For the morality task, the valence effect `r df5_dprime_M_anova_apa$full$Valence`.
 
-For emotion conditions, we found that main effect of valence `r df5_dprime_E_anova_apa$full$Valence`. Post-hoc comparison showed that good (2.13, s.e. = 0.161) was not different from neutral condition (2.10, se = 0.125), *t*(37) = 0.163, *p* = 0.9854, but both are higher than  than bad condition (1.79, se = 0.148) (neutral > bad, *t*(37) = 3.588, *p* = 0.0027; good > bad, *t*(37) = 2.62, *p* = 0.0332).
+For emotion conditions, we found that main effect of valence `r df5_dprime_E_anova_apa$full$Valence`. Post-hoc comparison showed that good (2.13, SE = 0.161) was not different from neutral condition (2.10, SE = 0.125), *t*(37) = 0.163, *p* = 0.9854, but both are higher than  than bad condition (1.79, SE = 0.148) (neutral > bad, *t*(37) = 3.588, *p* = 0.0027; good > bad, *t*(37) = 2.62, *p* = 0.0332).
 
-For the person appearance, the main effect of valence is significant, `r df5_dprime_P_anova_apa$full$Valence`. Post-hoc analysis found that good condition (2.4, se = 0.167) was higher than both neutral (1.71, se = 0.175, *t*(37) = 5.482, *p* < .0001) and bad (1.70, se = 0.182, *t*(37) = 6.365, *p* < .0001), but neutral and bad condition are not different (*t*(37) = 0.197, *p* =0.9788).
+For the person appearance, the main effect of valence is significant, `r df5_dprime_P_anova_apa$full$Valence`. Post-hoc analysis found that good condition (2.4, SE = 0.167) was higher than both neutral (1.71, SE = 0.175, *t*(37) = 5.482, *p* < .0001) and bad (1.70, SE = 0.182, *t*(37) = 6.365, *p* < .0001), but neutral and bad condition are not different (*t*(37) = 0.197, *p* =0.9788).
 
-For scene appearance, the main effect of valence is significnat `r df5_dprime_S_anova_apa$full$Valence`. Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, se = 0.156) is higher than both neutral (1.57, se = 0.178, *t*(37) =4.683, *p* = 0.0001) and bad (1.77, se = 0.148, *t*(37) = 3.414, *p* = 0.0044), but neutral and bad conditions are not different (*t*(37) = -1.893, *p* = 0.1549)
+For scene appearance, the main effect of valence was significant `r df5_dprime_S_anova_apa$full$Valence`. Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, SE = 0.156) is higher than both neutral (1.57, SE = 0.178, *t*(37) =4.683, *p* = 0.0001) and bad (1.77, SE = 0.148, *t*(37) = 3.414, *p* = 0.0044), but neutral and bad conditions are not different (*t*(37) = -1.893, *p* = 0.1549)
 
-
-### Reaction time
+### Reaction times
 
 As in previous experiment, we focused our analysis on the matched trials. We conducted 4 (task type: morality, emotion, beauty of person, beauty of scene) by 3 (Valence: good, neutral, bad) repeated measure ANOVA for matched trials only.
 ```{r 5_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -2157,19 +2140,19 @@ df6a.meta.rt <- df6a.v.rt_m %>%
 ```
 
 ### Participants
-`r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua Universtiy in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
+`r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua University in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
 
 ### Experimental design
 The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
 
 ### Stimuli
 Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (“坏人, HuaiRen”), good person (“好人, HaoRen”) or ordinary  person (“常人, ChangRen”) was counterbalanced across participants. The words bad person, good person or ordinary  person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
-We used backward masking to avoid over-processing of the moral words, in which a scrabmled picture were presented for 900 ms after the label. Also, to avoid the celling effect on accruacy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picutre of 3/4gray and ¼ white at resoluation of 2 × 2 pixel. 
+We used backward masking to avoid over-processing of the moral words, in which a scrambled picture were presented for 900 ms after the label. Also, to avoid the ceiling effect on accuracy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picture of 3/4gray and ¼ white at resolution of 2 × 2 pixel. 
 
 ### Procedure
 The procedure was similar to Experiment 2. Participants finished 9 blocks of trial, each with 120 trials. In total, participants finished 180 trials for each combination of condition.
 
-As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
+As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the associations between labels and shapes and then completed a shape-label matching task (e.g., good person-triangle). In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scrambled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
 
 All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
 
@@ -2195,10 +2178,10 @@ posthoc_6a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
 graphics::pairs(posthoc_6a_d)
 # plot(posthoc_5a_d, comparisons = TRUE)
 ```
-We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (`r df6a_dprime_anova_apa$full$Valence`). Post-hoc anlaysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),*t* = 2.916, *df* = 24, *p* = 0.02, p-value adjusted by Tukey method, but the *d* prime between Good and bad (mean = 3.03, SE = 0.142) (*t* = 1.512, *df* = 24, *p* = 0.3034, p-value adjusted by Tukey method), bad and neutral (*t* = 1.599, *df* = 24, *p* = 0.2655, p-value adjusted by Tukey method) were not siginificant.
+We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (`r df6a_dprime_anova_apa$full$Valence`). Post-hoc analysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),*t* = 2.916, *df* = 24, *p* = 0.02, p-value adjusted by Tukey method, but the *d* prime between Good and bad (mean = 3.03, SE = 0.142) (*t* = 1.512, *df* = 24, *p* = 0.3034, p-value adjusted by Tukey method), bad and neutral (*t* = 1.599, *df* = 24, *p* = 0.2655, p-value adjusted by Tukey method) were not significant.
 
 ### Analaysis of reaction time.
-The results of reaction times of matchness trials showed similiar pattern as the *d* prime data.
+The results of reaction times of matchness trials showed similar pattern as the *d* prime data.
 ```{r 6a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 df6a_RT_anova <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m,     # using afex's function 
@@ -2426,7 +2409,7 @@ The experimental design of this experiment is same as experiment 3:  a 2 × 3 ×
 As in experiment 3a, 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels (good self, neutral self, bad self, good person, bad person, neutral person). To match the concreteness of the label, we asked participant to chosen an unfamiliar name of their own gender to be the stranger.
 
 ### Procedure
-The procedure was similar to Experiment 2 and 6a. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scramled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finnally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
+The procedure was similar to Experiment 2 and 6a. Subjects first learned the associations between labels and shapes and then completed a shape-label matching task. In each trial of the matching task, a fixation were first presented for 500 ms, followed by a 50 ms label; then, a scrambled picture presented 900 ms. After the backward mask, the shape were presented on a noisy background for 50ms. Participant have to response in 1000ms after the presentation of the shape, and finally, a feedback screen was presented for 500 ms (see figure 1). The inter-trial interval (ITI) were randomly varied at the range of 1000 ~ 1400 ms. 
 
 All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
 
@@ -2473,7 +2456,7 @@ df6b_d1_dprime_o_anova_apa <- df6b_d1_dprime_o_anova %>% papaja::apa_print.afex_
 Figure \@ref(fig:ex6b-d1-dprime-rt) shows *d* prime and reaction times from day 1 of the experiment 6b. 
 
 #### *d* prime
-There was evidence for the interaction between identity and valence, `r df6b_d1_dprime_anova_apa$full$Identity_Valence`. We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d1_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), *t*(21) = 5.984, *p* < 0.001, and bad-self condition (2.07, SE = 0.154), *t*(21) = 6.555, *p* < 0.001. But there was no significant difference between bad-self and neutral-self, *t*(21) = -1.059, *p* = 0.549. For other trials, there was no significant effect of valuence, `r df6b_d1_dprime_o_anova_apa$full$Valence`.
+There was evidence for the interaction between identity and valence, `r df6b_d1_dprime_anova_apa$full$Identity_Valence`. We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d1_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), *t*(21) = 5.984, *p* < 0.001, and bad-self condition (2.07, SE = 0.154), *t*(21) = 6.555, *p* < 0.001. But there was no significant difference between bad-self and neutral-self, *t*(21) = -1.059, *p* = 0.549. For other trials, there was no significant effect of valence, `r df6b_d1_dprime_o_anova_apa$full$Valence`.
 
 ```{r 6b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df6b_d1_RT_anova <- afex::aov_ez('Subject','RT_m',df6b_d1.v.rt_m,     # using afex's function 
@@ -2601,7 +2584,7 @@ df6b_d2_dprime_o_anova_apa <- df6b_d2_dprime_o_anova %>% papaja::apa_print.afex_
 
 ```
 #### *d* prime
-There was evidence for the interaction between identity and valence, `r df6b_d2_dprime_anova_apa$full$Identity_Valence`.  We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d2_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), *t*(21) = 2.98, *p* = 0.0189, and bad-self condition (2.43, SE = 0.199), *t*(21) = 3.93, *p* = 0.0021. But there was no significant difference between bad-self and neutral-self, *t*(21) = -0.097, *p* = 0.995. For other trials, there was no significant effect of valuence, `r df6b_d2_dprime_o_anova_apa$full$Valence`.
+There was evidence for the interaction between identity and valence, `r df6b_d2_dprime_anova_apa$full$Identity_Valence`.  We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d2_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), *t*(21) = 2.98, *p* = 0.0189, and bad-self condition (2.43, SE = 0.199), *t*(21) = 3.93, *p* = 0.0021. But there was no significant difference between bad-self and neutral-self, *t*(21) = -0.097, *p* = 0.995. For other trials, there was no significant effect of valence, `r df6b_d2_dprime_o_anova_apa$full$Valence`.
 
 ```{r 5b_d2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
@@ -2662,7 +2645,7 @@ df6b_d2_RT_anova_nm_apa <- df6b_d2_RT_anova_nm %>% papaja::apa_print.afex_aov()
 ```
 
 #### RT
-For the matched trials, the interaction between identity and valence, `r df6b_d2_RT_anova_m_apa$full$Identity_Valence`. As in previous studies, we splited the self- and other-relevant trials. For the self condition, the valence effect is significant, `r df6b_d2_RT_anova_m_s_apa$full$Valence`. The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , *t* = -2.289, *p* = 0.0795, *df* = 21 and self-bad condition (508, SE = 17.9),  *t* = -4.342, *p* = 0.0008, *df* = 21. but not significant different between neutral and bad condition, *t* = -0.503, *p* = 0.871, *df* = 21. For other condition, there was no effect of valence, `r df6b_d2_RT_anova_m_o_apa$full$Valence`. 
+For the matched trials, the interaction between identity and valence, `r df6b_d2_RT_anova_m_apa$full$Identity_Valence`. As in previous studies, we split the self- and other-relevant trials. For the self condition, the valence effect is significant, `r df6b_d2_RT_anova_m_s_apa$full$Valence`. The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , *t* = -2.289, *p* = 0.0795, *df* = 21 and self-bad condition (508, SE = 17.9),  *t* = -4.342, *p* = 0.0008, *df* = 21. but not significant different between neutral and bad condition, *t* = -0.503, *p* = 0.871, *df* = 21. For other condition, there was no effect of valence, `r df6b_d2_RT_anova_m_o_apa$full$Valence`. 
 
 \newpage
 

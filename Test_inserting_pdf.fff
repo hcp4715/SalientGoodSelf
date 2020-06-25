@@ -1,7 +1,0 @@
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics[width=5.20833in,height=\textheight]{HDDM/exp1a_hddm_vta_pairplot.pdf}
-\caption{Test: Presenting a pairplot}
-\end{figure*}

@@ -121,6 +121,15 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 
 # Introduction
+
+Instead of using the mean of reaction or the Frequentist way to calculate the sensitivity under signal detection theory, We analyzed our data using Hierarchical Bayesian Drift Diffusion Model (HDDM). This was done for a few reasons: first, either mean or median of RTs are representative to the RT distribution, which is usually highly skewed; second, sequential sampling models have a concrete assumption about the generative process of RTs and accurate, provide stronger framework for testing hypothesis. Also, these models had been widely used in two alternative forced choice (TAFC) task, including perceptual matching task [van_zandt_comparison_2000].
+
+Using HDDM to extract the dependent variable allow us to infer the perceptual process, at least better than we can infer when using mean or median-based GLM. Previous studies have showed that each parameter of the DDM is influence by different way. The initial bias is largely influenced by the proportion of each type of trial, the boundary is influenced by the instruction about the accuracy, while the drift rate is mainly related to relative perceptual salience or easiness of the perceptual decision-making.
+
+Before analyzing the real data, we did parameter recovery to test the sanity of the model.
+
+First, we simulated the data using the `hddm.generate.gen_rand_data` in HDDM model. To emulate the previous study on the perceptual matching task (same-faster-different-slow) and self-tagging task (manipulated effect only occur at the matched trials), we simulated six conditions. For the mismatching trials, we ....; For the matching trials, we simulated three levels, we varied drift rate ($v$) at three level: $1.5$, $2.5$, and $3.5$, while kept the other parameters fixed ($a = 1$, $t=0.4$, $z=0.5$).
+
 XXXX
 In perceptual matching, same is faster than different [@Krueger_1978; @Farell_1985].
 Automatic processing [Spruyt_de_Houwer_2017]
@@ -203,7 +212,7 @@ In this part, we reported the data from experiment 5, which included positive, n
 
 Finally, we explored correlation between results from behavioral results and self-reported measures. 
 For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences [Jensen, 1992; Ouyang et al., 2017]. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. 
-The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: https://psyarxiv.com/9fczh/). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
+The DDM analyses were finished by HDDM, as reported in @Hu_2020_GoodSelf. That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in [@Liu_2020_JOPD].
 
@@ -212,8 +221,8 @@ load("AllData.RData")
 ```
 
 ```{r define_funs,echo=FALSE,results='hide'}
-
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
+# for 1a, 1b, 1c, 2, 6a
 fun_sdt_val <- function(exp_name) {
   df_name <- paste('df', exp_name, '.v', sep = '')
   m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
@@ -230,6 +239,8 @@ fun_sdt_val <- function(exp_name) {
             family = bernoulli(link="probit"),
             data = .,
             control = list(adapt_delta = .99),
+            iter = 4000,
+            thin = 2,
             cores = parallel::detectCores(),
             file = here::here(m_name))
   return(m)
@@ -305,6 +316,8 @@ fun_rt_val <- function(exp_name) {
     brms::brm(RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject),
               family = shifted_lognormal(),
               data = ., control = list(adapt_delta = .99),
+              iter = 4000,
+              thin = 2,
               cores = parallel::detectCores(),
               file = here::here(m_name))
   return(m)
@@ -397,14 +410,13 @@ pp_check(exp1a_sdt_m1)  # posterior predictive check
 
 hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.97
 hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
-hypothesis(exp1a_sdt_m1, "ValenceNeutral:ismatch > ValenceBad:ismatch")   # 0.92
-hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.81
-hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .94
-hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.79
+hypothesis(exp1a_sdt_m1, "ValenceNeutral:ismatch > ValenceBad:ismatch")   # 0.91
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.82
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .95
+hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.81
 
 exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
 ```
-
 #### Reaction time
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition (), $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = 99$. However, the mismatched trials are largely overlapped. 
 
@@ -486,7 +498,6 @@ We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as
 
 ```{r 1b_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # fit a three-level hierarchical model for RT, didn't specify the prior
-
 exp1b_rt_m1 <- fun_rt_val('1b')
 #plot(exp1b_rt_m1, "b_")
 summary(exp1b_rt_m1)  # n
@@ -547,12 +558,12 @@ exp1c_sdt_m1 <- fun_sdt_val('1c')
 summary(exp1c_sdt_m1)    # check summary
 #pp_check(exp1c_sdt_m1)   # posterior predictive check
 
-hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.73
-hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # .79
-hypothesis(exp1c_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.99
-hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.4
-hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceBad")      # 0.73
-hypothesis(exp1c_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.79
+hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.75
+hypothesis(exp1c_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # .8
+hypothesis(exp1c_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.39
+hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.45
+hypothesis(exp1c_sdt_m1, "ValenceGood > ValenceBad")      # 0.71
+hypothesis(exp1c_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.77
 
 # extract the population level parameters
 # criteria
@@ -564,7 +575,7 @@ exp1c_sdt_p <- fun_plot_sdt_val(exp1c_sdt_m1)
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition (), $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = 99$. However, the mismatched trials are largely overlapped. 
 
 ```{r 1c_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-exp1c_rt_m1 <- fun_rt_val('3a')
+exp1c_rt_m1 <- fun_rt_val('1c')
 
 #plot(exp1b_rt_m1, "b_")
 summary(exp1c_rt_m1)  # n
@@ -580,9 +591,9 @@ pp_check(exp1c_rt_m1)
 # ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
 
 hypothesis(exp1c_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
-hypothesis(exp1c_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
-hypothesis(exp1c_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.74
-hypothesis(exp1c_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+hypothesis(exp1c_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.5
+hypothesis(exp1c_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.95
+hypothesis(exp1c_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 0.86
 
 exp1c_rt_p <- fun_plot_rt_val(exp1c_rt_m1)
 
@@ -591,6 +602,8 @@ exp1c_sdt_p[[1]] + exp1c_sdt_p[[2]] + exp1c_sdt_p[[3]] + exp1c_sdt_p[[4]] + exp1
 
 ### HDDM
 We fitted our data with HDDM, using the response-coding [also see Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+
 
 
 # Results

@@ -1,3 +1,8 @@
+
+if(!"effsize" %in% rownames(installed.packages())) install.packages("effsize")
+if(!"MBESS" %in% rownames(installed.packages())) install.packages("MBESS")
+if(!"compute.es" %in% rownames(installed.packages())) install.packages("compute.es")
+
 test.df <- read.csv('df4a.meta_d_w.csv')
 
 ## Mothed 0: JASP

@@ -1,4 +1,5 @@
 ## go through hbsdtr2
+## Not really used it then
 
 library(bhsdtr2)
 library(rstan)
