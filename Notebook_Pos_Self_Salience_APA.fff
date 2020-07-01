@@ -2,6 +2,48 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_all_effect-1.pdf}
-\caption{(\#fig:plot\_all\_effect)Effect size (Cohen's \emph{d}) of Valence.}
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-all-effect-1.pdf}
+\caption{\label{fig:plot-all-effect}Effect size (Cohen's \emph{d}) of Valence.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4a-effect-1.pdf}
+\caption{\label{fig:plot-exp4a-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4a.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-effect-1.pdf}
+\caption{\label{fig:plot-exp4b-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-diff-diff-1.pdf}
+\caption{\label{fig:plot-exp4b-diff-diff}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp5-effect-1.pdf}
+\caption{\label{fig:plot-exp5-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-1-1.pdf}
+\caption{\label{fig:plot-corr-1}Correlation between moral self-image, self esteem, and behavior}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-2-1.pdf}
+\caption{\label{fig:plot-corr-2}Correlation between moral identity and behavior}
 \end{figure*}

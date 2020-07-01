@@ -1,9 +1,12 @@
 \begin{table*}[hbt]
 \ifnextchar[{\eatarg}{}
 [tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:Table1_exp_info}Information about all experiments.}
+
 \begin{tabular}{lllllllll}
 \toprule
 ExpID & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Month} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{DV} & \multicolumn{1}{c}{Design} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Valence} & \multicolumn{1}{c}{Presenting}\\
@@ -28,9 +31,12 @@ Exp\_7b & 2018 & 5 & 46 (42) & behav & 2 * 2 * 2 & explicit & words & Simultaneo
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} DV = dependent variables; Valence = how valence was manipulated; Shape \& Label = how shapes \& labels were presented.}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
+
 \end{table*}

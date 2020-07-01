@@ -1,39 +1,49 @@
-\documentclass[man]{apa6}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  english,
+  man]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdftitle={Positive bias in perceptual matching may reflect an spontaneous self-referential processing},
-            pdfauthor={Hu Chuan-Peng, Kaiping Peng, \& Jie Sui},
-            pdfkeywords={Perceptual decision-making, Self, positive bias, morality},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{graphicx}
-% grffile has become a legacy package: https://ctan.org/pkg/grffile
-\IfFileExists{grffile.sty}{%
-\usepackage{grffile}
-}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Positive bias in perceptual matching may reflect an spontaneous self-referential processing},
+  pdflang={en-EN},
+  pdfkeywords={Perceptual decision-making, Self, positive bias, morality},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -42,60 +52,74 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
 \ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-
-  \title{Positive bias in perceptual matching may reflect an spontaneous self-referential processing}
-    \author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{1}, \& Jie Sui\textsuperscript{1,3}}
-    \date{}
-  
-\shorttitle{Positive-bias as the spontaneous self-referential processing}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} Leibniz Institute for Resilience Research, 55131 Mainz, Germany\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
-\keywords{Perceptual decision-making, Self, positive bias, morality\newline\indent Word count: X}
-\usepackage{csquotes}
+% Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
 
+% Table formatting
 \usepackage{longtable}
 \usepackage{lscape}
-\usepackage{multirow}
-\usepackage{tabularx}
-\usepackage[flushleft]{threeparttable}
-\usepackage{threeparttablex}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 \newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
 \newcommand\LastLTentrywidth{1em}
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
 
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\makeatother
+\shorttitle{Positive-bias as the spontaneous self-referential processing}
+\author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{1}, \& Jie Sui\textsuperscript{1,3}}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} Leibniz Institute for Resilience Research, 55131 Mainz, Germany\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
+\authornote{Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
+
+Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
+
+
+Correspondence concerning this article should be addressed to Hu Chuan-Peng, Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany. E-mail: hcp4715@gmail.com}
+\keywords{Perceptual decision-making, Self, positive bias, morality\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -105,19 +129,21 @@
 \usepackage{lineno}
 
 \linenumbers
+\usepackage{csquotes}
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\else
+  \usepackage[shorthands=off,main=english]{babel}
+\fi
 
-\authornote{Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
-Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
-Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
+\title{Positive bias in perceptual matching may reflect an spontaneous self-referential processing}
 
-Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
-
-Correspondence concerning this article should be addressed to Hu Chuan-Peng, Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany. E-mail: \href{mailto:hcp4715@gmail.com}{\nolinkurl{hcp4715@gmail.com}}}
+\date{}
 
 \abstract{
 To navigate in a complex social world, individual has learnt to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized (Anderson, Siegel, et al., 2011, Science; Gantman \& Van Bavel, 2014, Cognition). Using social associative learning paradigm, we found that when geometric shapes, without soical meaning, were associated with different moral valence (morally good, neutral, or bad), the shapes that associated with positive moral valence were prioritized in moral matching task. This patterns of results were robust across different procedures. Further, we tested whether this positive effect was modulated by self-relevance by manipulating the self-referential explicitly and found that the positive bias showed a large effect when positive valued stimuli were related to the self. This effect exist also when the self related information were presented as a task-irrelevant information. We also tested the specificity of the positive valence and found that this effect was not limited to moral domain. Interestingly, the better performance in reaction time is not correpsonding to self-rated psychological distance between self and a morally good-person, but with distance between self and morall bad-person. These results may suggest that our participants (College students in two different cities in China) have a positive moral self bias in perceptual processing, which drive the facilitated processing of morally good stimuli because of the spontaneous self-referential processing, and this trendency is not correlated with explicit rating of moral self.
-
-
 }
 
 \begin{document}
@@ -127,31 +153,48 @@ To navigate in a complex social world, individual has learnt to prioritize valua
 \section{Introduction}\label{introduction}}
 
 XXXX
+In perceptual matching, same is faster than different {[}Krueger\_1978; Farell\_1985{]}.
+Automatic processing {[}Spruyt\_de\_Houwer\_2017{]}
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+Trisha Van Zandt, Hans Colonius, Robert W. Proctor: A comparison of two response time models applied to perceptual matching
+
+Yakushijin, ReikoJacobs, Robert A (2020), Are People Successful at Learning Sequential Decisions on a Perceptual Matching Task?
+
+Schooler, L. J., Shiffrin, R. M., \& Raaijmakers, J. G. W. (2001). A Bayesian model for implicit effects in perceptual identification. Psychological Review, 108(1), 257--272. \url{https://doi.org/10.1037/0033-295X.108.1.257}
+
+\hypertarget{general-methods}{%
+\section{General Methods}\label{general-methods}}
 
 \hypertarget{participants.}{%
 \subsection{Participants.}\label{participants.}}
 
-Most experiments (1a \textasciitilde{} 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing. Participants of these experiments were recruited in the local community. To increase the sample size so that each experiment has 50 or more valid data (Simmons, Nelson, \& Simonsohn, 2013), we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in Hu, Lan, Macrae, and Sui (2019) (See Table 1 for overview of these experiments).
+Most experiments (1a \textasciitilde{} 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more (Simmons, Nelson, \& Simonsohn, 2013), we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in Hu, Lan, Macrae, and Sui (2020) (See Table 1 for overview of these experiments).
 All participant received informed consent and compensated for their time. These experiments were approved by the ethic board in the Department of Tsinghua University.
 
 \hypertarget{design-and-procedure}{%
 \subsection{Design and Procedure}\label{design-and-procedure}}
 
-This series of experiments started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or self-tagging paradigm)(Sui, He, \& Humphreys, 2012), in which participants first learned the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60\% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase.
-The xperiment 1a, 1b, 1c, 2, and 6a shared a 2 (matchness: matched vs.~mismatched) by 3 (moral valence: good vs.~neutral vs.~bad) within-subject design. The experiment 1a was the first one of the whole series studies and 1b, 1c, and 2 were conducted to exclude the potential confounding factors. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occure with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learnt to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequently presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
-For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we included self-relevance as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the desing of experiment 1a into a 2 (matchness: matched vs.~mismatched) by 2 (reference: self vs.~other) by 3 (moral valence: good vs.~neutral vs.~bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezois). The experiment 6b was an EEG experiment extended from experiment 3a but presented the lable and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different blocks: in the self-referential blocks, they only response to good-self, neutral-self, and bad-self, with half of the trials was matched and half was not; for the other-reference blocks, they only reponded to good-other, neutral-other, and bad-other. Experiment 4a and 4b were design to test the automaticity of the binding between self/other and moral valence. In 4a, we used only two labels (self vs.~other) and two shapes (circle, square). To manipulate the moral valence, we added labels within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-relevance and valence in the task: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words for self-relevance, \enquote{self} or \enquote{other}, were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task. Experiment 7a and 7b were designed to test the cross task robustness of the effect we observed in the aforementioned experiments (Hu et al., 2019). As we found that the neutral and bad conditions constantly show nonsignificant results, we only used two conditions of moral valence, i.e., good vs.~bad, in experiment 7a and 7b.
+This series of experiments started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or tagging paradigm)(Sui, He, \& Humphreys, 2012), in which participants first learned the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60\% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase.
 
-Finally, experiment 5 was design to test the specificity of the moral valence. We extended experiment 1a with an additional independnet variable: domains of the valence words. More specifically, besides the moral valence, we also added valence from other domains: appearance of person (beautiful, neutral, ugly), apperance of a scene (beautiful, neutral, ugly), and emotion (happy, neutral, and sad). Label-shape pairs from different domains were separated into different blocks.
+The experiment 1a, 1b, 1c, 2, and 6a shared a 2 (matchness: matched vs.~mismatched) by 3 (moral valence: good vs.~neutral vs.~bad) within-subject design. Experiment 1a was the first one of the whole series studies and 1b, 1c, and 2 were conducted to exclude the potential confounding factors. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occured with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learnt to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequentially presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
 
-E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab psychtoolbox (Brainard, 1997; Pelli, 1997). For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about 3.7º × 3.7º, the fixation cross is of (0.8º × 0.8º of visual angle) at the center of the screen. The words were of 3.6º × 1.6º visual angle. The distance between the center of the shape or the word and the fixation cross was 3.5º of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 \textasciitilde{} 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants's chin were not fixed.
+For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we included self-relevance as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the design of experiment 1a into a 2 (matchness: matched vs.~mismatched) by 2 (reference: self vs.~other) by 3 (moral valence: good vs.~neutral vs.~bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezoids). The experiment 6b was an EEG experiment extended from experiment 3a but presented the label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different blocks: in the self-referential blocks, they only response to good-self, neutral-self, and bad-self, with half of the trials was matched and half was not; for the other-reference blocks, they only responded to good-other, neutral-other, and bad-other. Experiment 7a and 7b were designed to test the cross task robustness of the effect we observed in the aforementioned experiments (Hu et al., 2020), and the matching task in these two experiments shared the same design with experiment 3a, only with few conditions for moral valence. We only used two conditions of moral valence, i.e., good vs.~bad, in experiment 7a and 7b because we found that the neutral and bad conditions constantly show non-significant results.
+
+Experiment 4a and 4b were design to test the automaticity of the binding between self/other and moral valence. In 4a, we used only two labels (self vs.~other) and two shapes (circle, square). To manipulate the moral valence, we added labels within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-relevance and valence in the task: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words for self-relevance, \enquote{self} or \enquote{other}, were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task.
+
+Finally, experiment 5 was design to test the specificity of the moral valence. We extended experiment 1a with an additional independent variable: domains of the valence words. More specifically, besides the moral valence, we also added valence from other domains: appearance of person (beautiful, neutral, ugly), appearance of a scene (beautiful, neutral, ugly), and emotion (happy, neutral, and sad). Label-shape pairs from different domains were separated into different blocks.
+
+E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab Psychtoolbox (Brainard, 1997; Pelli, 1997). For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about \(3.7^\circ × 3.7^\circ\), the fixation cross is of (\(0.8^\circ × 0.8^\circ\) of visual angle) at the center of the screen. The words were of \(3.6^\circ\) × \(1.6^\circ\) visual angle. The distance between the center of the shape or the word and the fixation cross was \(3.5^\circ\) of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 \textasciitilde{} 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants's chin were not fixed.
+
+In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open (see, dataset 4 in Liu et al., 2020). See Table 1 for a summary information about all the experiments reported here.
 
 \begin{table}[tbp]
+
 \begin{center}
 \begin{threeparttable}
+
 \caption{\label{tab:Table1_exp_info}Information about all experiments.}
+
 \begin{tabular}{lllllllll}
 \toprule
 ExpID & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Month} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{DV} & \multicolumn{1}{c}{Design} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Valence} & \multicolumn{1}{c}{Presenting}\\
@@ -176,62 +219,63 @@ Exp\_7b & 2018 & 5 & 46 (42) & behav & 2 * 2 * 2 & explicit & words & Simultaneo
 \bottomrule
 \addlinespace
 \end{tabular}
+
 \begin{tablenotes}[para]
 \normalsize{\textit{Note.} DV = dependent variables; Valence = how valence was manipulated; Shape \& Label = how shapes \& labels were presented.}
 \end{tablenotes}
+
 \end{threeparttable}
 \end{center}
-\end{table}
 
-In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open (see, dataset 4 in Liu, Wang, Yan, Peng, \& Hu, 2020). See Table 1 for a summary information about all the experiments reported here.
+\end{table}
 
 \hypertarget{data-analysis}{%
 \subsection{Data analysis}\label{data-analysis}}
 
 We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60\% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.
 
-All data were first pre-processed using R (Version 3.6.1; R Core Team, 2018) and the R-packages \emph{afex} (Version 0.25.1; Singmann, Bolker, Westfall, \& Aust, 2019), \emph{BayesFactor} (Version 0.9.12.4.2; Morey \& Rouder, 2018), \emph{boot} (Version 1.3.23; Davison \& Hinkley, 1997; Gerlanc \& Kirby, 2015), \emph{bootES} (Version 1.2; Gerlanc \& Kirby, 2015), \emph{coda} (Version 0.19.3; Plummer, Best, Cowles, \& Vines, 2006), \emph{corrplot2017} (Wei \& Simko, 2017), \emph{dplyr} (Version 0.8.3; Wickham et al., 2019), \emph{emmeans} (Version 1.4.3; Lenth, 2019), \emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggformula} (Version 0.9.2; Kaplan \& Pruim, 2019), \emph{ggplot2} (Version 3.2.1; Wickham, 2016), \emph{ggstance} (Version 0.3.3; Henry, Wickham, \& Chang, 2018), \emph{ggstatsplot} (Version 0.1.3; Patil \& Powell, 2018), \emph{here} (Version 0.1; Müller, 2017), \emph{Hmisc} (Version 4.3.0; Harrell Jr, Charles Dupont, \& others., 2019), \emph{lattice} (Version 0.20.38; Sarkar, 2008), \emph{lme4} (Version 1.1.21; Bates, Mächler, Bolker, \& Walker, 2015), \emph{lsmeans} (Version 2.30.0; Lenth, 2016), \emph{MASS} (Version 7.3.51.4; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.2.17; Bates \& Maechler, 2019), \emph{MBESS} (Version 4.6.0; Kelley, 2018), \emph{mosaic} (Version 1.5.0; Pruim, Kaplan, \& Horton, 2017, 2018), \emph{mosaicData} (Version 0.17.0; Pruim et al., 2018), \emph{multcomp} (Version 1.4.10; Hothorn, Bretz, \& Westfall, 2008), \emph{mvtnorm} (Version 1.0.11; Genz \& Bretz, 2009), \emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{plyr} (Version 1.8.4; Wickham et al., 2019; Wickham, 2011), \emph{psych} (Version 1.8.12; Revelle, 2018), \emph{purrr} (Version 0.3.3; Henry \& Wickham, 2019), \emph{RColorBrewer} (Version 1.1.2; Neuwirth, 2014), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{reshape2} (Version 1.4.3; Wickham, 2007), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{survival} (Version 3.1.7; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{TH.data} (Version 1.0.10; Hothorn, 2019), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019), \emph{tidyr} (Version 1.0.0; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.3.0; Wickham, 2017). Individual experiment's results were analyzed as in Sui et al. (2012). we analyzed the accuracy performance using a signal detection approach. The performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of \emph{d'}. Trials without response were coded either as \enquote{miss} (matched trials) or \enquote{false alarm} (mismatched trials). The \emph{d'} were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). The reaction times of accurate trials were also analyzed using repeated measures ANOVA. These analyses were based on the pre-processed data and finished by using JASP (0.8.6.0, www.jasp-stats.org, Love et al., 2019). To control the false positive rate when conducting the post-hoc comparisons, we used Bonferroni correction. See supplementary materials for the results of each experiment's method and results, which included the significance test resuts, effect size (Bakeman, 2005; Lakens, 2013), and Bayes factor calculated by JASP (Hu, Kong, Wagenmakers, Ly, \& Peng, 2018; Wagenmakers et al., 2018).
+The raw data were pre-processed using the \texttt{tidyverse} package of r, in which we excluded the practicing trials, invalid trials of each participants, and invalid participant, if there was any R (Version 4.0.2; R Core Team, 2018) and the R-packages \emph{afex} (Version 0.27.2; Singmann, Bolker, Westfall, \& Aust, 2019), \emph{BayesFactor} (Version 0.9.12.4.2; Morey \& Rouder, 2018), \emph{boot} (Version 1.3.25; Davison \& Hinkley, 1997; Gerlanc \& Kirby, 2015), \emph{bootES} (Version 1.2; Gerlanc \& Kirby, 2015), \emph{brms} (Version 2.13.0; Bürkner, 2017, 2018), \emph{coda} (Version 0.19.3; Plummer, Best, Cowles, \& Vines, 2006), \emph{corrplot2017} (Wei \& Simko, 2017), \emph{dplyr} (Version 1.0.0; Wickham et al., 2019), \emph{emmeans} (Version 1.4.8; Lenth, 2019), \emph{forcats} (Version 0.5.0; Wickham, 2019a), \emph{Formula} (Version 1.2.3; Zeileis \& Croissant, 2010), \emph{ggformula} (Version 0.9.4; Kaplan \& Pruim, 2019), \emph{ggplot2} (Version 3.3.2; Wickham, 2016), \emph{ggstance} (Version 0.3.4; Henry, Wickham, \& Chang, 2018), \emph{ggstatsplot} (Patil \& Powell, 2018), \emph{here} (Version 0.1; Müller, 2017), \emph{Hmisc} (Version 4.4.0; Harrell Jr, Charles Dupont, \& others., 2019), \emph{lattice} (Version 0.20.41; Sarkar, 2008), \emph{lme4} (Version 1.1.23; Bates, Mächler, Bolker, \& Walker, 2015), \emph{lsmeans} (Version 2.30.0; Lenth, 2016), \emph{MASS} (Version 7.3.51.6; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.2.18; Bates \& Maechler, 2019), \emph{MBESS} (Kelley, 2018), \emph{mosaic} (Version 1.7.0; Pruim, Kaplan, \& Horton, 2017, 2018), \emph{mosaicData} (Version 0.18.0; Pruim et al., 2018), \emph{multcomp} (Version 1.4.13; Hothorn, Bretz, \& Westfall, 2008), \emph{mvtnorm} (Version 1.1.1; Genz \& Bretz, 2009), \emph{papaja} (Version 0.1.0.9942; Aust \& Barth, 2018), \emph{plyr} (Version 1.8.6; Wickham et al., 2019; Wickham, 2011), \emph{psych} (Version 1.9.12.31; Revelle, 2018), \emph{purrr} (Version 0.3.4; Henry \& Wickham, 2019), \emph{RColorBrewer} (Version 1.1.2; Neuwirth, 2014), \emph{Rcpp} (Version 1.0.4.6; Eddelbuettel \& François, 2011; Eddelbuettel \& Balamuta, 2017), \emph{readr} (Version 1.3.1; Wickham, Hester, \& Francois, 2018), \emph{reshape2} (Version 1.4.4; Wickham, 2007), \emph{stringr} (Version 1.4.0; Wickham, 2019b), \emph{survival} (Version 3.1.12; Terry M. Therneau \& Patricia M. Grambsch, 2000), \emph{TH.data} (Version 1.0.10; Hothorn, 2019), \emph{tibble} (Version 3.0.1; Müller \& Wickham, 2019), \emph{tidyr} (Version 1.1.0; Wickham \& Henry, 2019), and \emph{tidyverse} (Version 1.3.0; Wickham, 2017). Individual experiment's results were analyzed as in Sui et al. (2012), see supplementary materials. More specifically, we analyzed the accuracy performance using a signal detection approach, in which the performance in each match condition was combined with that in the nonmatching condition with the same shape to form a measure of \emph{d'}. Trials without response were coded either as \enquote{miss} (matched trials) or \enquote{false alarm} (mismatched trials). The \emph{d'} were then analyzed using repeated measures analyses of variance (repeated measures ANOVA). The reaction times of accurate trials were also analyzed using repeated measures ANOVA. To control the false positive rate when conducting the post-hoc comparisons, we used Bonferroni correction. See supplementary materials for the results of each experiment's method and results, which included the significance test results, effect size (Bakeman, 2005; Lakens, 2013), and Bayes factor calculated by JASP (Hu, Kong, Wagenmakers, Ly, \& Peng, 2018; Wagenmakers et al., 2018).
 
-To have a better estimation of the effect size, we reported the synthesized results in five parts: valence effect, valence-self-relevance interaction, generalizability, specificity of valence effect, and behavior-questionnaire correlation analysis.
+To have a better estimation of the effect size, we reported the synthesized results in five parts: valence effect, explicit interaction between valence and self-relevance, implicit interaction between valence and self-relevance, specificity of valence effect, and behavior-questionnaire correlation analysis.
 
-For the first two parts, we synthesized results from individual results by mini-meta-analysis (Goh, Hall, \& Rosenthal, 2016). The Mini meta-analyses were carried out in R 3.6, using the \enquote{metafor} package (Viechtbauer, 2010). We first calculated the mean of \emph{d}' and RT of each condition for each participant, then calculate the effect size (Cohen's \emph{d}) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs.~other for the effect of self-relevance. Cohen's \emph{d} and its variance were estimated using the following formula (Cooper, Hedges, \& Valentine, 2009):
+For the first two parts, we synthesized results from individual results using mini-meta-analysis (Goh, Hall, \& Rosenthal, 2016). The Mini meta-analyses were carried out by using the \texttt{metafor} package (Viechtbauer, 2010). We first calculated the mean of \emph{d}' and RT of each condition for each participant, then calculate the effect size (Cohen's \emph{d}) and variance of the effect size for all contrast we interested: Good v. Bad, Good v. Neutral, and Neutral v. Bad for the effect of valence, and self vs.~other for the effect of self-relevance. Cohen's \emph{d} and its variance were estimated using the following formula (Cooper, Hedges, \& Valentine, 2009):
 
-\[d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2*r*sd_{1}*sd_{2}}} * \sqrt {2*(1-r)}\]
+\[d = \frac {(M_{1} - M_{2})}{\sqrt {(sd_{1}^2 + sd_{2}^2) - 2rsd_{1}sd_{2}}}  \sqrt {2(1-r)}\]
 
-\[var.d = 2*(1-r) * (\frac{1}{n} + \frac{d^2}{2*n})\]
+\[var.d = 2 (1-r)  (\frac{1}{n} + \frac{d^2}{2n})\]
 
 \(M_1\) is the mean of the first condition, \(sd_1\) is the standard deviation of the first condition, while \(M_2\) is the mean of the second condition, \(sd_2\) is the standard deviation of the second condition. \(r\) is the correlation coefficient between data from first and second condition. \(n\) is the number of data point (in our case the number of participants included in our research).
 
-The effect size from each experiment were then synthesized by random effect model using metafor. Note that to avoid the cases that some participants participated more than one experiments, we inspected the all available information of participants and only included participants' results from their first participation. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the meta-analysis.
+The effect size from each experiment were then synthesized by random effect model using \texttt{metafor}. Note that to avoid the cases that some participants participated more than one experiments, we inspected the all available information of participants and only included participants' results from their first participation. As mentioned above, 24 participants were intentionally recruited to participate both exp 1a and exp 2, we only included their results from exp 1a in the meta-analysis.
 
 \hypertarget{valence-effect}{%
 \subsubsection{Valence effect}\label{valence-effect}}
 
-We synthesized effect size of \emph{d} prime and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach.
+We synthesized effect size of \(d'\) and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach.
 
-\hypertarget{valence-self-relevance-interaction}{%
-\subsubsection{Valence-self-relevance interaction}\label{valence-self-relevance-interaction}}
+\hypertarget{explicit-interaction-between-valence-and-self-relevance}{%
+\subsubsection{Explicit interaction between Valence and self-relevance}\label{explicit-interaction-between-valence-and-self-relevance}}
 
-The results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitedly included both moral valence and self-reference.
+The results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitly included both moral valence and self-reference.
 
-\hypertarget{implicit-coupling-between-valence-and-self-relevance}{%
-\subsubsection{Implicit coupling between valence and self-relevance}\label{implicit-coupling-between-valence-and-self-relevance}}
+\hypertarget{implicit-interaction-between-valence-and-self-relevance}{%
+\subsubsection{Implicit interaction between valence and self-relevance}\label{implicit-interaction-between-valence-and-self-relevance}}
 
 In the third part, we examined the change of effect size brought by change of design, with a focus on 4a and 4b, which were designed to examine the implicit effect of the interaction between moral valence and self-referential processing. We are interested in one particular question: will self-referential and morally positive valence had a mutual facilitation effect. That is, when moral valence (experiment 4a) or self-referential (experiment 4a) was presented as task-irrelevant stimuli, whether they would facilitate self-referential or valence effect on perceptual decision-making. For experiment 4a, we report the comparisons between different valence conditions under the self-referential task, not the other-referential task; for experiment 4b, we reported the comparison between the self- vs.~other-referential conditions for positive moral condition, not for the neutral or negative conditions. Note that the results were also analyzed in a standard repeated measure ANOVAs (see supplementary materials).
 
 \hypertarget{specificity-of-the-valence-effect}{%
 \subsubsection{Specificity of the valence effect}\label{specificity-of-the-valence-effect}}
 
-In this part, we reported the data from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, aesthetic of person, aesthetic of scence, and emotion. This experiment was design to test whether the positive bias is specific to morality.
+In this part, we reported the data from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, aesthetic of person, aesthetic of scene, and emotion. This experiment was design to test whether the positive bias is specific to morality.
 
 \hypertarget{behavior-questionnaire-correlation}{%
 \subsubsection{Behavior-Questionnaire correlation}\label{behavior-questionnaire-correlation}}
 
 Finally, we explored correlation between results from behavioral results and self-reported measures.
-For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences {[}Jensen, 1992; Ouyang et al., 2017{]}. Second, we used drift diffusion model to estimate four parameters of DDM for each participants.
-The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: \url{https://psyarxiv.com/9fczh/}). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
+For the behavioral task part, we derived different indices. First, we used the mean of the RT data from each participants of each condition. Second, we used drift diffusion model to estimate four parameters of DDM for each participants.
+The DDM analyses were finished by HDDM(Wiecki, Sofer, \& Frank, 2013), as reported in Hu et al. (2020). That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in (Liu et al., 2020).
+For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in (Liu et al., 2020).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -239,49 +283,98 @@ For the questinnaire part, we are most interested in the self-rated distance bet
 \hypertarget{effect-of-moral-valence}{%
 \subsection{Effect of moral valence}\label{effect-of-moral-valence}}
 
+\begin{figure}
+\centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-all-effect-1.pdf}
-In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analysis. We found differences between positive and negative conditions on RT was Cohen's \emph{d} = -0.58 \(\pm\) 0.06, 95\% CI {[}-0.70 -0.47{]}; on \emph{d'} was Cohen's \emph{d} = 0.24 \(\pm\) 0.05, 95\% CI {[}0.15 0.34{]}. The effect was also observed between positive and neutral condition, RT: Cohen's \emph{d} = -0.44 \(\pm\) 0.10, 95\% CI {[}-0.63 -0.25{]}; \emph{d'}: Cohen's \emph{d} = 0.31 \(\pm\) 0.07, 95\% CI {[}0.16 0.45{]}. And the difference between neutral and bad conditions are not significant, RT: Cohen's \emph{d} = -0.15 \(\pm\) 0.07, 95\% CI {[}-0.30 0.00{]}; \emph{d'}: Cohen's \emph{d} = -0.07 \(\pm\) 0.07, 95\% CI {[}-0.21 0.08{]}. See Figure \ref{fig:plot-all-effect} left panel.
+\caption{\label{fig:plot-all-effect}Effect size (Cohen's \emph{d}) of Valence.}
+\end{figure}
+
+In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analyses. We found differences between positive and negative conditions on RT was Cohen's \emph{d} = -0.58 \(\pm\) 0.06, 95\% CI {[}-0.70 -0.47{]}; on \emph{d'} was Cohen's \emph{d} = 0.24 \(\pm\) 0.05, 95\% CI {[}0.15 0.34{]}. The effect was also observed between positive and neutral condition, RT: Cohen's \emph{d} = -0.44 \(\pm\) 0.10, 95\% CI {[}-0.63 -0.25{]}; \emph{d'}: Cohen's \emph{d} = 0.31 \(\pm\) 0.07, 95\% CI {[}0.16 0.45{]}. And the difference between neutral and bad conditions are not significant, RT: Cohen's \emph{d} = -0.15 \(\pm\) 0.07, 95\% CI {[}-0.30 0.00{]}; \emph{d'}: Cohen's \emph{d} = -0.07 \(\pm\) 0.07, 95\% CI {[}-0.21 0.08{]}. See Figure \ref{fig:plot-all-effect} left panel.
 
 \hypertarget{interaction-between-valence-and-self-reference}{%
 \subsection{Interaction between valence and self-reference}\label{interaction-between-valence-and-self-reference}}
 
-In this part, we combined the experiments that explicitly manipulated the self-reference and valence, which includes 3a, 3b, 6b, 7a, and 7b. For the positive versus negative contrast, data were from five experiments whith 178 participants; for positive versus neutral and neutral versus negative contrasts, data were from three experiments with 108 participants.
+In this part, we combined the experiments that explicitly manipulated the self-reference and valence, which includes 3a, 3b, 6b, 7a, and 7b. For the positive versus negative contrast, data were from five experiments with 178 participants; for positive versus neutral and neutral versus negative contrasts, data were from three experiments ( 3a, 3b, and 6b) with 108 participants.
 
-In most of these experiments, the interaction between self-reference and valence was signficant (see results of each experiment in supplementary materials). In the mini-meta-analysis, we analyzed the valence effect for self-referential condition and other-referential condition separately.
+In most of these experiments, the interaction between self-reference and valence was significant (see results of each experiment in supplementary materials). In the mini-meta-analysis, we analyzed the valence effect for self-referential condition and other-referential condition separately.
 
 For the self-referential condition, we found the same pattern as in the first part of results. That is we found significant differences between positive and neutral as well as positive and negative, but not neutral and negative. The effect size of RT between positive and negative is Cohen's \emph{d} = -0.89 \(\pm\) 0.12, 95\% CI {[}-1.11 -0.66{]}; on \emph{d'} was Cohen's \emph{d} = 0.61 \(\pm\) 0.09, 95\% CI {[}0.44 0.78{]}. The effect was also observed between positive and neutral condition, RT: Cohen's \emph{d} = -0.76 \(\pm\) 0.13, 95\% CI {[}-1.01 -0.50{]}; \emph{d'}: Cohen's \emph{d} = 0.69 \(\pm\) 0.14, 95\% CI {[}0.42 0.96{]}. And the difference between neutral and bad conditions are not significant, RT: Cohen's \emph{d} = -0.03 \(\pm\) 0.13, 95\% CI {[}-0.29 0.22{]}; \emph{d'}: Cohen's \emph{d} = -0.08 \(\pm\) 0.08, 95\% CI {[}-0.24 0.07{]}. See Figure \ref{fig:plot-all-effect} the middle panel.
 
-For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's \emph{d} = -0.28 \(\pm\) 0.05, 95\% CI {[}-0.38 -0.17{]}; on \emph{d'} was Cohen's \emph{d} = -0.02 \(\pm\) 0.08, 95\% CI {[}-0.17 0.13{]}. The effect was also observed between positive and neutral condition, RT: Cohen's \emph{d} = -0.12 \(\pm\) 0.10, 95\% CI {[}-0.31 0.06{]}; \emph{d'}: Cohen's \emph{d} = 0.01 \(\pm\) 0.08, 95\% CI {[}-0.16 0.17{]}. And the difference between neutral and bad conditions are not significant, RT: Cohen's \emph{d} = -0.14 \(\pm\) 0.09, 95\% CI {[}-0.31 0.03{]}; \emph{d'}: Cohen's \emph{d} = -0.05 \(\pm\) 0.07, 95\% CI {[}-0.18 0.08{]}. See Figure \ref{fig:plot-all-effect} right panel.
+For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's \emph{d} = -0.28 \(\pm\) 0.05, 95\% CI {[}-0.38 -0.17{]}; on \emph{d'} was Cohen's \emph{d} = -0.02 \(\pm\) 0.08, 95\% CI {[}-0.17 0.13{]}. The effect was not observed between positive and neutral condition, RT: Cohen's \emph{d} = -0.12 \(\pm\) 0.10, 95\% CI {[}-0.31 0.06{]}; \emph{d'}: Cohen's \emph{d} = 0.01 \(\pm\) 0.08, 95\% CI {[}-0.16 0.17{]}. And the difference between neutral and bad conditions are not significant, RT: Cohen's \emph{d} = -0.14 \(\pm\) 0.09, 95\% CI {[}-0.31 0.03{]}; \emph{d'}: Cohen's \emph{d} = -0.05 \(\pm\) 0.07, 95\% CI {[}-0.18 0.08{]}. See Figure \ref{fig:plot-all-effect} right panel.
 
 \hypertarget{generalizibility-of-the-valence-effect}{%
 \subsection{Generalizibility of the valence effect}\label{generalizibility-of-the-valence-effect}}
 
 In this part, we reported the results from experiment 4 in which either moral valence or self-reference were manipulated as task-irrelevant stimuli.
 
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot_exp4a_effect-1.pdf}
-For exmperiment 4a, when self-reference was the target and moral valence was task-irrelevant, we found that only under the implicit self-referential condition, i.e., when the moral words were presented as task irrelevant stimuli, there was the main effect of valence and interaction between valence and reference for both \emph{d} prime and RT (See supplementary resuls for the detailed statistics). For \emph{d} prime, we found good-self condition (2.55 \(\pm\) 0.86) had higher \emph{d} prime than bad-self condition (2.38 \(\pm\) 0.80); good self condition was also higher than neutral self (2.45 \(\pm\) 0.78) but there was not statistically significant, while the neutral-self condition was higher than bad self condition and not significant neither. For reaction times, good-self condition (654.26 \(\pm\) 67.09) were faster relative to bad-self condition (665.64 \(\pm\) 64.59), and over neutral-self condition (664.26 \(\pm\) 64.71). The difference between neutral-self and bad-self conditions were not significant. However, for the other-referential condition, there was no significant differences between different valence conditions.
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4a-effect-1.pdf}
+\caption{\label{fig:plot-exp4a-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4a.}
+\end{figure}
 
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/analyzing exp4b-1.pdf}
-For experiemnt 4b, when valence was the target and the reference was task-irrelevant, we found a strong valence effect (see supplementary results). In this experiment, the advantage of good-self conition can only be distangled by comparing the self-referential and other-referential conditions while controling the valence condition. We only found this modulation effect on RT. The RT of good-self (680.49 \(\pm\) 65.69) were faster relative to good-other condition (688.37 \(\pm\) 66.94), Cohen's \emph{d} = -0.12, 95\% CI{[}-0.23 -0.01{]}. However, neutral-self (712.83 \(\pm\) 54.95) were faster relative to good-other condition (704.64 \(\pm\) 57.07), Cohen's \emph{d} = 0.15, 95\% CI{[}0.05 0.24{]}. The difference between bad-self and bad-other was not significant. All the differences between self-referential and other-referential were not significant for \emph{d} prime.
+For experiment 4a, when self-reference was the target and moral valence was task-irrelevant, we found that only under the implicit self-referential condition, i.e., when the moral words were presented as task irrelevant stimuli, there was the main effect of valence and interaction between valence and reference for both \emph{d} prime and RT (See supplementary results for the detailed statistics). For \emph{d} prime, we found good-self condition (2.55 \(\pm\) 0.86) had higher \emph{d} prime than bad-self condition (2.38 \(\pm\) 0.80); good self condition was also higher than neutral self (2.45 \(\pm\) 0.78) but there was not statistically significant, while the neutral-self condition was higher than bad self condition and not significant neither. For reaction times, good-self condition (654.26 \(\pm\) 67.09) were faster relative to bad-self condition (665.64 \(\pm\) 64.59), and over neutral-self condition (664.26 \(\pm\) 64.71). The difference between neutral-self and bad-self conditions were not significant. However, for the other-referential condition, there was no significant differences between different valence conditions. See Figure \ref{fig:plot-exp4a-effect}.
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-effect-1.pdf}
+\caption{\label{fig:plot-exp4b-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-diff-diff-1.pdf}
+\caption{\label{fig:plot-exp4b-diff-diff}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure}
+
+For experiment 4b, when valence was the target and the identity was task-irrelevant, we found a strong valence effect (see supplementary results and Figure \ref{fig:plot-exp4b-effect}).
+
+In this experiment, the advantage of good-self condition can only be disentangled by comparing the self-referential and other-referential conditions. Therefore, we calculated the differences between the valence effect under self-referential and other referential conditions and used the weighted variance as the variance of this differences. We found this modulation effect on RT. The valence effect of RT was stronger in self-referential than other-referential for the Good vs.~Neutral condition (-0.27 \(\pm\) 0.01), while the size of the other effect's CI included zero, suggestion those effects didn't differ from zero. See Figure \ref{fig:plot-exp4b-diff-diff}.
 
 \hypertarget{specificity-of-valence-effect}{%
 \subsection{Specificity of valence effect}\label{specificity-of-valence-effect}}
 
-In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both \emph{d} prime and RT (matched trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradian on both \emph{d} prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater \emph{d} prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene).
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp5-effect-1.pdf}
+\caption{\label{fig:plot-exp5-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure}
+
+In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both \emph{d} prime and RT (matched trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both \emph{d} prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater \emph{d} prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \ref{fig:plot-exp5-effect}.
 
 \hypertarget{correlation-analyses}{%
 \subsection{Correlation analyses}\label{correlation-analyses}}
 
-As the reliability of the quesetionnaire can be found in (Liu et al., 2020). Then we calculated the correlation between the data from behavioral task and the questionnaire data.
+The reliability of questionnaires can be found in (Liu et al., 2020). Then we calculated the correlation between the data from behavioral task and the questionnaire data.
 
-For the behavioral task part, we derived different indices. First, we used the mean and SD of the RT data from each participants of each condition. We included the RT variation because it has been shown to be meaningful as individual differences {[}Jensen, 1992; Ouyang et al., 2017{]}. Second, we used drift diffusion model to estimate four parameters of DDM for each participants. Third, we also calculated the differences between different conditions (valence effect: good-self vs.~bad-self, good-self vs.~neutral-self, bad-self vs.~neutral-self; good-other vs.~bad-other, good-other vs.~neutral-other, bad-other vs.~neutral-other; Self-reference effect: good-self vs.~good-other, neutral-self vs.~neutral-other, bad-self vs.~bad-other), as indexed by Cohen's d and se of Cohen's \emph{d}.
+For the behavioral task part, we derived different indices. First, we used the mean of the RT data from each participants of each condition. Second, we used three parameters of drift diffusion model of each participant as estimated by HDDM. Third, we calculated the differences between different conditions (valence effect: good-self vs.~bad-self, good-self vs.~neutral-self, bad-self vs.~neutral-self; good-other vs.~bad-other, good-other vs.~neutral-other, bad-other vs.~neutral-other; Self-reference effect: good-self vs.~good-other, neutral-self vs.~neutral-other, bad-self vs.~bad-other), as indexed by Cohen's \(d\) and standard error (SE) of Cohen's \(d\).
+\[ Cohen's \space d_{z} = \frac {(M_{1} - M_{2})} {\sqrt{(SD_{1}^2 + SD_{2}^2)/2}}\]
+Given that the task difficulty were different across experiments, we z-transformed all these indices so that they become unit-free.
 
-The DDM analyses were finished by HDDM, as reported in Hu et al., (2019: \url{https://psyarxiv.com/9fczh/}). That is, we used the reponse code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
+The DDM analyses were finished by HDDM, as reported in Hu et al. (2020). That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs.~non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
 
-For the questinnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
+For the questionnaire part, we are interested in those questionnaires related to morality: self-rated distance between different person, self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
 
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/correlation analysis-1.pdf}
-We found that data from behavioral task are closely related, but not with self-reported questionnaire data.
+We used Pearson correlation analysis to quantify the correlation. For those correlation that is significant (\(p < 0.05\)), we further tested the robustness of the correlation using bootstrap.
+
+We focused on the task-questionnaire correlation, the results revealed that the score from three questionnaire are related to behavioral responses data.
+First, the moral self image is positively correlated with the \(d'\) (\(r = 0.24\), , 95\% CI {[}0.065 0.398{]}) and the drift rate (\(r = 0.226\), , 95\% CI {[}0.046 0.385{]}) of the morally good condition. See the left part of Figure \ref{fig:plot-corr-1}.
+
+Second, we found the self esteem score was negative correlated with the \(d'\) of neutral conditions (\(r = -0.151\), , 95\% CI {[}-0.261 -0.039{]}) and the bad conditions (\(r = -0.167\), , 95\% CI {[}-0.314 -0.014{]}). See the right part of Figure \ref{fig:plot-corr-1}.
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-1-1.pdf}
+\caption{\label{fig:plot-corr-1}Correlation between moral self-image, self esteem, and behavior}
+\end{figure}
+
+Third, the external moral identity score was correlated with the drift rate of neutral condition, the boundary of good condition, difference between good and neutral, and RT of neutral condition. Moral specifically, the correlation between external moral identity and the drift rate of neutral condition: \(r = -0.231\), 95\% CI {[}-0.402 -0.028{]}; the correlation between external moral identity and boundary separation of good condition: \(r = 0.189\), 95\% CI {[}0.0285 0.331{]}; the correlation between external moral identity and the differences between good and neutral: \(r = -0.213\), 95\% CI{[}-0.398 -0.005{]}; the correlation between external moral identity and reaction time of Neutral condition: \(r = 0.202\), 95\% CI{[}0.004 0.382{]}. See Figure \ref{fig:plot-corr-2}.
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-2-1.pdf}
+\caption{\label{fig:plot-corr-2}Correlation between moral identity and behavior}
+\end{figure}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -309,11 +402,23 @@ Bates, D., Mächler, M., Bolker, B., \& Walker, S. (2015). Fitting linear mixed-
 \leavevmode\hypertarget{ref-Brainard_1997}{}%
 Brainard, D. H. (1997). The psychophysics toolbox. \emph{Spatial Vision}, \emph{10}(4), 433--436. Journal Article.
 
+\leavevmode\hypertarget{ref-R-brms_a}{}%
+Bürkner, P.-C. (2017). brms: An R package for Bayesian multilevel models using Stan. \emph{Journal of Statistical Software}, \emph{80}(1), 1--28. \url{https://doi.org/10.18637/jss.v080.i01}
+
+\leavevmode\hypertarget{ref-R-brms_b}{}%
+Bürkner, P.-C. (2018). Advanced Bayesian multilevel modeling with the R package brms. \emph{The R Journal}, \emph{10}(1), 395--411. \url{https://doi.org/10.32614/RJ-2018-017}
+
 \leavevmode\hypertarget{ref-Cooper_2009_handbook}{}%
 Cooper, H., Hedges, L. V., \& Valentine, J. C. (2009). \emph{The handbook of research synthesis and meta-analysis} (2nd ed.). Book, New York: Sage.
 
 \leavevmode\hypertarget{ref-R-boot}{}%
 Davison, A. C., \& Hinkley, D. V. (1997). \emph{Bootstrap methods and their applications}. Cambridge: Cambridge University Press. Retrieved from \url{http://statwww.epfl.ch/davison/BMA/}
+
+\leavevmode\hypertarget{ref-R-Rcpp_b}{}%
+Eddelbuettel, D., \& Balamuta, J. J. (2017). Extending extitR with extitC++: A Brief Introduction to extitRcpp. \emph{PeerJ Preprints}, \emph{5}, e3188v1. \url{https://doi.org/10.7287/peerj.preprints.3188v1}
+
+\leavevmode\hypertarget{ref-R-Rcpp_a}{}%
+Eddelbuettel, D., \& François, R. (2011). Rcpp: Seamless R and C++ integration. \emph{Journal of Statistical Software}, \emph{40}(8), 1--18. \url{https://doi.org/10.18637/jss.v040.i08}
 
 \leavevmode\hypertarget{ref-R-mvtnorm}{}%
 Genz, A., \& Bretz, F. (2009). \emph{Computation of multivariate normal and t probabilities}. Heidelberg: Springer-Verlag.
@@ -342,8 +447,8 @@ Hothorn, T., Bretz, F., \& Westfall, P. (2008). Simultaneous inference in genera
 \leavevmode\hypertarget{ref-Hu_2018_JASP}{}%
 Hu, C.-P., Kong, X.-Z., Wagenmakers, E.-J., Ly, A., \& Peng, K. (2018). Bayes factor and its implementation in jasp: A practical primer (in chinese). \emph{Advances in Psychological Science}, \emph{26}(6), 951--965. Journal Article. \url{https://doi.org/10.3724/SP.J.1042.2018.00951}
 
-\leavevmode\hypertarget{ref-Hu_2019_GoodSelf}{}%
-Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2019). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? \emph{PsyArxiv}. Journal Article. \url{https://doi.org/10.31234/osf.io/9fczh}
+\leavevmode\hypertarget{ref-Hu_2020_GoodSelf}{}%
+Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? \emph{Collabra: Psychology}, \emph{6}(1), 20. Journal Article. \url{https://doi.org/10.1525/collabra.301}
 
 \leavevmode\hypertarget{ref-R-ggformula}{}%
 Kaplan, D., \& Pruim, R. (2019). \emph{Ggformula: Formula interface to the grammar of graphics}. Retrieved from \url{https://CRAN.R-project.org/package=ggformula}
@@ -361,10 +466,7 @@ Lenth, R. (2019). \emph{Emmeans: Estimated marginal means, aka least-squares mea
 Lenth, R. V. (2016). Least-squares means: The R package lsmeans. \emph{Journal of Statistical Software}, \emph{69}(1), 1--33. \url{https://doi.org/10.18637/jss.v069.i01}
 
 \leavevmode\hypertarget{ref-Liu_2020_JOPD}{}%
-Liu, Q., Wang, F., Yan, W., Peng, K., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. Journal Article. \url{https://doi.org/10.5334/jopd.49/}
-
-\leavevmode\hypertarget{ref-Love_etal_2019_JASP}{}%
-Love, J., Selker, R., Marsman, M., Jamil, T., Dropmann, D., Verhagen, J., \ldots{} Wagenmakers, E.-J. (2019). JASP: Graphical statistical software for common statistical designs. \emph{Journal of Statistical Software}, \emph{1}(2), 1--17. Journal Article. \url{https://doi.org/10.18637/jss.v088.i02}
+Liu, Q., Wang, F., Yan, W., Peng, K., Sui, J., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. Journal Article. \url{https://doi.org/10.5334/jopd.49/}
 
 \leavevmode\hypertarget{ref-R-BayesFactor}{}%
 Morey, R. D., \& Rouder, J. N. (2018). \emph{BayesFactor: Computation of bayes factors for common designs}. Retrieved from \url{https://CRAN.R-project.org/package=BayesFactor}
@@ -450,10 +552,12 @@ Wickham, H., \& Henry, L. (2019). \emph{Tidyr: Easily tidy data with 'spread()' 
 \leavevmode\hypertarget{ref-R-readr}{}%
 Wickham, H., Hester, J., \& Francois, R. (2018). \emph{Readr: Read rectangular text data}. Retrieved from \url{https://CRAN.R-project.org/package=readr}
 
+\leavevmode\hypertarget{ref-wiecki_hddm_2013}{}%
+Wiecki, T. V., Sofer, I., \& Frank, M. J. (2013). HDDM: Hierarchical bayesian estimation of the drift-diffusion model in python. \emph{Frontiers in Neuroinformatics}, \emph{7}. \url{https://doi.org/10.3389/fninf.2013.00014}
+
 \leavevmode\hypertarget{ref-R-Formula}{}%
 Zeileis, A., \& Croissant, Y. (2010). Extended model formulas in R: Multiple parts and multiple responses. \emph{Journal of Statistical Software}, \emph{34}(1), 1--13. \url{https://doi.org/10.18637/jss.v034.i01}
 
 \endgroup
-
 
 \end{document}
