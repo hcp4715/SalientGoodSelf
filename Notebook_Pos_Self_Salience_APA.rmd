@@ -132,6 +132,27 @@ apatheme_x = theme_bw()+
               strip.text.x = element_text(size = 12, colour = "black"),
               strip.text.y = element_text(size = 12, colour = "black"))  # increase the space between title and y axis
 
+apatheme_s = theme_bw()+
+        theme(panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              panel.border = element_blank(),
+              text=element_text(family='Times'),
+              legend.title=element_blank(),
+              legend.text = element_text(size =12),
+              #legend.position='top',
+              plot.title = element_text(lineheight=.8, face="bold", size = 10),
+#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
+              axis.text = element_text (size = 8, color = 'black'),
+#              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
+              axis.title = element_text (size = 8),
+              axis.line.x = element_line(color='black', size = 1),   # increase the size of font
+              axis.line.y = element_line(color='black', size = 1),   # increase the size of font
+              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
+              axis.title.y = element_text(margin=margin(0,12,0,0)),
+              strip.text.x = element_text(size = 8, colour = "black"),
+              strip.text.y = element_text(size = 8, colour = "black"))  # increase the space between title and y axis
+
 # define the d prime function
 dprime <- function(hit,fa) {
   qnorm(hit) - qnorm(fa)
@@ -284,7 +305,7 @@ df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df4
 
 # Prepare the data for meta ----
 # calculate the mean, sd, n, and r for estimating the effect size and SE of effect size.
-effectList_1 <- c('Good_Bad','Good_Neut','Neut_Bad')
+effectList_1 <- c('Good_Bad','Good_Neut','Bad_Neut')
 
 df.ES_1 <- data.frame(matrix(nrow=length(unique(df.meta_d_1$ExpID))*length(effectList_1)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d_1$ExpID))*length(effectList_1)),
@@ -320,11 +341,11 @@ for (DVName in c('RT','dprime')){
         #  next
         #  }
         }
-      else if (effectName == 'Neut_Bad'){
+      else if (effectName == 'Bad_Neut'){
         #if ('Neutral' %in% tmpdata$Valence)
         #  {
-            dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-            dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
+            dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+            dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
         #  }
         #else{
             #print(paste('There is no Neutral condition in', expName, sepe=''))
@@ -391,8 +412,8 @@ df.meta_rt_2 <- rbind(df3a.meta.rt, df3b.meta.rt, df6b.meta.rt, df7a_m.meta.rt, 
 
 # Calculate the mean, sd, n, and r ----
 # for estimating the effect size and SE of effect size.
-effectList_2 <- c('Good_Bad_S','Good_Neut_S','Neut_Bad_S',
-                'Good_Bad_O','Good_Neut_O','Neut_Bad_O')
+effectList_2 <- c('Good_Bad_S','Good_Neut_S','Bad_Neut_S',
+                'Good_Bad_O','Good_Neut_O','Bad_Neut_O')
 
 df.ES_2 <- data.frame(matrix(nrow=length(unique(df.meta_d_2$ExpID))*length(effectList_2)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df.meta_d_2$ExpID))*length(effectList_2)),
@@ -432,10 +453,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }  
-      else if (effectName == 'Neut_Bad_S'){
+      else if (effectName == 'Bad_Neut_S'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')  
           }
         else{
           next
@@ -460,10 +481,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }
-      else if (effectName == 'Neut_Bad_O'){
+      else if (effectName == 'Bad_Neut_O'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
           }
         else{
           next
@@ -516,14 +537,14 @@ for (DVName in c('RT','dprime')){
 
 # plot the effect size  ----
 df.res.meta_2 <- df.res.meta_2 %>%
-  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Neut_Bad_S",
+  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Bad_Neut_S",
                                   "Self-Ref.", "Other-Ref."),
                 EffectType = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Bad_O", "Good_Bad",
-                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Neut_Bad")))
+                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Bad_Neut")))
 
 df.res_meta_pdata <- rbind(df.res.meta_1, df.res.meta_2) %>%
   dplyr::mutate(Identity = factor(Identity, levels = c("No-Ref.", "Self-Ref.", "Other-Ref.")),
-                EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Neut_Bad" )))
+                EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Bad_Neut" )))
 
 ```
 
@@ -535,27 +556,27 @@ df.res_meta_pdata %>%
   ggplot2::ggplot(., aes(x = EffectType, y=Cohen_d, color=EffectType, fill=EffectType )) + # 
   geom_pointrange(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), 
                   position = position_dodge(width = 0.5),
-                  shape=18, size=1) +
+                  shape=18, size=0.8) +
   geom_hline(yintercept=0, size=1, color='grey', linetype = 'dashed') +
   coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
   ylab(expression(paste("Effect size: Cohen's ",italic("d"), sep = ' '))) +
-  xlab('Dependent variables') +
+  xlab('Contrasts between different valence') +
   apatheme_x +
   facet_grid(  DVtype ~ Identity)
 ```
 
-In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analyses. We found differences between positive and negative conditions on RT was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`]; on *d'* was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Neut_Bad']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Neut_Bad']`]. See Figure \@ref(fig:plot-all-effect) left panel.
+In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analyses. We found differences between positive and negative conditions on RT was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`]; on *d'* was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']`]. See Figure \@ref(fig:plot-all-effect) left panel.
 
 ## Interaction between valence and self-reference
 In this part, we combined the experiments that explicitly manipulated the self-reference and valence, which includes 3a, 3b, 6b, 7a, and 7b. For the positive versus negative contrast, data were from five experiments with 178 participants; for positive versus neutral and neutral versus negative contrasts, data were from three experiments ( 3a, 3b, and 6b) with 108 participants.
 
 In most of these experiments, the interaction between self-reference and valence was significant (see results of each experiment in supplementary materials). In the mini-meta-analysis, we analyzed the valence effect for self-referential condition and other-referential condition separately.
 
-For the self-referential condition, we found the same pattern as in the first part of results. That is we found significant differences between positive and neutral as well as positive and negative, but not neutral and negative. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_S']`]. See Figure \@ref(fig:plot-all-effect) the middle panel.
+For the self-referential condition, we found the same pattern as in the first part of results. That is we found significant differences between positive and neutral as well as positive and negative, but not neutral and negative. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']`]. See Figure \@ref(fig:plot-all-effect) the middle panel.
 
-For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`]. The effect was not observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Neut_Bad_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Neut_Bad_O']`]. See Figure \@ref(fig:plot-all-effect) right panel.
+For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`]. The effect was not observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']`]. See Figure \@ref(fig:plot-all-effect) right panel.
 
 ## Generalizibility of the valence effect
 In this part, we reported the results from experiment 4 in which either moral valence or self-reference were manipulated as task-irrelevant stimuli. 
@@ -599,10 +620,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }  
-      else if (effectName == 'Neut_Bad_S'){
+      else if (effectName == 'Bad_Neut_S'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')  
           }
         else{
           next
@@ -627,10 +648,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }
-      else if (effectName == 'Neut_Bad_O'){
+      else if (effectName == 'Bad_Neut_O'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
           }
         else{
           next
@@ -651,11 +672,12 @@ for (DVName in c('RT','dprime')){
 }
 
 df.ES_4a <- df.ES_4a %>%
-  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Neut_Bad_S",
+  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Bad_Neut_S",
                                   "Self-ref.", "Other-ref."),
                 EffectType = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Bad_O", "Good_Bad",
-                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Neut_Bad")),
-                Identity = factor(Identity, levels = c("Self-ref.", "Other-ref.")))
+                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Bad_Neut")),
+                Identity = factor(Identity, levels = c("Self-ref.", "Other-ref.")),
+                EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Bad_Neut")))
 ```
 
 ```{r 'plot-exp4a-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4a.", warning=FALSE}
@@ -664,9 +686,9 @@ df.ES_4a %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
                   position = position_dodge(width = 0.5),
-                  shape=18, size=1) +
+                  shape=18, size=0.8) +
   geom_hline(yintercept=0, size=1, color='grey', linetype = 'dashed') +
-  ggtitle('A: Valence effect') +
+  # ggtitle('A: Valence effect') +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
@@ -725,10 +747,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }  
-      else if (effectName == 'Neut_Bad_S'){
+      else if (effectName == 'Bad_Neut_S'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence ){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Self')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Self')  
           }
         else{
           next
@@ -753,10 +775,10 @@ for (DVName in c('RT','dprime')){
           next
           }
         }
-      else if (effectName == 'Neut_Bad_O'){
+      else if (effectName == 'Bad_Neut_O'){
         if (!all(is.na(tmpdata$Identity)) & 'Neutral' %in% tmpdata$Valence){
-          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')
-          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')  
+          dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad" & Identity == 'Other')
+          dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral" & Identity == 'Other')  
           }
         else{
           next
@@ -830,11 +852,12 @@ for (DVName in c('RT','dprime')){
 #                 Val = factor(Val, levels = c("Good", "Neutral", "Bad")))
 
 df.ES_4b <- df.ES_4b %>%
-  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Neut_Bad_S",
+  dplyr::mutate(Identity = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Neut_S" | Effect == "Bad_Neut_S",
                                   "Self-ref.", "Other-ref."),
                 EffectType = ifelse(Effect == "Good_Bad_S" | Effect == "Good_Bad_O", "Good_Bad",
-                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Neut_Bad")),
-                Identity = factor(Identity, levels = c("Self-ref.", "Other-ref.")))
+                                    ifelse(Effect == "Good_Neut_S" | Effect == "Good_Neut_O", "Good_Neut", "Bad_Neut")),
+                Identity = factor(Identity, levels = c("Self-ref.", "Other-ref.")),
+                EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Bad_Neut")))
 ```
 
 ```{r 'plot-exp4b-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
@@ -860,7 +883,7 @@ df.ES_4b %>%
                   position = position_dodge(width = 0.5),
                   shape=18, size=1) +
   geom_hline(yintercept=0, size=1, color='grey', linetype = 'dashed') +
-  ggtitle('A: Valence effect') +
+  # ggtitle('A: Valence effect') +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
@@ -885,7 +908,7 @@ df.ES_4b_diff %>%
                   position = position_dodge(width = 0.5),
                   shape=18, size=1) +
   geom_hline(yintercept=0, size=1, color='grey', linetype = 'dashed') +
-  ggtitle('Differences in valence effect (self-other)') +
+  # ggtitle('Differences in valence effect (self-other)') +
   coord_cartesian(ylim=c(-1.1, 1.1))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
@@ -902,10 +925,10 @@ In this experiment, the advantage of good-self condition can only be disentangle
 ## Specificity of valence effect
 
 ```{r analyzing exp5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-effectList_exp5 <- c('Good_Bad_Mrl','Good_Neut_Mrl','Neut_Bad_Mrl',
-                     'Good_Bad_BP','Good_Neut_BP','Neut_Bad_BP',
-                     'Good_Bad_BS','Good_Neut_BS','Neut_Bad_BS',
-                     'Good_Bad_Emo','Good_Neut_Emo','Neut_Bad_Emo')
+effectList_exp5 <- c('Good_Bad_Mrl','Good_Neut_Mrl','Bad_Neut_Mrl',
+                     'Good_Bad_BP','Good_Neut_BP','Bad_Neut_BP',
+                     'Good_Bad_BS','Good_Neut_BS','Bad_Neut_BS',
+                     'Good_Bad_Emo','Good_Neut_Emo','Bad_Neut_Emo')
 
 df.ES_5 <- data.frame(matrix(nrow=length(unique(df5.meta.d$ExpID))*length(effectList_exp5)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df5.meta.d$ExpID))*length(effectList_exp5)),
@@ -932,10 +955,10 @@ for (DVName in c('RT','dprime')){
         dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
         dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
         }  
-      else if (effectName == 'Neut_Bad_Mrl'){
+      else if (effectName == 'Bad_Neut_Mrl'){
         tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
       }
       
       else if (effectName == 'Good_Bad_BP'){
@@ -948,10 +971,10 @@ for (DVName in c('RT','dprime')){
         dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
         dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
         }  
-      else if (effectName == 'Neut_Bad_BP'){
+      else if (effectName == 'Bad_Neut_BP'){
         tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
       }
       
       else if (effectName == 'Good_Bad_BS'){
@@ -964,10 +987,10 @@ for (DVName in c('RT','dprime')){
         dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
         dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
         }  
-      else if (effectName == 'Neut_Bad_BS'){
+      else if (effectName == 'Bad_Neut_BS'){
         tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
       }
       
       else if (effectName == 'Good_Bad_Emo'){
@@ -980,10 +1003,10 @@ for (DVName in c('RT','dprime')){
         dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
         dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
         }  
-      else if (effectName == 'Neut_Bad_Emo'){
+      else if (effectName == 'Bad_Neut_Emo'){
         tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
+        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
         }
       
       M1  <- mean(dataCond1$Value) -> df.ES_5$M1[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
@@ -1000,16 +1023,16 @@ for (DVName in c('RT','dprime')){
 }
 
 df.ES_5 <- df.ES_5 %>%
-  dplyr::mutate(Domain = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Neut_Mrl" | Effect == "Neut_Bad_Mrl",
+  dplyr::mutate(Domain = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Neut_Mrl" | Effect == "Bad_Neut_Mrl",
                                   "Mrl",
-                                ifelse(Effect == "Good_Bad_BP" | Effect == "Good_Neut_BP" | Effect == "Neut_Bad_BP",
+                                ifelse(Effect == "Good_Bad_BP" | Effect == "Good_Neut_BP" | Effect == "Bad_Neut_BP",
                                   "AP",
-                                  ifelse(Effect == "Good_Bad_BS" | Effect == "Good_Neut_BS" | Effect == "Neut_Bad_BS",
+                                  ifelse(Effect == "Good_Bad_BS" | Effect == "Good_Neut_BS" | Effect == "Bad_Neut_BS",
                                   "AS", 'Emo'))),
                 Domain = factor(Domain, levels = c("Mrl", "AP", "AS", "Emo")),
                 EffectType = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Bad_BP"  | Effect == "Good_Bad_BS"  | Effect == "Good_Bad_Emo", "Pos_Neg",
-                                    ifelse(Effect == "Good_Neut_Mrl" | Effect == "Good_Neut_BP" | Effect == "Good_Neut_BS" | Effect == "Good_Neut_Emo", "Pos_Neut", "Neut_Neg")),
-                EffectType = factor(EffectType, levels = c("Pos_Neg", "Pos_Neut", "Neut_Neg")))
+                                    ifelse(Effect == "Good_Neut_Mrl" | Effect == "Good_Neut_BP" | Effect == "Good_Neut_BS" | Effect == "Good_Neut_Emo", "Pos_Neut", "Neg_Neut")),
+                EffectType = factor(EffectType, levels = c("Pos_Neg", "Pos_Neut", "Neg_Neut")))
 ```
 
 ```{r 'plot-exp5-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
@@ -1020,7 +1043,7 @@ df.ES_5 %>%
                   position = position_dodge(width = 0.4),
                   shape=18, size=1) +
   geom_hline(yintercept=0, size=1, color='black') +
-  ggtitle('Valence effect across different domains') +
+  # ggtitle('Valence effect across different domains') +
   coord_cartesian(ylim=c(-1.5, 1.5))+
   scale_color_brewer(palette = "Dark2")+
   scale_fill_brewer(palette = "Dark2")+
@@ -1345,7 +1368,7 @@ for (row_id in 1:nrow(cor_pairs)){
     labs(title=paste(cor_pairs$Parameter1[row_id], '&', cor_pairs$Parameter2[row_id], sep = ' '), 
        x = cor_pairs$Parameter1[row_id], 
        y = cor_pairs$Parameter2[row_id]) +
-    apatheme
+    apatheme_s
   
   boot_plot_list[[row_id]] <- var_tmp$t %>% as.data.frame(.) %>% 
     dplyr::rename(r = V1) %>%
@@ -1356,7 +1379,7 @@ for (row_id in 1:nrow(cor_pairs)){
               color="black", linetype="dashed", size=1) +
     labs(title=paste("Bootstr 4k |", cor_pairs$Parameter1[row_id], '&', cor_pairs$Parameter2[row_id], sep = ' '), 
          x="Correlation", y = "Count") +
-    apatheme
+    apatheme_s
 }
 
 # bf = BayesFactor::correlationBF(x = df.corr_norm$Good_v, y = df.corr_norm$mrlslfImg)
@@ -1367,9 +1390,9 @@ for (row_id in 1:nrow(cor_pairs)){
 ```
 
 We focused on the task-questionnaire correlation, the results revealed that the score from three questionnaire are related to behavioral responses data. 
-First, the moral self image is positively correlated with the $d'$ ($r = 0.24$, , 95% CI [0.065 0.398]) and the drift rate ($r = 0.226$, , 95% CI [0.046 0.385]) of the morally good condition. See the left part of Figure \@ref(fig:plot-corr-1).
+First, the moral self image is positively correlated with the $d'$ ($r = 0.24$, 95% CI [0.065 0.398]) and the drift rate ($r = 0.226$, 95% CI [0.046 0.385]) of the morally good condition. See the left part of Figure \@ref(fig:plot-corr-1).
 
-Second, we found the self esteem score was negative correlated with the $d'$ of neutral conditions ($r = -0.151$, , 95% CI [-0.261 -0.039]) and the bad conditions ($r = -0.167$, , 95% CI [-0.314 -0.014]). See the right part of Figure \@ref(fig:plot-corr-1).
+Second, we found the self esteem score was negative correlated with the $d'$ of neutral conditions ($r = -0.151$, 95% CI [-0.261 -0.039]) and the bad conditions ($r = -0.167$, 95% CI [-0.314 -0.014]). See the right part of Figure \@ref(fig:plot-corr-1).
 
 ```{r plot-corr-1, fig.cap="Correlation between moral self-image, self esteem, and behavior", fig.width=8, warning=FALSE}
 library(patchwork)
