@@ -16,8 +16,15 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-effect-1.pdf}
-\caption{\label{fig:plot-exp4b-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-effect-1-1.pdf}
+\caption{\label{fig:plot-exp4b-effect-1}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-effect-2-1.pdf}
+\caption{\label{fig:plot-exp4b-effect-2}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
@@ -31,7 +38,7 @@
 
 \centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp5-effect-1.pdf}
-\caption{\label{fig:plot-exp5-effect}Effect size (Cohen's \emph{d}) of Valence in Exp4b.}
+\caption{\label{fig:plot-exp5-effect}Effect size (Cohen's \emph{d}) of Valence in Exp5.}
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}

@@ -57,6 +57,14 @@ output            :
 source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
+
+
+if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
+if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
+
+# Install devtools package if necessary
+if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+
 # Install the stable development verions from GitHub
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
@@ -92,7 +100,93 @@ In the experimental task, participants judged whether shape–label pairs, which
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matched, bad-person nonmatching, good-person matched, good-person nonmatching, neutral-person matched, and neutral-person nonmatching). For the participants from Wenzhou Univeristy, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 ### Data analysis
-As we describe in the general method section.
+As we describe in the general method section, we used three different approaches to analyze the data: classical NHST approach, which including repeated ANOVA and post-hoc comparisons, Bayesian GLM approach where we used hierarchical modeling approach, and hierarchical drift diffusion model (HDDM).
+
+#### Classic NHST
+We analyzed accuracy performance using a signal detection theory approach. The performance in each match condition was combined with that in the non-matching condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the mismatching trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the matching and mismatching trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [Rouder_2005_BHM_SDT]. Trials without response were excluded from the analysis. 
+
+In the classic NHST approach, we've used the maximum likelihood estimate of the EVSDT parameters (mainly, the sensitivity $d'$) separately for each participant in the each experiment condition [@Hu_2020_GoodSelf, @Sui_2012_JEPHPP], and then used the parameter of each condition from each participant as dependent variable for repeated measure ANOVAs. The $d'$ is calculated as the difference of the standardized hit and false alarm rats [@Stanislaw_Todorov_1999]: 
+$$ d' = zHR - zFAR = \Phi^{-1}(HR) - \Phi^{-1}(FAR) $$
+where the $HR$ means hit rate and the $FAR$ mean false alarm rate. $zHR$ and $zFAR$ are the standardized hit rate and false alarm rates, respectively. These two $z$-scores were converted from proportion (i.e., hit rate or false alarm rate) by inverse cumulative normal density function, $\Phi^{-1}$ ($\Phi$ is the cumulative normal density function, and is used convert $z$ score into probabilities). Another parameter of signal detection theory, response criterion $c$, is defined by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
+
+For the RT, we used mean RT of accurate trials of each condition and subject this data to repeated measures ANOVA. 
+
+#### Bayesian genelarized modelling
+The maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Bayesian generalized linear model (GLM) can help to estimate the uncertainty of parameters. We used BRMs [@Bürkner_2017, @(Bürkner 2017; @Carpenter_2017_stan] to model the data. 
+
+In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+
+$$ y_{i} \sim Bernoulli(p_{i})$$
+In the matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
+
+$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
+The outcomes $y_{i}$ are 0 if the participant responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another way of saying $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
+
+In each experiment, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierarchical mode in which individual's parameter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
+
+$$ y_{ij} \sim Bernoulli(p_{ij})$$
+Similarly, the generalized linear model was extended to two levels:
+$$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}$$
+The outcomes $y_{ij}$ are 0 if participant $j$ responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+
+The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
+$$ \begin{bmatrix}\beta_{0j}\\
+\beta_{1j}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0}\\
+\theta_{1}\\
+\end{bmatrix}, \sum) $$
+
+In the same vein, when trying to estimate the parameter across different experiments, we can further consider the participant is nested in different experiments, and each experiment, because of its variation in stimuli or stimuli presentation, may have different intercepts and slopes. In this case, we can use a nested hierarchical model to model all the experiment with similar design:
+$$y_{ijk} \sim Bernoulli(p_{ijk})$$
+the linear model
+$$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
+The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "mismatch" on trial $i$, 1 if they responded "match". 
+
+$$\begin{bmatrix}\beta_{0jk}\\
+\beta_{1jk}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
+\end{bmatrix}, \sum)$$
+
+and the experiment level parameter $mu_{0k}$ and $mu_{1k}$ is from a higher order distribution:
+
+$$\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
+\mu_{1}\\
+\end{bmatrix}, \sum)$$
+in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
+
+Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ across all experiments, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall effect. 
+
+For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better capture a representative parameter for RTs, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response.
+
+$$y_{i} = \beta_{0} + \beta_{1}*IsMatch_{i} * Valence_{i}$$
+
+Shifted log-normal distribution:
+$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
+
+$$\mu_{j} \sim N(\mu, \sigma)$$
+
+$$\sigma_{j} \sim Cauchy()$$
+
+This model can be easily expand to three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+$$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
+
+$y_{ijk}$ is the RT of the $i$th trial of the $j$th participants in the $k$th experiment.
+
+$$\mu_{jk} \sim N(\mu_{k}, \sigma_{k})$$
+
+$$\sigma_{jk} \sim Cauchy()$$
+
+$$\theta_{jk} \sim Cauchy()$$
+
+$$\mu_{k} \sim N(\mu, \sigma)$$
+
+#### Hierarchical drift diffusion model (HDDM)
+
+
 
 ## Results
 
@@ -108,7 +202,8 @@ Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 
 ```
 
-### d prime
+### Classic analytical approach
+#### *d* prime
 Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
 ```{r 1a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # df1a.sdt <- df1a.v %>%
@@ -151,7 +246,7 @@ papaja::apa_table(df1a_dprime_anova_apa$table
 
 We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, *t*(50) = 2.109, *p* = .098.
 
-### Reaction time
+#### Reaction times
 ```{r 1a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
 
@@ -180,11 +275,19 @@ df1a_RT_anova_nm_apa <- df1a_RT_anova_nm %>% papaja::apa_print.afex_aov()
 
 posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1a_rt)
-
 ```
 We conducted 2 (Matchness: Match v. Mismatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and interaction between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
 
 We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
+
+### Bayesian hierarchical modelling approach
+#### *d* prime
+
+#### Reaction times
+
+
+### Hierarchical Drift-Diffusion modelling approach
+
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
