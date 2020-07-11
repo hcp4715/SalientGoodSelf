@@ -286,19 +286,16 @@ In this part, we reported the data from experiment 5, which included positive, n
 \subsubsection{Behavior-Questionnaire correlation}\label{behavior-questionnaire-correlation}}
 
 Finally, we explored correlation between results from behavioral results and self-reported measures.
-For the behavioral task part, we derived different indices. First, we used the mean of the RT and \emph{d'} from each participants of each condition. Second, we used three parameters from drift diffusion model. The mean value of each parameter's posterior were used. The DDM analyses were finished by HDDM(Wiecki et al., 2013), as reported in Hu et al. (2020). That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in (Liu et al., 2020).
 
-For the behavioral task part, we derived different indices. First, we used the mean of the RT data from each participants of each condition. Second, we used three parameters of drift diffusion model of each participant as estimated by HDDM. Third, we calculated the differences between different conditions (valence effect: good-self vs.~bad-self, good-self vs.~neutral-self, bad-self vs.~neutral-self; good-other vs.~bad-other, good-other vs.~neutral-other, bad-other vs.~neutral-other; Self-reference effect: good-self vs.~good-other, neutral-self vs.~neutral-other, bad-self vs.~bad-other), as indexed by Cohen's \(d\) and standard error (SE) of Cohen's \(d\).
+For the behavioral task part, we derived different indices. First, we used the mean of the RT and \emph{d'} from each participants of each condition. Second, we used three parameters from drift diffusion model: drift rate (\emph{v}), boundary separation (\emph{a}), and non decision-making time (\emph{t}). Third, we calculated the differences between different conditions (valence effect: good-self vs.~bad-self, good-self vs.~neutral-self, bad-self vs.~neutral-self; good-other vs.~bad-other, good-other vs.~neutral-other, bad-other vs.~neutral-other; Self-reference effect: good-self vs.~good-other, neutral-self vs.~neutral-other, bad-self vs.~bad-other), as indexed by Cohen's \(d\) and standard error (SE) of Cohen's \(d\).
 \[ Cohen's \space d_{z} = \frac {(M_{1} - M_{2})} {\sqrt{(SD_{1}^2 + SD_{2}^2)/2}}\]
 Given that the task difficulty were different across experiments, we z-transformed all these indices so that they become unit-free.
 
 The DDM analyses were finished by HDDM, as reported in Hu et al. (2020). That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs.~non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
 
-For the questionnaire part, we are interested in those questionnaires related to morality: self-rated distance between different person, self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
-
-We used Pearson correlation analysis to quantify the correlation. For those correlation that is significant (\(p < 0.05\)), we further tested the robustness of the correlation using bootstrap.
+We used Pearson correlation to quantify the correlation. For those correlation that is significant (\(p < 0.05\)), we further tested the robustness of the correlation using bootstrap by \texttt{BootES} package (Kirby \& Gerlanc, 2013). To avoid false positive, we further determined the threshold for signifcant by permutation. More specifically, for each pairs that initially with \(p < .05\), we randomly shuffle the participants data of each score and calculated the correlation between the shuffled vectors. After repeating this procedure for 5000 times, we choose arrange these 5000 correlation coefficients and use the 95\% percentile number as our threshold.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -374,12 +371,10 @@ In this part, we analyzed the results from experiment 5, which included positive
 \hypertarget{correlation-analyses}{%
 \subsection{Correlation analyses}\label{correlation-analyses}}
 
-The reliability of questionnaires can be found in (Liu et al., 2020). Then we calculated the correlation between the data from behavioral task and the questionnaire data.
+The reliability of questionnaires can be found in (Liu et al., 2020). We calculated the correlation between the data from behavioral task and the questionnaire data.
 
 We focused on the task-questionnaire correlation, the results revealed that the score from three questionnaire are related to behavioral responses data.
-First, the external moral identity is positively correlated with boundary separation of moral good condition, \(r = 0.194\), 95\% CI {[}0.023 0.350{]}); the moral self image is positively correlated with the drift rate (\(r = 0.191\), 95\% CI {[}-0.016 0.354{]}) of the morally good condition. See the left and middle part of Figure \ref{fig:plot-corr-1}.
-
-Second, we found the personal distance between self and good is positively correlated with the boundary separation of neutral condition and the self-neutral distance is negatively correlated with the boundary separation of neutral condition.
+First, the external moral identity is positively correlated with boundary separation of moral good condition, \(r = 0.194\), 95\% CI {[}0.023 0.350{]}); the moral self image is positively correlated with the drift rate (\(r = 0.191\), 95\% CI {[}-0.016 0.354{]}) of the morally good condition. See Figure \ref{fig:plot-corr-1}.
 
 \begin{figure}
 \centering
@@ -387,7 +382,15 @@ Second, we found the personal distance between self and good is positively corre
 \caption{\label{fig:plot-corr-1}Correlation between moral self-image, self esteem, and behavior}
 \end{figure}
 
-Third, we found the self esteem score was negative correlated with the \(d'\) of bad conditions (\(r = -0.16\), 95\% CI {[}-0.277 -0.038{]}) and the neutral conditions (\(r = -.197\), 95\% CI {[}-0.348 -0.026{]}). See Figure \ref{fig:plot-corr-2}.
+Second, we found the personal distance between self and good is positively correlated with the boundary separation of neutral condition and the self-neutral distance is negatively correlated with the boundary separation of neutral condition. See figure \ref{fig:plot-corr-2}
+
+\begin{figure}
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-2-1.pdf}
+\caption{\label{fig:plot-corr-2}Correlation between moral self-image, self esteem, and behavior}
+\end{figure}
+
+Third, we found the self esteem score was negative correlated with the \(d'\) of bad conditions (\(r = -0.16\), 95\% CI {[}-0.277 -0.038{]}) and the neutral conditions (\(r = -.197\), 95\% CI {[}-0.348 -0.026{]}). See Figure \ref{fig:plot-corr-3}.
 
 We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential. For experiments without self-referential (Valence effect), we found the personal distance between Good-person and self is positively correlated with boundary separation of good conditions, r = 0.292, 95\% {[}0.071 0.485{]}. also personal distance between the bad and neutral person is positively correlated with non-responding time of bad and neutral conditions, r = 0.249, 0.233, respectively.
 
@@ -395,8 +398,8 @@ For experiments with self-referential (Valence effect for the self), we found se
 
 \begin{figure}
 \centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-2-1.pdf}
-\caption{\label{fig:plot-corr-2}Correlation between moral identity and behavior}
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-3-1.pdf}
+\caption{\label{fig:plot-corr-3}Correlation between moral identity and behavior}
 \end{figure}
 
 \hypertarget{discussion}{%
@@ -427,6 +430,9 @@ Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own
 
 \leavevmode\hypertarget{ref-Hu_2020_GoodSelf}{}%
 Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? \emph{Collabra: Psychology}, \emph{6}(1), 20. Journal Article. \url{https://doi.org/10.1525/collabra.301}
+
+\leavevmode\hypertarget{ref-kirby_bootes_2013}{}%
+Kirby, K. N., \& Gerlanc, D. (2013). BootES: An r package for bootstrap confidence intervals on effect sizes. \emph{Behavior Research Methods}, \emph{45}(4), 905--927. \url{https://doi.org/10.3758/s13428-013-0330-5}
 
 \leavevmode\hypertarget{ref-Liu_2020_JOPD}{}%
 Liu, Q., Wang, F., Yan, W., Peng, K., Sui, J., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. Journal Article. \url{https://doi.org/10.5334/jopd.49/}

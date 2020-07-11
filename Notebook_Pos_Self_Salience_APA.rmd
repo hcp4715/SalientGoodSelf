@@ -140,6 +140,7 @@ apatheme_s = theme_bw()+
               text=element_text(family='Times'),
               legend.title=element_blank(),
               legend.text = element_text(size =12),
+              legend.position="none",
               #legend.position='top',
               plot.title = element_text(lineheight=.8, face="bold", size = 10),
 #              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
@@ -270,19 +271,16 @@ In this part, we reported the data from experiment 5, which included positive, n
 ### Behavior-Questionnaire correlation
 
 Finally, we explored correlation between results from behavioral results and self-reported measures. 
-For the behavioral task part, we derived different indices. First, we used the mean of the RT and *d'* from each participants of each condition. Second, we used three parameters from drift diffusion model. The mean value of each parameter's posterior were used. The DDM analyses were finished by HDDM[@wiecki_hddm_2013], as reported in  @Hu_2020_GoodSelf. That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses.
 
 For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in [@Liu_2020_JOPD].
 
-For the behavioral task part, we derived different indices. First, we used the mean of the RT data from each participants of each condition. Second, we used three parameters of drift diffusion model of each participant as estimated by HDDM. Third, we calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's $d$ and standard error (SE) of Cohen's $d$. 
+For the behavioral task part, we derived different indices. First, we used the mean of the RT and *d'* from each participants of each condition. Second, we used three parameters from drift diffusion model: drift rate (*v*), boundary separation (*a*), and non decision-making time (*t*). Third, we calculated the differences between different conditions (valence effect: good-self vs. bad-self, good-self vs. neutral-self, bad-self vs. neutral-self; good-other vs. bad-other, good-other vs. neutral-other, bad-other vs. neutral-other; Self-reference effect: good-self vs. good-other, neutral-self vs. neutral-other, bad-self vs. bad-other), as indexed by Cohen's $d$ and standard error (SE) of Cohen's $d$. 
 $$ Cohen's \space d_{z} = \frac {(M_{1} - M_{2})} {\sqrt{(SD_{1}^2 + SD_{2}^2)/2}}$$
 Given that the task difficulty were different across experiments, we z-transformed all these indices so that they become unit-free.
 
 The DDM analyses were finished by HDDM, as reported in @Hu_2020_GoodSelf. That is, we used the response code approach, matched response were coded as 1 and mismatched responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
 
-For the questionnaire part, we are interested in those questionnaires related to morality: self-rated distance between different person,  self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included.
-
-We used Pearson correlation analysis to quantify the correlation. For those correlation that is significant ($p < 0.05$), we further tested the robustness of the correlation using bootstrap.
+We used Pearson correlation to quantify the correlation. For those correlation that is significant ($p < 0.05$), we further tested the robustness of the correlation using bootstrap by `BootES` package [@kirby_bootes_2013]. To avoid false positive, we further determined the threshold for signifcant by permutation. More specifically, for each pairs that initially with  $p < .05$, we randomly shuffle the participants data of each score and calculated the correlation between the shuffled vectors. After repeating this procedure for 5000 times, we choose arrange these 5000 correlation coefficients and use the 95% percentile number as our threshold.
 
 ```{r loadingData,echo=FALSE,results='hide'}
 load("AllData.RData")
@@ -1126,7 +1124,7 @@ df.ES_5 %>%
 In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (matched trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater *d* prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \@ref(fig:plot-exp5-effect).
 
 ## Correlation analyses
-The reliability of questionnaires can be found in [@Liu_2020_JOPD]. Then we calculated the correlation between the data from behavioral task and the questionnaire data. 
+The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculated the correlation between the data from behavioral task and the questionnaire data. 
 
 ```{r correlation analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # get data for valence effect ---- 
@@ -1411,19 +1409,45 @@ cor_pairs_2 <- res.cor_2 %>%
 
 write.csv(cor_pairs_all, 'sig_behav_quest_corr_pairs.csv', row.names = F)
 
-# bootstrap for all
+
+```
+
+```{r plot correlation,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# Permutation
+set.seed(12345)
+permutation <- function(df) {
+  v1 <- df[, 1] %>% base::sample(.)
+  v2 <- df[, 2] %>% base::sample(.)
+  tmp_cor <- cor(v1, v2, method = "pearson")
+  tmp_cor
+}
+
+# plot for all
 boot_plot_list <- list()
 corr_plot_list <- list()
 for (row_id in 1:nrow(cor_pairs_all)){
+  
+  # select variables
   var1 <- df.corr_norm %>% dplyr::select(cor_pairs_all$Parameter1[row_id])
   var2 <- df.corr_norm %>% dplyr::select(cor_pairs_all$Parameter2[row_id])
   var_tmp <- data.frame(var1, var2) %>%
-    tidyr::drop_na() %>%
-    bootES::bootES(., R = 4000, effect.type = 'r')
-  cor_pairs_all$BootES_cor[row_id] <- var_tmp$t0[1]
-  cor_pairs_all$BootES_lb[row_id] <- var_tmp$bounds[[1]]
-  cor_pairs_all$BootES_ub[row_id] <- var_tmp$bounds[[2]]
+    tidyr::drop_na()
   
+  # boot
+  boot_var <- var_tmp %>%
+    bootES::bootES(., R = 5000, effect.type = 'r')
+  
+  cor_pairs_all$BootES_cor[row_id] <- boot_var$t0[1]
+  cor_pairs_all$BootES_lb[row_id] <- boot_var$bounds[[1]]
+  cor_pairs_all$BootES_ub[row_id] <- boot_var$bounds[[2]]
+  
+  # permutation
+  per_cor <- rep(NA, 5000)
+  for (i in 1:length(per_cor)){
+    per_cor[i] <- permutation(var_tmp)
+  }
+  
+  # plot scatter plot
   corr_plot_list[[row_id]] <- data.frame(var1, var2) %>%
     ggplot(., aes_string(x = cor_pairs_all$Parameter1[row_id], y = cor_pairs_all$Parameter2[row_id])) + 
     geom_point() + 
@@ -1433,43 +1457,65 @@ for (row_id in 1:nrow(cor_pairs_all)){
        y = cor_pairs_all$Parameter2[row_id]) +
     apatheme_s
   
-  boot_plot_list[[row_id]] <- var_tmp$t %>% as.data.frame(.) %>% 
-    dplyr::rename(r = V1) %>%
-    ggplot2::ggplot(., aes(x = r)) + 
-    geom_histogram(aes(y=..density..), position = 'identity', alpha=0.5) + 
-    geom_density(alpha=0.6) + 
-    geom_vline(aes(xintercept=0),
-              color="black", linetype="dashed", size=1) +
-    labs(title=paste("Bootstr 4k |", cor_pairs_all$Parameter1[row_id], '&', cor_pairs_all$Parameter2[row_id], sep = ' '), 
-         x="Correlation", y = "Count") +
-    apatheme_s
+  # plot permutation and boot 
+  boot_cor <- boot_var$t %>%
+    as.data.frame(.) %>%
+    dplyr::arrange(V1) %>%
+    dplyr::rename(corcoef = V1) %>%
+    dplyr::mutate(Method = 'bootstrap')
+    # dplyr::pull(V1)
+  per_cor <- data.frame(per_cor) %>%
+    dplyr::rename(corcoef = per_cor) %>%
+    dplyr::mutate(Method = 'permutation')
+  
+  probs <- c(0.025, 0.975)
+  quantiles <- quantile(per_cor$corcoef, prob=probs)
+  
+  # p_dist_df <- rbind(boot_cor, per_cor)
+  
+  xd <- data.frame(density(per_cor$corcoef)[c("x", "y")]) %>% dplyr::mutate(Method = 'permutation')
+  yd <- data.frame(density(boot_cor$corcoef)[c("x", "y")]) %>% dplyr::mutate(Method = 'bootstrap')
+  zd <- rbind(xd, yd)
+  
+  label_r <- paste("r = ", round(cor_pairs_all$r[row_id], 3), sep = '')
+  
+  boot_plot_list[[row_id]] <- ggplot(zd, aes(x, y, group=Method, colour = Method)) + 
+      geom_area(data = subset(xd, x > quantiles[1] & x < quantiles[2]), fill = "grey") + # plot the 95 % area of zero
+      geom_line() + 
+      geom_vline(xintercept = cor_pairs_all$r[row_id], colour = 'blue') +
+      geom_vline(xintercept = quantiles[1], colour = 'grey', linetype="dashed") + 
+      geom_vline(xintercept = quantiles[2], colour = 'grey', linetype="dashed") + 
+      geom_vline(xintercept = 0, colour = 'grey', linetype="dashed") + 
+      # geom_text(aes(x = cor_pairs_all$r[row_id]*2, y = 6, label = label_r), colour = 'blue') +
+      scale_color_grey() +
+      apatheme_s
 }
-
-# bf = BayesFactor::correlationBF(x = df.corr_norm$Good_v, y = df.corr_norm$mrlslfImg)
-# bf
-# samples = BayesFactor::posterior(bf, iterations = 10000)
-# summary(samples)
-# plot(samples[,"rho"])
 ```
-
 We focused on the task-questionnaire correlation, the results revealed that the score from three questionnaire are related to behavioral responses data. 
-First, the external moral identity is positively correlated with boundary separation of moral good condition, $r = 0.194$, 95% CI [0.023 0.350]); the moral self image is positively correlated with the drift rate ($r = 0.191$, 95% CI [-0.016 0.354]) of the morally good condition. See the left and middle part of Figure \@ref(fig:plot-corr-1).
-
-Second, we found the personal distance between self and good is positively correlated with the boundary separation of neutral condition and the self-neutral distance is negatively correlated with the boundary separation of neutral condition.
+First, the external moral identity is positively correlated with boundary separation of moral good condition, $r = 0.194$, 95% CI [0.023 0.350]); the moral self image is positively correlated with the drift rate ($r = 0.191$, 95% CI [-0.016 0.354]) of the morally good condition. See Figure \@ref(fig:plot-corr-1).
 
 ```{r plot-corr-1, fig.cap="Correlation between moral self-image, self esteem, and behavior", fig.width=8, warning=FALSE}
 library(patchwork)
-corr_plot_list[[3]] + corr_plot_list[[5]] + corr_plot_list[[4]] + corr_plot_list[[6]] + 
-           boot_plot_list[[3]] + boot_plot_list[[5]] + boot_plot_list[[4]] + boot_plot_list[[6]] + plot_layout(ncol = 4)
+corr_plot_list[[3]] + corr_plot_list[[5]]  + 
+           boot_plot_list[[3]] + boot_plot_list[[5]] + plot_layout(ncol = 2)
 ```
 
-Third, we found the self esteem score was negative correlated with the $d'$ of bad conditions ($r = -0.16$, 95% CI [-0.277 -0.038]) and the neutral conditions ($r = -.197$, 95% CI [-0.348	-0.026]). See Figure \@ref(fig:plot-corr-2).
+Second, we found the personal distance between self and good is positively correlated with the boundary separation of neutral condition and the self-neutral distance is negatively correlated with the boundary separation of neutral condition. See figure \@ref(fig:plot-corr-2)
+
+
+```{r plot-corr-2, fig.cap="Correlation between moral self-image, self esteem, and behavior", fig.width=8, warning=FALSE}
+library(patchwork)
+corr_plot_list[[4]] + corr_plot_list[[6]] + 
+           boot_plot_list[[4]] + boot_plot_list[[6]] + plot_layout(ncol = 2)
+```
+
+Third, we found the self esteem score was negative correlated with the $d'$ of bad conditions ($r = -0.16$, 95% CI [-0.277 -0.038]) and the neutral conditions ($r = -.197$, 95% CI [-0.348	-0.026]). See Figure \@ref(fig:plot-corr-3).
 
 We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential. For experiments without self-referential (Valence effect), we found the personal distance between Good-person and self is positively correlated with boundary separation of good conditions, r = 0.292, 95% [0.071 0.485]. also personal distance between the bad and neutral person is positively correlated with non-responding time of bad and neutral conditions, r = 0.249, 0.233, respectively.
 
 For experiments with self-referential (Valence effect for the self), we found self-esteem is negatively correlated with d prime of neutral condition, r = -0.272, [-0.468	-0.052], the self-good distance is positively correlated with d prime for Bad condition, r = 0.185, 95%CI[0.004 0.354].
 
-```{r plot-corr-2, fig.cap="Correlation between moral identity and behavior", fig.width=6, warning=FALSE}
+```{r plot-corr-3, fig.cap="Correlation between moral identity and behavior", fig.width=8, warning=FALSE}
 library(patchwork)
 corr_plot_list[[1]] + corr_plot_list[[2]] +
   boot_plot_list[[1]] + boot_plot_list[[2]] + plot_layout(ncol = 2)
