@@ -50,7 +50,7 @@ output            :
 ---
 
 ```{r setup, include=FALSE}
-#rm(list = ls())
+# rm(list = ls())
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
@@ -58,17 +58,10 @@ source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
 
-
 if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
 if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
 
-# Install devtools package if necessary
-if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
-
-# Install the stable development verions from GitHub
-if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
-
-library(brms)
+# library(brms)
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
@@ -82,7 +75,6 @@ CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Iden
 CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
 
 load("AllData.RData")
-
 ```
 
 # Experiment 1a
@@ -97,37 +89,37 @@ Three geometric shapes were used in this experiment: triangle, square, and circl
 ### Procedure
 As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is represented by a square.” After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
 In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
-For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person matched, bad-person nonmatching, good-person matched, good-person nonmatching, neutral-person matched, and neutral-person nonmatching). For the participants from Wenzhou Univeristy, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
+For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 ### Data analysis
-As we describe in the general method section, we used three different approaches to analyze the data: classical NHST approach, which including repeated ANOVA and post-hoc comparisons, Bayesian GLM approach where we used hierarchical modeling approach, and hierarchical drift diffusion model (HDDM).
+As we describe in the general method section, we used three different approaches to analyze the data: classical NHST approach, i.e., the repeated measures ANOVA and post-hoc comparisons in our cases, Bayesian generalized linear model (GLM) approach where we used hierarchical modeling approach, and the hierarchical drift diffusion model (HDDM).
+
+We analyzed accuracy performance using a signal detection theory approach. The performance in each match condition was combined with that in the nonmatch condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the nonmatch trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the match and nonmatch trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [@Rouder_2005_BHM_SDT]. **Trials without response were excluded from the analysis.** 
 
 #### Classic NHST
-We analyzed accuracy performance using a signal detection theory approach. The performance in each match condition was combined with that in the non-matching condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the mismatching trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the matching and mismatching trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [Rouder_2005_BHM_SDT]. Trials without response were excluded from the analysis. 
-
-In the classic NHST approach, we've used the maximum likelihood estimate of the EVSDT parameters (mainly, the sensitivity $d'$) separately for each participant in the each experiment condition [@Hu_2020_GoodSelf, @Sui_2012_JEPHPP], and then used the parameter of each condition from each participant as dependent variable for repeated measure ANOVAs. The $d'$ is calculated as the difference of the standardized hit and false alarm rats [@Stanislaw_Todorov_1999]: 
+In the classic NHST approach, we've used the maximum likelihood estimate of the EVSDT parameters (mainly, the sensitivity $d'$) separately for each participant in the each experiment condition [@Hu_2020_GoodSelf, @Sui_2012_JEPHPP], and then used the parameter of each condition from each participant as dependent variable for repeated measures ANOVA. The $d'$ is calculated as the difference of the standardized hit and false alarm rats [@Stanislaw_Todorov_1999]: 
 $$ d' = zHR - zFAR = \Phi^{-1}(HR) - \Phi^{-1}(FAR) $$
 where the $HR$ means hit rate and the $FAR$ mean false alarm rate. $zHR$ and $zFAR$ are the standardized hit rate and false alarm rates, respectively. These two $z$-scores were converted from proportion (i.e., hit rate or false alarm rate) by inverse cumulative normal density function, $\Phi^{-1}$ ($\Phi$ is the cumulative normal density function, and is used convert $z$ score into probabilities). Another parameter of signal detection theory, response criterion $c$, is defined by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
 
-For the RT, we used mean RT of accurate trials of each condition and subject this data to repeated measures ANOVA. 
+For the RTs, we used mean RTs of the accurate trials of each condition and subject for repeated measures ANOVA. 
 
 #### Bayesian genelarized modelling
-The maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Bayesian generalized linear model (GLM) can help to estimate the uncertainty of parameters. We used BRMs [@Bürkner_2017, @(Bürkner 2017; @Carpenter_2017_stan] to model the data. 
+The maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Bayesian generalized linear model (GLM) can help to estimate the uncertainty of parameters. We used BRMs [@Bürkner_2017, @Carpenter_2017_stan] to model the data. 
 
 In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
 
 $$ y_{i} \sim Bernoulli(p_{i})$$
-In the matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
+In the perceptual matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
 
 $$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
-The outcomes $y_{i}$ are 0 if the participant responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another way of saying $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
+The outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
 
 In each experiment, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierarchical mode in which individual's parameter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
 Similarly, the generalized linear model was extended to two levels:
 $$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}$$
-The outcomes $y_{ij}$ are 0 if participant $j$ responded "mismatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+The outcomes $y_{ij}$ are 0 if participant $j$ responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
 
 The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
 $$ \begin{bmatrix}\beta_{0j}\\
@@ -138,9 +130,9 @@ $$ \begin{bmatrix}\beta_{0j}\\
 
 In the same vein, when trying to estimate the parameter across different experiments, we can further consider the participant is nested in different experiments, and each experiment, because of its variation in stimuli or stimuli presentation, may have different intercepts and slopes. In this case, we can use a nested hierarchical model to model all the experiment with similar design:
 $$y_{ijk} \sim Bernoulli(p_{ijk})$$
-the linear model
+where 
 $$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
-The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "mismatch" on trial $i$, 1 if they responded "match". 
+The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "nonmatch" on trial $i$, 1 if they responded "match". 
 
 $$\begin{bmatrix}\beta_{0jk}\\
 \beta_{1jk}\\
@@ -155,9 +147,9 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
 \mu_{1}\\
 \end{bmatrix}, \sum)$$
-in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
+in which $\mu_{0}$ and $\mu_{1}$ means the population level parameter.
 
-Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ across all experiments, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini] to synthesize the overall effect. 
+Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
 
 For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better capture a representative parameter for RTs, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response.
 
@@ -185,7 +177,7 @@ $$\theta_{jk} \sim Cauchy()$$
 $$\mu_{k} \sim N(\mu, \sigma)$$
 
 #### Hierarchical drift diffusion model (HDDM)
-
+ <!-- Shall I write more about HDDM here, or just refer the interested reader to the paper? -->
 
 
 ## Results

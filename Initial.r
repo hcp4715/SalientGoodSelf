@@ -12,24 +12,25 @@ Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
 #rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
-pkgTest <- function(x)
-{
-        if (!require(x,character.only = TRUE))
-        {
-                install.packages(x,dep = TRUE)
-                if(!require(x,character.only = TRUE)) stop("Package not found")
-        }
+pkgTest <- function(x){
+  if (!require(x, character.only = TRUE)){
+    install.packages(x, dep = TRUE)
+    if(!require(x, character.only = TRUE)) stop("Package not found")
+  }
 }
 
 pkgNeeded <- (c("tidyverse","ggplot2", "afex", 'emmeans',
                 "BayesFactor","psych","corrplot","readr", 'lme4',
-                'mosaic', 'here'))
+                'mosaic', 'here', 'brms'))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
 # Install devtools package if necessary
 if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+
+# Install the stable development verions from GitHub
+if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
 
 # run the geo_flat_violin.r, which is from:https://gist.githubusercontent.com/
 # benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R
@@ -117,10 +118,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 #
 
-
 ########### define a function for the plots ##########
 #### For categorization task
-CAplots <- function(saveDir = traDir, curDir = curDir,expName = 'exp7', task = 'id', inData){
+CAplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', task = 'id', inData){
       inData$Identity <- factor(inData$Identity,levels = c("Self","Other"))
       inData$Morality <- factor(inData$Morality,levels = c("Good","Bad"))
       #inData$Morality[inData$Morality == "Good"] <- 1
@@ -167,7 +167,6 @@ CAplots <- function(saveDir = traDir, curDir = curDir,expName = 'exp7', task = '
     fileName = paste0('p_',expName,'_',task,'_ACC','.pdf')
     ggsave(fileName, P.acc, scale = 1,height = 6, width = 6, dpi = 300, family = "Times",path = saveDir)
     
-    
     P.rt <- ggplot(rtData,aes(x = Morality, y = RT, fill = Identity))+
           geom_flat_violin(aes(fill = Identity),position = position_nudge(x = 0.1, y = 0),
                            adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
@@ -199,7 +198,7 @@ CAplots <- function(saveDir = traDir, curDir = curDir,expName = 'exp7', task = '
  
 #### For Match task
 #Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp1', dData,rtData){
-Mplots <- function(expName = 'exp1', dData,rtData){
+Mplots <- function(expName = 'exp1', dData, rtData){
       #dData <- dData %>% dplyr::rename(Valence=Val_sh)
       #rtData <- rtData %>% dplyr::rename(Valence=Val_sh)
       dData$Valence <- factor(dData$Valence,levels = c("Good",'Neutral',"Bad"))
@@ -241,19 +240,6 @@ Mplots <- function(expName = 'exp1', dData,rtData){
                 #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
                 scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
                 apatheme
-          # save the d-prime plot
-          #fileName = paste0('p_',expName,'_match_dprime','.pdf')
-          #ggsave(fileName, P.dprime, scale = 1,height = 6, width = 7, dpi = 300, family = "Times")
-          # save the RT plot
-          #fileName = paste0('p_',expName,'_match_RT','.pdf')
-          #ggsave(fileName, P.rt, scale = 1,height = 6, width = 7, dpi = 300, family = "Times")
-          # save the both      
-          #fileName = paste0('p_',expName,'_match_','.tiff')
-          #setwd(saveDir)
-          #tiff(fileName, width = 14, height = 6, units = 'in', res = 300)
-          #p_dprime_match <- multiplot(P.rt,P.dprime,cols = 2)
-          #dev.off()
-          #setwd(curDir)
           return(multiplot(P.rt,P.dprime,cols = 2))
       } else {
               #
@@ -328,20 +314,6 @@ Mplots <- function(expName = 'exp1', dData,rtData){
                       axis.title.x = element_blank(),
                       #axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
                       axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
-              
-              # save the d-prime plot
-              #fileName = paste0('p_',expName,'_match_dprime','.pdf')
-              #ggsave(fileName, P.dprime, scale = 1,height = 6, width = 5, dpi = 300, family = "Times",path = saveDir)
-              # save the RT plot
-              #fileName = paste0('p_',expName,'_match_RT','.pdf')
-              #ggsave(fileName, P.rt, scale = 1,height = 6, width = 5, dpi = 300, family = "Times",path = saveDir)
-              # save the both      
-              #fileName = paste0('p_',expName,'_match_','.tiff')
-              #setwd(saveDir)
-              #tiff(fileName, width = 12, height = 10, units = 'in', res = 300)
-              #p_dprime_match <- multiplot(P.rt,P.dprime,cols = 2)
-              #dev.off()
-              #setwd(curDir)
               return(multiplot(P.rt,P.dprime,cols = 2))
       }
 }
