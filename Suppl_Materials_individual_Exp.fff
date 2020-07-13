@@ -9,6 +9,13 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
+\includegraphics[width=5.20833in,height=\textheight]{HDDM/exp1a_hddm_vta_pairplot.pdf}
+\caption{HDDM results of Exp 1a}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
 \includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/ex1b-dprime-rt-1.pdf}
 \caption{\label{fig:ex1b-dprime-rt}RT and \emph{d} prime of Experiment 1b.}
 \end{figure*}
