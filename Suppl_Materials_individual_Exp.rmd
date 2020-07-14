@@ -138,7 +138,7 @@ fun_plot_sdt_val <- function(m_sdt) {
     
     # plot comparison
     p_sdt_d <- tmp_d %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       tidybayes::compare_levels(sdt_d, by = Valence) %>%
       ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = stat(x > 0))) +
       tidybayes::stat_halfeyeh() + 
@@ -148,7 +148,7 @@ fun_plot_sdt_val <- function(m_sdt) {
       theme_classic()
     
     p_sdt_c <- tmp_c %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       tidybayes::compare_levels(sdt_c, by = Valence) %>%
       ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = stat(x > 0))) +
       tidybayes::stat_halfeyeh() + 
@@ -212,7 +212,9 @@ fun_plot_rt_val <- function(m_rt) {
       tidybayes::stat_halfeyeh() + 
       labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
       theme_classic()
-    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+    
+    # plot comparison
+    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       dplyr::filter(Matchness == 'Match') %>%
       tidybayes::compare_levels(RT, by = Valence) %>%
       ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
@@ -221,7 +223,7 @@ fun_plot_rt_val <- function(m_rt) {
       scale_fill_manual(values = c("gray80", "skyblue")) +
       labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
       theme_classic()
-    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       dplyr::filter(Matchness == 'Mismatch') %>%
       tidybayes::compare_levels(RT, by = Valence) %>%
       ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
@@ -261,7 +263,7 @@ where the $HR$ means hit rate and the $FAR$ mean false alarm rate. $zHR$ and $zF
 
 For the RTs, we used mean RTs of the accurate trials of each condition and subject for repeated measures ANOVA. 
 
-#### Bayesian generalized modelling
+#### Bayesian hierarchical generalized linear model (GLM)
 The maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Bayesian generalized linear model (GLM) can help to estimate the uncertainty of parameters. We used BRMs [@Bürkner_2017; @Carpenter_2017_stan] to model the data. 
 
 In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
@@ -407,9 +409,8 @@ We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad)
 
 We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
 
-### Bayesian hierarchical modelling approach
-
-#### *d* prime
+### Bayesian hierarchical GLM
+#### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1a_sdt_m1 <- fun_sdt_val('1a')
 
@@ -452,12 +453,14 @@ hypothesis(exp1a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral,
 hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
 
 exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
+```
 
+```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.width=8, warning=FALSE}
 library(patchwork)
 exp1a_sdt_p[[1]] + exp1a_sdt_p[[2]] + exp1a_sdt_p[[3]] + exp1a_sdt_p[[4]] + exp1a_rt_p[[1]] + exp1a_rt_p[[2]] + exp1a_rt_p[[3]] + exp1a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
 ```
-We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. 
 
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1a-BGLM).
 
 ### HDDM
 We fitted our data with HDDM, using the response-coding [See also, @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
@@ -474,14 +477,16 @@ In this study, we aimed at excluding the potential confounding factor of the fam
 ### Stimuli and Tasks
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (“恶人”, ERen), a morally good person (“善人”, ShanRen) or a morally neutral person (“常人”, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
 Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person. 
+![Ratings of words in exp 1b](exp1b/Familiarity_ratings/df1b_fami_rating.pdf){width=500px}
 
 ### Procedure
-For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a. For participants in Tsinghua community, they finished a survey suite include personal distance, objective and subjective SES, belief in just world (Wu et al., 2011), disgust sensitivity scale (谭永红 et al., 2007), trait justice (Wu et al., 2014), and cognitive reflection test (Frederick, 2005). For participants from Wenzhou community, they finished exactly the same questionnaires as the participants from Wenzhou University in experiment 1a.
+For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a.
 
 ## Data Analysis
 Data was analyzed as in experiment 1a. 
 
 ## Results
+### NHST
 
 ```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df1b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
@@ -491,7 +496,7 @@ Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
 
 Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experiment 1b. 
 
-### *d* prime
+#### d prime
 
 ```{r 1b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
@@ -503,7 +508,7 @@ posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each va
 ```
 Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.87 $\pm$ 0.102) was with greater *d* prime than Neutral condition (1.44 $\pm$ 0.101, *t*(51) = 5.945, *p* < 0.001). We also found that the Bad-Person condition (1.67 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(51) = 3.132, *p* = 0.008). There Good-person condition was also slightly greater than the bad condition, *t*(51) = 2.265, *p* = 0.0701.
 
-### Reaction time
+#### Reaction time
 
 ```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m, within = c('Matchness','Valence'))
@@ -540,6 +545,68 @@ posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each val
 # pairs(posthoc_1b_rt)
 ```
 We found interaction between Matchness and Valence (`r df1b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df1b_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (684 $\pm$ 8.77) were responded faster than Neutral-Person (740 $\pm$ 9.84), (*t*(51) = -8.167, *p* < 0.001) and Bad Person (728 $\pm$ 9.15), *t*(51) = -5.724, *p* < 0.0001). While there was no significant differences between Neutral and Bad-Person condition (*t*(51) = 1.686, *p* = 0.221). For non-matched trials, there was no significant effect of Valence (`r df1b_RT_anova_nm_apa$full$Valence`).
+
+### BGLM
+#### Signal detection theory analysis of accuracy
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+```{r 1b_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp1b_sdt_m1 <- fun_sdt_val('1b')
+
+summary(exp1b_sdt_m1)    # check summary
+#pp_check(exp1b_sdt_m1)   # posterior predictive check
+
+hypothesis(exp1b_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 1
+hypothesis(exp1b_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # .97
+hypothesis(exp1b_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.99
+hypothesis(exp1b_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.97
+hypothesis(exp1b_sdt_m1, "ValenceGood > ValenceBad")      # 1
+hypothesis(exp1b_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.99
+
+# extract the population level parameters
+# criteria
+exp1b_sdt_p <- fun_plot_sdt_val(exp1b_sdt_m1)
+```
+#### Reaction time
+
+```{r 1b_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# fit a three-level hierarchical model for RT, didn't specify the prior
+exp1b_rt_m1 <- fun_rt_val('1b')
+#plot(exp1b_rt_m1, "b_")
+summary(exp1b_rt_m1)  # n
+#pp_check(exp1b_rt_m1)
+
+# Population-Level Effects: 
+#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
+# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
+# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
+# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
+# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
+# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
+
+hypothesis(exp1b_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1b_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
+hypothesis(exp1b_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
+hypothesis(exp1b_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp1b_rt_p <- fun_plot_rt_val(exp1b_rt_m1)
+```
+
+```{r plot-exp1b-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.", fig.width=8, warning=FALSE}
+library(patchwork)
+exp1b_sdt_p[[1]] + exp1b_sdt_p[[2]] + exp1b_sdt_p[[3]] + exp1b_sdt_p[[4]] + exp1b_rt_p[[1]] + exp1b_rt_p[[2]] + exp1b_rt_p[[3]] + exp1b_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1b-BGLM).
+
+#### HDDM
+We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+** insert figure of HDDM **
+
 
 ## Discussion
 These results confirmed the facilitation effect of positive moral valence on the perceptual matching task. This pattern of results mimic prior results demonstrating self-bias effect on perceptual matching (Sui et al., 2012) and in line with previous studies that indirect learning of other’s moral reputation do have influence on our subsequent behavior (Fouragnan et al., 2013). 
