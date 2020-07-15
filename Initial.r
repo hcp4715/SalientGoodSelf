@@ -80,6 +80,44 @@ d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
         return(out)
 }
 
+## code for calculate the summary with sE, adopted from cook book for R
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+                      conf.interval=.95, .drop=TRUE) {
+  library(plyr)
+  
+  # New version of length which can handle NA's : if na.rm == T, don't count the
+  length2 <- function(x, na.rm=FALSE){
+    if(na.rm) sum(!is.na(x))
+    else      length(x)
+  }
+  
+  # this does the summary. For each group's data frame, return a vector with
+  # N, mean, and sd
+  datac <- ddply(data,groupvars, .drop=.drop,
+                 .fun = function(xx,col){
+                   c(N    = length2(xx[[col]],na.rm=na.rm),
+                     mean = mean(xx[[col]],na.rm=na.rm),
+                     sd   = sd  (xx[[col]],na.rm=na.rm)
+                   )
+                 },
+                 measurevar
+  )
+  # Rename the "mean" column
+  
+  datac <- plyr::rename(datac,c("mean" = measurevar))
+  
+  datac$se <- datac$sd /sqrt(datac$N)   # calculate standard error of the mean
+  
+  # Confidence interval mltiplier for standard error
+  # calculate t-statistic for confidence interval:
+  # e.g., if conf.interval is .95, use .975 (above/below), and use df = N-1
+  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+  datac$ci <- datac$se * ciMult
+  
+  return (datac)
+}
+
+
 ### function of multiplot
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
         library(grid)
@@ -329,3 +367,97 @@ make_table <- function(df, ali = "left", aw = 0.5){
   t <- border(t, border = fp_border(), part = "all") 
   return(t)
 }
+
+# new plot for valence effect
+Val_plot_NHST <- function(df.rt, df.d){
+  df.plot <- df.rt %>%
+    dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
+    dplyr::rename(RT = RT_m) %>%
+    dplyr::full_join(., df.d) %>%  
+    tidyr::pivot_longer(., cols = c(RT, dprime), 
+                        names_to = 'DVs', 
+                        values_to = "value") %>% # to longer format
+    dplyr::mutate(Valence =factor(Valence, levels = c('Good','Neutral', 'Bad')),
+                  DVs = factor(DVs, levels = c('RT', 'dprime')),
+                  # create an extra column for ploting the individual data cross different conditions.
+                  Conds = mosaic::derivedFactor("1" = (Valence == 'Good'), 
+                                                "2" = (Valence == 'Neutral'),
+                                                "3" = (Valence == 'Bad'),
+                                                method ="first", .default = NA),
+                  Conds = as.numeric(as.character(Conds)),
+    ) 
+  
+  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add gitter to x
+  
+  # New facet label names for panel variable
+  # https://stackoverflow.com/questions/34040376/cannot-italicize-facet-labels-with-labeller-label-parsed
+  levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+                            "dprime"=expression(paste(italic("d"), ' prime')))
+  levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+                            "dprime"=expression(paste(italic("d"), ' prime')))
+  
+  df.plot.sum_p <- summarySE(df.plot, measurevar = "value", groupvars = c('Valence',"DVs")) %>%
+    dplyr::mutate(Val_num = ifelse(Valence == 'Good', 1,
+                                   ifelse(Valence == 'Neutral', 2, 3)))
+  
+  pd1 <- position_dodge(0.5)
+  scaleFUN <- function(x) sprintf("%.2f", x)
+  scales_y <- list(
+    RT = scale_y_continuous(limits = c(400, 900)),
+    dprime = scale_y_continuous(labels=scaleFUN)
+  )
+  
+  p_df_sum <- df.plot  %>% # dplyr::filter(DVs== 'RT') %>%
+    ggplot(., aes(x = Valence, y = value, colour = as.factor(Valence))) +
+    geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+              linetype = 1, size = 0.8, colour = "#000000", alpha = 0.06) + 
+    geom_point(aes(x = Conds_j, y = value, group = Subject),   # plot individual points
+               colour = "#000000",
+               size = 3, shape = 20, alpha = 0.1) +
+    geom_line(data = df.plot.sum_p, aes(x = as.numeric(Valence), # plot the group means  
+                                        y = value, 
+                                        #group = Identity, 
+                                        colour = as.factor(Valence),
+    ), 
+    linetype = 1, position = pd1, size = 2)+
+    geom_point(data = df.plot.sum_p, aes(x = as.numeric(Valence), # group mean
+                                         y = value, 
+                                         #group = Identity, 
+                                         colour = as.factor(Valence),
+    ), 
+    shape = 18, position = pd1, size = 6) +
+    geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(Valence),  # group error bar.
+                                            y = value, # group = Identity, 
+                                            colour = as.factor(Valence),
+                                            ymin = value- 1.96*se, 
+                                            ymax = value+ 1.96*se), 
+                  width = .05, position = pd1, size = 2, alpha = 0.75) +
+    scale_colour_brewer(palette = "Dark2") +
+    scale_x_continuous(breaks=c(1, 2, 3),
+                       labels=c("Good", "Neutral", "Bad")) +
+    scale_fill_brewer(palette = "Dark2") +
+    #ggtitle("A. Matching task") +
+    theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) +
+    facet_wrap( ~ DVs,
+                scales = "free_y", nrow = 1,
+                labeller = label_parsed)
+  return(p_df_sum)
+}
+

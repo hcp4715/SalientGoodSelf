@@ -50,7 +50,7 @@ output            :
 ---
 
 ```{r setup, include=FALSE}
-# rm(list = ls())
+#rm(list = ls())
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
@@ -60,8 +60,6 @@ figDir = here::here('figures')
 
 if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
 if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
-
-# library(brms)
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
@@ -342,16 +340,10 @@ $$\mu_{k} \sim N(\mu, \sigma)$$
 
 ## Results
 
-```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
-rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
-
-#plotData <- dplyr::full_join(rtdata, df1a.v.dprime_l, by = c('Site','Subject','Age','Sex','Valence'))
-
-#p <- ggplot(plotData, aes(x = RT, y = dprime, color = Valence)) + geom_point()
-  
-#ggExtra::ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
-
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
+# rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
+Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
 ```
 
 ### Classic analytical approach
@@ -455,7 +447,7 @@ hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Ma
 exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
 ```
 
-```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.width=8, warning=FALSE}
+```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
 exp1a_sdt_p[[1]] + exp1a_sdt_p[[2]] + exp1a_sdt_p[[3]] + exp1a_sdt_p[[4]] + exp1a_rt_p[[1]] + exp1a_rt_p[[2]] + exp1a_rt_p[[3]] + exp1a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
 ```
@@ -488,10 +480,12 @@ Data was analyzed as in experiment 1a.
 ## Results
 ### NHST
 
-```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=6, fig.width=10, warning=FALSE}
-rtdata <- df1b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
+# rtdata <- df1b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
-Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
+# Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
+
+Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
 ```
 
 Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experiment 1b. 
@@ -595,7 +589,7 @@ hypothesis(exp1b_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Ma
 exp1b_rt_p <- fun_plot_rt_val(exp1b_rt_m1)
 ```
 
-```{r plot-exp1b-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.", fig.width=8, warning=FALSE}
+```{r plot-exp1b-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
 exp1b_sdt_p[[1]] + exp1b_sdt_p[[2]] + exp1b_sdt_p[[3]] + exp1b_sdt_p[[4]] + exp1b_rt_p[[1]] + exp1b_rt_p[[2]] + exp1b_rt_p[[3]] + exp1b_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
 ```
