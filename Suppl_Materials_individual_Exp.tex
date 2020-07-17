@@ -333,7 +333,7 @@ In this study, we aimed at excluding the potential confounding factor of the fam
 \subsubsection{Stimuli and Tasks}\label{stimuli-and-tasks-1}}
 
 Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (\enquote{恶人}, ERen), a morally good person (\enquote{善人}, ShanRen) or a morally neutral person (\enquote{常人}, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
-Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positve, neutral, and negative person.
+Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positive, neutral, and negative person.
 \includegraphics[width=5.20833in,height=\textheight]{exp1b/Familiarity_ratings/df1b_fami_rating.pdf}
 
 \hypertarget{procedure-1}{%
@@ -427,7 +427,7 @@ Three names (Zhang, Wang, Li) were first paired with three paragraphs of behavio
 
 After arriving the lab, participants were informed to complete two experimental tasks, first a social memory task to remember three person and their behaviors, after tested for their memory, they will finish a perceptual matching task.
 In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95\% accuracy before preceding to matching task.
-The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing util they reached 70\% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials.
+The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing until they reached 70\% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials.
 
 \hypertarget{data-analysis-2}{%
 \subsection{Data Analysis}\label{data-analysis-2}}
@@ -445,10 +445,35 @@ Data was analyzed as in experiment 1a.
 
 Figure \ref{fig:ex1c-dprime-rt} shows \emph{d} prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on \emph{d} prime, \(F(1.93, 42.56) = 0.23\), \(\mathit{MSE} = 0.41\), \(p = .791\), \(\hat{\eta}^2_G = .005\). Neither the effect of valence on RT (\(F(1.63, 35.81) = 0.22\), \(\mathit{MSE} = 2,212.71\), \(p = .761\), \(\hat{\eta}^2_G = .001\)) or interaction between valence and matchness on RT (\(F(1.79, 39.43) = 1.20\), \(\mathit{MSE} = 1,973.91\), \(p = .308\), \(\hat{\eta}^2_G = .005\)).
 
+\hypertarget{signal-detection-theory-analysis-of-accuracy-1}{%
+\paragraph{Signal detection theory analysis of accuracy}\label{signal-detection-theory-analysis-of-accuracy-1}}
+
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity (\(d'\)) and criteria (\(c\)) were both influenced. For the \(d'\), we found that the shapes tagged with morally good person (2.30, 95\% CI{[}1.93 2.70{]}) is greater than shapes tagged with moral bad (2.11, 95\% CI{[}1.83 2.42{]}), \(P_{PosteriorComparison} = 0.8\). Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.16, 95\% CI{[}1.88 2.45{]}), \(P_{PosteriorComparison} = 0.75\).
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-0.97, {[}-1.12 -0.82{]}), followed by shapes tagged with neutral person(-0.96, {[}-1.09 -0.83{]}), and then the shapes tagged with bad person(-1.03, {[}-1.22 -0.84{]}). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+\hypertarget{reaction-time-2}{%
+\paragraph{Reaction time}\label{reaction-time-2}}
+
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = 1\)). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), \(P_{PosteriorComparison} = .99\), it was also faster than the Bad condition (), \(P_{PosteriorComparison} = 1\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = 99\). However, the mismatched trials are largely overlapped.
+
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/1c_BGLMM_rt-1.pdf}
+
+\begin{figure}
+\centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-exp1c-BGLM-1.pdf}
+\caption{\label{fig:plot-exp1c-BGLM}Exp1c: Results of Bayesian GLM analysis.}
+\end{figure}
+
+\hypertarget{hddm-2}{%
+\subsubsection{HDDM}\label{hddm-2}}
+
+We fitted our data with HDDM, using the response-coding {[}also see Hu\_2020\_GoodSelf{]}. We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
 \hypertarget{discussion-1}{%
 \subsection{Discussion}\label{discussion-1}}
 
-Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-signficant results. (move this experiment to supplementary?)
+Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-significant results. (move this experiment to supplementary?)
 
 \hypertarget{experiment-2-sequential-presenting}{%
 \section{Experiment 2: Sequential presenting}\label{experiment-2-sequential-presenting}}
@@ -490,8 +515,8 @@ Figure \ref{fig:ex2-dprime-rt} shows \emph{d} prime and reaction times of experi
 
 There was evidence for the main effect of valence, \(F(1.83, 60.36) = 14.41\), \(\mathit{MSE} = 0.23\), \(p < .001\), \(\hat{\eta}^2_G = .066\). Paired t test showed that the Good-Person condition (2.79 \(\pm\) 0.17) was with greater \emph{d} prime than Netural condition (2.21 \(\pm\) 0.16, \emph{t}(33) = 4.723, \emph{p} = 0.001) and Bad-person condition (2.41 \(\pm\) 0.14), \emph{t}(33) = 4.067, \emph{p} = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, \emph{t}(33) = -1,802, \emph{p} = 0.185.
 
-\hypertarget{reaction-time-2}{%
-\subsubsection{Reaction time}\label{reaction-time-2}}
+\hypertarget{reaction-time-3}{%
+\subsubsection{Reaction time}\label{reaction-time-3}}
 
 The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data.
 
@@ -554,8 +579,8 @@ There was evidence for the main effect of valence, \(F(1.89, 64.37) = 11.09\), \
 
 We then conducted separated ANOVA for self-referential and other-referential trials. The valence effect was shown for the self-referential conditions, \(F(1.65, 56.25) = 13.98\), \(\mathit{MSE} = 0.31\), \(p < .001\), \(\hat{\eta}^2_G = .119\). Post-hoc test revealed that the Good-Self condition (1.97 \(\pm\) 0.14) was with greater \emph{d} prime than Netural condition (1.41 \(\pm\) 0.12, \emph{t}(34) = 4.505, \emph{p} = 0.0002), and Bad-self condition (1.43 \(\pm\) 0.102), \emph{t}(34) = 3.856, \emph{p} = 0.0014. There was difference between neutral and bad conidition, \emph{t}(34) = -0.238, \emph{p} = 0.9694. However, no effect of valence was found for the other-referential condition \(F(1.98, 67.36) = 0.38\), \(\mathit{MSE} = 0.35\), \(p = .681\), \(\hat{\eta}^2_G = .004\).
 
-\hypertarget{reaction-time-3}{%
-\subsubsection{Reaction time}\label{reaction-time-3}}
+\hypertarget{reaction-time-4}{%
+\subsubsection{Reaction time}\label{reaction-time-4}}
 
 We found intercation between Matchness and Valence (\(F(1.98, 67.44) = 26.29\), \(\mathit{MSE} = 730.09\), \(p < .001\), \(\hat{\eta}^2_G = .025\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
@@ -612,8 +637,8 @@ There was evidence for the main effect of valence, \(F(1.92, 105.43) = 1.90\), \
 
 We also tested the effect of personal association by comparing \emph{d'} values for difference moral valence level. The results showed that the bad-self association condition was responded worse than the bad-other association condition, \emph{t}(55) = -4.1, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -0.548, 95\% CI {[}-0.827 -0.265{]}, BF10 = 167. The neutral-self was also worse than the neutral-other, \emph{t}(55) = -3.15, \emph{p} = 0.0026 , Cohen's \emph{d} = -0.422, 95\% CI {[}-0.693 -0.146{]}, BF10 = 11.7. While the good-self association condition and good-stranger conditions are not differ from each other, \emph{t}(55) = 1.394, \emph{p} = 0.169, Cohen's \emph{d} = 0.186, 95\% CI{[}-0.079 0.449{]}, BF10 = 0.364.
 
-\hypertarget{reaction-time-4}{%
-\subsubsection{Reaction time}\label{reaction-time-4}}
+\hypertarget{reaction-time-5}{%
+\subsubsection{Reaction time}\label{reaction-time-5}}
 
 The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data. We found three-way interaction between matchness, and valence (\(F(1.86, 102.47) = 15.44\), \(\mathit{MSE} = 3,112.78\), \(p < .001\), \(\hat{\eta}^2_G = .006\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 

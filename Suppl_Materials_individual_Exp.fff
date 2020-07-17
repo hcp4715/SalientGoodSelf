@@ -37,6 +37,13 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-exp1c-BGLM-1.pdf}
+\caption{\label{fig:plot-exp1c-BGLM}Exp1c: Results of Bayesian GLM analysis.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
 \includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/ex2-dprime-rt-1.pdf}
 \caption{\label{fig:ex2-dprime-rt}RT and \emph{d} prime of Experiment 2.}
 \end{figure*}
