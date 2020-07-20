@@ -682,7 +682,7 @@ exp1c_rt_m1 <- fun_rt_val('1c')
 
 #plot(exp1b_rt_m1, "b_")
 summary(exp1c_rt_m1)  # n
-pp_check(exp1c_rt_m1)
+#pp_check(exp1c_rt_m1)
 
 hypothesis(exp1c_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
 hypothesis(exp1c_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.5
@@ -705,7 +705,7 @@ We fitted our data with HDDM, using the response-coding [also see Hu_2020_GoodSe
 
 
 ## Discussion
-Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-significant results. (move this experiment to supplementary?) 
+Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-significant results. Although the results were not significant, the pattern was consistent with previous two studies.
 
 # Experiment 2: Sequential presenting
 Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the association between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of positive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect occurred because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.

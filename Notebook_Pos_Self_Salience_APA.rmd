@@ -568,6 +568,7 @@ df.res_meta_pdata <- rbind(df.res.meta_1, df.res.meta_2) %>%
 ```{r plot-all-effect, fig.cap="Effect size (Cohen's *d*) of Valence.", warning=FALSE}
 # fig.width=8, 
 df.res_meta_pdata %>%
+  dplyr::filter(EffectType != 'Good_Bad') %>%
   ggplot2::ggplot(., aes(x = EffectType, y=Cohen_d, color=EffectType, fill=EffectType )) + # 
   geom_pointrange(aes(ymin=Cohen_d - 1.96*se, ymax = Cohen_d + 1.96*se), 
                   position = position_dodge(width = 0.5),
@@ -697,7 +698,7 @@ df.ES_4a <- df.ES_4a %>%
 
 ```{r 'plot-exp4a-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4a.", warning=FALSE}
 df.ES_4a %>%
-  #dplyr::filter(Identity == "Self") %>%
+  dplyr::filter(EffectType != "Good_Bad") %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
                   position = position_dodge(width = 0.5),
@@ -950,6 +951,7 @@ df.ES_4b %>%
 ```{r 'plot-exp4b-effect-2', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
 df.ES_4b_2 %>%
   dplyr::filter(Effect %in% effectList_2) %>%
+  dplyr::filter(EffectType != "Good_Bad") %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) +
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)),
                   position = position_dodge(width = 0.5),
@@ -967,7 +969,8 @@ df.ES_4b_2 %>%
 
 ```{r 'plot-exp4b-diff-diff', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
 df.ES_4b_2 %>%
-  dplyr::filter(Effect %in% c('Good_Bad_SO', 'Good_Neut_SO', 'Bad_Neut_SO')) %>%
+  #dplyr::filter(Effect %in% c('Good_Bad_SO', 'Good_Neut_SO', 'Bad_Neut_SO')) %>%
+  dplyr::filter(Effect %in% c('Good_Neut_SO', 'Bad_Neut_SO')) %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
                   position = position_dodge(width = 0.5),
@@ -1103,7 +1106,7 @@ df.ES_5 <- df.ES_5 %>%
 
 ```{r 'plot-exp5-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp5.", warning=FALSE}
 df.ES_5 %>%
-  #dplyr::filter(DVtype == "RT") %>%
+  dplyr::filter(EffectType != "Pos_Neg") %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
   geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
                   position = position_dodge(width = 0.4),
