@@ -172,6 +172,43 @@ d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
         return(out)
 }
 
+## code for calculate the summary with sE, adopted from cook book for R
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+                      conf.interval=.95, .drop=TRUE) {
+  library(plyr)
+  
+  # New version of length which can handle NA's : if na.rm == T, don't count the
+  length2 <- function(x, na.rm=FALSE){
+    if(na.rm) sum(!is.na(x))
+    else      length(x)
+  }
+  
+  # this does the summary. For each group's data frame, return a vector with
+  # N, mean, and sd
+  datac <- ddply(data,groupvars, .drop=.drop,
+                 .fun = function(xx,col){
+                   c(N    = length2(xx[[col]],na.rm=na.rm),
+                     mean = mean(xx[[col]],na.rm=na.rm),
+                     sd   = sd  (xx[[col]],na.rm=na.rm)
+                   )
+                 },
+                 measurevar
+  )
+  # Rename the "mean" column
+  
+  datac <- plyr::rename(datac,c("mean" = measurevar))
+  
+  datac$se <- datac$sd /sqrt(datac$N)   # calculate standard error of the mean
+  
+  # Confidence interval mltiplier for standard error
+  # calculate t-statistic for confidence interval:
+  # e.g., if conf.interval is .95, use .975 (above/below), and use df = N-1
+  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+  datac$ci <- datac$se * ciMult
+  
+  return (datac)
+}
+
 curDir = here::here() # dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
 
@@ -1124,6 +1161,179 @@ df.ES_5 %>%
 
 In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (match trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater *d* prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \@ref(fig:plot-exp5-effect).
 
+## Self-reported personal distance
+
+```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# prepare questionnaire data
+df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
+                                      "Exp1b" = (expID == "exp1.1"),
+                                      "Exp3a" = (expID == "exp3"),
+                                      "Exp3b" = (expID == "exp3.1"),
+                                      "Exp4a" = (expID == "exp4.1"),
+                                      "Exp4b" = (expID == "exp4.2"),
+                                      "Exp5" = (expID == "exp5.2"),
+                                      "Exp6b" = (expID == "exp6.2"),
+                                      "Exp7a" = (expID == "exp7.1"),
+                                      "Exp7b" = (expID == "exp7r"),
+                                      "Exp_dpr" = (expID == "exp6"),
+                                      .method ="first", .default = NA),
+                expID = as.character(expID))
+
+## get the questionnaire names
+# Self-esteem
+SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
+
+# moral identity
+mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
+                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
+                "morId_13","morId_14","morId_15","morId_16")
+mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
+                   "morId_12","morId_13","morId_14")
+mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
+                   "morId_15", "morId_16")
+
+# moral self images
+mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
+                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
+
+# personal distance
+perDistNames <- c("SelfSelf", 
+                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
+                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
+                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
+                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
+                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
+                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
+                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
+
+df.perdist <- df.scales %>%
+  dplyr::select(c(expID, subjID),perDistNames) %>%
+  #dplyr::rowwise() %>%
+  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
+                SelfSelfraw = SelfSelf,
+                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
+                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
+                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
+                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
+                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
+                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
+                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
+  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
+                SelfGoodraw, SelfNeutraw, SelfBadraw,
+                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
+  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
+                SelfGood = SelfGoodraw/sumRaw,
+                SelfNeut = SelfNeutraw/sumRaw,
+                SelfBad = SelfBadraw/sumRaw,
+                SelfStra = SelfStraraw/sumRaw, 
+                GoodNeut = GoodNeutraw/sumRaw, 
+                GoodBad = GoodBadraw/sumRaw, 
+                NeutBad = NeutBadraw/sumRaw) %>%
+  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
+                SelfStra, GoodNeut, GoodBad, NeutBad) %>%
+  tidyr::drop_na()
+```
+
+```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
+df.plot <- df.perdist %>%
+    dplyr::select(-c(SelfSelf, SelfStra)) %>%
+    tidyr::pivot_longer(., cols = SelfGood:NeutBad, 
+                        names_to = 'PerDist', 
+                        values_to = "value") %>% # to longer format
+    dplyr::mutate(PerDist =factor(PerDist, levels = c('SelfNeut', 'SelfGood', 'GoodNeut', 'NeutBad', 'GoodBad', 'SelfBad')),
+                  # DVs = factor(DVs, levels = c('RT', 'dprime')),
+                  # create an extra column for ploting the individual data cross different conditions.
+                  Conds = mosaic::derivedFactor("1" = (PerDist == 'SelfNeut'), 
+                                                "2" = (PerDist == 'SelfGood'),
+                                                "3" = (PerDist == 'GoodNeut'),
+                                                "4" = (PerDist == 'NeutBad'),
+                                                "5" = (PerDist == 'GoodBad'),
+                                                "6" = (PerDist == 'SelfBad'),
+                                                method ="first", .default = NA),
+                  Conds = as.numeric(as.character(Conds)),
+    ) 
+  
+  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add gitter to x
+  
+  # New facet label names for panel variable
+  # https://stackoverflow.com/questions/34040376/cannot-italicize-facet-labels-with-labeller-label-parsed
+  # levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+  #                           "dprime"=expression(paste(italic("d"), ' prime')))
+  # levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+  #                           "dprime"=expression(paste(italic("d"), ' prime')))
+  
+  df.plot.sum_p <- summarySE(df.plot, measurevar = "value", groupvars = c('PerDist')) %>%
+    dplyr::mutate(Cond_num = mosaic::derivedFactor("1" = (PerDist == 'SelfNeut'), 
+                                                "2" = (PerDist == 'SelfGood'),
+                                                "3" = (PerDist == 'GoodNeut'),
+                                                "4" = (PerDist == 'NeutBad'),
+                                                "5" = (PerDist == 'GoodBad'),
+                                                "6" = (PerDist == 'SelfBad'),
+                                                method ="first", .default = NA),
+                  Cond_num = as.numeric(as.character(Cond_num)))
+  
+  pd1 <- position_dodge(0.5)
+  # scaleFUN <- function(x) sprintf("%.2f", x)
+  # scales_y <- list(
+  #   RT = scale_y_continuous(limits = c(400, 900)),
+  #   dprime = scale_y_continuous(labels=scaleFUN)
+  #)
+  
+  df.plot  %>% # dplyr::filter(DVs== 'RT') %>%
+    dplyr::rename(Subject=subjID) %>%
+    ggplot(., aes(x = PerDist, y = value, colour = as.factor(Valence))) +
+    geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+              linetype = 1, size = 1, colour = "#000000", alpha = 0.03) + 
+    geom_point(aes(x = Conds_j, y = value, group = Subject),   # plot individual points
+               colour = "#000000",
+               size = 1, shape = 20, alpha = 0.03) +
+    geom_line(data = df.plot.sum_p, aes(x = as.numeric(PerDist), # plot the group means  
+                                        y = value, 
+                                        #group = Identity, 
+                                        colour = PerDist,
+    ), 
+    linetype = 1, position = pd1, size = 2)+
+    geom_point(data = df.plot.sum_p, aes(x = as.numeric(PerDist), # group mean
+                                         y = value, 
+                                         #group = Identity, 
+                                         colour = PerDist,
+    ), 
+    shape = 18, position = pd1, size = 5) +
+    geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(PerDist),  # group error bar.
+                                            y = value, # group = Identity, 
+                                            colour = PerDist,
+                                            ymin = value- 1.96*se, 
+                                            ymax = value+ 1.96*se), 
+                  width = .05, size = 1, alpha = 0.75) +
+    scale_colour_brewer(palette = "Dark2") +
+    scale_x_continuous(breaks=c(1, 2, 3, 4, 5, 6),
+                       labels=c("SelfNeut", "SelfGood", "GoodNeut", 'NeutBad', 'GoodBad', 'SelfBad')) +
+    scale_fill_brewer(palette = "Dark2") +
+    #ggtitle("A. Matching task") +
+    theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
+```
+
+See Figure \@ref(fig:plot-person-dist).
+
 ## Correlation analyses
 The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculated the correlation between the data from behavioral task and the questionnaire data. 
 
@@ -1250,55 +1460,12 @@ df.meta_all_wide <- df.meta_2_wide %>%
   dplyr::filter(Identity == "Self") %>%
   rbind(df.meta_1_wide, .)
 
-# prepare questionnaire data
-df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::mutate(expID = derivedFactor("Exp1a" = (expID == "exp1.0"), 
-                                      "Exp1b" = (expID == "exp1.1"),
-                                      "Exp3a" = (expID == "exp3"),
-                                      "Exp3b" = (expID == "exp3.1"),
-                                      "Exp4a" = (expID == "exp4.1"),
-                                      "Exp4b" = (expID == "exp4.2"),
-                                      "Exp5" = (expID == "exp5.2"),
-                                      "Exp6b" = (expID == "exp6.2"),
-                                      "Exp7a" = (expID == "exp7.1"),
-                                      "Exp7b" = (expID == "exp7r"),
-                                      "Exp_dpr" = (expID == "exp6"),
-                                      .method ="first", .default = NA),
-                expID = as.character(expID))
-
 # intersection between participant from behavioral task and scales and get the data
 subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253
 
 df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
-## get the questionnaire names
-# Self-esteem
-SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
-
-# moral identity
-mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
-                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
-                "morId_13","morId_14","morId_15","morId_16")
-mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
-                   "morId_12","morId_13","morId_14")
-mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
-                   "morId_15", "morId_16")
-
-# moral self images
-mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
-                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
-
-# personal distance
-perDistNames <- c("SelfSelf", 
-                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
-                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
-                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
-                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
-                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
-                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
-                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
 
 df.mrlID <- df.scales.v[c('subjID', mrlIdIntNames, mrlIdExtNames)] %>%
   #tidyr::drop_na() %>%
@@ -1315,7 +1482,7 @@ df.q_scores.v <- df.scales.v %>%
                 ) %>%
   dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
 
-df.perdist <- df.scales.v %>%
+df.perdist.v <- df.scales.v %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
   #dplyr::rowwise() %>%
   dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
@@ -1341,7 +1508,7 @@ df.perdist <- df.scales.v %>%
   dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
                 SelfStra, GoodNeut, GoodBad, NeutBad)
 
-df.q_scores.v <- merge(df.q_scores.v, df.perdist)
+df.q_scores.v <- merge(df.q_scores.v, df.perdist.v)
 
 ## calculate correlation ----
 df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
@@ -1371,10 +1538,6 @@ df.corr_norm <- df.corr %>%
 res.cor_all <- df.corr_norm %>%
   dplyr::select(-c(ExpID:Sex)) %>%
   correlation::correlation(., method="pearson", p_adjust = 'none')
-  #dplyr::na_if("NaN") %>%
-  #as.matrix(.) %>%
-  #dplyr::select_if(~sum(!is.na(.)) > 0) %>%
-  #Hmisc::rcorr(., type = 'spearman')
 
 res.cor_1 <- df.corr_norm %>%
   dplyr::filter(ExpID %in% unique(df.meta_1_wide$ExpID)) %>%
@@ -1385,10 +1548,6 @@ res.cor_2 <- df.corr_norm %>%
   dplyr::filter(ExpID %in% unique(df.meta_2_wide$ExpID)) %>%
   dplyr::select(-c(ExpID:Sex)) %>%
   correlation::correlation(., method="pearson", p_adjust = 'none')
-# corrplot::corrplot(res.cor$r, method="color", sig.level = .25, order = "FPC")
-# res.cor2 <- df.corr_norm %>%
-#   dplyr::select(-c(ExpID:Sex)) %>%
-#   correlation::correlation(., method="spearman", p_adjust = 'none')
 
 cor_pairs_all <- res.cor_all %>%
   dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
@@ -1410,10 +1569,9 @@ cor_pairs_2 <- res.cor_2 %>%
 
 write.csv(cor_pairs_all, 'sig_behav_quest_corr_pairs.csv', row.names = F)
 
-
 ```
 
-```{r plot correlation,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r get plots of correlation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # Permutation
 set.seed(12345)
 permutation <- function(df) {
