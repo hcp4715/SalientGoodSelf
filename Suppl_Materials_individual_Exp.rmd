@@ -455,8 +455,33 @@ exp1a_sdt_p[[1]] + exp1a_sdt_p[[2]] + exp1a_sdt_p[[3]] + exp1a_sdt_p[[4]] + exp1
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1a-BGLM).
 
 ### HDDM
+
+```{r plot-exp1a-HDDM, fig.cap="Exp1a: Results of HDDM.",  fig.height=4.5, fig.width=9, warning=FALSE}
+df1a.hddm.group.trace <- read_csv(here::here('HDDM','df1a_group_traces.csv'))
+
+params_p <- df1a.hddm.group.trace %>%
+  dplyr::mutate(sample = 1:nrow(.)) %>%
+  dplyr::select(chain, sample, contains('Match') | contains('Mismatch')) %>%
+  tidyr::pivot_longer(.,`a(Match.Bad)`:`t(Mismatch.Neutral)`, names_to = 'conditions', values_to = 'value') %>%
+  tidyr::separate(., conditions, into = c('v1', 'valence'), sep= '[.]') %>%       # split into two part
+  tidyr::separate(., v1, into = c('param', 'matchness'), sep = '[(]') %>%         # further split the first half into two part
+  dplyr::mutate(valence = stringr::str_sub(.$valence, start = 1, end = -2)) %>%   # remove the last two elements ') ' from the strings
+  dplyr::arrange(., param) %>%
+  tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
+
+params_p %>% 
+  dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad"))) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
+  geom_point() + 
+  facet_grid(~ matchness)
+  
+library(patchwork)
+
+```
+
 We fitted our data with HDDM, using the response-coding [See also, @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
 ![HDDM results of Exp 1a](HDDM/exp1a_hddm_vta_pairplot.pdf){width=500px}
+
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
@@ -598,6 +623,12 @@ We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as
 
 #### HDDM
 We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+```{r plot-exp1b-HDDM, fig.cap="Exp1b: Results of HDDM.",  fig.height=4.5, fig.width=9, warning=FALSE}
+library(patchwork)
+exp1b_sdt_p[[1]] + exp1b_sdt_p[[2]] + exp1b_sdt_p[[3]] + exp1b_sdt_p[[4]] + exp1b_rt_p[[1]] + exp1b_rt_p[[2]] + exp1b_rt_p[[3]] + exp1b_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
 
 ** insert figure of HDDM **
 
