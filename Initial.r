@@ -19,8 +19,9 @@ pkgTest <- function(x){
   }
 }
 
-pkgNeeded <- (c("tidyverse","ggplot2", "afex", 'emmeans',
-                "BayesFactor","psych","corrplot","readr", 'lme4',
+pkgNeeded <- (c("tidyverse", "afex", 'emmeans',
+                "metafor", "Hmisc", "psych", 
+                "BayesFactor","corrplot","readr", 'lme4',
                 'mosaic', 'here', 'brms', 'patchwork'))
 
 lapply(pkgNeeded,pkgTest)
@@ -58,6 +59,50 @@ apatheme = theme_bw()+
               axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
               axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
 
+apatheme_x = theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        text=element_text(family='Times'),
+        legend.title=element_blank(),
+        legend.text = element_text(size =12),
+        #legend.position='top',
+        plot.title = element_text(lineheight=.8, face="bold", size = 16),
+        #              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
+        axis.text = element_text (size = 14, color = 'black'),
+        #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
+        axis.title = element_text (size = 14),
+        axis.line.x = element_line(color='black', size = 1),   # increase the size of font
+        axis.line.y = element_line(color='black', size = 1),   # increase the size of font
+        axis.text.x = element_blank(),                         # no ext on x-axis
+        axis.ticks.x = element_blank(),
+        axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
+        axis.title.y = element_text(margin=margin(0,12,0,0)),
+        strip.text.x = element_text(size = 12, colour = "black"),
+        strip.text.y = element_text(size = 12, colour = "black"))  # increase the space between title and y axis
+
+apatheme_s = theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        text=element_text(family='Times'),
+        legend.title=element_blank(),
+        legend.text = element_text(size =12),
+        legend.position="none",
+        #legend.position='top',
+        plot.title = element_text(lineheight=.8, face="bold", size = 10),
+        #              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
+        axis.text = element_text (size = 8, color = 'black'),
+        #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
+        axis.title = element_text (size = 8),
+        axis.line.x = element_line(color='black', size = 1),   # increase the size of font
+        axis.line.y = element_line(color='black', size = 1),   # increase the size of font
+        axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
+        axis.title.y = element_text(margin=margin(0,12,0,0)),
+        strip.text.x = element_text(size = 8, colour = "black"),
+        strip.text.y = element_text(size = 8, colour = "black"))  # increase the space between title and y axis
 
 # define the d prime function
 dprime <- function(hit,fa) {

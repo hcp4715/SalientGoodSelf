@@ -9,20 +9,22 @@ author:
     address       : "Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany"
     email         : "hcp4715@gmail.com"
   - name          : "Kaiping Peng"
-    affiliation   : "1"
+    affiliation   : "3"
   - name          : "Jie Sui"
-    affiliation   : "1,3"
+    affiliation   : "3,4"
 
 affiliation:
   - id            : "1"
-    institution   : "Tsinghua University, 100084 Beijing, China"
+    institution   : "TBA"
   - id            : "2"
     institution   : "Leibniz Institute for Resilience Research, 55131 Mainz, Germany"
   - id            : "3"
+    institution   : "Tsinghua University, 100084 Beijing, China"
+  - id            : "4"
     institution   : "University of Aberdeen, Aberdeen, Scotland"
 
 authornote: |
-  Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+  Hu Chuan-Peng, Leibniz Institute for Resilience Research (LIR).
   Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
   Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
 
@@ -60,155 +62,7 @@ output            :
  
 ```{r setup, include = FALSE}
 #rm(list = ls())
-if (.Platform$OS.type == 'windows') {
-  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
-} else {
-  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-}
-Sys.setenv(LANG = "en") # set the feedback language to English
-options(scipen = 999)   # force R to output in decimal instead of scientific notion
-options(digits=5)       # limit the number of reporting
-
-pkgTest <- function(x){
-        if (!require(x, character.only = TRUE)){
-          install.packages(x, dep = TRUE)
-          if(!require(x, character.only = TRUE)) stop("Package not found")
-        }
-}
-
-pkgNeeded <- (c('papaja',"tidyverse", 'metafor',
-                "corrplot","readr", 'patchwork',
-                "Hmisc",'mosaic', 'here'))
-lapply(pkgNeeded, pkgTest)
-rm('pkgNeeded') # remove the variable 'pkgNeeded';
-
-if (.Platform$OS.type == 'windows') {
-  windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
-} 
-
-apatheme = theme_bw()+
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_blank(),
-              text=element_text(family='Times'),
-              legend.title=element_blank(),
-              legend.text = element_text(size =12),
-              #legend.position='top',
-              plot.title = element_text(lineheight=.8, face="bold", size = 16),
-#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
-              axis.text = element_text (size = 14, color = 'black'),
-#              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
-              axis.title = element_text (size = 14),
-              axis.line.x = element_line(color='black', size = 1),   # increase the size of font
-              axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-              axis.title.y = element_text(margin=margin(0,12,0,0)),
-              strip.text.x = element_text(size = 12, colour = "black"),
-              strip.text.y = element_text(size = 12, colour = "black"))  # increase the space between title and y axis
-
-apatheme_x = theme_bw()+
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_blank(),
-              text=element_text(family='Times'),
-              legend.title=element_blank(),
-              legend.text = element_text(size =12),
-              #legend.position='top',
-              plot.title = element_text(lineheight=.8, face="bold", size = 16),
-#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
-              axis.text = element_text (size = 14, color = 'black'),
-#              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
-              axis.title = element_text (size = 14),
-              axis.line.x = element_line(color='black', size = 1),   # increase the size of font
-              axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-              axis.text.x = element_blank(),                         # no ext on x-axis
-              axis.ticks.x = element_blank(),
-              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-              axis.title.y = element_text(margin=margin(0,12,0,0)),
-              strip.text.x = element_text(size = 12, colour = "black"),
-              strip.text.y = element_text(size = 12, colour = "black"))  # increase the space between title and y axis
-
-apatheme_s = theme_bw()+
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              panel.border = element_blank(),
-              text=element_text(family='Times'),
-              legend.title=element_blank(),
-              legend.text = element_text(size =12),
-              legend.position="none",
-              #legend.position='top',
-              plot.title = element_text(lineheight=.8, face="bold", size = 10),
-#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
-              axis.text = element_text (size = 8, color = 'black'),
-#              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
-              axis.title = element_text (size = 8),
-              axis.line.x = element_line(color='black', size = 1),   # increase the size of font
-              axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-              axis.title.y = element_text(margin=margin(0,12,0,0)),
-              strip.text.x = element_text(size = 8, colour = "black"),
-              strip.text.y = element_text(size = 8, colour = "black"))  # increase the space between title and y axis
-
-# define the d prime function
-dprime <- function(hit,fa) {
-  qnorm(hit) - qnorm(fa)
-}
-
-## below is the code from blog, and adapted from A C Del Re from email
-d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
-        # m.1 = mean at time 1
-        # m.2 = mean at time 2
-        # sd.1 = standard dev. at time 1
-        # sd.2 = standard dev. at time 2
-        # n = sample size
-        # r = correlation between time 1 and 2
-        s.within <- (sqrt((sd.1^2 + sd.2^2)-2*r*sd.1*sd.2))/(sqrt(2*(1-r))) 
-        d <- ((m.1 - m.2)/s.within)
-        var.d <- 2*(1-r) * (1/n + d^2/(2*n))
-        out <- cbind(d, var.d)
-        return(out)
-}
-
-## code for calculate the summary with sE, adopted from cook book for R
-summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
-                      conf.interval=.95, .drop=TRUE) {
-  library(plyr)
-  
-  # New version of length which can handle NA's : if na.rm == T, don't count the
-  length2 <- function(x, na.rm=FALSE){
-    if(na.rm) sum(!is.na(x))
-    else      length(x)
-  }
-  
-  # this does the summary. For each group's data frame, return a vector with
-  # N, mean, and sd
-  datac <- ddply(data,groupvars, .drop=.drop,
-                 .fun = function(xx,col){
-                   c(N    = length2(xx[[col]],na.rm=na.rm),
-                     mean = mean(xx[[col]],na.rm=na.rm),
-                     sd   = sd  (xx[[col]],na.rm=na.rm)
-                   )
-                 },
-                 measurevar
-  )
-  # Rename the "mean" column
-  
-  
-  datac <- plyr::rename(datac,c("mean" = measurevar))
-  
-  datac$se <- datac$sd /sqrt(datac$N)   # calculate standard error of the mean
-  
-  # Confidence interval mltiplier for standard error
-  # calculate t-statistic for confidence interval:
-  # e.g., if conf.interval is .95, use .975 (above/below), and use df = N-1
-  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
-  datac$ci <- datac$se * ciMult
-  
-  return (datac)
-}
+source('Initial.r')
 
 curDir = here::here() # dirname(rstudioapi::getActiveDocumentContext()$path)
 figDir = here::here('figures')
@@ -231,12 +85,455 @@ Yakushijin, ReikoJacobs, Robert A (2020), Are People Successful at Learning Sequ
 
 Schooler, L. J., Shiffrin, R. M., & Raaijmakers, J. G. W. (2001). A Bayesian model for implicit effects in perceptual identification. Psychological Review, 108(1), 257–272. https://doi.org/10.1037/0033-295X.108.1.257
 
-# General Methods
-## Participants.
-Most experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in @Hu_2020_GoodSelf (See Table 1 for overview of these experiments). 
+We reported results from eleven experiments. In first set of experiments, we found that shapes associated with morally positive person label were responded faster and more accurately. In the second set of experiment, we explore the potential role of good self in perceptual matching task and added one more independent variable, we found that the effect was mainly on good self. In the third part we tested whether the morality will automatically binds with person-relevance. Finally, we explore the correlation between behavioral task and questionnaire scores.
+
+# Disclosures
+We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis. To have a better overview of the effect reported in this series experiment, we reported the synthesized results in the main text and individual experiment in supplementary materials. 
+
+All the experiments reported were not pre-registered. Most experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in @Hu_2020_GoodSelf (See Table S1 for overview of these experiments). 
+
 All participant received informed consent and compensated for their time. These experiments were approved by the ethic board in the Department of Tsinghua University. 
 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+
+```{r loadingData,echo=FALSE,results='hide'}
+load("AllData.RData")
+```
+
+```{r define_funs,echo=FALSE,results='hide'}
+# define a function to run the sdt GLMM for all exp with Matchness * Valence design
+# for 1a, 1b, 1c, 2, 6a
+fun_sdt_val <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  
+  m <- df %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+  brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
+              (0 + Valence + Valence:ismatch | Subject),
+            family = bernoulli(link="probit"),
+            data = .,
+            control = list(adapt_delta = .99),
+            iter = 4000,
+            thin = 2,
+            cores = parallel::detectCores(),
+            file = here::here(m_name))
+  return(m)
+}
+
+fun_plot_sdt_val <- function(m_sdt) {
+    # extract c
+    tmp_c <- m_sdt %>% 
+      tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood) %>%
+      dplyr::rename(Valence = .variable, sdt_c = .value) %>% dplyr::ungroup() %>%
+      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
+      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
+                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
+    
+    # dprime
+    tmp_d <- m_sdt %>% 
+      tidybayes::gather_draws(`b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                              `b_ValenceGood:ismatch`) %>%
+      dplyr::rename(Valence = .variable, sdt_d = .value) %>% dplyr::ungroup() %>%
+      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
+      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
+                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
+    
+    # plot summaries with densities
+    p_sdt_d_sum <- tmp_d %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      ggplot2::ggplot(aes(x = sdt_d, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "sensitivity (d')", y = 'Posterior') +
+      theme_classic()
+    
+    p_sdt_c_sum <- tmp_c %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      ggplot2::ggplot(aes(x = sdt_c, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "criteria (c)", y = 'Posterior') +
+      theme_classic()
+    
+    # plot comparison
+    p_sdt_d <- tmp_d %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+      tidybayes::compare_levels(sdt_d, by = Valence) %>%
+      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = stat(x > 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(x = "sensitivity (d')", y = 'Comparison') +
+      theme_classic()
+    
+    p_sdt_c <- tmp_c %>%
+      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+      tidybayes::compare_levels(sdt_c, by = Valence) %>%
+      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = stat(x > 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(x = "criteria (c)", y = 'Comparison') +
+      theme_classic()
+    
+    return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
+}
+
+# define a function to run the RT GLMM for all exp with Matchness * Valence design
+fun_rt_val <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  m <- df %>%
+    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+    dplyr::filter(ACC == 1) %>%
+    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+    brms::brm(RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject),
+              family = shifted_lognormal(),
+              data = ., control = list(adapt_delta = .99),
+              iter = 4000,
+              thin = 2,
+              cores = parallel::detectCores(),
+              file = here::here(m_name))
+  return(m)
+}
+
+fun_plot_rt_val <- function(m_rt) {
+    tmp_rt <- m_rt %>% 
+      tidybayes::spread_draws(b_Intercept, b_ValenceBad, b_ValenceGood, 
+                              b_ismatch,   `b_ValenceBad:ismatch`, `b_ValenceGood:ismatch`) %>%
+      dplyr::mutate(Neut_MM = b_Intercept,
+                    Bad_MM = Neut_MM + b_ValenceBad,
+                    Good_MM = Neut_MM + b_ValenceGood,
+                    Neut_M = Neut_MM + b_ismatch,
+                    Bad_M = Neut_MM + b_ismatch + `b_ValenceBad:ismatch`,
+                    Good_M = Neut_MM + b_ismatch + `b_ValenceGood:ismatch`) %>%
+      dplyr::select(-contains('b_')) %>%
+      tidyr::pivot_longer(cols = Neut_MM:Good_M,
+                          names_to = 'cond',
+                          values_to = 'logRT') %>%
+      dplyr::mutate(RT = exp(logRT)*1000,
+                    Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
+                                                 cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
+                    Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
+                                               cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
+                                               cond == 'Good_MM' | cond == 'Good_M' ~ 'Good'))
+    p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Match') %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(x = "RTs (Matching, ms)", y = 'Posterior') +
+      theme_classic()
+    p_exp1b_rt_mm_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Mismatch') %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence)) +
+      tidybayes::stat_halfeyeh() + 
+      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
+      theme_classic()
+    
+    # plot comparison
+    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Match') %>%
+      tidybayes::compare_levels(RT, by = Valence) %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
+      theme_classic()
+    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
+      dplyr::filter(Matchness == 'Mismatch') %>%
+      tidybayes::compare_levels(RT, by = Valence) %>%
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      tidybayes::stat_halfeyeh() + 
+      geom_vline(xintercept =0, linetype = "dashed") +
+      scale_fill_manual(values = c("gray80", "skyblue")) +
+      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
+      theme_classic()
+    return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
+}
+
+```
+
+# Part 1: Moral valence effect
+In this part, we report five experiments that aimed at testing whether the instantly acquired association between shapes and good person would be prioritized in perceptual decision-making.
+
+## Experiment 1a 
+### Methods
+#### Participants
+`r df1a.T.basic$N` college students (`r df1a.T.basic$Nf` female, age = `r df1a.T.basic$Age_mean` $\pm$ `r df1a.T.basic$Age_sd` years) participated. `r df1a.T.basic$N_thu` of them were recruited from Tsinghua University community in 2014; `r df1a.T.basic$N_wzu` were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. `r nrow(df1a.excld.sub)` participant’s data were excluded from analysis because nearly random level of accuracy, leaving `r df1a.v.basic$N` participants (`r df1a.v.basic$Nf` female, age = `r df1a.v.basic$Age_mean` $\pm$ `r df1a.v.basic$Age_sd` years).
+
+#### Stimuli and Tasks
+Three geometric shapes were used in this experiment: triangle, square, and circle. These shapes were paired with three labels (bad person, good person or neutral person). The pairs were counterbalanced across participants. 
+
+#### Procedure
+This experiment had two phases. First, there was a brief learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is represented by a square.” After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
+In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
+For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
+
+#### Data analysis
+We analyzed accuracy performance using a signal detection theory approach. The performance in each match condition was combined with that in the nonmatch condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the nonmatch trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the match and nonmatch trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [@Rouder_2005_BHM_SDT]. **Trials without response were excluded from the analysis.** 
+
+We analyzed the *d* prime and reaction times using the generalized linear model (GLM). The GLM approach didn't assume a particular generative model of the data but using linear model to fit the data. We applied the traditional repeated measures ANOVA, which is a special case of GLM. We also reported results from Bayesian generalized linear model approach.
+
+We also analyzed the accuracy and reaction times data using the drift-diffusion model (DDM), which combine the accuracy and reaction times together.
+
+
+##### Classic NHST
+In the classic NHST approach, we've used the maximum likelihood estimate of the EVSDT parameters (mainly, the sensitivity $d'$) separately for each participant in the each experiment condition [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP], and then used the parameter of each condition from each participant as dependent variable for repeated measures ANOVA. The $d'$ is calculated as the difference of the standardized hit and false alarm rats [@Stanislaw_Todorov_1999]: 
+$$ d' = zHR - zFAR = \Phi^{-1}(HR) - \Phi^{-1}(FAR) $$
+where the $HR$ means hit rate and the $FAR$ mean false alarm rate. $zHR$ and $zFAR$ are the standardized hit rate and false alarm rates, respectively. These two $z$-scores were converted from proportion (i.e., hit rate or false alarm rate) by inverse cumulative normal density function, $\Phi^{-1}$ ($\Phi$ is the cumulative normal density function, and is used convert $z$ score into probabilities). Another parameter of signal detection theory, response criterion $c$, is defined by the negative standardized false alarm rate [@DeCarlo_1998]: $-zFAR$.
+
+For the RTs, we used mean RTs of the accurate trials of each condition and subject for repeated measures ANOVA. 
+
+The repeated measure ANOVA was done by `afex` package.
+
+##### Bayesian hierarchical generalized linear model (GLM)
+The maximum likelihood estimate of parameters of EVSDT may ignored the uncertainty in estimates of the parameters [@Rouder_2005_BHM_SDT]. Bayesian generalized linear model (GLM) can help to estimate the uncertainty of parameters. We used BRMs [@Bürkner_2017; @Carpenter_2017_stan] to model the data. 
+
+In the GLM model, we assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+
+$$ y_{i} \sim Bernoulli(p_{i})$$
+In the perceptual matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
+
+$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
+The outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
+
+In each experiment, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierarchical mode in which individual's parameter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{ij}$ that $y_{ij} = 1$. 
+
+$$ y_{ij} \sim Bernoulli(p_{ij})$$
+Similarly, the generalized linear model was extended to two levels:
+$$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}$$
+The outcomes $y_{ij}$ are 0 if participant $j$ responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+
+The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
+$$ \begin{bmatrix}\beta_{0j}\\
+\beta_{1j}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0}\\
+\theta_{1}\\
+\end{bmatrix}, \sum) $$
+
+In the same vein, when trying to estimate the parameter across different experiments, we can further consider the participant is nested in different experiments, and each experiment, because of its variation in stimuli or stimuli presentation, may have different intercepts and slopes. In this case, we can use a nested hierarchical model to model all the experiment with similar design:
+$$y_{ijk} \sim Bernoulli(p_{ijk})$$
+where 
+$$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
+The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "nonmatch" on trial $i$, 1 if they responded "match". 
+
+$$\begin{bmatrix}\beta_{0jk}\\
+\beta_{1jk}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
+\end{bmatrix}, \sum)$$
+
+and the experiment level parameter $mu_{0k}$ and $mu_{1k}$ is from a higher order distribution:
+
+$$\begin{bmatrix}\theta_{0k}\\
+\theta_{1k}\\
+\end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
+\mu_{1}\\
+\end{bmatrix}, \sum)$$
+in which $\mu_{0}$ and $\mu_{1}$ means the population level parameter.
+
+Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
+
+For the reaction time, there are many criticism about using the mean RTs as the representation of each participant [@Rousselet_2019], to better capture a representative parameter for RTs, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal). This distribution has two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response.
+
+$$y_{i} = \beta_{0} + \beta_{1}*IsMatch_{i} * Valence_{i}$$
+
+Shifted log-normal distribution:
+$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
+
+$$\mu_{j} \sim N(\mu, \sigma)$$
+
+$$\sigma_{j} \sim Cauchy()$$
+
+This model can be easily expand to three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+$$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
+
+$y_{ijk}$ is the RT of the $i$th trial of the $j$th participants in the $k$th experiment.
+
+$$\mu_{jk} \sim N(\mu_{k}, \sigma_{k})$$
+
+$$\sigma_{jk} \sim Cauchy()$$
+
+$$\theta_{jk} \sim Cauchy()$$
+
+$$\mu_{k} \sim N(\mu, \sigma)$$
+
+##### Hierarchical drift diffusion model (HDDM)
+To further explore the psychological mechanism under perceptual decision-making, we used HDDM [@wiecki_hddm_2013] to model our RTs and accuracy data. We used the prior implemented in HDDM, that is, informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009] 
+ <!-- Shall I write more about HDDM here, or just refer the interested reader to the paper? -->
+
+### Results
+
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
+Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
+```
+
+#### Classic analytical approach
+##### *d* prime
+Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
+
+```{r 1a_dprime_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime with 2*2 design
+df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
+df1a_dprime_anova_apa <- df1a_dprime_anova %>% papaja::apa_print.afex_aov()
+
+posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_1a_d)
+```
+
+```{r results='asis', echo = F, eval=F}
+# knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
+papaja::apa_table(df1a_dprime_anova_apa$table
+  , caption = "Repeated measure ANOVA of *d* prime from Experiment 1a"
+  , note = "*d* prime was calculated in a signal detection way.")
+
+```
+
+We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, *t*(50) = 2.109, *p* = .098.
+
+##### Reaction times
+```{r 1a_RT_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
+
+df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print.afex_aov()
+
+df1a.v.rt_m1 <- df1a.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
+df1a_RT_anova_m_apa <- df1a_RT_anova_m %>% papaja::apa_print.afex_aov()
+
+df1a.v.rt_m2 <- df1a.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
+df1a_RT_anova_nm_apa <- df1a_RT_anova_nm %>% papaja::apa_print.afex_aov()
+
+posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
+# pairs(posthoc_1a_rt)
+```
+We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and interaction between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
+
+We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
+
+#### Bayesian hierarchical GLM
+##### d prime
+```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp1a_sdt_m1 <- fun_sdt_val('1a')
+
+summary(exp1a_sdt_m1)    # check summary
+# pp_check(exp1a_sdt_m1)  # posterior predictive check
+
+hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.97
+hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
+hypothesis(exp1a_sdt_m1, "ValenceNeutral:ismatch > ValenceBad:ismatch")   # 0.91
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.82
+hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .95
+hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.81
+
+exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
+```
+We fitted a Bayesian hierarchical GLM for signal detection theory approach. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(-1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+##### Reaction times
+```{r 1a_rt_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# fit a three-level hierarchical model for RT, didn't specify the prior
+exp1a_rt_m1 <- fun_rt_val('1a')
+#plot(exp1a_rt_m1, "b_")
+summary(exp1a_rt_m1)  # n
+# pp_check(exp1a_rt_m1)
+
+# Population-Level Effects: 
+#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
+# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
+# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
+# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
+# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
+# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
+
+hypothesis(exp1a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
+hypothesis(exp1a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
+hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
+```
+
+```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.height=4.5, fig.width=9, warning=FALSE}
+library(patchwork)
+exp1a_sdt_p[[1]] + exp1a_sdt_p[[2]] + exp1a_sdt_p[[3]] + exp1a_sdt_p[[4]] + exp1a_rt_p[[1]] + exp1a_rt_p[[2]] + exp1a_rt_p[[3]] + exp1a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1a-BGLM).
+
+#### HDDM
+
+```{r plot-exp1a-HDDM, fig.cap="Exp1a: Results of HDDM.",  fig.height=4.5, fig.width=9, warning=FALSE}
+df1a.hddm.group.trace <- read_csv(here::here('HDDM','df1a_group_traces.csv'))
+
+params_p <- df1a.hddm.group.trace %>%
+  dplyr::mutate(sample = 1:nrow(.)) %>%
+  dplyr::select(chain, sample, contains('Match') | contains('Mismatch')) %>%
+  tidyr::pivot_longer(.,`a(Match.Bad)`:`t(Mismatch.Neutral)`, names_to = 'conditions', values_to = 'value') %>%
+  tidyr::separate(., conditions, into = c('v1', 'valence'), sep= '[.]') %>%       # split into two part
+  tidyr::separate(., v1, into = c('param', 'matchness'), sep = '[(]') %>%         # further split the first half into two part
+  dplyr::mutate(valence = stringr::str_sub(.$valence, start = 1, end = -2)) %>%   # remove the last two elements ') ' from the strings
+  dplyr::arrange(., param) %>%
+  tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
+
+params_p %>% 
+  dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
+  geom_point() + 
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(~ matchness) +
+  ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
+  xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
+  theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
+```
+
+We fitted our data with HDDM, using the response-coding [See also, @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see Figure \@ref(fig:plot-exp1a-HDDM)).
+
 
 ## Design and Procedure
 This series of experiments started to test the effect of instantly acquired moral valence on perceptual decision-making. For this purpose, we used the social associative learning paradigm (or tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learned the associations between geometric shapes and labels of person with different moral valence (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase. 
@@ -251,22 +548,9 @@ Finally, experiment 5 was design to test the specificity of the moral valence. W
 
 E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab Psychtoolbox [@Brainard_1997;@Pelli_1997]. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about $3.7^\circ × 3.7^\circ$, the fixation cross is of ($0.8^\circ × 0.8^\circ$ of visual angle) at the center of the screen. The words were of $3.6^\circ$ × $1.6^\circ$ visual angle. The distance between the center of the shape or the word and the fixation cross was $3.5^\circ$ of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
 
-In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2020_JOPD]. See Table 1 for a summary information about all the experiments reported here. 
-
-```{r 'Table1_exp_info', ehco = FALSE, results = 'asis'}
-exp_table <- read.csv('Exp_info_all.csv') %>%
-  dplyr::rename(ExpID = 1)
-# knitr::kable(exp_table, caption = "Information about all experiments")
-apa_table(
-  exp_table
-  , caption = "Information about all experiments."
-  , note = "DV = dependent variables; Valence = how valence was manipulated; Shape & Label = how shapes & labels were presented."
-  , escape = TRUE
-)
-```
+In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2020_JOPD]. See Table S1 for a summary information about all the experiments. 
 
 ## Data analysis
-We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis. To have a better overview of the effect reported in this series experiment, we reported the synthesized results in the main text and individual experiment in supplementary materials. 
 
 ### Analysis of individual study
 The individual experiment's results were reported in supplementary materials. We used the `tidyverse` of r (see script `Load_save_data.r`) to exclude the practicing trials, invalid trials of each participants, and invalid participants, if there were any, in the raw data. 
@@ -317,10 +601,6 @@ Given that the task difficulty were different across experiments, we z-transform
 The DDM analyses were finished by HDDM, as reported in @Hu_2020_GoodSelf. That is, we used the response code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
 
 We used Pearson correlation to quantify the correlation. For those correlation that is significant ($p < 0.05$), we further tested the robustness of the correlation using bootstrap by `BootES` package [@kirby_bootes_2013]. To avoid false positive, we further determined the threshold for signifcant by permutation. More specifically, for each pairs that initially with  $p < .05$, we randomly shuffle the participants data of each score and calculated the correlation between the shuffled vectors. After repeating this procedure for 5000 times, we choose arrange these 5000 correlation coefficients and use the 95% percentile number as our threshold.
-
-```{r loadingData,echo=FALSE,results='hide'}
-load("AllData.RData")
-```
 
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}
 ## exclude the repeating subjects

@@ -75,6 +75,18 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 load("AllData.RData")
 ```
 
+```{r 'Table_s1_exp_info', ehco = FALSE, results = 'asis'}
+exp_table <- read.csv('Exp_info_all.csv') %>%
+  dplyr::rename(ExpID = 1)
+# knitr::kable(exp_table, caption = "Information about all experiments")
+apa_table(
+  exp_table
+  , caption = "Information about all experiments."
+  , note = "DV = dependent variables; Valence = how valence was manipulated; Shape & Label = how shapes & labels were presented."
+  , escape = TRUE
+)
+```
+
 ```{r define_funs,echo=FALSE,results='hide'}
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
 # for 1a, 1b, 1c, 2, 6a
@@ -473,10 +485,27 @@ params_p %>%
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad"))) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
-  facet_grid(~ matchness)
-  
-library(patchwork)
-
+  facet_grid(~ matchness) +
+  ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
+  xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
+  theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
 ```
 
 We fitted our data with HDDM, using the response-coding [See also, @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
