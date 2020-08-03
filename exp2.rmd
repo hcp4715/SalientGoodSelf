@@ -1,0 +1,175 @@
+## Experiment 2: Sequential presenting
+Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the association between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of positive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect occurred because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
+
+### Method
+
+#### Participants
+
+`r df2.T.basic$N` participants (`r df2.T.basic$Nf` female, age = `r df2.T.basic$Age_mean` $\pm$ `r df2.T.basic$Age_sd`) were recruited. 24 of them had participated in Experiment 1a (9 male, mean age = 21.9, s.d. = 2.9), and the time gap between these experiment 1a and experiment 2 is at least six weeks. The results of `r nrow(df2.excld.sub)` participants were excluded from analysis because of less than 60% overall accuracy, remains `r df2.v.basic$N` participants (`r df2.v.basic$Nf` female, age = `r df2.v.basic$Age_mean` $\pm$ `r df2.v.basic$Age_sd`).
+
+#### Procedure
+In Experiment 2, the sequential presenting makes the matching task much easier than experiment 1. To avoid ceiling effect on behavioral data, we did a few pilot experiments to get optimal parameters, i.e., the conditions under which participant have similar accuracy as in Experiment 1 (around 70 ~ 80% accuracy). 
+In the final procedure, the label (good person, bad person, or neutral person) was presented for 50 ms and then masked by a scrambled image for 200 ms. A geometric shape followed the scrambled mask for 50 ms in a noisy background (which was produced by first decomposing a square with $¾$ gray area and $¼$ white area to small squares with a size of 2 × 2 pixels and then re-combine these small pieces randomly), instead of pure gray background in Experiment 1. After that, a blank screen was presented 1100 ms, during which participants should press a button to indicate the label and the shape match the original association or not. Feedback was given, as in study 1. The next trial then started after 700 ~ 1100 ms blank. Other aspects of study 2 were identical to study 1.
+
+#### Data analysis
+Data was analyzed as in study 1a. 
+
+### Results
+
+#### NHST
+
+```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
+Val_plot_NHST(df.rt = df2.v.rt_m, df.d = df2.v.dprime_l)
+```
+
+Figure \@ref(fig:ex2-dprime-rt) shows *d* prime and reaction times of experiment 2. Less than 0.2% correct trials with less than 200ms reaction times were excluded. 
+
+##### d prime.
+
+```{r 2_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# anova for d prime
+df2_dprime_anova <- afex::aov_ez('Subject','dprime',df2.v.dprime_l, within = c('Valence'))
+df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print.afex_aov()
+
+posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each valence for both self and other condition
+#pairs(posthoc_2_d)
+```
+There was evidence for the main effect of valence, `r df2_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (2.79 $\pm$ 0.17) was with greater *d* prime than Netural condition (2.21 $\pm$ 0.16, *t*(33) = 4.723, *p* = 0.001) and Bad-person condition (2.41 $\pm$ 0.14), *t*(33) = 4.067, *p* = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, *t*(33) = -1,802, *p* = 0.185.
+
+##### Reaction time
+The results of reaction times of matchness trials showed similar pattern as the *d* prime data.
+
+```{r 2_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+df2_RT_anova <- afex::aov_ez('Subject','RT_m',df2.v.rt_m, within = c('Matchness','Valence'))
+df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print.afex_aov()
+
+# match trials
+df2.v.rt_m1 <- df2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
+
+df2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df2.v.rt_m1,     # using afex's function 
+                                  within = c('Valence'))
+df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print.afex_aov()
+
+posthoc_2_rt <- emmeans::emmeans(df2_RT_anova_m, "Valence") # compare each valence for both self and other condition
+# pairs(posthoc_2_rt)
+
+# Mismatch trials
+df2.v.rt_m2 <- df2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
+  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup()
+
+df2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df2.v.rt_m2,     # using afex's function 
+                                  within = c('Valence'))
+df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print.afex_aov()
+
+```
+We found interaction between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (548 $\pm$ 9.4) were responded faster than Neutral-Person (582 $\pm$ 10.9), (*t*(33) = -3.95, *p* = 0.0011) and Bad Person (582 $\pm$ 10.2), *t*(33) = -3.9, *p* = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (*t*(33) = -0.01, *p* = 0.999).  For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).
+
+#### BGLMM
+
+##### Signal detection theory analysis of accuracy
+We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+
+Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
+
+```{r 2_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp2_sdt_m1 <- fun_sdt_val('2')
+summary(exp2_sdt_m1)    # check summary
+#pp_check(exp1c_sdt_m1)   # posterior predictive check
+
+hypothesis(exp2_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 1
+hypothesis(exp2_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
+hypothesis(exp2_sdt_m1, "ValenceNeutral:ismatch < ValenceBad:ismatch")   # 0.95
+hypothesis(exp2_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.69
+hypothesis(exp2_sdt_m1, "ValenceGood > ValenceBad")      # 0.82
+hypothesis(exp2_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.61
+
+# extract the population level parameters
+# criteria
+exp2_sdt_p <- fun_plot_sdt_val(exp2_sdt_m1)
+```
+##### Reaction times
+
+
+```{r 2_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp2_rt_m1 <- fun_rt_val('2')
+
+#plot(exp1b_rt_m1, "b_")
+summary(exp2_rt_m1)  # n
+#pp_check(exp1c_rt_m1)
+
+hypothesis(exp2_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp2_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 1
+hypothesis(exp2_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.66
+hypothesis(exp2_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+exp2_rt_p <- fun_plot_rt_val(exp2_rt_m1)
+```
+
+
+```{r plot-exp2-BGLM, fig.cap="Exp2: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
+library(patchwork)
+exp2_sdt_p[[1]] + exp2_sdt_p[[2]] + exp2_sdt_p[[3]] + exp2_sdt_p[[4]] + exp2_rt_p[[1]] + exp2_rt_p[[2]] + exp2_rt_p[[3]] + exp2_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+```
+
+We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = .75$). We focused on matched trials only, and compared different conditions: Good () is not faster than the neutral (), $P_{PosteriorComparison} = .5$, it was faster than the Bad condition (), $P_{PosteriorComparison} = .88$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .95$. However, the mismatched trials are largely overlapped. 
+
+### HDDM
+We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \@ref(fig:plot-exp1c
+-HDDM))).
+
+```{r plot-exp2-HDDM, fig.cap="Exp2: Results of HDDM.",  fig.height=4.5, fig.width=9, warning=FALSE}
+df2.hddm.group.trace <- readr::read_csv(here::here('HDDM','df2_group_traces.csv')) # this will keep the '(' and ')' in the column name
+
+params_p <- df2.hddm.group.trace %>%
+  dplyr::mutate(sample = 1:nrow(.)) %>%
+  dplyr::select(chain, sample, contains('Match') | contains('Mismatch')) %>%
+  tidyr::pivot_longer(.,`a(Match.Bad)`:`t(Mismatch.Neutral)`, names_to = 'conditions', values_to = 'value') %>%
+  tidyr::separate(., conditions, into = c('v1', 'valence'), sep= '[.]') %>%       # split into two part
+  tidyr::separate(., v1, into = c('param', 'matchness'), sep = '[(]') %>%         # further split the first half into two part
+  dplyr::mutate(valence = stringr::str_sub(.$valence, start = 1, end = -2)) %>%   # remove the last two elements ') ' from the strings
+  dplyr::arrange(., param) %>%
+  tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
+
+params_p %>% 
+  dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
+  geom_point() + 
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(~ matchness) +
+  ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
+  xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
+  theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
+```
+
+## Discussion
+In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valence association. Moreover, with a cross-task analysis, we didn’t found evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
+These findings suggested that the facilitation effect of positive moral valence is robust and not affected by task. This robust effect detected by the associative learning is unexpected. 
