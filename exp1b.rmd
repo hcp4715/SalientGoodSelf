@@ -42,7 +42,7 @@ posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each va
 ```
 Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.87 $\pm$ 0.102) was with greater *d* prime than Neutral condition (1.44 $\pm$ 0.101, *t*(51) = 5.945, *p* < 0.001). We also found that the Bad-Person condition (1.67 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(51) = 3.132, *p* = 0.008). There Good-person condition was also slightly greater than the bad condition, *t*(51) = 2.265, *p* = 0.0701.
 
-##### Reaction time
+##### Reaction times
 
 ```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m, within = c('Matchness','Valence'))

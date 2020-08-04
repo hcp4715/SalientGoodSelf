@@ -88,7 +88,7 @@ Schooler, L. J., Shiffrin, R. M., & Raaijmakers, J. G. W. (2001). A Bayesian mod
 We reported results from eleven experiments. In first set of experiments, we found that shapes associated with morally positive person label were responded faster and more accurately. In the second set of experiments, we explore the potential role of good self in perceptual matching task and added one more independent variable, we found that the effect was mainly on good self. In the third part we tested whether the morality will automatically binds with person-relevance. Finally, we explore the correlation between behavioral task and questionnaire scores.
 
 # Disclosures
-We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis. To have a better overview of the effect reported in this series experiment, we reported the synthesized results in the main text and individual experiment in supplementary materials. 
+We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.  
 
 All the experiments reported were not pre-registered. Most experiments (1a ~ 6b, except experiment 3b) reported in the current study were first finished between 2014 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from two experiments (experiment 7a, 7b) that were reported in @Hu_2020_GoodSelf (See Table S1 for overview of these experiments). 
 
@@ -261,7 +261,6 @@ fun_plot_rt_val <- function(m_rt) {
 
 ```
 
-
   <!-- A general method part describing experimental design and data analysis -->
 ```{r child = "general_method.rmd"}
 ```
@@ -279,6 +278,9 @@ In this part, we report five experiments that aimed at testing whether the insta
 ```
 
 ```{r child = "exp2.rmd"}
+```
+
+```{r child = "exp6a.rmd"}
 ```
 
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}

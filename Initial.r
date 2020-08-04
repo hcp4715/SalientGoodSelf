@@ -138,7 +138,7 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   
   # this does the summary. For each group's data frame, return a vector with
   # N, mean, and sd
-  datac <- ddply(data,groupvars, .drop=.drop,
+  datac <- plyr::ddply(data,groupvars, .drop=.drop,
                  .fun = function(xx,col){
                    c(N    = length2(xx[[col]],na.rm=na.rm),
                      mean = mean(xx[[col]],na.rm=na.rm),
