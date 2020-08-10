@@ -123,10 +123,10 @@ hypothesis(exp6a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral
 hypothesis(exp6a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
 hypothesis(exp6a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
 
-exp1b_rt_p <- fun_plot_rt_val(exp6a_rt_m1)
+exp6a_rt_p <- fun_plot_rt_val(exp6a_rt_m1)
 ```
 
-```{r plot-exp1b-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
+```{r plot-exp6a-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp1b_sdt_p[[1]] + exp1b_sdt_p[[2]] + exp1b_sdt_p[[3]] + exp1b_sdt_p[[4]] + exp1b_rt_p[[1]] + exp1b_rt_p[[2]] + exp1b_rt_p[[3]] + exp1b_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+exp6a_sdt_p[[1]] + exp6a_sdt_p[[2]] + exp6a_sdt_p[[3]] + exp6a_sdt_p[[4]] + exp6a_rt_p[[1]] + exp6a_rt_p[[2]] + exp6a_rt_p[[3]] + exp6a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
 ```

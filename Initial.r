@@ -506,3 +506,96 @@ Val_plot_NHST <- function(df.rt, df.d){
   return(p_df_sum)
 }
 
+
+Val_id_plot_NHST <- function(df.rt, df.d){
+  df.plot <- df.rt %>%
+    dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
+    dplyr::rename(RT = RT_m) %>%
+    dplyr::full_join(., df.d) %>%  
+    tidyr::pivot_longer(., cols = c(RT, dprime), 
+                        names_to = 'DVs', 
+                        values_to = "value") %>% # to longer format
+    dplyr::mutate(Valence =factor(Valence, levels = c('Good','Neutral', 'Bad')),
+                  Identity = factor(Identity, levels = c("Self", 'Other')),
+                  DVs = factor(DVs, levels = c('RT', 'dprime')),
+                  # create an extra column for plotting the individual data cross different conditions.
+                  Conds = mosaic::derivedFactor("0.8" = (Valence == 'Good' & Identity == 'Self'),
+                                                "1.2" = (Valence == 'Good' & Identity == 'Other'),
+                                                "1.8" = (Valence == 'Neutral' & Identity == 'Self'),
+                                                "2.2" = (Valence == 'Neutral' & Identity == 'Other'),
+                                                "2.8" = (Valence == 'Bad' & Identity == 'Self'),
+                                                "3.2" = (Valence == 'Bad' & Identity == 'Other'),
+                                                method ="first", .default = NA),
+                  Conds = as.numeric(as.character(Conds)),
+    ) 
+  
+  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.05) # add gitter to x
+
+  levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+                            "dprime"=expression(paste(italic("d"), ' prime')))
+  
+  df.plot.sum_p <- summarySE(df.plot, measurevar = "value", groupvars = c('Valence', 'Identity',"DVs")) %>%
+    dplyr::mutate(Val_num = ifelse(Valence == 'Good', 1,
+                                   ifelse(Valence == 'Neutral', 2, 3)))
+  
+  pd1 <- position_dodge(0.8)
+  scaleFUN <- function(x) sprintf("%.2f", x)
+  scales_y <- list(
+    RT = scale_y_continuous(limits = c(400, 900)),
+    dprime = scale_y_continuous(labels=scaleFUN)
+  )
+  
+  p_df_sum <- df.plot  %>% # dplyr::filter(DVs== 'RT') %>%
+    ggplot(., aes(x = Valence, y = value)) +
+    geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+              linetype = 1, size = 0.8, colour = "#000000", alpha = 0.03) + 
+    geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(Identity)),   # plot individual points
+               #colour = "#000000",
+               
+               size = 3, shape = 20, alpha = 0.15) +
+    geom_line(data = df.plot.sum_p, aes(x = as.numeric(Valence), # plot the group means  
+                                        y = value, 
+                                        group = Identity, 
+                                        colour = as.factor(Identity),
+    ), 
+    linetype = 1, position = pd1, size = 2)+
+    geom_point(data = df.plot.sum_p, aes(x = as.numeric(Valence), # group mean
+                                         y = value, 
+                                         group = Identity, 
+                                         colour = as.factor(Identity),
+    ), 
+    shape = 18, position = pd1, size = 6) +
+    geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(Valence),  # group error bar.
+                                            y = value, group = Identity, 
+                                            colour = as.factor(Identity),
+                                            ymin = value- 1.96*se, 
+                                            ymax = value+ 1.96*se), 
+                  width = .05, position = pd1, size = 2, alpha = 0.75) +
+    scale_colour_brewer(palette = "Dark2") +
+    scale_x_continuous(breaks=c(1, 2, 3),
+                       labels=c("Good", "Neutral", "Bad")) +
+    scale_fill_brewer(palette = "Dark2") +
+    #ggtitle("A. Matching task") +
+    theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) +
+    facet_wrap( ~ DVs,
+                scales = "free_y", nrow = 1,
+                labeller = label_parsed)
+  return(p_df_sum)
+}

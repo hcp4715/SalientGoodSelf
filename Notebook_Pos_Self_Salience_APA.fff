@@ -86,6 +86,41 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6a-dprime-rt-1.pdf}
+\caption{\label{fig:ex6a-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp6a-BGLM-1.pdf}
+\caption{\label{fig:plot-exp6a-BGLM}Exp1b: Results of Bayesian GLM analysis.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex3a-dprime-rt-1.pdf}
+\caption{\label{fig:ex3a-dprime-rt}RT and \emph{d} prime of Experiment 3a.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp3a-BGLM-1.pdf}
+\caption{\label{fig:plot-exp3a-BGLM}Exp3a: Results of Bayesian GLM analysis.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp3a-HDDM-1.pdf}
+\caption{\label{fig:plot-exp3a-HDDM}Exp3a: Results of HDDM.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-all-effect-1.pdf}
 \caption{\label{fig:plot-all-effect}Effect size (Cohen's \emph{d}) of Valence.}
 \end{figure*}

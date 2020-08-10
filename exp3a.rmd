@@ -67,6 +67,7 @@ df3a_RT_anova <- afex::aov_ez('Subject','RT_m',df3a.v.rt_m,     # using afex's f
                                   within = c('Matchness','Identity','Valence'))
 df3a_RT_anova_apa <- df3a_RT_anova %>% papaja::apa_print.afex_aov()
 ```
+
 We found interaction between Matchness and Valence (`r df3a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and nonmatch trials separately, as in previous experiments.
 
 ```{r 3a_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -151,7 +152,23 @@ hypothesis(exp3a_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  
 
 # extract the population level parameters
 # criteria
-exp3a_sdt_p <- fun_plot_sdt_val(exp3a_sdt_m1)
+exp3a_sdt_p <- exp3a_sdt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
+                ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+                Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+                Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
+  #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
+  #geom_line(alpha = .01) +
+  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+  stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line"
+               #,position=position_dodge(width = 0.1)
+               ) +
+  #scale_fill_brewer() +
+  facet_grid(~ ismatch) +
+  theme_classic()
 ```
 We found that the *d* prime is greater when shapes were associated with good self condition than with neutral self or bad self, but shapes associated with bad self and neutral self didn't show differences. comparing the self vs other under three condition revealed that shapes associated with good self is greater than with good other, but with a weak evidence. In contrast, for both neutral and bad valence condition, shapes associated with other had greater *d* prime than with self.
 
@@ -177,31 +194,36 @@ em <- emmeans::emmeans(rg, 'ismatch')
 summary(em, point.est = median)
 emmeans::joint_tests(exp3a_rt_m1)
 
-exp3a_rt_m1 %>%
+exp3a_rt_p <- exp3a_rt_m1 %>%
   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
   tidybayes::gather_emmeans_draws() %>%
-  ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
+              Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+              Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  dplyr::rename(log_RT = .value) %>%
+  ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
-  tidybayes::geom_eye() +
-  stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
+  tidybayes::stat_halfeye() +
+  ggplot2::stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
   #scale_fill_brewer() +
   facet_grid(~ ismatch) +
-  theme_light()
+  theme_classic()
 
-hypothesis(exp3a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
-hypothesis(exp3a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
-hypothesis(exp3a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
-hypothesis(exp3a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+emm1 <- emmeans::emmeans(exp3a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
+emm1$contrasts %>% summary(infer = TRUE, point.est = mean)
 
-exp3a_rt_p <- fun_plot_rt_val(exp3a_rt_m1)
+emm2 <- emmeans::emmeans(exp3a_rt_m1, specs = pairwise ~ Valence | Identity | ismatch)
+emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
+
 ```
 
 ```{r plot-exp3a-BGLM, fig.cap="Exp3a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp3a_sdt_p[[1]] + exp3a_sdt_p[[2]] + exp3a_sdt_p[[3]] + exp3a_sdt_p[[4]] + exp3a_rt_p[[1]] + exp3a_rt_p[[2]] + exp3a_rt_p[[3]] + exp3a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+exp3a_sdt_p + exp3a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
-In reaction times, we found that same trends in the match trials: while the shapes associated with good self if greater than with good other, the direction is reversed for neutral and negative condition.
+
+In reaction times, we found that same trends in the match trials as in the *d* prime: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp3a-BGLM) 
 
 ### HDDM
 
@@ -249,5 +271,4 @@ params_p %>%
     ) 
 ```
 
-We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \@ref(fig:plot-exp1c
--HDDM))).
+We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \@ref(fig:plot-exp3a-HDDM))).

@@ -259,6 +259,51 @@ fun_plot_rt_val <- function(m_rt) {
     return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
 }
 
+fun_sdt_val_id <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  
+  m <- df %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
+                Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  brms::brm(saymatch ~ 0 + Valence:Identity + Valence:Identity:ismatch + 
+              (0 + Valence:Identity + Valence:Identity:ismatch | Subject),
+            family = bernoulli(link="probit"),
+            data = .,
+            control = list(adapt_delta = .99),
+            iter = 4000,
+            thin = 2,
+            cores = parallel::detectCores(),
+            file = here::here(m_name))
+  return(m)
+}
+
+# define a function to run the RT GLMM for all exp with Matchness * Valence design
+fun_rt_val_id <- function(exp_name) {
+  df_name <- paste('df', exp_name, '.v', sep = '')
+  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
+  df <- get(df_name)  # get the data by string
+  m <- df %>%
+    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+    dplyr::filter(ACC == 1) %>%
+    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
+                  Identity = factor(Identity, levels=c('Self', 'Other'))) %>%
+    brms::brm(RT_sec ~ ismatch*Valence*Identity + (ismatch*Valence*Identity | Subject),
+              family = shifted_lognormal(),
+              data = ., control = list(adapt_delta = .99),
+              iter = 4000,
+              thin = 2,
+              cores = parallel::detectCores(),
+              file = here::here(m_name))
+  return(m)
+}
+
 ```
 
   <!-- A general method part describing experimental design and data analysis -->
@@ -281,6 +326,14 @@ In this part, we report five experiments that aimed at testing whether the insta
 ```
 
 ```{r child = "exp6a.rmd"}
+```
+
+
+## Part 2: interaction between valence and identity
+
+In this part, we report four experiments that aimed at testing whether the positivity effect found in the previous experiment can be modulated by the self-referential processing.
+
+```{r child = "exp3a.rmd"}
 ```
 
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}
