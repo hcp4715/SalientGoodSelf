@@ -4,7 +4,7 @@ To examine the modulation effect of positive valence was an intrinsic, self-refe
 ### Method
 
 #### Participants
-`r df3a.T.basic$N` college students (`r df3a.T.basic$Nf` female, age = `r df3a.T.basic$Age_mean` $\pm$ `r df3a.T.basic$Age_sd`) participated in experiment 3a. All of them were right-handed, and all had normal or correted-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. One female and one male student did not finish the experiment, and `r nrow(df3a.excld.sub)` participants' data were excluded from analysis because less than 60% overall accuracy, remains `r df3a.v.basic$N` participants (`r df3a.v.basic$Nf` female, age = `r df3a.v.basic$Age_mean` $\pm$ `r df3a.v.basic$Age_sd`).
+`r df3a.T.basic$N` college students (`r df3a.T.basic$Nf` female, age = `r df3a.T.basic$Age_mean` $\pm$ `r df3a.T.basic$Age_sd`) participated in experiment 3a. All of them were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. One female and one male student did not finish the experiment, and `r nrow(df3a.excld.sub)` participants' data were excluded from analysis because less than 60% overall accuracy, remains `r df3a.v.basic$N` participants (`r df3a.v.basic$Nf` female, age = `r df3a.v.basic$Age_mean` $\pm$ `r df3a.v.basic$Age_sd`).
 
 #### Design
 Study 3a combined moral valence with self-relevance, hence the experiment has a   2 × 3 × 2 within-subject design. The first variable was self-relevance, include two levels: self-relevance vs. stranger-relevance; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs. nonmatch.
@@ -52,7 +52,7 @@ df3a_dprime_o_anova <- df3a.v.dprime_l %>%
   dplyr::filter(Identity == 'Other') %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
 df3a_dprime_o_anova_apa <- df3a_dprime_o_anova %>% papaja::apa_print.afex_aov()
-posthoc_3a_d_o <- emmeans::emmeans(df3a_dprime_s_anova, "Valence")
+posthoc_3a_d_o <- emmeans::emmeans(df3a_dprime_o_anova, "Valence")
 pairs(posthoc_3a_d_o)
 
 ```
@@ -223,7 +223,7 @@ library(patchwork)
 exp3a_sdt_p + exp3a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
-In reaction times, we found that same trends in the match trials as in the *d* prime: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp3a-BGLM) 
+In reaction times, we found that same trends in the match trials as in the RT: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp3a-BGLM) 
 
 ### HDDM
 
