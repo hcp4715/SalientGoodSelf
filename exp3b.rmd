@@ -23,15 +23,13 @@ Same as experiment 3a.
 ### Results
 
 #### NHST
-```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
-#rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-#Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
+```{r 'exp3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
 
 Val_id_plot_NHST(df.rt = df3b.v.rt_m, df.d = df3b.v.dprime_l)
 
 ```
 
-Figure \@ref(fig:ex3a-dprime-rt) shows *d* prime and reaction times of experiment 3a. Less than 5% correct trials with less than 200ms reaction times were excluded.
+Figure \@ref(fig:exp3b-dprime-rt) shows *d* prime and reaction times of experiment 3b. Less than 5% correct trials with less than 200ms reaction times were excluded.
 
 ##### d prime
 
@@ -122,7 +120,7 @@ summary(exp3b_sdt_m1)    # check summary
 # check fixed and varying effect using bayestestR
 bayestestR::describe_posterior(
   exp3b_sdt_m1,
-  effects = "all",
+  effects = "fixed",
   component = "all",
   test = c("p_direction", "p_significance"),
   centrality = "all"
@@ -130,27 +128,27 @@ bayestestR::describe_posterior(
 #pp_check(exp3b_sdt_m1)   # posterior predictive check
 
 # d-prime
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentitySelf:ValenceNeutral:ismatch")  # 1
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentitySelf:ValenceBad:ismatch")  # 1
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch> IdentitySelf:ValenceBad:ismatch")  # .55
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood:ismatch> IdentityOther:ValenceNeutral:ismatch")  # .85
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood:ismatch> IdentityOther:ValenceBad:ismatch ")  # .71
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceNeutral:ismatch> IdentityOther:ValenceBad:ismatch")  # .27
+hypothesis(exp3b_sdt_m1, "ValenceGood:IdentitySelf:ismatch> ValenceNeutral:IdentitySelf:ismatch")    # 1
+hypothesis(exp3b_sdt_m1, "ValenceGood:IdentitySelf:ismatch> ValenceBad:IdentitySelf:ismatch")        # 1
+hypothesis(exp3b_sdt_m1, "ValenceNeutral:IdentitySelf:ismatch> ValenceBad:IdentitySelf:ismatch")     # .16
+hypothesis(exp3b_sdt_m1, "ValenceGood:IdentityOther:ismatch> ValenceNeutral:IdentityOther:ismatch")  # .44
+hypothesis(exp3b_sdt_m1, "ValenceGood:IdentityOther:ismatch> ValenceBad:IdentityOther:ismatch ")     # .32
+hypothesis(exp3b_sdt_m1, "ValenceNeutral:IdentityOther:ismatch> ValenceBad:IdentityOther:ismatch")    # .34
 
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentityOther:ValenceGood:ismatch")  # .73
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch> IdentityOther:ValenceNeutral:ismatch")  # .05
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceBad:ismatch> IdentityOther:ValenceBad:ismatch")  # .0
+hypothesis(exp3b_sdt_m1, "ValenceGood:IdentitySelf:ismatch> ValenceGood:IdentityOther:ismatch")  # .47
+hypothesis(exp3b_sdt_m1, "ValenceNeutral:IdentitySelf:ismatch> ValenceNeutral:IdentityOther:ismatch")  # .00
+hypothesis(exp3b_sdt_m1, "ValenceBad:IdentitySelf:ismatch> ValenceBad:IdentityOther:ismatch")  # .0
 
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral > IdentitySelf:ValenceBad")  # .49
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceNeutral")  # .68
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceBad")  # .92
-hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceNeutral> IdentityOther:ValenceBad")  # .8
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral > IdentitySelf:ValenceBad")  # .49
+#hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceNeutral")  # .68
+#hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceBad")  # .92
+#hypothesis(exp3b_sdt_m1, "IdentityOther:ValenceNeutral> IdentityOther:ValenceBad")  # .8
 
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
-hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
+#hypothesis(exp3b_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
 
 # extract the population level parameters
 # criteria
@@ -159,7 +157,7 @@ exp3b_sdt_p <- exp3b_sdt_m1 %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
-                Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
@@ -177,14 +175,14 @@ We found that the *d* prime is greater when shapes were associated with good sel
 ##### Reaction time
 
 ```{r 3b_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-exp_name <- '3a'
+exp_name <- '3b'
 exp3b_rt_m1 <- fun_rt_val_id(exp_name)
 
-summary(exp3b_rt_m1)  # n
+#summary(exp3b_rt_m1)  # n
 
 bayestestR::describe_posterior(
   exp3b_rt_m1,
-  effects = "all",
+  effects = "fixed",
   component = "all",
   test = c("p_direction", "p_significance"),
   centrality = "all"
@@ -200,7 +198,7 @@ exp3b_rt_p <- exp3b_rt_m1 %>%
   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
-              Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
               Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   dplyr::rename(log_RT = .value) %>%
   ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
@@ -273,4 +271,6 @@ params_p %>%
     ) 
 ```
 
-We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \@ref(fig:plot-exp3b-HDDM))).
+We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that, similar to experiment 3a, the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person, but only for the self-referential condition. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation, and this effect also exist only for the  self-referential condition. 
+
+Interestingly, we found that  in both self-referential and other-referential conditions, the shapes associated bad valence have higher drift rate and higher boundary separation. which might suggest that the shape associated with bad stimuli might be priortized in the non-match trials (see figure \@ref(fig:plot-exp3b-HDDM))).

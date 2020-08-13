@@ -115,8 +115,8 @@ fun_sdt_val <- function(exp_name) {
                 saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
                                     (Matchness == 'Mismatch' & ACC == 0), 1, 0),
                 Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-  brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
-              (0 + Valence + Valence:ismatch | Subject),
+  brms::brm(saymatch ~ 0 + Valence + ismatch:Valence + 
+              (0 + Valence + ismatch:Valence | Subject),
             family = bernoulli(link="probit"),
             data = .,
             control = list(adapt_delta = .99),
@@ -194,7 +194,7 @@ fun_rt_val <- function(exp_name) {
     dplyr::filter(ACC == 1) %>%
     dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
                   Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-    brms::brm(RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject),
+    brms::brm(RT_sec ~ ismatch*Valence + (ismatch*Valence | Subject),
               family = shifted_lognormal(),
               data = ., control = list(adapt_delta = .99),
               iter = 4000,
@@ -271,8 +271,8 @@ fun_sdt_val_id <- function(exp_name) {
                                     (Matchness == 'Mismatch' & ACC == 0), 1, 0),
                 Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
-  brms::brm(saymatch ~ 0 + Valence:Identity + Valence:Identity:ismatch + 
-              (0 + Valence:Identity + Valence:Identity:ismatch | Subject),
+  brms::brm(saymatch ~ 0 + Identity:Valence + ismatch:Identity:Valence + 
+              (0 + Identity:Valence + ismatch:Identity:Valence | Subject),
             family = bernoulli(link="probit"),
             data = .,
             control = list(adapt_delta = .99),
@@ -294,7 +294,7 @@ fun_rt_val_id <- function(exp_name) {
     dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
                   Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
                   Identity = factor(Identity, levels=c('Self', 'Other'))) %>%
-    brms::brm(RT_sec ~ ismatch*Valence*Identity + (ismatch*Valence*Identity | Subject),
+    brms::brm(RT_sec ~ ismatch*Identity*Valence + (ismatch*Identity*Valence | Subject),
               family = shifted_lognormal(),
               data = ., control = list(adapt_delta = .99),
               iter = 4000,
@@ -328,13 +328,29 @@ In this part, we report five experiments that aimed at testing whether the insta
 ```{r child = "exp6a.rmd"}
 ```
 
+# Part 2: interaction between valence and identity
 
-## Part 2: interaction between valence and identity
-
-In this part, we report four experiments that aimed at testing whether the positivity effect found in the previous experiment can be modulated by the self-referential processing.
+In this part, we report two experiments that aimed at testing whether the moral valence effect found in the previous experiment can be modulated by the self-referential processing.
 
 ```{r child = "exp3a.rmd"}
 ```
+
+```{r child = "exp3b.rmd"}
+```
+
+```{r child = "exp6b.rmd"}
+```
+
+# Part 3: Implicit binding between valence and identity
+
+In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevantness will eliminate the effect observed in previous experiment. 
+
+```{r child = "exp4a.rmd"}
+```
+
+```{r child = "exp4b.rmd"}
+```
+
 
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}
 ## exclude the repeating subjects

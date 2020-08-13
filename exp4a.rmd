@@ -1,8 +1,5 @@
 ## Experiment 4a
-n study 1-3 participants made explicit judgments about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf. Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
-
-In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgments to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the intrinsic binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
-
+In part two (experiment 3a and 3b), participants learned the association between self and moral valence directly. In Experiment 4a, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf. @Sui_2012_JEPHPP). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
 
 ### Method
 #### Participants
@@ -10,7 +7,7 @@ In study 4b, we changed the role of valence and identity in task. In this experi
 
 #### Design
 As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, neutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
-However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
+However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embedding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
 
 #### Stimuli
 2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
@@ -117,8 +114,8 @@ For the nonmatch trials, we didn't found any strong effect: identity, `r df4a_RT
 ##### Signal detection theory analysis of accuracy
 
 ```{r 4a_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-
-exp4a_sdt_m1 <- fun_sdt_val_id('4a')
+exp_name <- '4a'
+exp4a_sdt_m1 <- fun_sdt_val_id(exp_name)
 
 summary(exp4a_sdt_m1)    # check summary
 
@@ -133,27 +130,27 @@ bayestestR::describe_posterior(
 #pp_check(exp4a_sdt_m1)   # posterior predictive check
 
 # d-prime
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentitySelf:ValenceNeutral:ismatch")  # 1
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentitySelf:ValenceBad:ismatch")  # 1
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch> IdentitySelf:ValenceBad:ismatch")  # .55
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch> IdentityOther:ValenceNeutral:ismatch")  # .85
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch> IdentityOther:ValenceBad:ismatch ")  # .71
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral:ismatch> IdentityOther:ValenceBad:ismatch")  # .27
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceNeutral:ismatch")  # .82
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceBad:ismatch")  # .75
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentitySelf:ValenceBad:ismatch")  # .44
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceNeutral:ismatch")  # .11
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceBad:ismatch")  # .07
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral:ismatch > IdentityOther:ValenceBad:ismatch")  # .39
 
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch> IdentityOther:ValenceGood:ismatch")  # .73
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch> IdentityOther:ValenceNeutral:ismatch")  # .05
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad:ismatch> IdentityOther:ValenceBad:ismatch")  # .0
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentityOther:ValenceGood:ismatch")  # 1
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentityOther:ValenceNeutral:ismatch")  # 1
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad:ismatch > IdentityOther:ValenceBad:ismatch")  # 1
 
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentitySelf:ValenceBad")  # .49
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceNeutral")  # .68
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceBad")  # .92
-hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral> IdentityOther:ValenceBad")  # .8
-
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
-hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentitySelf:ValenceBad")  # .49
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceNeutral")  # .68
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceBad")  # .92
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral> IdentityOther:ValenceBad")  # .8
+# 
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
 
 # extract the population level parameters
 # criteria
@@ -162,7 +159,7 @@ exp4a_sdt_p <- exp4a_sdt_m1 %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
-                Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
@@ -187,7 +184,7 @@ summary(exp4a_rt_m1)  # n
 
 bayestestR::describe_posterior(
   exp4a_rt_m1,
-  effects = "all",
+  effects = "fixed",
   component = "all",
   test = c("p_direction", "p_significance"),
   centrality = "all"
@@ -203,7 +200,7 @@ exp4a_rt_p <- exp4a_rt_m1 %>%
   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
-              Valence = factor(Valence, levels = c('Bad', 'Neutral',  'Good')),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
               Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   dplyr::rename(log_RT = .value) %>%
   ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
@@ -247,12 +244,13 @@ params_p <- df4a.hddm.group.trace %>%
 
 params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
-                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
-  ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness),
+                identity = factor(identity, levels = c('Self', 'Other'))) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = identity, color = identity)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(identity ~ matchness) +
+  facet_grid(matchness ~ valence) +
   #facet_grid(~ matchness) +
   ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
   xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +

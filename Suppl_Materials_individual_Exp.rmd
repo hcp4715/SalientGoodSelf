@@ -1591,7 +1591,7 @@ Experiment 6b was conducted to study the neural correlates of the prioritization
 ## Method
 
 ### Participants
-`r df6b_d1.T.basic$N` college students (`r df6b_d1.T.basic$Nf` female, age = `r df6b_d1.T.basic$Age_mean` $\pm$ `r df6b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df6b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy, remaining `r df6b_d1.v.basic$N` participants (`r df6b_d1.v.basic$Nf` female, age = `r df6b_d1.v.basic$Age_mean` $\pm$ `r df6b_d1.v.basic$Age_sd`). For day 2's data, one participant dropped out, leaving 22 participants  (`r df6b_d2.v.basic$Nf` female, age = `r df6b_d2.v.basic$Age_mean` $\pm$ `r df6b_d2.v.basic$Age_sd`), all of them has overall accuracy higher than 60%.
+`r df6b_d1.T.basic$N` college students (`r df6b_d1.T.basic$Nf` female, age = `r df6b_d1.T.basic$Age_mean` $\pm$ `r df6b_d1.T.basic$Age_sd`) participated the current study, all of them were recruited from Tsinghua University in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, `r nrow(df6b_d1.excld.sub)` participant was excluded from the current analysis because of lower than 60% overall accuracy, remaining `r df6b_d1.v.basic$N` participants (`r df6b_d1.v.basic$Nf` female, age = `r df6b_d1.v.basic$Age_mean` $\pm$ `r df6b_d1.v.basic$Age_sd`). For day 2's data, one participant dropped out, leaving 22 participants  (`r df6b_d2.v.basic$Nf` female, age = `r df6b_d2.v.basic$Age_mean` $\pm$ `r df6b_d2.v.basic$Age_sd`), all of them has overall accuracy higher than 60%.
 
 ### Experimental design
 The experimental design of this experiment is same as experiment 3:  a 2 × 3 × 2 within-subject design with self-relevance (self-relevant vs. other-relevant), moral valence (good, neutral, and bad) and matchness between shape and label (match vs. mismatch) as within-subject variables. 
@@ -1777,7 +1777,7 @@ df6b_d2_dprime_o_anova_apa <- df6b_d2_dprime_o_anova %>% papaja::apa_print.afex_
 #### *d* prime
 There was evidence for the interaction between identity and valence, `r df6b_d2_dprime_anova_apa$full$Identity_Valence`.  We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, `r df6b_d2_dprime_s_anova_apa$full$Valence`. Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), *t*(21) = 2.98, *p* = 0.0189, and bad-self condition (2.43, SE = 0.199), *t*(21) = 3.93, *p* = 0.0021. But there was no significant difference between bad-self and neutral-self, *t*(21) = -0.097, *p* = 0.995. For other trials, there was no significant effect of valence, `r df6b_d2_dprime_o_anova_apa$full$Valence`.
 
-```{r 5b_d2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r 6b_d2_RT_match, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 df6b_d2.v.rt_m <- df6b_d2.v %>%
   dplyr::filter(ACC == 1) %>%
@@ -1795,7 +1795,7 @@ df6b_d2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6b_d2.v.rt_m1,     # using
                                   within = c('Identity','Valence'))
 df6b_d2_RT_anova_m_apa <- df6b_d2_RT_anova_m %>% papaja::apa_print.afex_aov()
 
-posthoc_5b_d2_rt <- emmeans::emmeans(df6b_d2_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
+posthoc_6b_d2_rt <- emmeans::emmeans(df6b_d2_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_5b_d2_rt)
 
 df6b_d2_RT_anova_m_s <- df6b_d2.v %>%
@@ -1809,7 +1809,7 @@ df6b_d2_RT_anova_m_s <- df6b_d2.v %>%
 
 df6b_d2_RT_anova_m_s_apa <- df6b_d2_RT_anova_m_s %>% papaja::apa_print.afex_aov()
 
-posthoc_5b_d2_rt_s <- emmeans::emmeans(df6b_d2_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
+posthoc_6b_d2_rt_s <- emmeans::emmeans(df6b_d2_RT_anova_m_s, 'Valence') # compare each valence for both self and other condition
 # pairs(posthoc_5b_d2_rt_s)
 
 ### For matched, other trials
