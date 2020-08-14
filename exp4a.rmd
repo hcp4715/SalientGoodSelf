@@ -23,7 +23,7 @@ Same as experiment 3a.
 ### Results
 
 #### NHST
-```{r 'exp4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+```{r 'exp4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 #rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 #Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
 
@@ -117,7 +117,7 @@ For the nonmatch trials, we didn't found any strong effect: identity, `r df4a_RT
 exp_name <- '4a'
 exp4a_sdt_m1 <- fun_sdt_val_id(exp_name)
 
-summary(exp4a_sdt_m1)    # check summary
+#summary(exp4a_sdt_m1)    # check summary
 
 # check fixed and varying effect using bayestestR
 bayestestR::describe_posterior(
@@ -180,7 +180,7 @@ We found that the *d* prime is greater when shapes were associated with good sel
 exp_name <- '4a'
 exp4a_rt_m1 <- fun_rt_val_id(exp_name)
 
-summary(exp4a_rt_m1)  # n
+# summary(exp4a_rt_m1)  # n
 
 bayestestR::describe_posterior(
   exp4a_rt_m1,

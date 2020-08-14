@@ -343,7 +343,7 @@ In this part, we report two experiments that aimed at testing whether the moral 
 
 # Part 3: Implicit binding between valence and identity
 
-In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevantness will eliminate the effect observed in previous experiment. 
+In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance will eliminate the effect observed in previous experiment. 
 
 ```{r child = "exp4a.rmd"}
 ```

@@ -23,7 +23,7 @@ Same as experiment 3a.
 ### Results
 
 #### NHST
-```{r 'exp4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+```{r 'exp4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
 #rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 #Mplots(expName = 'exp4b', df4b.v.dprime_l,rtdata)
 
@@ -130,16 +130,16 @@ bayestestR::describe_posterior(
 #pp_check(exp4b_sdt_m1)   # posterior predictive check
 
 # d-prime
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceNeutral:ismatch")  # .82
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceBad:ismatch")  # .75
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentitySelf:ValenceBad:ismatch")  # .44
-hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceNeutral:ismatch")  # .11
-hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceBad:ismatch")  # .07
-hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceNeutral:ismatch > IdentityOther:ValenceBad:ismatch")  # .39
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceNeutral:ismatch")  # .98
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceBad:ismatch")  # 1
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentitySelf:ValenceBad:ismatch")  # .86
+hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceNeutral:ismatch")  # .91
+hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceBad:ismatch")  # .91
+hypothesis(exp4b_sdt_m1, "IdentityOther:ValenceNeutral:ismatch > IdentityOther:ValenceBad:ismatch")  # .65
 
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentityOther:ValenceGood:ismatch")  # 1
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentityOther:ValenceNeutral:ismatch")  # 1
-hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceBad:ismatch > IdentityOther:ValenceBad:ismatch")  # 1
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentityOther:ValenceGood:ismatch")  # .92
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentityOther:ValenceNeutral:ismatch")  # .67
+hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceBad:ismatch > IdentityOther:ValenceBad:ismatch")  # .29
 
 # hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
 # hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
@@ -150,7 +150,7 @@ hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceBad:ismatch > IdentityOther:Valenc
 # 
 # hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
 # hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
-# hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
+# hypothesis(exp4b_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .29
 
 # extract the population level parameters
 # criteria
@@ -180,7 +180,7 @@ We found that the *d* prime is greater when shapes were associated with good sel
 exp_name <- '4b'
 exp4b_rt_m1 <- fun_rt_val_id(exp_name)
 
-summary(exp4b_rt_m1)  # n
+#summary(exp4b_rt_m1)  # n
 
 bayestestR::describe_posterior(
   exp4b_rt_m1,
@@ -244,7 +244,8 @@ params_p <- df4b.hddm.group.trace %>%
 
 params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
-                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness),
+                identity = factor(identity, levels = c('Self', 'Other'))) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +

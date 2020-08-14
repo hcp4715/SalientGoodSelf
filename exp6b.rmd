@@ -27,7 +27,7 @@ Same as experiment 3a.
 ### Results of Day 1
 
 #### NHST
-```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6b.", fig.height=6, fig.width=10, warning=FALSE}
 
 Val_id_plot_NHST(df.rt = df6b_d1.v.rt_m, df.d = df6b_d1.v.dprime_l)
 
@@ -118,7 +118,7 @@ For the nonmatch trials, we didn't found any strong effect: identity, `r df6b_d1
 exp_name <- '6b_d1'
 exp6b_d1_sdt_m1 <- fun_sdt_val_id(exp_name)
 
-summary(exp6b_d1_sdt_m1)    # check summary
+#summary(exp6b_d1_sdt_m1)    # check summary
 
 # check fixed and varying effect using bayestestR
 bayestestR::describe_posterior(
@@ -245,7 +245,8 @@ params_p <- df6b.hddm.group.trace %>%
 
 params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
-                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness),
+                identity = factor(identity, levels = c('Self', 'Other'))) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +

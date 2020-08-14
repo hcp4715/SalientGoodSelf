@@ -23,7 +23,7 @@ Same as experiment 3a.
 ### Results
 
 #### NHST
-```{r 'exp3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+```{r 'exp3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
 
 Val_id_plot_NHST(df.rt = df3b.v.rt_m, df.d = df3b.v.dprime_l)
 
