@@ -94,7 +94,14 @@
 
 \centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp6a-BGLM-1.pdf}
-\caption{\label{fig:plot-exp6a-BGLM}Exp1b: Results of Bayesian GLM analysis.}
+\caption{\label{fig:plot-exp6a-BGLM}Exp6a: Results of Bayesian GLM analysis.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp6a-HDDM-1.pdf}
+\caption{\label{fig:plot-exp6a-HDDM}exp6a: Results of HDDM.}
 \end{figure*}
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}

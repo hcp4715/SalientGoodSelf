@@ -204,7 +204,8 @@ exp6b_d1_rt_p <- exp6b_d1_rt_m1 %>%
               Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
               Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   dplyr::rename(log_RT = .value) %>%
-  ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
+  dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
   tidybayes::stat_halfeye() +
@@ -277,4 +278,4 @@ params_p %>%
 
 We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that, similar to experiment 3a, the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person, but only for the self-referential condition. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation, and this effect also exist only for the  self-referential condition. 
 
-Interestingly, we found that  in both self-referential and other-referential conditions, the shapes associated bad valence have higher drift rate and higher boundary separation. which might suggest that the shape associated with bad stimuli might be prioritized in the non-match trials (see figure \@ref(fig:plot-exp6b-HDDM))).
+Interestingly, we found that  in both self-referential and other-referential conditions, the shapes associated bad valence have higher drift rate and higher boundary separation. which might suggest that the shape associated with bad stimuli might be prioritized in the non-match trials (see figure \@ref(fig:plot-exp6b-HDDM)).

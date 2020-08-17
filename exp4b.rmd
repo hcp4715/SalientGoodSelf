@@ -1,4 +1,4 @@
-## Experiment 4b
+## Experiment 4b: Morality as task-irrelevant variable
 In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgments to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 ~ 3, we made put the labels of "self/other" in the shapes so that identity served as an task irrelevant variable. As in experiment 4b, we also hypothesized that the intrinsic binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
 
 ### Method

@@ -107,7 +107,26 @@ hypothesis(exp6a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.87
 
 # extract the population level parameters
 # criteria
-exp6a_sdt_p <- fun_plot_sdt_val(exp6a_sdt_m1)
+# exp6a_sdt_p <- fun_plot_sdt_val(exp6a_sdt_m1)
+
+exp6a_sdt_p <- exp6a_sdt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
+                ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
+                #,Identity = factor(Identity, levels = c('Self', 'Other'))
+                ) %>%
+  ggplot2::ggplot(aes(x = Valence, y = .value)) +
+  #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
+  #geom_line(alpha = .01) +
+  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+  stat_summary(aes(group = NA), fun.y = mean, geom = "line"
+               #,position=position_dodge(width = 0.1)
+               ) +
+  #scale_fill_brewer() +
+  facet_grid(cols = vars(ismatch), scales = "free_y") +
+  theme_classic()
 ```
 ##### Reaction time
 
@@ -123,10 +142,77 @@ hypothesis(exp6a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral
 hypothesis(exp6a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
 hypothesis(exp6a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
 
-exp6a_rt_p <- fun_plot_rt_val(exp6a_rt_m1)
+# exp6a_rt_p <- fun_plot_rt_val(exp6a_rt_m1)
+
+exp6a_rt_p <- exp6a_rt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+              #Identity = factor(Identity, levels = c('Self', 'Other'))
+  dplyr::rename(log_RT = .value) %>%
+  dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
+  #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
+  #geom_line(alpha = .01) +
+  tidybayes::stat_halfeye() +
+  ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+  #scale_fill_brewer() +
+  facet_grid(~ ismatch) +
+  theme_classic()
 ```
 
-```{r plot-exp6a-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
+```{r plot-exp6a-BGLM, fig.cap="Exp6a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp6a_sdt_p[[1]] + exp6a_sdt_p[[2]] + exp6a_sdt_p[[3]] + exp6a_sdt_p[[4]] + exp6a_rt_p[[1]] + exp6a_rt_p[[2]] + exp6a_rt_p[[3]] + exp6a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+# exp6a_sdt_p[[1]] + exp6a_sdt_p[[2]] + exp6a_sdt_p[[3]] + exp6a_sdt_p[[4]] + exp6a_rt_p[[1]] + exp6a_rt_p[[2]] + exp6a_rt_p[[3]] + exp6a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+exp6a_sdt_p + exp6a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
+
+### HDDM
+
+```{r plot-exp6a-HDDM, fig.cap="exp6a: Results of HDDM.",  fig.height=8, fig.width=9, warning=FALSE}
+df6a.hddm.group.trace <- readr::read_csv(here::here('HDDM','df6a_group_traces.csv')) # this will keep the '(' and ')' in the column name
+
+params_p <- df6a.hddm.group.trace %>%
+  dplyr::mutate(sample = 1:nrow(.)) %>%
+  dplyr::select(chain, sample, contains('Match') | contains('Mismatch')) %>%
+  tidyr::pivot_longer(.,`a(Match.Bad)`:`t(Mismatch.Neutral)`, names_to = 'conditions', values_to = 'value') %>%
+  tidyr::separate(., conditions, into = c('v1', 'valence'), sep= '[.]') %>%       # split into two part
+  tidyr::separate(., v1, into = c('param', 'matchness'), sep = '[(]') %>%         # further split the first half into two part
+  dplyr::mutate(valence = stringr::str_sub(.$valence, start = 1, end = -2)) %>%   # remove the last two elements ') ' from the strings
+  dplyr::arrange(., param) %>%
+  tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
+
+params_p %>% 
+  dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
+  geom_point() + 
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(~ matchness) +
+  ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
+  xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
+  theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
+```
+
+We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that, similar to experiment 2, the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person, but only for the self-referential condition. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation, and this effect also exist only for the  self-referential condition. 
+
+Interestingly, we found that  in both self-referential and other-referential conditions, the shapes associated bad valence have higher drift rate and higher boundary separation. which might suggest that the shape associated with bad stimuli might be prioritized in the non-match trials (see figure \@ref(fig:plot-exp6a-HDDM)).
