@@ -170,7 +170,7 @@ exp6a_sdt_p + exp6a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow
 
 ### HDDM
 
-```{r plot-exp6a-HDDM, fig.cap="exp6a: Results of HDDM.",  fig.height=8, fig.width=9, warning=FALSE}
+```{r plot-exp6a-HDDM, fig.cap="exp6a: Results of HDDM.",  fig.height=4.5, fig.width=9, warning=FALSE}
 df6a.hddm.group.trace <- readr::read_csv(here::here('HDDM','df6a_group_traces.csv')) # this will keep the '(' and ')' in the column name
 
 params_p <- df6a.hddm.group.trace %>%

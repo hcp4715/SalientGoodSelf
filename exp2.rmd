@@ -95,7 +95,18 @@ hypothesis(exp2_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.61
 
 # extract the population level parameters
 # criteria
-exp2_sdt_p <- fun_plot_sdt_val(exp2_sdt_m1)
+#exp2_sdt_p <- fun_plot_sdt_val(exp2_sdt_m1)
+exp2_sdt_p <- exp2_sdt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
+                ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  ggplot2::ggplot(aes(x = Valence, y = .value)) +
+  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+  stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+  facet_grid(cols = vars(ismatch), scales = "free_y") +
+  theme_classic()
 ```
 ##### Reaction times
 
@@ -112,13 +123,25 @@ hypothesis(exp2_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral,
 hypothesis(exp2_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.66
 hypothesis(exp2_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
 
-exp2_rt_p <- fun_plot_rt_val(exp2_rt_m1)
+#exp2_rt_p <- fun_plot_rt_val(exp2_rt_m1)
+exp2_rt_p <- exp2_rt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::rename(log_RT = .value) %>%
+  dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
+  tidybayes::stat_halfeye() +
+  ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+  facet_grid(~ ismatch) +
+  theme_classic()
 ```
 
 
 ```{r plot-exp2-BGLM, fig.cap="Exp2: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp2_sdt_p[[1]] + exp2_sdt_p[[2]] + exp2_sdt_p[[3]] + exp2_sdt_p[[4]] + exp2_rt_p[[1]] + exp2_rt_p[[2]] + exp2_rt_p[[3]] + exp2_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+exp2_sdt_p + exp2_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = .75$). We focused on matched trials only, and compared different conditions: Good () is not faster than the neutral (), $P_{PosteriorComparison} = .5$, it was faster than the Bad condition (), $P_{PosteriorComparison} = .88$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .95$. However, the mismatched trials are largely overlapped. 
@@ -171,5 +194,5 @@ params_p %>%
 ```
 
 ## Discussion
-In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valence association. Moreover, with a cross-task analysis, we didn’t found evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
+In this experiment, we repeated the results pattern that the positive moral valenced stimuli has an advantage over the neutral or the negative valence association. Moreover, with a cross-task analysis, we did not find evidence that the experiment task interacted with moral valence, suggesting that the effect might not be effect by experiment task. 
 These findings suggested that the facilitation effect of positive moral valence is robust and not affected by task. This robust effect detected by the associative learning is unexpected. 

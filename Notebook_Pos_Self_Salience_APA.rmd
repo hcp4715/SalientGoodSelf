@@ -1190,7 +1190,7 @@ df.ES_5 %>%
   apatheme_x
 ```
 
-In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (match trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, the positive conditions had advantages over both neutral and negative conditions (greater *d* prime and faster RT), and neutral and negative conditions didn't differ from each other. But for the emotional stimuli, it was the positive and neutral had advantage over negative conditions, while positive and neutral conditions were not significantly different. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \@ref(fig:plot-exp5-effect).
+In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (match trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, there was a positivity effect where the positive conditions had advantages over both neutral (greater *d* prime and faster RT), while neutral and negative conditions didn't differ from each other. But for the emotional stimuli, there was a reversed negativity effect: positive and neutral conditions were not significantly different from each other but both had advantage over negative conditions. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \@ref(fig:plot-exp5-effect).
 
 ## Self-reported personal distance
 
@@ -1222,7 +1222,7 @@ mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
                 "morId_13","morId_14","morId_15","morId_16")
 mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
                    "morId_12","morId_13","morId_14")
-mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9","morId_10",
+mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9",
                    "morId_15", "morId_16")
 
 # moral self images
@@ -1265,6 +1265,62 @@ df.perdist <- df.scales %>%
   dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
                 SelfStra, GoodNeut, GoodBad, NeutBad) %>%
   tidyr::drop_na()
+```
+
+```{r test_SEM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# Test the SEM, compare two models of the moral identity scale
+
+mrlID.m1 <- 'mrlId =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14 +
+morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_10 +
+morId_15 +
+morId_16
+'
+
+mrlID.m2 <- 'mrlIdInt =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14
+
+mrlIdExtNames =~  morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_15 +
+morId_16
+'
+
+fit.mrlID.m1 <- lavaan::cfa(mrlID.m1, data = df.scales, estimator = "MLR")
+fit.mrlID.m2 <- lavaan::cfa(mrlID.m2, data = df.scales, estimator = "MLR")
+
+#Model Outputs
+summary(fit.mrlID.m1, standardize = TRUE, fit.measures=TRUE)
+summary(fit.mrlID.m2, standardize = TRUE, fit.measures=TRUE)
+
+mrlID.comp <- lavaan::anova(fit.mrlID.m1, fit.mrlID.m2)
+mrlID.comp
+
+# plot the path
+# semPlot::semPaths(fit.mrlID.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+# semPlot::semPaths(fit.mrlID.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
 ```
 
 ```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}

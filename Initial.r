@@ -19,10 +19,12 @@ pkgTest <- function(x){
   }
 }
 
-pkgNeeded <- (c("tidyverse", "afex", 'emmeans',
-                "metafor", "Hmisc", "psych", 
-                "BayesFactor","corrplot","readr", 'lme4',
-                'mosaic', 'here', 'brms', 'patchwork'))
+pkgNeeded <- (c('here', "tidyverse", "readr", 'mosaic', 
+                "afex", 'emmeans', 'lme4',
+                "metafor", "Hmisc",  
+                "BayesFactor", 'brms', 
+                "corrplot", 'patchwork',
+                "psych", "lavaan", "semPlot"))
 
 lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
