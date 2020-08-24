@@ -61,7 +61,18 @@ hypothesis(exp1c_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.77
 
 # extract the population level parameters
 # criteria
-exp1c_sdt_p <- fun_plot_sdt_val(exp1c_sdt_m1)
+#exp1c_sdt_p <- fun_plot_sdt_val(exp1c_sdt_m1)
+exp1c_sdt_p <- exp1c_sdt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
+                ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  ggplot2::ggplot(aes(x = Valence, y = .value)) +
+  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+  stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+  facet_grid(cols = vars(ismatch), scales = "free_y") +
+  theme_classic()
 ```
 
 #### Reaction time
@@ -79,13 +90,25 @@ hypothesis(exp1c_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral
 hypothesis(exp1c_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.95
 hypothesis(exp1c_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 0.86
 
-exp1c_rt_p <- fun_plot_rt_val(exp1c_rt_m1)
+#exp1c_rt_p <- fun_plot_rt_val(exp1c_rt_m1)
+exp1c_rt_p <- exp1c_rt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::rename(log_RT = .value) %>%
+  dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
+  tidybayes::stat_halfeye() +
+  ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+  facet_grid(~ ismatch) +
+  theme_classic()
 ```
 
 
 ```{r plot-exp1c-BGLM, fig.cap="Exp1c: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp1c_sdt_p[[1]] + exp1c_sdt_p[[2]] + exp1c_sdt_p[[3]] + exp1c_sdt_p[[4]] + exp1c_rt_p[[1]] + exp1c_rt_p[[2]] + exp1c_rt_p[[3]] + exp1c_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
+exp1c_rt_p + exp1c_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 

@@ -166,7 +166,8 @@ exp3a_sdt_p <- exp3a_sdt_m1 %>%
   stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line"
                #,position=position_dodge(width = 0.1)
                ) +
-  #scale_fill_brewer() +
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
   facet_grid(~ ismatch) +
   theme_classic()
 ```
@@ -201,12 +202,14 @@ exp3a_rt_p <- exp3a_rt_m1 %>%
               Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
               Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   dplyr::rename(log_RT = .value) %>%
-  ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
+  dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
   tidybayes::stat_halfeye() +
   ggplot2::stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
-  #scale_fill_brewer() +
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
   facet_grid(~ ismatch) +
   theme_classic()
 
@@ -220,7 +223,7 @@ emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
 
 ```{r plot-exp3a-BGLM, fig.cap="Exp3a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp3a_sdt_p + exp3a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+exp3a_rt_p + exp3a_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 In reaction times, we found that same trends in the match trials as in the RT: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp3a-BGLM) 

@@ -141,7 +141,7 @@ exp2_rt_p <- exp2_rt_m1 %>%
 
 ```{r plot-exp2-BGLM, fig.cap="Exp2: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
-exp2_sdt_p + exp2_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+exp2_rt_p + exp2_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = .75$). We focused on matched trials only, and compared different conditions: Good () is not faster than the neutral (), $P_{PosteriorComparison} = .5$, it was faster than the Bad condition (), $P_{PosteriorComparison} = .88$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .95$. However, the mismatched trials are largely overlapped. 

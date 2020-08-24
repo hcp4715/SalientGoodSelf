@@ -553,14 +553,13 @@ Val_id_plot_NHST <- function(df.rt, df.d){
               linetype = 1, size = 0.8, colour = "#000000", alpha = 0.03) + 
     geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(Identity)),   # plot individual points
                #colour = "#000000",
-               
                size = 3, shape = 20, alpha = 0.15) +
     geom_line(data = df.plot.sum_p, aes(x = as.numeric(Valence), # plot the group means  
                                         y = value, 
                                         group = Identity, 
                                         colour = as.factor(Identity),
     ), 
-    linetype = 1, position = pd1, size = 2)+
+    linetype = 1, position = pd1, size = 2) +
     geom_point(data = df.plot.sum_p, aes(x = as.numeric(Valence), # group mean
                                          y = value, 
                                          group = Identity, 

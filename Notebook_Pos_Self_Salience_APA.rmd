@@ -351,7 +351,6 @@ In this part, we reported two studies in which the moral valence or the self-ref
 ```{r child = "exp4b.rmd"}
 ```
 
-
 ```{r remove repeated subj Data,echo=FALSE,results='hide'}
 ## exclude the repeating subjects
 df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
@@ -1239,10 +1238,20 @@ perDistNames <- c("SelfSelf",
                   "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
                   "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
 
+# Normalize the person distance by dividing the maxiumum value for each data point
+
+df.perdist_raw <- df.scales %>%
+  dplyr::select(c(expID, subjID),perDistNames) %>%
+  dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
+  dplyr::filter(sd_raw >=10)
+
 df.perdist <- df.scales %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
-  #dplyr::rowwise() %>%
-  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
+  dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
+  dplyr::filter(sd_raw >=10) %>%
+  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames))) %>% # find the maximum value of the row
+  # dplyr::rowwise() %>%
+  dplyr::mutate(# sumRaw = rowMeans(.[3:31], na.rm = T),
                 SelfSelfraw = SelfSelf,
                 SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
                 SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
@@ -1251,19 +1260,18 @@ df.perdist <- df.scales %>%
                 GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
                 GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
                 NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
-  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
+  dplyr::select(expID, subjID, maxDist,
                 SelfGoodraw, SelfNeutraw, SelfBadraw,
-                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
-  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
-                SelfGood = SelfGoodraw/sumRaw,
-                SelfNeut = SelfNeutraw/sumRaw,
-                SelfBad = SelfBadraw/sumRaw,
-                SelfStra = SelfStraraw/sumRaw, 
-                GoodNeut = GoodNeutraw/sumRaw, 
-                GoodBad = GoodBadraw/sumRaw, 
-                NeutBad = NeutBadraw/sumRaw) %>%
-  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
-                SelfStra, GoodNeut, GoodBad, NeutBad) %>%
+                GoodNeutraw, GoodBadraw, NeutBadraw) %>%
+  dplyr::mutate(SelfGood = SelfGoodraw/maxDist,
+                SelfNeut = SelfNeutraw/maxDist,
+                SelfBad = SelfBadraw/maxDist,
+                # SelfStra = SelfStraraw/maxDist, 
+                GoodNeut = GoodNeutraw/maxDist, 
+                GoodBad = GoodBadraw/maxDist, 
+                NeutBad = NeutBadraw/maxDist) %>%
+  dplyr::select(subjID, SelfGood, SelfNeut, SelfBad,
+                GoodNeut, GoodBad, NeutBad) %>% # note, SelfStra may has many zeros that should be NA
   tidyr::drop_na()
 ```
 
@@ -1308,41 +1316,191 @@ morId_15 +
 morId_16
 '
 
+sem.m1 <- 'mrlIdInt =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14
+
+mrlIdExt =~  morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_15 +
+morId_16
+
+Good =~ Good_v
+
+# regression
+Good ~ mrlIdInt + mrlIdExt 
+'
+
+sem.m2 <- 'mrlIdInt =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14
+
+mrlIdExt =~  morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_15 +
+morId_16
+
+morSlfImg =~ morSlfImg_1 +
+morSlfImg_2 +
+morSlfImg_3 +
+morSlfImg_4 +
+morSlfImg_5 +
+morSlfImg_6 +
+morSlfImg_7 +
+morSlfImg_8 +
+morSlfImg_9
+
+Good =~ Good_v
+
+Bad =~ Bad_v
+
+# regression
+Good ~ mrlIdInt + mrlIdExt + morSlfImg
+Bad ~ mrlIdInt + mrlIdExt + morSlfImg
+
+# correlations
+Good ~~ Bad
+'
+
 fit.mrlID.m1 <- lavaan::cfa(mrlID.m1, data = df.scales, estimator = "MLR")
 fit.mrlID.m2 <- lavaan::cfa(mrlID.m2, data = df.scales, estimator = "MLR")
+
+fit.sem.m1 <- lavaan::sem(sem.m1, data = tmp, estimator = "MLM")
+fit.sem.m2 <- lavaan::sem(sem.m2, data = tmp, estimator = "MLM")
 
 #Model Outputs
 summary(fit.mrlID.m1, standardize = TRUE, fit.measures=TRUE)
 summary(fit.mrlID.m2, standardize = TRUE, fit.measures=TRUE)
 
-mrlID.comp <- lavaan::anova(fit.mrlID.m1, fit.mrlID.m2)
-mrlID.comp
+summary(fit.sem.m1, standardize = TRUE, fit.measures=TRUE)
+summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
+
+sem.comp <- lavaan::anova(fit.sem.m1, fit.sem.m2)
+sem.comp
 
 # plot the path
 # semPlot::semPaths(fit.mrlID.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-# semPlot::semPaths(fit.mrlID.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+semPlot::semPaths(fit.mrlID.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+
+semPlot::semPaths(fit.sem.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+semPlot::semPaths(fit.sem.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
 ```
 
 ```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
-df.plot <- df.perdist %>%
-    dplyr::select(-c(SelfSelf, SelfStra)) %>%
-    tidyr::pivot_longer(., cols = SelfGood:NeutBad, 
-                        names_to = 'PerDist', 
-                        values_to = "value") %>% # to longer format
-    dplyr::mutate(PerDist =factor(PerDist, levels = c('SelfNeut', 'SelfGood', 'GoodNeut', 'NeutBad', 'GoodBad', 'SelfBad')),
+
+# boxplot
+df.perdist %>% 
+  tidyr::pivot_longer(., cols = SelfGood:NeutBad,
+                      names_to = 'PerDist',
+                      values_to = 'value') %>%
+  ggplot2::ggplot(.,aes(x=PerDist, y=value)) +
+  ggplot2::geom_boxplot() +
+  ggplot2::geom_point(position = position_jitter())
+
+mean(df.perdist$GoodBad) - 2.5*sd(df.perdist$GoodBad)
+
+df.plot3 <- df.perdist %>%
+  dplyr::mutate(sum_GN_NB = GoodNeut + NeutBad,
+                sum_SG_SB = SelfGood + SelfBad,
+                sum_SG_SB_m = SelfGood + SelfBad - SelfNeut)
+df.plot3 %>%
+  tidyr::pivot_longer(., cols = GoodNeut_NonSelf:GoodBad_Self,
+                      names_to = 'PerDist',
+                      values_to = 'value') %>%
+  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE) 
+  ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=ID, shape=ID)) +
+  geom_point() + 
+  geom_smooth(method=lm)
+
+df.plot3 %>% 
+  ggplot(., aes(x = GoodBad, y = sum_GN_NB)) +
+   geom_point() + 
+  geom_smooth(method=lm)
+
+df.plot3 %>% 
+  ggplot(., aes(x = GoodBad, y = sum_SG_SB)) +
+   geom_point() + 
+  geom_smooth(method=lm)
+
+df.plot3 %>% 
+  ggplot(., aes(x = GoodBad, y = sum_SG_SB_m)) +
+   geom_point() + 
+  geom_smooth(method=lm)
+  
+df.plot2 <- df.perdist %>%
+  # dplyr::select(-c(SelfSelf, SelfStra)) %>%
+  dplyr::mutate(GoodNeut_Self = abs(SelfGood - SelfNeut),
+                NeutBad_Self = abs(SelfBad - SelfNeut),
+                GoodBad_Self = abs(SelfBad - SelfGood)) %>%
+  dplyr::select(-c(SelfGood, SelfNeut, SelfBad)) %>%
+  dplyr::rename(GoodNeut_NonSelf = GoodNeut,
+                GoodBad_NonSelf = GoodBad,
+                NeutBad_NonSelf = NeutBad)
+
+# correlation::correlation(df.plot2[,2:7])
+
+df.plot2 <- df.plot2 %>%
+  tidyr::pivot_longer(., cols = GoodNeut_NonSelf:GoodBad_Self,
+                      names_to = 'PerDist',
+                      values_to = 'value') %>%
+  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE)  %>%
+  tidyr::pivot_wider(., names_from = ID, values_from= value) 
+
+df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('ID', 'dist')) 
+
+# group the scatter point.
+df.plot2 %>%
+  ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=dist, shape=dist)) +
+  geom_point() + 
+  geom_smooth(method=lm)
+
+df.plot2 <- df.plot2 %>%
+    # dplyr::select(-c(SelfSelf, SelfStra)) %>%
+    #tidyr::pivot_longer(., cols = SelfGood:NeutBad, 
+    #                    names_to = 'PerDist', 
+    #                    values_to = "value") %>% # to longer format
+    dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
                   # DVs = factor(DVs, levels = c('RT', 'dprime')),
                   # create an extra column for ploting the individual data cross different conditions.
-                  Conds = mosaic::derivedFactor("1" = (PerDist == 'SelfNeut'), 
-                                                "2" = (PerDist == 'SelfGood'),
-                                                "3" = (PerDist == 'GoodNeut'),
-                                                "4" = (PerDist == 'NeutBad'),
-                                                "5" = (PerDist == 'GoodBad'),
-                                                "6" = (PerDist == 'SelfBad'),
+                  Conds = mosaic::derivedFactor("1" = (dist == 'GoodNeut'),
+                                                "2" = (dist == 'NeutBad'),
+                                                "3" = (dist == 'GoodBad'),
                                                 method ="first", .default = NA),
                   Conds = as.numeric(as.character(Conds)),
     ) 
-  
-  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add gitter to x
+df.plot2 <- df.plot2 %>%
+    dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
+                  ID = factor(ID, levels = c("Self", 'NonSelf')),
+                  # DVs = factor(DVs, levels = c('RT', 'dprime')),
+                  # create an extra column for plotting the individual data cross different conditions.
+                  Conds = mosaic::derivedFactor("0.9" = (dist == 'GoodNeut' & ID == 'Self'),
+                                                "1.1" = (dist == 'GoodNeut' & ID == 'NonSelf'),
+                                                "1.9" = (dist == 'NeutBad' & ID == 'Self'),
+                                                "2.1" = (dist == 'NeutBad' & ID == 'NonSelf'),
+                                                "2.9" = (dist == 'GoodBad' & ID == 'Self'),
+                                                "3.1" = (dist == 'GoodBad' & ID == 'NonSelf'),
+                                                method ="first", .default = NA),
+                  Conds = as.numeric(as.character(Conds)),
+    ) 
+df.plot2$Conds_j <- jitter(df.plot2$Conds, amount=.03) # add gitter to x
   
   # New facet label names for panel variable
   # https://stackoverflow.com/questions/34040376/cannot-italicize-facet-labels-with-labeller-label-parsed
@@ -1351,55 +1509,52 @@ df.plot <- df.perdist %>%
   # levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
   #                           "dprime"=expression(paste(italic("d"), ' prime')))
   
-  df.plot.sum_p <- summarySE(df.plot, measurevar = "value", groupvars = c('PerDist')) %>%
-    dplyr::mutate(Cond_num = mosaic::derivedFactor("1" = (PerDist == 'SelfNeut'), 
-                                                "2" = (PerDist == 'SelfGood'),
-                                                "3" = (PerDist == 'GoodNeut'),
-                                                "4" = (PerDist == 'NeutBad'),
-                                                "5" = (PerDist == 'GoodBad'),
-                                                "6" = (PerDist == 'SelfBad'),
+df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('dist', 'ID')) %>%
+    dplyr::mutate(Cond_num = mosaic::derivedFactor("1"  = (dist == 'GoodNeut'),
+                                                "2" = (dist == 'NeutBad'),
+                                                "3" = (dist == 'GoodBad'),
                                                 method ="first", .default = NA),
                   Cond_num = as.numeric(as.character(Cond_num)))
   
-  pd1 <- position_dodge(0.5)
+pd1 <- position_dodge(0.4)
   # scaleFUN <- function(x) sprintf("%.2f", x)
   # scales_y <- list(
   #   RT = scale_y_continuous(limits = c(400, 900)),
   #   dprime = scale_y_continuous(labels=scaleFUN)
   #)
   
-  df.plot  %>% # dplyr::filter(DVs== 'RT') %>%
+df.plot2  %>% # dplyr::filter(DVs== 'RT') %>%
     dplyr::rename(Subject=subjID) %>%
-    ggplot(., aes(x = PerDist, y = value, colour = as.factor(Valence))) +
-    geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
-              linetype = 1, size = 1, colour = "#000000", alpha = 0.03) + 
-    geom_point(aes(x = Conds_j, y = value, group = Subject),   # plot individual points
-               colour = "#000000",
-               size = 1, shape = 20, alpha = 0.03) +
-    geom_line(data = df.plot.sum_p, aes(x = as.numeric(PerDist), # plot the group means  
+    ggplot(., aes(x = dist, y = value)) +
+    #geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+    #          linetype = 1, size = 1, colour = "#000000", alpha = 0.01) + 
+    geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(ID)),   # plot individual points
+               #colour = "#000000", 
+               size = 1, shape = 20, alpha = 0.15) +
+    geom_line(data = df.plot2.sum_p, aes(x = as.numeric(dist), # plot the group means  
                                         y = value, 
-                                        #group = Identity, 
-                                        colour = PerDist,
+                                        group = ID, 
+                                        colour = as.factor(ID),
     ), 
-    linetype = 1, position = pd1, size = 2)+
-    geom_point(data = df.plot.sum_p, aes(x = as.numeric(PerDist), # group mean
+    linetype = 1, position = pd1, size = 2) +
+    geom_point(data = df.plot2.sum_p, aes(x = as.numeric(dist), # group mean
                                          y = value, 
-                                         #group = Identity, 
-                                         colour = PerDist,
+                                         group = ID, 
+                                         colour = as.factor(ID),
     ), 
     shape = 18, position = pd1, size = 5) +
-    geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(PerDist),  # group error bar.
-                                            y = value, # group = Identity, 
-                                            colour = PerDist,
+    geom_errorbar(data = df.plot2.sum_p, aes(x = as.numeric(dist),  # group error bar.
+                                            y = value, 
+                                            group = ID, 
+                                            colour = as.factor(ID),
                                             ymin = value- 1.96*se, 
                                             ymax = value+ 1.96*se), 
-                  width = .05, size = 1, alpha = 0.75) +
+                  width = .05, position = pd1, size = 1, alpha = 0.75) +
     scale_colour_brewer(palette = "Dark2") +
-    scale_x_continuous(breaks=c(1, 2, 3, 4, 5, 6),
-                       labels=c("SelfNeut", "SelfGood", "GoodNeut", 'NeutBad', 'GoodBad', 'SelfBad')) +
+    scale_x_continuous(breaks=c(1, 2, 3),
+                       labels=c("GoodNeut", "NeutBad", "GoodBad")) +
     scale_fill_brewer(palette = "Dark2") +
-    #ggtitle("A. Matching task") +
-    theme_bw()+
+    theme_bw() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           panel.background = element_blank(),
@@ -1417,12 +1572,43 @@ df.plot <- df.perdist %>%
           strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")
     ) 
+
+dist.m1 <- 'dist =~ GoodNeut + 
+GoodBad +
+NeutBad +
+SelfGood +
+# SelfBad +
+SelfNeut
+'
+
+dist.m2 <- 'dist_s =~ 
+SelfGood +
+SelfNeut +
+GoodNeut +
+NeutBad
+
+dist_bad =~ 
+SelfBad + 
+GoodBad
+'
+
+
+fit.dist.m1 <- lavaan::cfa(dist.m1, data = df.perdist, estimator = "MLR")
+fit.dist.m2 <- lavaan::cfa(dist.m2, data = df.perdist, estimator = "MLR")
+
+summary(fit.dist.m1, standardize = TRUE, fit.measures=TRUE)
+summary(fit.dist.m2, standardize = TRUE, fit.measures=TRUE)
+
+semPlot::semPaths(fit.dist.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
 ```
 
 See Figure \@ref(fig:plot-person-dist).
 
 ## Correlation analyses
-The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculated the correlation between the data from behavioral task and the questionnaire data. 
+The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculated the correlation between the data from behavioral task and the questionnaire data. First, we calculated the score for each scale based on their structure and factor loading, instead of sum score [@mcneish_thinking_2020]. Then, we used SEM to estimate the correlation because it can include measurement model and statistical model in a unified framework. 
+
+To make sure that what we found were not false positive, we used two method to ensure the robustness of our analysis. first, we split the data into two half: the data with self and without, then, we used the conditional random forest to find the robust correlation in the exploratory data (with self reference) that can be replicated in the confirmatory data (without the self reference). The robust correlation were then analyzed using SEM
+
 
 ```{r correlation analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # get data for valence effect ---- 
@@ -1597,6 +1783,9 @@ df.perdist.v <- df.scales.v %>%
 
 df.q_scores.v <- merge(df.q_scores.v, df.perdist.v)
 
+# temp data for SEM
+tmp <- merge(df.scales.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject')
+
 ## calculate correlation ----
 df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
   dplyr::select(-c(14)) %>%
@@ -1656,6 +1845,94 @@ cor_pairs_2 <- res.cor_2 %>%
 
 write.csv(cor_pairs_all, 'sig_behav_quest_corr_pairs.csv', row.names = F)
 
+```
+
+Instead of use the exploratory correlation analysis, we used a more principled way to explore the correlation between behavioral data (RT, dprime, etc) and scale data. More specifically, we used structural equation model.
+
+First, we tested whether the behavioral data can form different latent variables.
+
+```{r SEM2, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+behv.m1 <- 'behv =~ RT_Bad + 
+RT_Good +
+RT_Neutral +
+RT_SD_Bad +
+RT_SD_Good +
+RT_SD_Neutral +
+dprime_Bad +
+dprime_Good +
+dprime_Neut +
+Bad_a + 
+Good_a +
+Neutral_a +
+Bad_v + 
+Good_v +
+Neutral_v +
+Bad_t + 
+Good_t +
+Neutral_t
+'
+
+behv.m2 <- ' a =~ 
+Bad_a + 
+Good_a +
+Neutral_a
+
+t =~ 
+Bad_t + 
+Good_t +
+Neutral_t
+
+v =~ Bad_v + 
+Good_v +
+Neutral_v
+'
+
+behv.m3 <- 'behv1 =~ RT_Bad + 
+RT_Good +
+RT_Neutral+
+Bad_t + 
+Good_t +
+Neutral_t
+
+behav2 =~ dprime_Bad +
+dprime_Good +
+dprime_Neut +
+Bad_v + 
+Good_v +
+Neutral_v
+'
+
+behv.m4 <- 'Good =~ Good_a +
+Good_v +
+Good_t
+
+Neutral =~ Neutral_a +
+Neutral_v +
+Neutral_t
+
+Bad =~ Bad_a +
+Bad_v +
+Bad_t
+'
+
+fit.behv.m1 <- lavaan::cfa(behv.m1, data = df.meta_1_wide, estimator = "MLR")
+fit.behv.m2 <- lavaan::cfa(behv.m2, data = df.meta_1_wide, estimator = "MLR")
+fit.behv.m3 <- lavaan::cfa(behv.m3, data = df.meta_1_wide, estimator = "MLR")
+fit.behv.m4 <- lavaan::cfa(behv.m4, data = df.meta_1_wide, estimator = "MLR")
+
+#Model Outputs
+summary(fit.behv.m1, standardize = TRUE, fit.measures=TRUE)
+summary(fit.behv.m2, standardize = TRUE, fit.measures=TRUE)
+summary(fit.behv.m3, standardize = TRUE, fit.measures=TRUE)
+summary(fit.behv.m4, standardize = TRUE, fit.measures=TRUE)
+mrlID.comp <- lavaan::anova(fit.behv.m4, fit.behv.m2)
+mrlID.comp
+
+# plot the path
+semPlot::semPaths(fit.behv.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+semPlot::semPaths(fit.behv.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+semPlot::semPaths(fit.behv.m3, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+semPlot::semPaths(fit.behv.m4, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
 ```
 
 ```{r get plots of correlation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
