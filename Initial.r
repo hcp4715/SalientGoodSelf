@@ -19,7 +19,7 @@ pkgTest <- function(x){
   }
 }
 
-pkgNeeded <- (c('here', "tidyverse", "readr", 'mosaic', 
+pkgNeeded <- (c('here', "tidyverse", "readr", 'mosaic', 'matrixStats',
                 "afex", 'emmeans', 'lme4',
                 "metafor", "Hmisc",  
                 "BayesFactor", 'brms', 

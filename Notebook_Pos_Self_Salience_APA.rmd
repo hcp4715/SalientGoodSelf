@@ -1238,41 +1238,83 @@ perDistNames <- c("SelfSelf",
                   "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
                   "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
 
+perDistNames2 <- c("SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
+                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
+                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
+                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
+                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
+                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
+
 # Normalize the person distance by dividing the maxiumum value for each data point
-
-df.perdist_raw <- df.scales %>%
-  dplyr::select(c(expID, subjID),perDistNames) %>%
-  dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
-  dplyr::filter(sd_raw >=10)
-
 df.perdist <- df.scales %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
   dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
-  dplyr::filter(sd_raw >=10) %>%
-  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames))) %>% # find the maximum value of the row
-  # dplyr::rowwise() %>%
-  dplyr::mutate(# sumRaw = rowMeans(.[3:31], na.rm = T),
-                SelfSelfraw = SelfSelf,
-                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
-                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
-                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
-                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
-                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
-                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
-                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
-  dplyr::select(expID, subjID, maxDist,
-                SelfGoodraw, SelfNeutraw, SelfBadraw,
-                GoodNeutraw, GoodBadraw, NeutBadraw) %>%
-  dplyr::mutate(SelfGood = SelfGoodraw/maxDist,
-                SelfNeut = SelfNeutraw/maxDist,
-                SelfBad = SelfBadraw/maxDist,
-                # SelfStra = SelfStraraw/maxDist, 
-                GoodNeut = GoodNeutraw/maxDist, 
-                GoodBad = GoodBadraw/maxDist, 
-                NeutBad = NeutBadraw/maxDist) %>%
-  dplyr::select(subjID, SelfGood, SelfNeut, SelfBad,
-                GoodNeut, GoodBad, NeutBad) %>% # note, SelfStra may has many zeros that should be NA
+  dplyr::filter(sd_raw >=10) %>%                               # remove data with small variance
+  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames))) 
+
+df.perdist[,3:31] <- df.perdist[,3:31]/df.perdist$maxDist
+
+df.perdist <- df.perdist %>%         # find the maximum value of the row
+    dplyr::mutate(# sumRaw = rowMeans(.[3:31], na.rm = T),
+                SelfGood_pd = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
+                SelfNeut_pd = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
+                SelfBad_pd  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
+                GoodNeut_pd = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
+                GoodBad_pd  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
+                NeutBad_pd  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
+    dplyr::select(expID, subjID,
+                SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd) %>%
   tidyr::drop_na()
+
+
+# calculate the factor score for moral identity, moral self image, self-esteem, and personal distance.
+df.scale.fs <- df.scales %>% dplyr::select(expID, subjID)
+df.scales <- df.scales %>%
+  dplyr::mutate(morId_5_r = 0 - morId_5,
+                SES3_r = 5 - SES3,
+                SES5_r = 5 - SES5,
+                SES9_r = 5 - SES9,
+                SES10_r = 5 - SES10)
+
+FS.m.id1 <- 'mrlIdInt =~ morId_1 + morId_2 + morId_5_r + morId_8 + morId_10 + morId_11 + morId_12 + morId_13 + morId_14
+             
+             mrlIdExt =~ morId_3 + morId_4 + morId_6 + morId_7 + morId_9 + morId_15 + morId_16 '
+
+FS.m.id1.fit <- lavaan::cfa(FS.m.id1, data = df.scales, estimator = "MLR")
+
+idx <- lavInspect(FS.m.id1.fit, "case.idx")
+fscores <- lavPredict(FS.m.id1.fit)
+for (fs in colnames(fscores)) {
+  df.scale.fs[idx, fs] <- fscores[ , fs]
+}
+
+FS.m.id2 <- ' morSlfImg =~ morSlfImg_1 + morSlfImg_2 + morSlfImg_3 + morSlfImg_4 + morSlfImg_5 + morSlfImg_6 + morSlfImg_7 + 
+                          morSlfImg_8 + morSlfImg_9 '
+
+FS.m.id2.fit <- lavaan::cfa(FS.m.id2, data = df.scales, estimator = "MLR")
+
+idx <- lavInspect(FS.m.id2.fit, "case.idx")
+fscores <- lavPredict(FS.m.id2.fit)
+for (fs in colnames(fscores)) {
+  df.scale.fs[idx, fs] <- fscores[ , fs]
+}
+
+FS.m.id3 <- ' SlfEst =~ SES1 + SES2 + SES3_r + SES4 + SES5_r + SES6 + SES7 + SES8 + SES9_r + SES10_r '
+
+FS.m.id3.fit <- lavaan::cfa(FS.m.id3, data = df.scales, estimator = "MLR")
+
+# summary(FS.m.id3.fit, standardize = TRUE, fit.measures=TRUE)
+# semPlot::semPaths(FS.m.id3.fit, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+
+idx <- lavInspect(FS.m.id3.fit, "case.idx")
+fscores <- lavPredict(FS.m.id3.fit)
+for (fs in colnames(fscores)) {
+  df.scale.fs[idx, fs] <- fscores[ , fs]
+}
+
+df.scale.fs <- df.scale.fs %>%
+  dplyr::left_join(., df.perdist)
+
 ```
 
 ```{r test_SEM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -1408,14 +1450,14 @@ semPlot::semPaths(fit.sem.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, in
 
 # boxplot
 df.perdist %>% 
-  tidyr::pivot_longer(., cols = SelfGood:NeutBad,
+  tidyr::pivot_longer(., cols = SelfGood_pd:NeutBad_pd,
                       names_to = 'PerDist',
                       values_to = 'value') %>%
   ggplot2::ggplot(.,aes(x=PerDist, y=value)) +
   ggplot2::geom_boxplot() +
   ggplot2::geom_point(position = position_jitter())
 
-mean(df.perdist$GoodBad) - 2.5*sd(df.perdist$GoodBad)
+mean(df.perdist$GoodBad_pd) - 2.5*sd(df.perdist$GoodBad_pd)
 
 df.plot3 <- df.perdist %>%
   dplyr::mutate(sum_GN_NB = GoodNeut + NeutBad,
@@ -1610,7 +1652,329 @@ The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculate
 To make sure that what we found were not false positive, we used two method to ensure the robustness of our analysis. first, we split the data into two half: the data with self and without, then, we used the conditional random forest to find the robust correlation in the exploratory data (with self reference) that can be replicated in the confirmatory data (without the self reference). The robust correlation were then analyzed using SEM
 
 
-```{r correlation analysis,echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r correlation analysis, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+### Step 1: calculate the correlation of self-referential and other-referential in the later part.
+params.list <- list.files(here::here('HDDM'), pattern = '*_hddm_params.csv')
+
+df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
+df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
+
+for (indx in 1:6){
+  if ((indx ==1) && exists('df_hddm_param_1')){   # if the variable already exist before the for loop start
+    rm(df_hddm_param_1)
+  }
+
+  if (indx == 5 ){
+    hddm_params_tmp <- read.csv(here::here("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
+                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+      dplyr::filter(domain == "Morality") %>%
+      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+      tidyr::drop_na() %>%
+      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')  
+    
+  } else {
+    hddm_params_tmp <- read.csv(here::here("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
+                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
+      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
+      tidyr::drop_na() %>%
+      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
+      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')   # %>%
+      #dplyr::mutate(ExpID = 'Exp1a')
+  }
+  if (exists('df_hddm_param_1')) {
+    df_hddm_param_1 <- rbind(df_hddm_param_1, hddm_params_tmp) 
+  } else {
+    df_hddm_param_1 <- hddm_params_tmp
+  }
+}
+
+for (indx in 1:5){
+  if ((indx ==1) && exists('df_hddm_param_2')){   # in case the variable exist in the env.
+    rm(df_hddm_param_2)
+  }
+  hddm_params_tmp <- read.csv(paste(here::here("HDDM", df_hddm_ls_2[indx])), header = TRUE, sep = ",",
+                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
+    dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val, Identity = id) %>%
+    dplyr::select(Subject, Matchness, Identity, Valence, knode_name, mean) %>%
+    tidyr::drop_na() %>%
+    tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
+    dplyr::rename(param = v1)  %>% 
+    dplyr::filter(Matchness=='Match') %>% 
+    dplyr::select(- c(v2, Matchness)) %>%
+    tidyr::unite(conds, c(Valence, param)) %>%
+    #tidyr::unite(conds, c(Identity, Valence, param)) %>%
+    tidyr::pivot_wider(., names_from = c('conds'), values_from = 'mean')   # %>%
+    #dplyr::mutate(ExpID = 'Exp1a')
+  if (indx == 4 | indx == 5){
+    hddm_params_tmp <- hddm_params_tmp %>%
+      dplyr::mutate(Neutral_v = NA,
+                    Neutral_a = NA,
+                    #Other_Neutral_v = NA,
+                    #Other_Neutral_a = NA,
+                    #Other_Neutral_t = NA,
+                    Neutral_t = NA) # %>%
+      #dplyr::select(Subject, Identity, Bad_a, Good_a, Neutral_a, Bad_v, Good_v, Neutral_v, Bad_t, Good_t,
+      #              Neutral_t)
+  }
+  
+  if (exists('df_hddm_param_2')) {
+    df_hddm_param_2 <- rbind(df_hddm_param_2, hddm_params_tmp) 
+  } else {
+    df_hddm_param_2 <- hddm_params_tmp
+  }
+}
+
+# intersection between participant from behavioral task and scales and get the data
+subj.common_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_2$Subject))  # 183
+
+# df.scales.v_id <- df.scales %>% dplyr::filter(subjID %in% subj.common_id) %>%
+#  dplyr::select_if(~sum(!is.na(.)) > 0) %>% # remove columns that only have NA.
+#  dplyr::select(c('subjID'), mrlIdIntNames, mrlIdExtNames, SlfEstNames, mrlslfImgNames) %>%
+#  dplyr::left_join(., df.perdist, by = "subjID") # %>%
+  # dplyr::filter_all(any_vars(!is.na(.[, -1])))
+
+df.corr.id <- df_hddm_param_2 %>%
+  dplyr::filter(Subject %in% subj.common_id) %>%
+  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
+  dplyr::select(-expID)
+
+df.corr.id_s <- df.corr.id %>%
+  dplyr::filter(Identity == 'Self') %>%
+  dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+  #tidyr::drop_na() %>%  # N = 50
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
+
+#colnames(df.corr.id)
+#summary(df.corr.id.1)
+
+# plot(df.corr.id.1, layout = 'spring')
+
+df.corr.id_o <- df.corr.id %>%
+  dplyr::filter(Identity == 'Other') %>%
+  dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+  #tidyr::drop_na() %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
+  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
+
+# colnames(df.corr.id.2)
+summary(df.corr.id_o)
+
+Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o)
+
+plot(df.corr.id_s, layout = Layout1)
+plot(df.corr.id_o, layout = Layout1)
+
+df.corr.id.3 <- df.corr.id %>%
+  dplyr::filter(Identity == 'Self') %>%
+  dplyr::select(-c(Subject, Identity, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
+  #dplyr::select(-tidyselect::one_of(perDistNames)) %>%
+  # tidyr::drop_na() %>% # n = 55
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
+  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
+
+#colnames(df.corr.id.2)
+summary(df.corr.id.3)
+#plot(df.corr.id.3, layout = 'spring')
+
+df.corr.id.4 <- df.corr.id %>%
+  dplyr::filter(Identity == 'Other') %>%
+  dplyr::select(-c(Subject, Identity, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
+  #dplyr::select(-dplyr::starts_with('Self_')) %>%
+  #dplyr::select(-tidyselect::one_of(perDistNames)) %>%
+  #tidyr::drop_na() %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.1, missing = 'listwise')
+  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
+
+#colnames(df.corr.id.2)
+summary(df.corr.id.4)
+
+Layout2 <- qgraph::averageLayout(df.corr.id.3, df.corr.id.4)
+
+plot(df.corr.id.3, layout = Layout2, maximum=0.47)
+plot(df.corr.id.4, layout = Layout2, maximum=0.47)
+
+subj.common.no_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_1$Subject))  # 77?
+
+df.corr.no_id <- df_hddm_param_1 %>%
+  dplyr::filter(Subject %in% subj.common.no_id) %>%
+  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
+  dplyr::select(-expID)
+
+df.corr.no_id.1 <- df.corr.no_id %>%
+  dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+  #dplyr::select(-dplyr::starts_with('Other_')) %>%
+  #tidyr::drop_na() %>% # n =74
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
+
+#colnames(df.corr.id)
+summary(df.corr.no_id.1)
+
+Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o, df.corr.no_id.1)
+
+plot(df.corr.no_id.1, layout = Layout1)
+
+df.corr.no_id.2 <- df.corr.no_id %>%
+  dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
+  #tidyr::drop_na() %>% # n = 16, here is the problem!
+  #dplyr::select(-dplyr::starts_with('Other_')) %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
+
+#colnames(df.corr.id.2)
+summary(df.corr.no_id.2)
+
+Layout2 <- qgraph::averageLayout(df.corr.id.3, df.corr.id.4, df.corr.no_id.2)
+
+plot(df.corr.no_id.2, layout = Layout2, maximum=0.47)
+
+
+res.cor.id <- df.corr.id.fs %>%
+  dplyr::select(-Subject) %>%
+  correlation::correlation(., method="pearson", p_adjust = 'none')
+
+
+cor_pairs.id <- res.cor.id %>%
+  dplyr::filter(Parameter1 %in% colnames(df.corr.id.fs[2:19])) %>%
+  dplyr::filter(Parameter2 %in% colnames(df.corr.id.fs[20:29])) %>%
+  dplyr::filter(p <= 0.1) %>%
+  dplyr::arrange(p)
+
+#summary(FS.m.id.fit2, standardize = TRUE, fit.measures=TRUE)
+# plot the path
+#semPlot::semPaths(FS.m.id.fit2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+
+sem.m1 <- 'mrlIdInt =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14
+
+mrlIdExt =~  morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_15 +
+morId_16
+
+morSlfImg =~ morSlfImg_1 +
+morSlfImg_2 +
+morSlfImg_3 +
+morSlfImg_4 +
+morSlfImg_5 +
+morSlfImg_6 +
+morSlfImg_7 +
+morSlfImg_8 +
+morSlfImg_9
+
+SlfEst =~ SES1 +
+SES2 +
+SES3 +
+SES4 +
+SES5 +
+SES6 +
+SES7 +
+SES8 +
+SES9 +
+SES10
+
+v =~ Self_Good_v + Self_Bad_v + Other_Good_v + Other_Bad_v
+
+a =~ Self_Good_a + Self_Bad_a + Other_Good_a + Other_Bad_a
+
+#Self_Badv =~ Self_Bad_v
+
+#Self_Gooda =~ Self_Good_a
+
+#Self_Bada =~ Self_Bad_a
+
+#Other_Goodv =~ Other_Good_v
+
+#Other_Badv =~ Other_Bad_v
+
+#Other_Gooda =~ Other_Good_a
+
+#Other_Bada =~ Other_Bad_a
+
+v ~~ 0*a
+
+mrlIdInt ~~ mrlIdExt
+mrlIdInt ~~ morSlfImg
+mrlIdExt ~~ morSlfImg
+
+# regression
+Self_Good_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Self_Bad_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Self_Good_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Self_Bad_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Other_Good_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Other_Bad_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Other_Good_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+Other_Bad_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
+
+# correlations
+#Self_Good_v ~~ Self_Bad_v
+#Self_Good_v ~~ Other_Good_v
+#Other_Good_v ~~ Other_Bad_v
+#Self_Bad_v ~~ Other_Bad_v
+#Self_Good_a ~~ Self_Bad_a
+#Self_Good_a ~~ Other_Good_a
+#Other_Good_a ~~ Other_Bad_a
+#Self_Bad_a ~~ Other_Bad_a
+'
+
+fit.sem.m1 <- lavaan::sem(sem.m1, data = df.corr.id, estimator = "MLR", missing = 'fiml', orthogonal=T)
+fit.sem.m2 <- lavaan::sem(sem.m1, data = df.corr.id, estimator = "MLR", missing = 'listwise')
+
+#Model Outputs
+summary(fit.sem.m1, standardize = TRUE, fit.measures=TRUE)
+summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
+#summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
+
+#sem.comp <- lavaan::anova(fit.sem.m1, fit.sem.m2)
+#sem.comp
+
+# plot the path
+
+semPlot::semPaths(fit.sem.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+#semPlot::semPaths(fit.sem.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+
+fsr_m <- ' 
+  # latent variable definitions
+     Self_Goodv =~ Self_Good_v
+     mrlIdInt =~ morId_1 + 
+morId_2 +
+morId_5 +
+morId_8 +
+morId_10 +
+morId_11 +
+morId_12 +
+morId_13 +
+morId_14
+
+mrlIdExt =~  morId_3 + 
+morId_4 +
+morId_6 +
+morId_7 +
+morId_9 +
+morId_15 +
+morId_16
+
+  # regressions
+    Self_Goodv ~ mrlIdInt + mrlIdExt
+'
+
+fit <- lavaan::fsr(fsr_m, data = df.corr.id, fsr.method = "Skrondal-Laake")
+summary(fit)
+
 # get data for valence effect ---- 
 ## mean RT, SD of RT, and d prime for data without reference
 tmp1 <- df.meta_rt_1 %>%
@@ -1629,7 +1993,7 @@ rm(tmp1,tmp2)
 
 ## parameters of HDDM for the data without reference
 ## read all the file name.
-params.list <- list.files(here::here('HDDM'), pattern = '*_hddm_params.csv')
+
 params.expname <- data.frame(params.list) %>%
   tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
   dplyr::select(expName) %>%
@@ -1691,36 +2055,6 @@ df.meta_2_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
 
 ## parameters of HDDM 
 ## read all the file name.
-df_hddm_ls_2 <- params.list[c(5, 6, 11:13)]
-
-for (indx in 1:5){
-  if ((indx ==1) && exists('df_hddm_param_1')){   # in case the variable exist in the env.
-    rm(df_hddm_param_2)
-  }
-  hddm_params_tmp <- read.csv(paste(here::here("HDDM", df_hddm_ls_2[indx])), header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-    dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val, Identity = id) %>%
-    dplyr::select(Subject, Matchness, Identity, Valence, knode_name, mean) %>%
-    tidyr::drop_na() %>%
-    tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-    dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-    tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')   # %>%
-    #dplyr::mutate(ExpID = 'Exp1a')
-  if (indx == 4 | indx == 5){
-    hddm_params_tmp <- hddm_params_tmp %>%
-      dplyr::mutate(Neutral_a = NA,
-                    Neutral_t = NA,
-                    Neutral_v = NA) %>%
-      dplyr::select(Subject, Identity, Bad_a, Good_a, Neutral_a, Bad_v, Good_v, Neutral_v, Bad_t, Good_t,
-                    Neutral_t)
-  }
-  
-  if (exists('df_hddm_param_2')) {
-    df_hddm_param_2 <- rbind(df_hddm_param_2, hddm_params_tmp) 
-  } else {
-    df_hddm_param_2 <- hddm_params_tmp
-  }
-}
 
 df.meta_2_wide <- merge(df.meta_2_wide, df_hddm_param_2) %>%
   dplyr::select(-c(Domain, Matchness))
