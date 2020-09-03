@@ -1214,12 +1214,16 @@ df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), he
 ## get the questionnaire names
 # Self-esteem
 SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
+SlfEstNames_r <- c("SES1","SES2","SES3_r","SES4","SES5_r","SES6","SES7","SES8","SES9_r","SES10_r")
 
 # moral identity
 mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
                 "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
                 "morId_13","morId_14","morId_15","morId_16")
+
 mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
+                   "morId_12","morId_13","morId_14")
+mrlIdIntNames_r <- c("morId_1","morId_2","morId_5_r","morId_8", "morId_10","morId_11",
                    "morId_12","morId_13","morId_14")
 mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9",
                    "morId_15", "morId_16")
@@ -1268,13 +1272,19 @@ df.perdist <- df.perdist %>%         # find the maximum value of the row
 
 
 # calculate the factor score for moral identity, moral self image, self-esteem, and personal distance.
-df.scale.fs <- df.scales %>% dplyr::select(expID, subjID)
+
 df.scales <- df.scales %>%
   dplyr::mutate(morId_5_r = 0 - morId_5,
                 SES3_r = 5 - SES3,
                 SES5_r = 5 - SES5,
                 SES9_r = 5 - SES9,
-                SES10_r = 5 - SES10)
+                SES10_r = 5 - SES10,
+                SlfEst_sum = rowSums(.[SlfEstNames_r]),
+                mrlIdInt_sum = rowSums(.[mrlIdIntNames_r]),
+                mrlIdExt_sum = rowSums(.[mrlIdExtNames]),
+                mrlSlfImg_sum = rowSums(.[mrlslfImgNames]))
+
+df.scale.fs <- df.scales %>% dplyr::select(expID, subjID, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum)
 
 FS.m.id1 <- 'mrlIdInt =~ morId_1 + morId_2 + morId_5_r + morId_8 + morId_10 + morId_11 + morId_12 + morId_13 + morId_14
              
@@ -1653,6 +1663,9 @@ To make sure that what we found were not false positive, we used two method to e
 
 
 ```{r correlation analysis, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+### failed attempt:
+# We tried to first correlate the DDM parameters and the questionnaire separately for self-referential and other-referential, and then validation the correlation using data of experiment without self/other-referential. But the sample size for the correlation between questionnaires and behavioral results from experiment without identity are too small n = 16. I will record the code as a commit and delete those exploration later.
+
 ### Step 1: calculate the correlation of self-referential and other-referential in the later part.
 params.list <- list.files(here::here('HDDM'), pattern = '*_hddm_params.csv')
 
@@ -1831,6 +1844,34 @@ Layout2 <- qgraph::averageLayout(df.corr.id.3, df.corr.id.4, df.corr.no_id.2)
 
 plot(df.corr.no_id.2, layout = Layout2, maximum=0.47)
 
+df.corr.all.1 <- df.corr.id %>%
+  dplyr::filter(Identity == "Self") %>%
+  dplyr::select(-Identity) %>%
+  base::rbind(., df.corr.no_id) %>%
+  dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
+  #tidyr::drop_na() %>% # n = 71, here is the problem!
+  #dplyr::select(-dplyr::starts_with('Other_')) %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", corMethod = 'cor_auto', tuning = 0, missing = 'listwise')
+
+summary(df.corr.all.1)
+plot(df.corr.all.1, layout = 'spring', maximum=0.47)
+
+res.cor.id <- df.corr.id.fs %>%
+  dplyr::select(-Subject) %>%
+  correlation::correlation(., method="pearson", p_adjust = 'none')
+
+
+df.corr.all.2 <- df.corr.id %>%
+  dplyr::filter(Identity == "Self") %>%
+  dplyr::select(-Identity) %>%
+  base::rbind(., df.corr.no_id) %>%
+  dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+  #tidyr::drop_na() %>% # n = 124, here is the problem!
+  #dplyr::select(-dplyr::starts_with('Other_')) %>%
+  bootnet::estimateNetwork(., default = "EBICglasso", corMethod = 'cor_auto', tuning = 0, missing = 'listwise')
+
+summary(df.corr.all.2)
+plot(df.corr.all.2, layout = 'spring', maximum=0.47)
 
 res.cor.id <- df.corr.id.fs %>%
   dplyr::select(-Subject) %>%
