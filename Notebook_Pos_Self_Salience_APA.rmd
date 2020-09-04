@@ -1664,9 +1664,9 @@ To make sure that what we found were not false positive, we used two method to e
 
 ```{r correlation analysis, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 ### failed attempt:
-# We tried to first correlate the DDM parameters and the questionnaire separately for self-referential and other-referential, and then validation the correlation using data of experiment without self/other-referential. But the sample size for the correlation between questionnaires and behavioral results from experiment without identity are too small n = 16. I will record the code as a commit and delete those exploration later.
+# We tried to first correlate the DDM parameters and the questionnaire separately for self-referential and other-referential, and then validation the correlation using data of experiment without self/other-referential. But the sample size for the correlation between questionnaires and behavioral results from experiment without identity are too small n = 16. Therefore, we give up this exploration-validation approach.
 
-### Step 1: calculate the correlation of self-referential and other-referential in the later part.
+### Step 1: Get the parameter values
 params.list <- list.files(here::here('HDDM'), pattern = '*_hddm_params.csv')
 
 df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
@@ -1743,278 +1743,44 @@ for (indx in 1:5){
 }
 
 # intersection between participant from behavioral task and scales and get the data
-subj.common_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_2$Subject))  # 183
+# subj.common_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_2$Subject))  # 183
 
-# df.scales.v_id <- df.scales %>% dplyr::filter(subjID %in% subj.common_id) %>%
-#  dplyr::select_if(~sum(!is.na(.)) > 0) %>% # remove columns that only have NA.
-#  dplyr::select(c('subjID'), mrlIdIntNames, mrlIdExtNames, SlfEstNames, mrlslfImgNames) %>%
-#  dplyr::left_join(., df.perdist, by = "subjID") # %>%
-  # dplyr::filter_all(any_vars(!is.na(.[, -1])))
+#df.corr.id <- df_hddm_param_2 %>%
+#  dplyr::filter(Subject %in% subj.common_id) %>%
+#  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
+#  dplyr::select(-expID)
 
-df.corr.id <- df_hddm_param_2 %>%
-  dplyr::filter(Subject %in% subj.common_id) %>%
-  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
-  dplyr::select(-expID)
+# df.corr.id_s <- df.corr.id %>%
+#   dplyr::filter(Identity == 'Self') %>%
+#   dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+#   #tidyr::drop_na() %>%  # N = 50
+#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
+# 
+# subj.common.no_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_1$Subject))  # 77?
+# 
+# df.corr.no_id <- df_hddm_param_1 %>%
+#   dplyr::filter(Subject %in% subj.common.no_id) %>%
+#   dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
+#   dplyr::select(-expID)
+# 
+# df.corr.no_id.1 <- df.corr.no_id %>%
+#   dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
+#   #dplyr::select(-dplyr::starts_with('Other_')) %>%
+#   #tidyr::drop_na() %>% # n =74
+#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
 
-df.corr.id_s <- df.corr.id %>%
-  dplyr::filter(Identity == 'Self') %>%
-  dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-  #tidyr::drop_na() %>%  # N = 50
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
-
-#colnames(df.corr.id)
-#summary(df.corr.id.1)
-
-# plot(df.corr.id.1, layout = 'spring')
-
-df.corr.id_o <- df.corr.id %>%
-  dplyr::filter(Identity == 'Other') %>%
-  dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-  #tidyr::drop_na() %>%
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
-  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
-
-# colnames(df.corr.id.2)
-summary(df.corr.id_o)
-
-Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o)
-
-plot(df.corr.id_s, layout = Layout1)
-plot(df.corr.id_o, layout = Layout1)
-
-df.corr.id.3 <- df.corr.id %>%
-  dplyr::filter(Identity == 'Self') %>%
-  dplyr::select(-c(Subject, Identity, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
-  #dplyr::select(-tidyselect::one_of(perDistNames)) %>%
-  # tidyr::drop_na() %>% # n = 55
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
-  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
-
-#colnames(df.corr.id.2)
-summary(df.corr.id.3)
-#plot(df.corr.id.3, layout = 'spring')
-
-df.corr.id.4 <- df.corr.id %>%
-  dplyr::filter(Identity == 'Other') %>%
-  dplyr::select(-c(Subject, Identity, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
-  #dplyr::select(-dplyr::starts_with('Self_')) %>%
-  #dplyr::select(-tidyselect::one_of(perDistNames)) %>%
-  #tidyr::drop_na() %>%
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.1, missing = 'listwise')
-  #bootnet::bootnet_EBICglasso(., tuning = 0.5, missing = 'listwise')
-
-#colnames(df.corr.id.2)
-summary(df.corr.id.4)
-
-Layout2 <- qgraph::averageLayout(df.corr.id.3, df.corr.id.4)
-
-plot(df.corr.id.3, layout = Layout2, maximum=0.47)
-plot(df.corr.id.4, layout = Layout2, maximum=0.47)
-
-subj.common.no_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_1$Subject))  # 77?
-
-df.corr.no_id <- df_hddm_param_1 %>%
-  dplyr::filter(Subject %in% subj.common.no_id) %>%
-  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
-  dplyr::select(-expID)
-
-df.corr.no_id.1 <- df.corr.no_id %>%
-  dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-  #dplyr::select(-dplyr::starts_with('Other_')) %>%
-  #tidyr::drop_na() %>% # n =74
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
-
-#colnames(df.corr.id)
-summary(df.corr.no_id.1)
-
-Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o, df.corr.no_id.1)
-
-plot(df.corr.no_id.1, layout = Layout1)
-
-df.corr.no_id.2 <- df.corr.no_id %>%
-  dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
-  #tidyr::drop_na() %>% # n = 16, here is the problem!
-  #dplyr::select(-dplyr::starts_with('Other_')) %>%
-  bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
-
-#colnames(df.corr.id.2)
-summary(df.corr.no_id.2)
-
-Layout2 <- qgraph::averageLayout(df.corr.id.3, df.corr.id.4, df.corr.no_id.2)
-
-plot(df.corr.no_id.2, layout = Layout2, maximum=0.47)
-
-df.corr.all.1 <- df.corr.id %>%
-  dplyr::filter(Identity == "Self") %>%
-  dplyr::select(-Identity) %>%
-  base::rbind(., df.corr.no_id) %>%
-  dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
-  #tidyr::drop_na() %>% # n = 71, here is the problem!
-  #dplyr::select(-dplyr::starts_with('Other_')) %>%
-  bootnet::estimateNetwork(., default = "EBICglasso", corMethod = 'cor_auto', tuning = 0, missing = 'listwise')
-
-summary(df.corr.all.1)
-plot(df.corr.all.1, layout = 'spring', maximum=0.47)
-
-res.cor.id <- df.corr.id.fs %>%
-  dplyr::select(-Subject) %>%
-  correlation::correlation(., method="pearson", p_adjust = 'none')
-
-
-df.corr.all.2 <- df.corr.id %>%
-  dplyr::filter(Identity == "Self") %>%
-  dplyr::select(-Identity) %>%
-  base::rbind(., df.corr.no_id) %>%
-  dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-  #tidyr::drop_na() %>% # n = 124, here is the problem!
-  #dplyr::select(-dplyr::starts_with('Other_')) %>%
-  bootnet::estimateNetwork(., default = "EBICglasso", corMethod = 'cor_auto', tuning = 0, missing = 'listwise')
-
-summary(df.corr.all.2)
-plot(df.corr.all.2, layout = 'spring', maximum=0.47)
-
-res.cor.id <- df.corr.id.fs %>%
-  dplyr::select(-Subject) %>%
-  correlation::correlation(., method="pearson", p_adjust = 'none')
-
-
-cor_pairs.id <- res.cor.id %>%
-  dplyr::filter(Parameter1 %in% colnames(df.corr.id.fs[2:19])) %>%
-  dplyr::filter(Parameter2 %in% colnames(df.corr.id.fs[20:29])) %>%
-  dplyr::filter(p <= 0.1) %>%
-  dplyr::arrange(p)
-
-#summary(FS.m.id.fit2, standardize = TRUE, fit.measures=TRUE)
-# plot the path
-#semPlot::semPaths(FS.m.id.fit2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-
-sem.m1 <- 'mrlIdInt =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14
-
-mrlIdExt =~  morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_15 +
-morId_16
-
-morSlfImg =~ morSlfImg_1 +
-morSlfImg_2 +
-morSlfImg_3 +
-morSlfImg_4 +
-morSlfImg_5 +
-morSlfImg_6 +
-morSlfImg_7 +
-morSlfImg_8 +
-morSlfImg_9
-
-SlfEst =~ SES1 +
-SES2 +
-SES3 +
-SES4 +
-SES5 +
-SES6 +
-SES7 +
-SES8 +
-SES9 +
-SES10
-
-v =~ Self_Good_v + Self_Bad_v + Other_Good_v + Other_Bad_v
-
-a =~ Self_Good_a + Self_Bad_a + Other_Good_a + Other_Bad_a
-
-#Self_Badv =~ Self_Bad_v
-
-#Self_Gooda =~ Self_Good_a
-
-#Self_Bada =~ Self_Bad_a
-
-#Other_Goodv =~ Other_Good_v
-
-#Other_Badv =~ Other_Bad_v
-
-#Other_Gooda =~ Other_Good_a
-
-#Other_Bada =~ Other_Bad_a
-
-v ~~ 0*a
-
-mrlIdInt ~~ mrlIdExt
-mrlIdInt ~~ morSlfImg
-mrlIdExt ~~ morSlfImg
-
-# regression
-Self_Good_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Self_Bad_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Self_Good_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Self_Bad_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Other_Good_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Other_Bad_v ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Other_Good_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-Other_Bad_a ~ mrlIdInt + mrlIdExt + morSlfImg + SlfEst
-
-# correlations
-#Self_Good_v ~~ Self_Bad_v
-#Self_Good_v ~~ Other_Good_v
-#Other_Good_v ~~ Other_Bad_v
-#Self_Bad_v ~~ Other_Bad_v
-#Self_Good_a ~~ Self_Bad_a
-#Self_Good_a ~~ Other_Good_a
-#Other_Good_a ~~ Other_Bad_a
-#Self_Bad_a ~~ Other_Bad_a
-'
-
-fit.sem.m1 <- lavaan::sem(sem.m1, data = df.corr.id, estimator = "MLR", missing = 'fiml', orthogonal=T)
-fit.sem.m2 <- lavaan::sem(sem.m1, data = df.corr.id, estimator = "MLR", missing = 'listwise')
-
-#Model Outputs
-summary(fit.sem.m1, standardize = TRUE, fit.measures=TRUE)
-summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
-#summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
-
-#sem.comp <- lavaan::anova(fit.sem.m1, fit.sem.m2)
-#sem.comp
-
-# plot the path
-
-semPlot::semPaths(fit.sem.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-#semPlot::semPaths(fit.sem.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-
-fsr_m <- ' 
-  # latent variable definitions
-     Self_Goodv =~ Self_Good_v
-     mrlIdInt =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14
-
-mrlIdExt =~  morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_15 +
-morId_16
-
-  # regressions
-    Self_Goodv ~ mrlIdInt + mrlIdExt
-'
-
-fit <- lavaan::fsr(fsr_m, data = df.corr.id, fsr.method = "Skrondal-Laake")
-summary(fit)
+# #colnames(df.corr.id)
+# summary(df.corr.no_id.1)
+# 
+# Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o, df.corr.no_id.1)
+# 
+# plot(df.corr.no_id.1, layout = Layout1)
+# 
+# df.corr.no_id.2 <- df.corr.no_id %>%
+#   dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
+#   #tidyr::drop_na() %>% # n = 16, here is the problem!
+#   #dplyr::select(-dplyr::starts_with('Other_')) %>%
+#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
 
 # get data for valence effect ---- 
 ## mean RT, SD of RT, and d prime for data without reference
@@ -2039,42 +1805,6 @@ params.expname <- data.frame(params.list) %>%
   tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
   dplyr::select(expName) %>%
   dplyr::pull()
-
-df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
-
-for (indx in 1:6){
-  if ((indx ==1) && exists('df_hddm_param_1')){   # if the variable already exist before the for loop start
-    rm(df_hddm_param_1)
-  }
-
-  if (indx == 5 ){
-    hddm_params_tmp <- read.csv(here::here("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
-                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-      dplyr::filter(domain == "Morality") %>%
-      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-      tidyr::drop_na() %>%
-      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')  
-    
-  } else {
-    hddm_params_tmp <- read.csv(here::here("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
-                   stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-      dplyr::rename(Subject = subj_idx, Matchness = match, Valence = val) %>%
-      dplyr::select(Subject, Matchness, Valence, knode_name, mean) %>%
-      tidyr::drop_na() %>%
-      tidyr::separate(knode_name, into = paste('v', 1:2, sep= '')) %>%
-      dplyr::rename(param = v1)  %>% dplyr::filter(Matchness=='Match') %>% dplyr::select(- c(v2, Matchness)) %>%
-      tidyr::pivot_wider(., names_from = c('Valence', 'param'), values_from = 'mean')   # %>%
-      #dplyr::mutate(ExpID = 'Exp1a')
-  }
-  if (exists('df_hddm_param_1')) {
-    df_hddm_param_1 <- rbind(df_hddm_param_1, hddm_params_tmp) 
-  } else {
-    df_hddm_param_1 <- hddm_params_tmp
-  }
-}
 
 df.meta_1_wide <- merge(df.meta_1_wide, df_hddm_param_1) %>%
   dplyr::select(-c(Domain, Identity, Matchness))
@@ -2109,63 +1839,19 @@ df.meta_all_wide <- df.meta_2_wide %>%
   rbind(df.meta_1_wide, .)
 
 # intersection between participant from behavioral task and scales and get the data
-subj.common <- intersect(df.scales$subjID, unique(df.meta_all_wide$Subject))  # 253
+subj.common <- intersect(df.scale.fs$subjID, unique(df.meta_all_wide$Subject))  # 253
 
-df.scales.v <- df.scales %>% dplyr::filter(subjID %in% subj.common) %>%
+df.q_scores.v <- df.scale.fs %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
-
-
-df.mrlID <- df.scales.v[c('subjID', mrlIdIntNames, mrlIdExtNames)] %>%
-  #tidyr::drop_na() %>%
-  dplyr::mutate(mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
-                mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),)
-# plot(df.mrlID$mrlIdInt)
-
-# calculate the average score of each relevant scale
-df.q_scores.v <- df.scales.v %>%
-  dplyr::mutate(SlfEst = rowMeans(.[, SlfEstNames],na.rm = F),
-                mrlIdInt = rowMeans(.[, mrlIdIntNames], na.rm = F),
-                mrlIdExt = rowMeans(.[, mrlIdExtNames], na.rm = F),
-                mrlslfImg = rowMeans(.[, mrlslfImgNames], na.rm = F),
-                ) %>%
-  dplyr::select(subjID, SlfEst, mrlIdInt, mrlIdExt, mrlslfImg)
-
-df.perdist.v <- df.scales.v %>%
-  dplyr::select(c(expID, subjID),perDistNames) %>%
-  #dplyr::rowwise() %>%
-  dplyr::mutate(sumRaw = rowMeans(.[3:31], na.rm = T),
-                SelfSelfraw = SelfSelf,
-                SelfGoodraw = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
-                SelfNeutraw = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
-                SelfBadraw  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
-                SelfStraraw = rowMeans(.[grep("SelfStra", names(.))], na.rm = T),
-                GoodNeutraw = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
-                GoodBadraw  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
-                NeutBadraw  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
-  dplyr::select(expID, subjID, sumRaw, SelfSelfraw, 
-                SelfGoodraw, SelfNeutraw, SelfBadraw,
-                SelfStraraw, GoodNeutraw, GoodBadraw, NeutBadraw) %>%
-  dplyr::mutate(SelfSelf = SelfSelfraw/sumRaw,
-                SelfGood = SelfGoodraw/sumRaw,
-                SelfNeut = SelfNeutraw/sumRaw,
-                SelfBad = SelfBadraw/sumRaw,
-                SelfStra = SelfStraraw/sumRaw, 
-                GoodNeut = GoodNeutraw/sumRaw, 
-                GoodBad = GoodBadraw/sumRaw, 
-                NeutBad = NeutBadraw/sumRaw) %>%
-  dplyr::select(subjID, SelfSelf, SelfGood, SelfNeut, SelfBad,
-                SelfStra, GoodNeut, GoodBad, NeutBad)
-
-df.q_scores.v <- merge(df.q_scores.v, df.perdist.v)
 
 # temp data for SEM
 tmp <- merge(df.scales.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject')
 
 ## calculate correlation ----
 df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
-  dplyr::select(-c(14)) %>%
-  dplyr::select(-c(SelfSelf, SelfStra)) %>%
-  dplyr::select(12, 13, 1, 14:15, everything()) %>%
+  dplyr::select(-c(expID)) %>%
+  #dplyr::select(-c(SelfSelf, SelfStra)) %>%
+  dplyr::select(1, 17:20, everything()) %>%
   dplyr::mutate(subjID = as.character(subjID),
                 Age = as.character(Age)) %>%
   dplyr::na_if("NaN")
@@ -2175,20 +1861,20 @@ df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subje
 # standardize within each experiment.
 df.corr_norm <- df.corr %>%
   dplyr::group_by(ExpID, Site) %>%
-  mutate_if(is.numeric, scale) %>%
+  mutate_if(is.numeric, scale) %>% # re-consider here
   dplyr::ungroup() %>%
-  dplyr::mutate(RT_Good_Bad = RT_Good - RT_Bad,
-                RT_Good_Neutral = RT_Good - RT_Neutral,
-                RT_Bad_Neutral = RT_Bad -RT_Neutral,
-                d_Good_Bad = dprime_Good - dprime_Bad,
-                d_Good_Neutral = dprime_Good - dprime_Neut,
-                d_Bad_Neutral = dprime_Bad - dprime_Neut) %>%
+  # dplyr::mutate(RT_Good_Bad = RT_Good - RT_Bad,
+  #               RT_Good_Neutral = RT_Good - RT_Neutral,
+  #               RT_Bad_Neutral = RT_Bad -RT_Neutral,
+  #               d_Good_Bad = dprime_Good - dprime_Bad,
+  #               d_Good_Neutral = dprime_Good - dprime_Neut,
+  #               d_Bad_Neutral = dprime_Bad - dprime_Neut) %>%
   dplyr::select(-contains("SD"))
 
 # library(corrr)
 res.cor_all <- df.corr_norm %>%
   dplyr::select(-c(ExpID:Sex)) %>%
-  correlation::correlation(., method="pearson", p_adjust = 'none')
+  correlation::correlation(., method="spearman", p_adjust = 'none')
 
 res.cor_1 <- df.corr_norm %>%
   dplyr::filter(ExpID %in% unique(df.meta_1_wide$ExpID)) %>%
@@ -2203,7 +1889,7 @@ res.cor_2 <- df.corr_norm %>%
 cor_pairs_all <- res.cor_all %>%
   dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
   dplyr::filter(Parameter2 %in% colnames(df.meta_all_wide[7:24])) %>%
-  dplyr::filter(p <= 0.05) %>%
+  dplyr::filter(p <= 0.1) %>%
   dplyr::arrange(p)
 
 cor_pairs_1 <- res.cor_1 %>%
