@@ -31,7 +31,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  To navigate in a complex social world, individual has learnt to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized [@gantman_moral_2014;@anderson_visual_2011]. Using social associative learning paradigm (self-tagging paradigm), we found that when geometric shapes, without soical meaning, were associated with different moral valence (morally good, neutral, or bad), the shapes that associated with positive moral valence were prioritized in a perceptual matching task. This patterns of results were robust across different procedures. Further, we tested whether this positive effect was modulated by self-relevance by manipulating the self-referential explicitly and found that this moral positivity effect only occured when the moral valence are self-relevant but evidence to support such effect when the moral valence are other-relevant is weak. We further found that this effect exist even when the self-relevance or the moral valence were presented as a task-irrelevant information, though the effect size become much smaller. We also tested whether the positivity effect only exist in moral domain and found that this effect was not limited to moral domain. Exploratory analyses on task-questionnaire relationship found that moral self-image score (how closely one feel they are to the ideal moral image of themselves) is positively correlated to the *d'* of morally positive condition in singal detection and the drift rate using DDM, while the self-esteem is negatively correlated with *d'* of neutral and morally negative conditions. These results suggest that the positive self prioritzation in perceptual decision-making may reflect ...
+  To navigate in a complex social world, individual has learnt to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized [@gantman_moral_2014;@anderson_visual_2011]. Using social associative learning paradigm (self-tagging paradigm), we found that when geometric shapes, without soical meaning, were associated with different moral valence (morally good, neutral, or bad), the shapes that associated with positive moral valence were prioritized in a perceptual matching task. This patterns of results were robust across different procedures. Further, we tested whether this positivity effect was modulated by self-relevance by manipulating the self-relevance explicitly and found that this moral positivity effect was strong when the moral valence is describing onself, but only weak evidence that such effect occured when the moral valence was describing others. We further found that this effect exist even when the self-relevance or the moral valence were presented as a task-irrelevant information, though the effect size become smaller. We also tested whether the positivity effect only exist in moral domain and found that this effect was not limited to moral domain. Exploratory analyses on task-questionnaire relationship found that moral self-image score (how closely one feel they are to the ideal moral image of themselves) is positively correlated to the *d'* of morally positive condition in singal detection and the drift rate using DDM, while the self-esteem is negatively correlated with *d'* of neutral and morally negative conditions. These results suggest that the positive self prioritzation in perceptual decision-making may reflect ...
   
   <!-- https://tinyurl.com/ybremelq -->
   
@@ -73,19 +73,24 @@ options(tinytex.verbose = T) # debug the tex
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
-
+ <!-- What is the theoretic meaning of the series study? -->
 # Introduction
-XXXX
-In perceptual matching, same is faster than different [@Krueger_1978; @Farell_1985].
-Automatic processing [@Spruyt_de_Houwer_2017]
 
-@van_zandt_comparison_2000: A comparison of two response time models applied to perceptual matching
+Perceptual decision-making is an important window for understanding the cognition (Shadlen & Kiani, 2013).
 
-Yakushijin, ReikoJacobs, Robert A (2020), Are People Successful at Learning Sequential Decisions on a Perceptual Matching Task?
+The role of perception in social cognition has been largely ignored, but accumulating evidence revealed that perception provides rich information about our social cognition (Stolier & Freeman, 2016; Xiao, Coppin, & Bavel, 2016).
 
-Schooler, L. J., Shiffrin, R. M., & Raaijmakers, J. G. W. (2001). A Bayesian model for implicit effects in perceptual identification. Psychological Review, 108(1), 257–272. https://doi.org/10.1037/0033-295X.108.1.257
+Here we investigated how the instantly learned moral valence changed the perceptual decision-making and the underlying psychological processes.
 
-We reported results from eleven experiments. In first set of experiments, we found that shapes associated with morally positive person label were responded faster and more accurately. In the second set of experiments, we explore the potential role of good self in perceptual matching task and added one more independent variable, we found that the effect was mainly on good self. In the third part we tested whether the morality will automatically binds with person-relevance. Finally, we explore the correlation between behavioral task and questionnaire scores.
+Given the importance of morality in social life (DeScioli, 2016) and identity (Freitas, Cikara, Grossmann, & Schlegel, 2017; Strohminger, Knobe, & Newman, 2017; Zhang, Chen, Schlegel, Hicks, & Chen, 2019), and evidence that moral character impacts how people evaluate themselves [XXXX], desired personality change (Sun & Goodwin, 2020), memory (Carlson, Maréchal, Oud, Fehr, & Crockett, 2020; Kouchaki & Gino, 2016; Shu, Gino, & Bazerman, 2011; Stanley & De Brigard, 2019), one would expect that moral character, the morality related trait, will also reflected in perceptual decision-making. Yet, this effect was less studied (Anderson et al., 2011; Gantman & Van Bavel, 2014). This moral perception effect was driven by motivation (Gantman & Van Bavel, 2016) and influenced the information spreading online [@brady_attentional_2020]. Especially lacking is the process of this effect. 
+
+The current study first explored and confirmed a positive effect of moral character in perceptual decision-making, using an associative learning task, then attempted to provide a mechanistic explanation for this positivity effect: spontaenous self-identification with the moral good character (@juechems_where_2019: Self-relevance is an important dimension in determine the value, i.e., intrinsic goal), both implicitly and explicitly. Finally, this positivity  effect was also found in other social traits (beauty) but not non-social, emotional states.
+
+Potential theoretical discussion points:
+Close distance of the semantic representation of self and moral character (attractor network) (Freeman & Ambady, 2011).
+The core/true/authentic self concept.
+
+We reported behavioral results from eleven experiments. In first set of experiments, we found that shapes associated with morally positive person label were responded faster and more accurately. In the second set of experiments, we explore the potential role of good self in perceptual matching task and added one more independent variable, we found that the effect was mainly on good self. In the third part we tested whether the morality will automatically binds with self but not other. Finally, we explore the correlation between behavioral task and questionnaire scores.
 
 # Disclosures
 We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis.  
@@ -1249,37 +1254,37 @@ perDistNames2 <- c("SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
                   "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
                   "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
 
-# Normalize the person distance by dividing the maxiumum value for each data point
+# Normalize the person distance by dividing the maximum value for each data point
 df.perdist <- df.scales %>%
   dplyr::select(c(expID, subjID),perDistNames) %>%
   dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
-  dplyr::filter(sd_raw >=10) %>%                               # remove data with small variance
-  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames))) 
+  dplyr::filter(sd_raw >=10) %>%                                # remove data with small variance
+  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames)))   # find the maximum value of the row
 
-df.perdist[,3:31] <- df.perdist[,3:31]/df.perdist$maxDist
+df.perdist[,3:31] <- df.perdist[,3:31]/df.perdist$maxDist       # dividing the maximum
 
-df.perdist <- df.perdist %>%         # find the maximum value of the row
+# Get the mean value of each distance
+df.perdist <- df.perdist %>%        
     dplyr::mutate(# sumRaw = rowMeans(.[3:31], na.rm = T),
-                SelfGood_pd = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
-                SelfNeut_pd = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
-                SelfBad_pd  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
-                GoodNeut_pd = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
-                GoodBad_pd  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
-                NeutBad_pd  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
+                SelfGood = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
+                SelfNeut = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
+                SelfBad  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
+                GoodNeut = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
+                GoodBad  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
+                NeutBad  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
     dplyr::select(expID, subjID,
-                SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd) %>%
+                SelfGood, SelfNeut, SelfBad, GoodNeut, GoodBad, NeutBad) %>%
   tidyr::drop_na()
-
 
 # calculate the factor score for moral identity, moral self image, self-esteem, and personal distance.
 
 df.scales <- df.scales %>%
-  dplyr::mutate(morId_5_r = 0 - morId_5,
+  dplyr::mutate(morId_5_r = 0 - morId_5, # reverse the items that need to be reversed.
                 SES3_r = 5 - SES3,
                 SES5_r = 5 - SES5,
                 SES9_r = 5 - SES9,
-                SES10_r = 5 - SES10,
-                SlfEst_sum = rowSums(.[SlfEstNames_r]),
+                SES10_r = 5 - SES10) %>%
+  dplyr::mutate(SlfEst_sum = rowSums(.[SlfEstNames_r]),
                 mrlIdInt_sum = rowSums(.[mrlIdIntNames_r]),
                 mrlIdExt_sum = rowSums(.[mrlIdExtNames]),
                 mrlSlfImg_sum = rowSums(.[mrlslfImgNames]))
@@ -1327,222 +1332,66 @@ df.scale.fs <- df.scale.fs %>%
 
 ```
 
-```{r test_SEM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# Test the SEM, compare two models of the moral identity scale
-
-mrlID.m1 <- 'mrlId =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14 +
-morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_10 +
-morId_15 +
-morId_16
-'
-
-mrlID.m2 <- 'mrlIdInt =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14
-
-mrlIdExtNames =~  morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_15 +
-morId_16
-'
-
-sem.m1 <- 'mrlIdInt =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14
-
-mrlIdExt =~  morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_15 +
-morId_16
-
-Good =~ Good_v
-
-# regression
-Good ~ mrlIdInt + mrlIdExt 
-'
-
-sem.m2 <- 'mrlIdInt =~ morId_1 + 
-morId_2 +
-morId_5 +
-morId_8 +
-morId_10 +
-morId_11 +
-morId_12 +
-morId_13 +
-morId_14
-
-mrlIdExt =~  morId_3 + 
-morId_4 +
-morId_6 +
-morId_7 +
-morId_9 +
-morId_15 +
-morId_16
-
-morSlfImg =~ morSlfImg_1 +
-morSlfImg_2 +
-morSlfImg_3 +
-morSlfImg_4 +
-morSlfImg_5 +
-morSlfImg_6 +
-morSlfImg_7 +
-morSlfImg_8 +
-morSlfImg_9
-
-Good =~ Good_v
-
-Bad =~ Bad_v
-
-# regression
-Good ~ mrlIdInt + mrlIdExt + morSlfImg
-Bad ~ mrlIdInt + mrlIdExt + morSlfImg
-
-# correlations
-Good ~~ Bad
-'
-
-fit.mrlID.m1 <- lavaan::cfa(mrlID.m1, data = df.scales, estimator = "MLR")
-fit.mrlID.m2 <- lavaan::cfa(mrlID.m2, data = df.scales, estimator = "MLR")
-
-fit.sem.m1 <- lavaan::sem(sem.m1, data = tmp, estimator = "MLM")
-fit.sem.m2 <- lavaan::sem(sem.m2, data = tmp, estimator = "MLM")
-
-#Model Outputs
-summary(fit.mrlID.m1, standardize = TRUE, fit.measures=TRUE)
-summary(fit.mrlID.m2, standardize = TRUE, fit.measures=TRUE)
-
-summary(fit.sem.m1, standardize = TRUE, fit.measures=TRUE)
-summary(fit.sem.m2, standardize = TRUE, fit.measures=TRUE)
-
-sem.comp <- lavaan::anova(fit.sem.m1, fit.sem.m2)
-sem.comp
-
-# plot the path
-# semPlot::semPaths(fit.mrlID.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-semPlot::semPaths(fit.mrlID.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-
-semPlot::semPaths(fit.sem.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-semPlot::semPaths(fit.sem.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-```
 
 ```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
 
-# boxplot
+# Boxplot
 df.perdist %>% 
-  tidyr::pivot_longer(., cols = SelfGood_pd:NeutBad_pd,
+  tidyr::pivot_longer(., cols = SelfGood:NeutBad,
                       names_to = 'PerDist',
                       values_to = 'value') %>%
+  dplyr::mutate(PerDist=factor(PerDist, levels = c('SelfNeut', 'SelfGood', 'GoodNeut', 'NeutBad', 'GoodBad', 'SelfBad'))) %>%
   ggplot2::ggplot(.,aes(x=PerDist, y=value)) +
   ggplot2::geom_boxplot() +
-  ggplot2::geom_point(position = position_jitter())
+  ggplot2::geom_point(position = position_jitter(),size = 1, shape = 20, alpha = 0.15) + 
+  scale_fill_brewer(palette = "Dark2") +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")) 
 
-mean(df.perdist$GoodBad_pd) - 2.5*sd(df.perdist$GoodBad_pd)
+dist.cor <- df.perdist %>%
+  dplyr::select(-c(subjID, expID)) %>%
+  as.matrix() %>%
+  Hmisc::rcorr(., type = 'spearman')
 
-df.plot3 <- df.perdist %>%
-  dplyr::mutate(sum_GN_NB = GoodNeut + NeutBad,
-                sum_SG_SB = SelfGood + SelfBad,
-                sum_SG_SB_m = SelfGood + SelfBad - SelfNeut)
-df.plot3 %>%
-  tidyr::pivot_longer(., cols = GoodNeut_NonSelf:GoodBad_Self,
-                      names_to = 'PerDist',
-                      values_to = 'value') %>%
-  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE) 
-  ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=ID, shape=ID)) +
-  geom_point() + 
-  geom_smooth(method=lm)
+corrplot(dist.cor$r, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45,
+         p.mat = dist.cor$P, sig.level = 0.01, insig = "blank")
 
-df.plot3 %>% 
-  ggplot(., aes(x = GoodBad, y = sum_GN_NB)) +
-   geom_point() + 
-  geom_smooth(method=lm)
-
-df.plot3 %>% 
-  ggplot(., aes(x = GoodBad, y = sum_SG_SB)) +
-   geom_point() + 
-  geom_smooth(method=lm)
-
-df.plot3 %>% 
-  ggplot(., aes(x = GoodBad, y = sum_SG_SB_m)) +
-   geom_point() + 
-  geom_smooth(method=lm)
+col<- colorRampPalette(c("blue", "white", "red"))(20)
+heatmap(x = dist.cor$r, col = col, symm = TRUE)
   
+  #correlation::correlation(., method="spearman", p_adjust = 'none')
+
+# Suppose the self as the anchor, use the self-distance to calc the distance between good, bad, and neutral
 df.plot2 <- df.perdist %>%
-  # dplyr::select(-c(SelfSelf, SelfStra)) %>%
-  dplyr::mutate(GoodNeut_Self = abs(SelfGood - SelfNeut),
-                NeutBad_Self = abs(SelfBad - SelfNeut),
-                GoodBad_Self = abs(SelfBad - SelfGood)) %>%
-  dplyr::select(-c(SelfGood, SelfNeut, SelfBad)) %>%
-  dplyr::rename(GoodNeut_NonSelf = GoodNeut,
-                GoodBad_NonSelf = GoodBad,
-                NeutBad_NonSelf = NeutBad)
-
-# correlation::correlation(df.plot2[,2:7])
-
-df.plot2 <- df.plot2 %>%
+  dplyr::mutate(GoodNeut_Self = abs(SelfGood_pd - SelfNeut_pd),
+                NeutBad_Self = abs(SelfBad_pd - SelfNeut_pd),
+                GoodBad_Self = abs(SelfBad_pd - SelfGood_pd)) %>%
+  dplyr::select(-c(SelfGood_pd, SelfNeut_pd, SelfBad_pd)) %>%
+  dplyr::rename(GoodNeut_NonSelf = GoodNeut_pd,
+                GoodBad_NonSelf = GoodBad_pd,
+                NeutBad_NonSelf = NeutBad_pd)  %>%
   tidyr::pivot_longer(., cols = GoodNeut_NonSelf:GoodBad_Self,
                       names_to = 'PerDist',
                       values_to = 'value') %>%
-  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE)  %>%
-  tidyr::pivot_wider(., names_from = ID, values_from= value) 
-
-df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('ID', 'dist')) 
-
-# group the scatter point.
-df.plot2 %>%
-  ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=dist, shape=dist)) +
-  geom_point() + 
-  geom_smooth(method=lm)
-
-df.plot2 <- df.plot2 %>%
-    # dplyr::select(-c(SelfSelf, SelfStra)) %>%
-    #tidyr::pivot_longer(., cols = SelfGood:NeutBad, 
-    #                    names_to = 'PerDist', 
-    #                    values_to = "value") %>% # to longer format
-    dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
-                  # DVs = factor(DVs, levels = c('RT', 'dprime')),
-                  # create an extra column for ploting the individual data cross different conditions.
-                  Conds = mosaic::derivedFactor("1" = (dist == 'GoodNeut'),
-                                                "2" = (dist == 'NeutBad'),
-                                                "3" = (dist == 'GoodBad'),
-                                                method ="first", .default = NA),
-                  Conds = as.numeric(as.character(Conds)),
-    ) 
-df.plot2 <- df.plot2 %>%
-    dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
+  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE) %>%
+  dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
                   ID = factor(ID, levels = c("Self", 'NonSelf')),
-                  # DVs = factor(DVs, levels = c('RT', 'dprime')),
-                  # create an extra column for plotting the individual data cross different conditions.
                   Conds = mosaic::derivedFactor("0.9" = (dist == 'GoodNeut' & ID == 'Self'),
                                                 "1.1" = (dist == 'GoodNeut' & ID == 'NonSelf'),
                                                 "1.9" = (dist == 'NeutBad' & ID == 'Self'),
@@ -1550,50 +1399,37 @@ df.plot2 <- df.plot2 %>%
                                                 "2.9" = (dist == 'GoodBad' & ID == 'Self'),
                                                 "3.1" = (dist == 'GoodBad' & ID == 'NonSelf'),
                                                 method ="first", .default = NA),
-                  Conds = as.numeric(as.character(Conds)),
-    ) 
-df.plot2$Conds_j <- jitter(df.plot2$Conds, amount=.03) # add gitter to x
-  
-  # New facet label names for panel variable
-  # https://stackoverflow.com/questions/34040376/cannot-italicize-facet-labels-with-labeller-label-parsed
-  # levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
-  #                           "dprime"=expression(paste(italic("d"), ' prime')))
-  # levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
-  #                           "dprime"=expression(paste(italic("d"), ' prime')))
-  
+                  Conds = as.numeric(as.character(Conds)),) %>% 
+  dplyr::mutate(Conds_j = jitter(Conds, amount=.03))   # add gitter to x
+
+df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('ID', 'dist')) 
 df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('dist', 'ID')) %>%
     dplyr::mutate(Cond_num = mosaic::derivedFactor("1"  = (dist == 'GoodNeut'),
                                                 "2" = (dist == 'NeutBad'),
                                                 "3" = (dist == 'GoodBad'),
                                                 method ="first", .default = NA),
                   Cond_num = as.numeric(as.character(Cond_num)))
-  
+# # group the scatter point.
+# df.plot2 %>%
+#   ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=dist, shape=dist)) +
+#   geom_point() + 
+#   geom_smooth(method=lm)
 pd1 <- position_dodge(0.4)
-  # scaleFUN <- function(x) sprintf("%.2f", x)
-  # scales_y <- list(
-  #   RT = scale_y_continuous(limits = c(400, 900)),
-  #   dprime = scale_y_continuous(labels=scaleFUN)
-  #)
-  
-df.plot2  %>% # dplyr::filter(DVs== 'RT') %>%
+
+df.plot2  %>%
     dplyr::rename(Subject=subjID) %>%
     ggplot(., aes(x = dist, y = value)) +
-    #geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
-    #          linetype = 1, size = 1, colour = "#000000", alpha = 0.01) + 
     geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(ID)),   # plot individual points
-               #colour = "#000000", 
                size = 1, shape = 20, alpha = 0.15) +
     geom_line(data = df.plot2.sum_p, aes(x = as.numeric(dist), # plot the group means  
                                         y = value, 
                                         group = ID, 
-                                        colour = as.factor(ID),
-    ), 
+                                        colour = as.factor(ID)), 
     linetype = 1, position = pd1, size = 2) +
     geom_point(data = df.plot2.sum_p, aes(x = as.numeric(dist), # group mean
                                          y = value, 
                                          group = ID, 
-                                         colour = as.factor(ID),
-    ), 
+                                         colour = as.factor(ID),), 
     shape = 18, position = pd1, size = 5) +
     geom_errorbar(data = df.plot2.sum_p, aes(x = as.numeric(dist),  # group error bar.
                                             y = value, 
@@ -1622,36 +1458,7 @@ df.plot2  %>% # dplyr::filter(DVs== 'RT') %>%
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
           strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(3, "lines")
-    ) 
-
-dist.m1 <- 'dist =~ GoodNeut + 
-GoodBad +
-NeutBad +
-SelfGood +
-# SelfBad +
-SelfNeut
-'
-
-dist.m2 <- 'dist_s =~ 
-SelfGood +
-SelfNeut +
-GoodNeut +
-NeutBad
-
-dist_bad =~ 
-SelfBad + 
-GoodBad
-'
-
-
-fit.dist.m1 <- lavaan::cfa(dist.m1, data = df.perdist, estimator = "MLR")
-fit.dist.m2 <- lavaan::cfa(dist.m2, data = df.perdist, estimator = "MLR")
-
-summary(fit.dist.m1, standardize = TRUE, fit.measures=TRUE)
-summary(fit.dist.m2, standardize = TRUE, fit.measures=TRUE)
-
-semPlot::semPaths(fit.dist.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
+          panel.spacing = unit(3, "lines")) 
 ```
 
 See Figure \@ref(fig:plot-person-dist).
@@ -1742,69 +1549,29 @@ for (indx in 1:5){
   }
 }
 
-# intersection between participant from behavioral task and scales and get the data
-# subj.common_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_2$Subject))  # 183
-
-#df.corr.id <- df_hddm_param_2 %>%
-#  dplyr::filter(Subject %in% subj.common_id) %>%
-#  dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
-#  dplyr::select(-expID)
-
-# df.corr.id_s <- df.corr.id %>%
-#   dplyr::filter(Identity == 'Self') %>%
-#   dplyr::select(-c(Subject, Identity, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-#   #tidyr::drop_na() %>%  # N = 50
-#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
-# 
-# subj.common.no_id <- intersect(df.scale.fs$subjID, unique(df_hddm_param_1$Subject))  # 77?
-# 
-# df.corr.no_id <- df_hddm_param_1 %>%
-#   dplyr::filter(Subject %in% subj.common.no_id) %>%
-#   dplyr::left_join(., df.scale.fs, by = c('Subject'='subjID')) %>%
-#   dplyr::select(-expID)
-# 
-# df.corr.no_id.1 <- df.corr.no_id %>%
-#   dplyr::select(-c(Subject, morSlfImg, mrlIdExt, mrlIdInt, SlfEst)) %>%
-#   #dplyr::select(-dplyr::starts_with('Other_')) %>%
-#   #tidyr::drop_na() %>% # n =74
-#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0.15, missing = 'listwise')
-
-# #colnames(df.corr.id)
-# summary(df.corr.no_id.1)
-# 
-# Layout1 <- qgraph::averageLayout(df.corr.id_s, df.corr.id_o, df.corr.no_id.1)
-# 
-# plot(df.corr.no_id.1, layout = Layout1)
-# 
-# df.corr.no_id.2 <- df.corr.no_id %>%
-#   dplyr::select(-c(Subject, SelfGood_pd, SelfNeut_pd, SelfBad_pd, GoodNeut_pd, GoodBad_pd, NeutBad_pd)) %>%
-#   #tidyr::drop_na() %>% # n = 16, here is the problem!
-#   #dplyr::select(-dplyr::starts_with('Other_')) %>%
-#   bootnet::estimateNetwork(., default = "EBICglasso", tuning = 0, missing = 'listwise')
-
 # get data for valence effect ---- 
-## mean RT, SD of RT, and d prime for data without reference
-tmp1 <- df.meta_rt_1 %>%
-  dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
-  tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
-  
-tmp2 <- df.meta_d_1 %>%
-  dplyr::filter(Domain == 'Morality') %>%
-  tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
-  dplyr::rename(dprime_Good = Good,
-                dprime_Neut = Neutral,
-                dprime_Bad = Bad)
-  
-df.meta_1_wide <- merge(tmp1,tmp2)
-rm(tmp1,tmp2)
+# ## mean RT, SD of RT, and d prime for data without reference
+# tmp1 <- df.meta_rt_1 %>%
+#   dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
+#   tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
+#   
+# tmp2 <- df.meta_d_1 %>%
+#   dplyr::filter(Domain == 'Morality') %>%
+#   tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
+#   dplyr::rename(dprime_Good = Good,
+#                 dprime_Neut = Neutral,
+#                 dprime_Bad = Bad)
+#   
+# df.meta_1_wide <- merge(tmp1,tmp2)
+# rm(tmp1,tmp2)
 
 ## parameters of HDDM for the data without reference
 ## read all the file name.
 
-params.expname <- data.frame(params.list) %>%
-  tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
-  dplyr::select(expName) %>%
-  dplyr::pull()
+# params.expname <- data.frame(params.list) %>%
+#   tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
+#   dplyr::select(expName) %>%
+#   dplyr::pull()
 
 df.meta_1_wide <- merge(df.meta_1_wide, df_hddm_param_1) %>%
   dplyr::select(-c(Domain, Identity, Matchness))
@@ -1838,42 +1605,50 @@ df.meta_all_wide <- df.meta_2_wide %>%
   dplyr::filter(Identity == "Self") %>%
   rbind(df.meta_1_wide, .)
 
+df_hddm_param_1 <- df_hddm_param_1 %>%
+  dplyr::mutate(Identity = NA) %>%
+  dplyr::select(colnames(df_hddm_param_2))
+
+df_hddm_param_all <- df_hddm_param_2 %>%
+  dplyr::filter(Identity == "Self") %>%
+  rbind(df_hddm_param_1, .)
+
 # intersection between participant from behavioral task and scales and get the data
-subj.common <- intersect(df.scale.fs$subjID, unique(df.meta_all_wide$Subject))  # 253
+subj.common <- intersect(df.scale.fs$subjID, unique(df_hddm_param_all$Subject))  # 260
 
 df.q_scores.v <- df.scale.fs %>% dplyr::filter(subjID %in% subj.common) %>%
   dplyr::select_if(~sum(!is.na(.)) > 0) # remove columns that only have NA.
 
 # temp data for SEM
-tmp <- merge(df.scales.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject')
+# tmp <- merge(df.scales.v, df_hddm_param_all, by.x = 'subjID', by.y = 'Subject')
 
 ## calculate correlation ----
-df.corr <- merge(df.q_scores.v, df.meta_all_wide, by.x = 'subjID', by.y = 'Subject') %>%
-  dplyr::select(-c(expID)) %>%
-  #dplyr::select(-c(SelfSelf, SelfStra)) %>%
-  dplyr::select(1, 17:20, everything()) %>%
-  dplyr::mutate(subjID = as.character(subjID),
-                Age = as.character(Age)) %>%
-  dplyr::na_if("NaN")
+df.corr <- merge(df.q_scores.v, df_hddm_param_all, by.x = 'subjID', by.y = 'Subject') %>%
+  dplyr::select(-c(expID, Identity)) %>%
+  dplyr::select(-contains('_sum')) # %>%
+  # dplyr::select(1, 17:20, everything()) %>%
+  # dplyr::mutate(subjID = as.character(subjID),
+  #               Age = as.character(Age)) %>%
+  # dplyr::na_if("NaN")
 
 # sapply(df.corr, class)
 
 # standardize within each experiment.
-df.corr_norm <- df.corr %>%
-  dplyr::group_by(ExpID, Site) %>%
-  mutate_if(is.numeric, scale) %>% # re-consider here
-  dplyr::ungroup() %>%
-  # dplyr::mutate(RT_Good_Bad = RT_Good - RT_Bad,
-  #               RT_Good_Neutral = RT_Good - RT_Neutral,
-  #               RT_Bad_Neutral = RT_Bad -RT_Neutral,
-  #               d_Good_Bad = dprime_Good - dprime_Bad,
-  #               d_Good_Neutral = dprime_Good - dprime_Neut,
-  #               d_Bad_Neutral = dprime_Bad - dprime_Neut) %>%
-  dplyr::select(-contains("SD"))
+# df.corr_norm <- df.corr %>%
+#   dplyr::group_by(ExpID, Site) %>%
+#   mutate_if(is.numeric, scale) %>% # re-consider here
+#   dplyr::ungroup() %>%
+#   # dplyr::mutate(RT_Good_Bad = RT_Good - RT_Bad,
+#   #               RT_Good_Neutral = RT_Good - RT_Neutral,
+#   #               RT_Bad_Neutral = RT_Bad -RT_Neutral,
+#   #               d_Good_Bad = dprime_Good - dprime_Bad,
+#   #               d_Good_Neutral = dprime_Good - dprime_Neut,
+#   #               d_Bad_Neutral = dprime_Bad - dprime_Neut) %>%
+#   dplyr::select(-contains("SD"))
 
 # library(corrr)
-res.cor_all <- df.corr_norm %>%
-  dplyr::select(-c(ExpID:Sex)) %>%
+res.cor_all <- df.corr %>%
+  dplyr::select(-c(subjID)) %>%
   correlation::correlation(., method="spearman", p_adjust = 'none')
 
 res.cor_1 <- df.corr_norm %>%
@@ -1888,7 +1663,7 @@ res.cor_2 <- df.corr_norm %>%
 
 cor_pairs_all <- res.cor_all %>%
   dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
-  dplyr::filter(Parameter2 %in% colnames(df.meta_all_wide[7:24])) %>%
+  dplyr::filter(Parameter2 %in% colnames(df_hddm_param_all[3:11])) %>%
   dplyr::filter(p <= 0.1) %>%
   dplyr::arrange(p)
 
