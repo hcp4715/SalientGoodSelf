@@ -271,10 +271,3 @@
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-2-1.pdf}
 \caption{\label{fig:plot-corr-2}Correlation between personal distance and boundary separation of neutral condition}
 \end{figure*}
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-corr-3-1.pdf}
-\caption{\label{fig:plot-corr-3}Correlation between self esteem and d prime of bad and neutral conditions}
-\end{figure*}

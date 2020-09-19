@@ -1334,9 +1334,8 @@ df.scale.fs <- df.scale.fs %>%
 
 
 ```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
-
 # Boxplot
-df.perdist %>% 
+p_dist_1 <- df.perdist %>% 
   tidyr::pivot_longer(., cols = SelfGood:NeutBad,
                       names_to = 'PerDist',
                       values_to = 'value') %>%
@@ -1352,15 +1351,16 @@ df.perdist %>%
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
-          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          legend.text = element_text(size =12),
+          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 12, color = 'black'),
+          axis.title = element_text (size = 12),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")) 
 
 dist.cor <- df.perdist %>%
@@ -1368,97 +1368,44 @@ dist.cor <- df.perdist %>%
   as.matrix() %>%
   Hmisc::rcorr(., type = 'spearman')
 
-corrplot(dist.cor$r, type = "upper", order = "hclust", 
-         tl.col = "black", tl.srt = 45,
-         p.mat = dist.cor$P, sig.level = 0.01, insig = "blank")
-
-col<- colorRampPalette(c("blue", "white", "red"))(20)
-heatmap(x = dist.cor$r, col = col, symm = TRUE)
-  
-  #correlation::correlation(., method="spearman", p_adjust = 'none')
-
-# Suppose the self as the anchor, use the self-distance to calc the distance between good, bad, and neutral
-df.plot2 <- df.perdist %>%
-  dplyr::mutate(GoodNeut_Self = abs(SelfGood_pd - SelfNeut_pd),
-                NeutBad_Self = abs(SelfBad_pd - SelfNeut_pd),
-                GoodBad_Self = abs(SelfBad_pd - SelfGood_pd)) %>%
-  dplyr::select(-c(SelfGood_pd, SelfNeut_pd, SelfBad_pd)) %>%
-  dplyr::rename(GoodNeut_NonSelf = GoodNeut_pd,
-                GoodBad_NonSelf = GoodBad_pd,
-                NeutBad_NonSelf = NeutBad_pd)  %>%
-  tidyr::pivot_longer(., cols = GoodNeut_NonSelf:GoodBad_Self,
-                      names_to = 'PerDist',
-                      values_to = 'value') %>%
-  tidyr::separate(., col = PerDist, into = c('dist', 'ID'), sep = '_', remove=TRUE) %>%
-  dplyr::mutate(dist =factor(dist, levels = c('GoodNeut', 'NeutBad', 'GoodBad')),
-                  ID = factor(ID, levels = c("Self", 'NonSelf')),
-                  Conds = mosaic::derivedFactor("0.9" = (dist == 'GoodNeut' & ID == 'Self'),
-                                                "1.1" = (dist == 'GoodNeut' & ID == 'NonSelf'),
-                                                "1.9" = (dist == 'NeutBad' & ID == 'Self'),
-                                                "2.1" = (dist == 'NeutBad' & ID == 'NonSelf'),
-                                                "2.9" = (dist == 'GoodBad' & ID == 'Self'),
-                                                "3.1" = (dist == 'GoodBad' & ID == 'NonSelf'),
-                                                method ="first", .default = NA),
-                  Conds = as.numeric(as.character(Conds)),) %>% 
-  dplyr::mutate(Conds_j = jitter(Conds, amount=.03))   # add gitter to x
-
-df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('ID', 'dist')) 
-df.plot2.sum_p <- summarySE(df.plot2, measurevar = "value", groupvars = c('dist', 'ID')) %>%
-    dplyr::mutate(Cond_num = mosaic::derivedFactor("1"  = (dist == 'GoodNeut'),
-                                                "2" = (dist == 'NeutBad'),
-                                                "3" = (dist == 'GoodBad'),
-                                                method ="first", .default = NA),
-                  Cond_num = as.numeric(as.character(Cond_num)))
-# # group the scatter point.
-# df.plot2 %>%
-#   ggplot2::ggplot(., aes(x=Self, y=NonSelf, color=dist, shape=dist)) +
-#   geom_point() + 
-#   geom_smooth(method=lm)
-pd1 <- position_dodge(0.4)
-
-df.plot2  %>%
-    dplyr::rename(Subject=subjID) %>%
-    ggplot(., aes(x = dist, y = value)) +
-    geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(ID)),   # plot individual points
-               size = 1, shape = 20, alpha = 0.15) +
-    geom_line(data = df.plot2.sum_p, aes(x = as.numeric(dist), # plot the group means  
-                                        y = value, 
-                                        group = ID, 
-                                        colour = as.factor(ID)), 
-    linetype = 1, position = pd1, size = 2) +
-    geom_point(data = df.plot2.sum_p, aes(x = as.numeric(dist), # group mean
-                                         y = value, 
-                                         group = ID, 
-                                         colour = as.factor(ID),), 
-    shape = 18, position = pd1, size = 5) +
-    geom_errorbar(data = df.plot2.sum_p, aes(x = as.numeric(dist),  # group error bar.
-                                            y = value, 
-                                            group = ID, 
-                                            colour = as.factor(ID),
-                                            ymin = value- 1.96*se, 
-                                            ymax = value+ 1.96*se), 
-                  width = .05, position = pd1, size = 1, alpha = 0.75) +
-    scale_colour_brewer(palette = "Dark2") +
-    scale_x_continuous(breaks=c(1, 2, 3),
-                       labels=c("GoodNeut", "NeutBad", "GoodBad")) +
-    scale_fill_brewer(palette = "Dark2") +
-    theme_bw() +
-    theme(panel.grid.major = element_blank(),
+p_dist_2 <- ggcorrplot::ggcorrplot(dist.cor$r, hc.order = TRUE, type = "lower",
+     outline.col = "white", colors = c('red', 'white', 'blue'),
+     lab = TRUE, p.mat = dist.cor$P) +
+  #theme_bw() +
+  scale_y_discrete(position='right') +
+  theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           panel.background = element_blank(),
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
-          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          legend.text = element_text(size =12),
+          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 12, color = 'black'),
+          axis.title = element_text (size = 12),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
-          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(3, "lines")) 
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          #axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          #axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(0, "lines")) 
+
+# 
+# corrplot(dist.cor$r, type = "upper", order = "hclust", 
+#          tl.col = "black", tl.srt = 45,
+#          p.mat = dist.cor$P, sig.level = 0.01, insig = "blank")
+
+# col <- colorRampPalette(c( "red", "white", "blue"))(20)
+# p_dist_2 <- heatmap(x = dist.cor$r, col = col, symm = TRUE)
+# 
+# corrplot(dist.cor$r, type="upper", order="hclust", col=col)
+# legend(x="bottomright", legend=c("min", "ave", "max"), 
+#      fill=colorRampPalette(c( "red", "white", "blue"))(20))
+  
+library(patchwork)
+p_dist_1 + p_dist_2 + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+
 ```
 
 See Figure \@ref(fig:plot-person-dist).
@@ -1473,7 +1420,7 @@ To make sure that what we found were not false positive, we used two method to e
 ### failed attempt:
 # We tried to first correlate the DDM parameters and the questionnaire separately for self-referential and other-referential, and then validation the correlation using data of experiment without self/other-referential. But the sample size for the correlation between questionnaires and behavioral results from experiment without identity are too small n = 16. Therefore, we give up this exploration-validation approach.
 
-### Step 1: Get the parameter values
+# Step 1: Get the parameter values
 params.list <- list.files(here::here('HDDM'), pattern = '*_hddm_params.csv')
 
 df_hddm_ls_1 <- params.list[c(1:4, 9:10)]
@@ -1483,7 +1430,6 @@ for (indx in 1:6){
   if ((indx ==1) && exists('df_hddm_param_1')){   # if the variable already exist before the for loop start
     rm(df_hddm_param_1)
   }
-
   if (indx == 5 ){
     hddm_params_tmp <- read.csv(here::here("HDDM", df_hddm_ls_1[indx]), header = TRUE, sep = ",",
                    stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -1549,62 +1495,6 @@ for (indx in 1:5){
   }
 }
 
-# get data for valence effect ---- 
-# ## mean RT, SD of RT, and d prime for data without reference
-# tmp1 <- df.meta_rt_1 %>%
-#   dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
-#   tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
-#   
-# tmp2 <- df.meta_d_1 %>%
-#   dplyr::filter(Domain == 'Morality') %>%
-#   tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
-#   dplyr::rename(dprime_Good = Good,
-#                 dprime_Neut = Neutral,
-#                 dprime_Bad = Bad)
-#   
-# df.meta_1_wide <- merge(tmp1,tmp2)
-# rm(tmp1,tmp2)
-
-## parameters of HDDM for the data without reference
-## read all the file name.
-
-# params.expname <- data.frame(params.list) %>%
-#   tidyr::separate(params.list, c('expName','B','C'),sep = '_') %>%
-#   dplyr::select(expName) %>%
-#   dplyr::pull()
-
-df.meta_1_wide <- merge(df.meta_1_wide, df_hddm_param_1) %>%
-  dplyr::select(-c(Domain, Identity, Matchness))
-
-## Get data for interaction between ID & Val ----
-## mean RT, SD of RT, and d prime for data without reference
-tmp1 <- df.meta_rt_2 %>%
-  dplyr::filter(Matchness == "Match" & Domain == 'Morality') %>%
-  tidyr::pivot_wider(names_from = c(Valence), values_from = c(RT, RT_SD))
-  
-tmp2 <- df.meta_d_2 %>%
-  dplyr::filter(Domain == 'Morality') %>%
-  tidyr::pivot_wider(names_from = c(Valence), values_from = dprime) %>%
-  dplyr::rename(dprime_Good = Good,
-                dprime_Neut = Neutral,
-                dprime_Bad = Bad)
-  
-df.meta_2_wide <- merge(tmp1,tmp2); rm(tmp1,tmp2)
-
-## parameters of HDDM 
-## read all the file name.
-
-df.meta_2_wide <- merge(df.meta_2_wide, df_hddm_param_2) %>%
-  dplyr::select(-c(Domain, Matchness))
-
-df.meta_1_wide <- df.meta_1_wide %>%
-  dplyr::mutate(Identity = NA) %>%
-  dplyr::select(colnames(df.meta_2_wide))
-
-df.meta_all_wide <- df.meta_2_wide %>%
-  dplyr::filter(Identity == "Self") %>%
-  rbind(df.meta_1_wide, .)
-
 df_hddm_param_1 <- df_hddm_param_1 %>%
   dplyr::mutate(Identity = NA) %>%
   dplyr::select(colnames(df_hddm_param_2))
@@ -1626,150 +1516,51 @@ df.q_scores.v <- df.scale.fs %>% dplyr::filter(subjID %in% subj.common) %>%
 df.corr <- merge(df.q_scores.v, df_hddm_param_all, by.x = 'subjID', by.y = 'Subject') %>%
   dplyr::select(-c(expID, Identity)) %>%
   dplyr::select(-contains('_sum')) # %>%
-  # dplyr::select(1, 17:20, everything()) %>%
-  # dplyr::mutate(subjID = as.character(subjID),
-  #               Age = as.character(Age)) %>%
-  # dplyr::na_if("NaN")
-
-# sapply(df.corr, class)
-
-# standardize within each experiment.
-# df.corr_norm <- df.corr %>%
-#   dplyr::group_by(ExpID, Site) %>%
-#   mutate_if(is.numeric, scale) %>% # re-consider here
-#   dplyr::ungroup() %>%
-#   # dplyr::mutate(RT_Good_Bad = RT_Good - RT_Bad,
-#   #               RT_Good_Neutral = RT_Good - RT_Neutral,
-#   #               RT_Bad_Neutral = RT_Bad -RT_Neutral,
-#   #               d_Good_Bad = dprime_Good - dprime_Bad,
-#   #               d_Good_Neutral = dprime_Good - dprime_Neut,
-#   #               d_Bad_Neutral = dprime_Bad - dprime_Neut) %>%
-#   dplyr::select(-contains("SD"))
-
+  
 # library(corrr)
-res.cor_all <- df.corr %>%
+res.cor_all <-df.corr %>%
   dplyr::select(-c(subjID)) %>%
-  correlation::correlation(., method="spearman", p_adjust = 'none')
+  as.matrix() %>%
+  Hmisc::rcorr(., type = 'spearman')
 
-res.cor_1 <- df.corr_norm %>%
-  dplyr::filter(ExpID %in% unique(df.meta_1_wide$ExpID)) %>%
-  dplyr::select(-c(ExpID:Sex)) %>%
-  correlation::correlation(., method="pearson", p_adjust = 'none')
+# heatmap(x = res.cor_all$r, col = col, symm = TRUE)
 
-res.cor_2 <- df.corr_norm %>%
-  dplyr::filter(ExpID %in% unique(df.meta_2_wide$ExpID)) %>%
-  dplyr::select(-c(ExpID:Sex)) %>%
-  correlation::correlation(., method="pearson", p_adjust = 'none')
+p.mat <- res.cor_all$P %>%
+  tidyr::replace_na(1)
 
-cor_pairs_all <- res.cor_all %>%
-  dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
-  dplyr::filter(Parameter2 %in% colnames(df_hddm_param_all[3:11])) %>%
-  dplyr::filter(p <= 0.1) %>%
-  dplyr::arrange(p)
+# plat the corr matrix
+#ggcorrplot::ggcorrplot(res.cor_all$r, hc.order = TRUE, p.mat = p.mat, insig = "blank", # type = "lower",
+#                       outline.col = "black", colors = c('red', 'white', 'blue'), lab = T)
 
-cor_pairs_1 <- res.cor_1 %>%
-  dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
-  dplyr::filter(Parameter2 %in% colnames(df.meta_all_wide[7:24])) %>%
-  dplyr::filter(p <= 0.05) %>%
-  dplyr::arrange(p)
+#res.cor_all <-df.corr %>%
+#  dplyr::select(-c(subjID)) %>%
+#  correlation::correlation(., method="spearman", p_adjust = "holm")
 
-cor_pairs_2 <- res.cor_2 %>%
-  dplyr::filter(Parameter1 %in% colnames(df.q_scores.v)) %>%
-  dplyr::filter(Parameter2 %in% colnames(df.meta_all_wide[7:24])) %>%
-  dplyr::filter(p <= 0.05) %>%
-  dplyr::arrange(p)
+param1_names <- colnames(df.scale.fs)[7:length(df.scale.fs)]
+param2_names <- colnames(df_hddm_param_all[3:11])
 
-write.csv(cor_pairs_all, 'sig_behav_quest_corr_pairs.csv', row.names = F)
+cor_pairs_all <- data.frame(matrix(ncol = 4, nrow = 0))
+x <- c("Parameter1", "Parameter2", "r", 'p')
+colnames(cor_pairs_all) <- x
+i = 0
+for (param1 in param1_names) {
+  # print(param1)
+  for (param2 in param2_names) {
+    tmp_r <- res.cor_all$r[param1, param2]
+    tmp_p <- res.cor_all$P[param1, param2]
+    if (tmp_p <= 0.05) {
+      i = i + 1
+      cor_pairs_all[i, "Parameter1"] <- param1
+      cor_pairs_all[i, "Parameter2"] <- param2
+      cor_pairs_all[i, "r"] <- tmp_r
+      cor_pairs_all[i, "p"] <- tmp_p
+    }
+  }
+}
 
 ```
 
-Instead of use the exploratory correlation analysis, we used a more principled way to explore the correlation between behavioral data (RT, dprime, etc) and scale data. More specifically, we used structural equation model.
-
-First, we tested whether the behavioral data can form different latent variables.
-
-```{r SEM2, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-behv.m1 <- 'behv =~ RT_Bad + 
-RT_Good +
-RT_Neutral +
-RT_SD_Bad +
-RT_SD_Good +
-RT_SD_Neutral +
-dprime_Bad +
-dprime_Good +
-dprime_Neut +
-Bad_a + 
-Good_a +
-Neutral_a +
-Bad_v + 
-Good_v +
-Neutral_v +
-Bad_t + 
-Good_t +
-Neutral_t
-'
-
-behv.m2 <- ' a =~ 
-Bad_a + 
-Good_a +
-Neutral_a
-
-t =~ 
-Bad_t + 
-Good_t +
-Neutral_t
-
-v =~ Bad_v + 
-Good_v +
-Neutral_v
-'
-
-behv.m3 <- 'behv1 =~ RT_Bad + 
-RT_Good +
-RT_Neutral+
-Bad_t + 
-Good_t +
-Neutral_t
-
-behav2 =~ dprime_Bad +
-dprime_Good +
-dprime_Neut +
-Bad_v + 
-Good_v +
-Neutral_v
-'
-
-behv.m4 <- 'Good =~ Good_a +
-Good_v +
-Good_t
-
-Neutral =~ Neutral_a +
-Neutral_v +
-Neutral_t
-
-Bad =~ Bad_a +
-Bad_v +
-Bad_t
-'
-
-fit.behv.m1 <- lavaan::cfa(behv.m1, data = df.meta_1_wide, estimator = "MLR")
-fit.behv.m2 <- lavaan::cfa(behv.m2, data = df.meta_1_wide, estimator = "MLR")
-fit.behv.m3 <- lavaan::cfa(behv.m3, data = df.meta_1_wide, estimator = "MLR")
-fit.behv.m4 <- lavaan::cfa(behv.m4, data = df.meta_1_wide, estimator = "MLR")
-
-#Model Outputs
-summary(fit.behv.m1, standardize = TRUE, fit.measures=TRUE)
-summary(fit.behv.m2, standardize = TRUE, fit.measures=TRUE)
-summary(fit.behv.m3, standardize = TRUE, fit.measures=TRUE)
-summary(fit.behv.m4, standardize = TRUE, fit.measures=TRUE)
-mrlID.comp <- lavaan::anova(fit.behv.m4, fit.behv.m2)
-mrlID.comp
-
-# plot the path
-semPlot::semPaths(fit.behv.m1, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-semPlot::semPaths(fit.behv.m2, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-semPlot::semPaths(fit.behv.m3, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-semPlot::semPaths(fit.behv.m4, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-```
+Instead of use the exploratory correlation analysis, we used a more principled way to explore the correlation between parameter of HDDM (*v*, *t*, and *a*) and scale scores and person distance. 
 
 ```{r get plots of correlation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # Permutation
@@ -1787,8 +1578,8 @@ corr_plot_list <- list()
 for (row_id in 1:nrow(cor_pairs_all)){
   
   # select variables
-  var1 <- df.corr_norm %>% dplyr::select(cor_pairs_all$Parameter1[row_id])
-  var2 <- df.corr_norm %>% dplyr::select(cor_pairs_all$Parameter2[row_id])
+  var1 <- df.corr %>% dplyr::select(cor_pairs_all$Parameter1[row_id])
+  var2 <- df.corr %>% dplyr::select(cor_pairs_all$Parameter2[row_id])
   var_tmp <- data.frame(var1, var2) %>%
     tidyr::drop_na()
   
@@ -1849,36 +1640,27 @@ for (row_id in 1:nrow(cor_pairs_all)){
       scale_color_grey() +
       apatheme_s
 }
+
 ```
-We focused on the task-questionnaire correlation, the results revealed that the score from three questionnaire are related to behavioral responses data. 
-First, the external moral identity is positively correlated with boundary separation of moral good condition, $r = 0.194$, 95% CI [0.023 0.350]); the moral self image is positively correlated with the drift rate ($r = 0.191$, 95% CI [-0.016 0.354]) of the morally good condition. See Figure \@ref(fig:plot-corr-1).
+We didn't find the correlation between scale scores and the parameters of HDDM, but found weak correlation between personal distance and the parameter estimated from Good and neutral conditions. 
+
+First, boundary separation (*a*) of moral good condition was correlated with both Self-Bad distance ($r = 0.198$, 95% CI [], $p = 0.0063$) and Neutral-Bad distance ($r = 0.1571$, 95% CI [], $p = 0.031$). At the same time, the non-decision time is negatively correlated with Self-Bad distance ($r = 0.169$, 95% CI [], $p = 0.0197$). See Figure \@ref(fig:plot-corr-1).
 
 ```{r plot-corr-1, fig.cap="Correlation between moral identity and boundary separation of good condition; moral self-image and drift rate of good condition", fig.width=8, warning=FALSE}
 library(patchwork)
-corr_plot_list[[3]] + corr_plot_list[[5]]  + 
-           boot_plot_list[[3]] + boot_plot_list[[5]] + plot_layout(ncol = 2)
+corr_plot_list[[3]] + corr_plot_list[[6]] + corr_plot_list[[5]]  + 
+           boot_plot_list[[3]] + boot_plot_list[[6]] + boot_plot_list[[5]]+ plot_layout(ncol = 3)
 ```
 
-Second, we found the personal distance between self and good is positively correlated with the boundary separation of neutral condition and the self-neutral distance is negatively correlated with the boundary separation of neutral condition. See figure \@ref(fig:plot-corr-2)
-
+Second, we found the boundary separation of neutral condition is positively correlated with the personal distance between self and good distance ($r = 0.189$, 95% CI [], $p = 0.036$), but negatively correlated with self-neutral distance($r = -0.183$, 95% CI [], $p = 0.042$). Also, the drift rate of the neutral condition is positively correlated with the Self-Bad distance ($r = 0.177$, 95% CI [], $p = 0.048$).a. See figure \@ref(fig:plot-corr-2)
 
 ```{r plot-corr-2, fig.cap="Correlation between personal distance and boundary separation of neutral condition", fig.width=8, warning=FALSE}
 library(patchwork)
-corr_plot_list[[4]] + corr_plot_list[[6]] + 
-           boot_plot_list[[4]] + boot_plot_list[[6]] + plot_layout(ncol = 2)
+corr_plot_list[[1]] + corr_plot_list[[2]]  + corr_plot_list[[4]] + 
+           boot_plot_list[[1]] + boot_plot_list[[2]] + boot_plot_list[[4]] + plot_layout(ncol = 3)
 ```
 
-Third, we found the self esteem score was negative correlated with the $d'$ of bad conditions ($r = -0.16$, 95% CI [-0.277 -0.038]) and the neutral conditions ($r = -.197$, 95% CI [-0.348	-0.026]). See Figure \@ref(fig:plot-corr-3).
-
-We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential. For experiments without self-referential (Valence effect), we found the personal distance between Good-person and self is positively correlated with boundary separation of good conditions, r = 0.292, 95% [0.071 0.485]. also personal distance between the bad and neutral person is positively correlated with non-responding time of bad and neutral conditions, r = 0.249, 0.233, respectively.
-
-For experiments with self-referential (Valence effect for the self), we found self-esteem is negatively correlated with d prime of neutral condition, r = -0.272, [-0.468	-0.052], the self-good distance is positively correlated with d prime for Bad condition, r = 0.185, 95%CI[0.004 0.354].
-
-```{r plot-corr-3, fig.cap="Correlation between self esteem and d prime of bad and neutral conditions", fig.width=8, warning=FALSE}
-library(patchwork)
-corr_plot_list[[1]] + corr_plot_list[[2]] +
-  boot_plot_list[[1]] + boot_plot_list[[2]] + plot_layout(ncol = 2)
-```
+We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential, however, the sample size is very low for some conditions.
 
 # Discussion
 
