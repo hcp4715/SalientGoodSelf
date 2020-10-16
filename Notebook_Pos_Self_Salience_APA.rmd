@@ -76,19 +76,81 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
  <!-- What is the theoretic meaning of the series study? -->
 # Introduction
 
-Perceptual decision-making is an important window for understanding the cognition (Shadlen & Kiani, 2013).
+Morality is the central of human social life. Its importance is manifested in many ways in human cognition. For example, morality is a basic dimension of social cognition [@goodwin_moral_2014; goodwin_moral_2015; @abele_navigating_2020]. When judging a person, based on face or other information, the evaluation of the moral character is fast and without much effort []. Also, moral character is the most defining trait to judge whether a person is him/herself as before, i.e, the continuity of identity [].
 
-The role of perception in social cognition has been largely ignored, but accumulating evidence revealed that perception provides rich information about our social cognition (Stolier & Freeman, 2016; Xiao, Coppin, & Bavel, 2016).
+The importance of morality in person perception goes two ways for an individuals: She needs to both accurately evaluate whether other people are moral and (2) to behave in a way that she is perceived as a moral person, or at least not a morally bad person. The former was usually investigated as person perception in social psychology while the latter was usually studied separately as moral self-concept, moral self-image, or moral self-enhancement. There are abundant of evidence that people weigh morality heavily in evaluating others [] and evaluating the continuity of identity others. These findings suggest that, given the importance of morality in social life, morality has been internalized in socialized individuals, and this internalized moral concept influence how they perceiving, remembering, and making decisions. 
+
+When it comes to self perception, there is also accumulating evidence that individual studied has motivation to maintain a good moral-self concept. For example, there exists a significant self-enhancement effect in morality, which is stronger than self-enhancement effect in other domains, such as competence or social competence [@tappin_illusion_2017]. Also, participants try to maintain their moral self image even after their own unethical behaviors (e.g., cheating)[]. similarly, when asked how likely they will act ethically or unethically, most participants showed the tendency of less likely to do unethical things []. In other words, existing evidence supported the notion that morality is important in person perception and self-concept, people are motivated to maintain a good moral-self image.
+
+Yet, as @freeman_dynamic_2011 put it, the focus of these models and studies is not to explain the perceptual process, rather, they are explaining the higher-order social cognitive processes that come after. That is, the perceptual decision-making process of moral related information (about self and others) were less studied. Without knowledge of these processes, we can not have a full picture of how moral information is prioritized in our cognition. Recently, there is a increasingly larger body of literature revealed that perception is strongly influenced by social factors, such as group-categorization, stereotype [@xiao_perceiving_2016]. Given the importance of moral character, one might expect that moral related information can also bias cognitive processes, such as attention, perception, and learning and memory. Indeed, previous studies have found that moral related words more likely to pop-out [@gantman_moral_2014, but see @], and are easier to be remembered [@stanley_moral_2019]. When it comes to moral character, studies also revealed that memories retrieved are biased by their relevance to moral self-image and that this effect is modulated by the motivation of maintaining a positive moral self-image [@carlson_motivated_2020]. 
+
+However, the lower-level perceptual process of moral character related information, which is the mechanism that produced those social cognitive phenomena, is still unknown. There are a few studies about the temporal dynamics of judging the trustworthiness of face [e.g., @dzhelyova_temporal_2012], but trustworthy is only part of the morality [Haidt 2007]. Given that that moral character is a high-level and hidden state instead of observable feature, one ways to study the perceptual process of moral character is using concrete moral behaviors. That is, we assume that moral character has impact on perceptual decision-making if we observed how different moral behaviors influence the perceptual process. Previous studies in moral judgement has used different moral behaviors and other ecologically valid stimuli (e.g., face, or vignettes). Recent memory tasks also used those stimuli [], however, the idiosyncratic and heterogeneity of those stimuli might introduce large noise in perceptual tasks. 
+
+An alternative might be using abstract concepts in language to study how these concepts influence perception. After all, abstract concept about moral character is part of our world and it can be used to identify useful constructs in social life []. For example, .... Therefore, It is possible to use abstract or semantic stimuli to study the perceptual process of moral character. As recent theoretical frameworks suggested, different levels of information formed a dynamic network in human brain and stimuli cue can activate more abstract, non-observable personal traits [e.g., @freeman_dynamic_2011; @amodio_social_2019]. If a concept of moral character (e.g., a good person) is activated, it should also be able to have influence on perceptual process (e.g., visual cues) directly, especially when the perceptual decision-making is directly related to the concept-cue association. In this case, abstract concepts of moral character may like signal of moral reputation (for others) or moral self-concept []. Indeed, previous studies used the moral words and found that moral related information can be perceived faster [@gantman_moral_2014]. If moral character information is an important social cue, then, as those other social cues listed above, moral character related information might be prioritized in perceptual processing. Here, we use the associative learning paradigm to study the moral character. In this paradigm, simple geometric shapes were paired with different words whose dominant use is to describe the moral character of person, participants first learn the association between shapes and words, i.e., buid direct link between high-level, hidden moral character and visual cue (e.g., Freeman). After they remembered the association, they perform a matching task to judge whether the shape-word pair presented on the screen match the association they learned. This paradigm has been used intensively in studying the self-concept, but not so much in studying moral character. 
+
+The first question is, whether the moral words used the in paradigm is really related to the moral character? As we reviewed above, previous theories, especially the interactive dynamic theory, would predict this influence. The self-tagging paradigm might be able to studies this effect. To validate the the influence is the moral meaning, we also used four experiments to explore and validate the paradigm. All of these four experiment showed similar patterns. 
+
+If the paradigm is valid, then how to explain the emerging pattern in the results? Two theoretical frameworks are relevant here. The first one is valence theory, which emphasize the importance of valence in perceptual decision-making. Under this framework, the valence of the stimuli drives the perceptual decision-making. There exists three different sub-theories under this framework: Negativity effect, positivity effect, and valence effect. The first one might be the threaten detection theory, which predicted that threatening stimuli are preferentially processed because of the evolutionary advantage. Though appealing in the first glance, this threat-detection theory itself has been questioned for the evidence on which this theory was initially proposed. That is negative prioritized because of the low-level physical features of the stimuli []. given that the physical stimuli associated with moral character are manipulated in our study, we expect the low level feature will not play a role, and therefore we have a low a priori on the negative first prediction. The second prediction is positivist hypothesis, which predict that positive moral character will be prioritized. There are also evidence consistent with this idea. For example, XXX found that trustworthy faces attracted attention more than untrustworthy faces, probably because trustworthy faces are more likely to be the collaborative partners, which will bring future reward. A third possibility is that both negative and positive is faster than neutral because of the valence. 
+
+As we found a positivity effect, which is contradict with negativity effect reported by previous studies [@gantman_2012, @anderson_2011], we didn't have clear explanation why positive stimuli is different from the neutral while the negative condition is not distinguishable from neutral. One potential explanation is reward related framework, which suggested that positive are rewarding to self, e.g., potential collaboration. This focus on the value of the other person. Another possible explanation is related to the self-categorization or multiple identity theory, which proposed that people categorize people as in-group and out-group[]. Previous studies found that in-group were prioritized in the self-tagging paradigm []. Therefore, it's possible that participants identify with good-person as "in-group", while exclude the neutral and bad moral characters as out-group. This social categorization theory also related to self, i.e., in-group is an expanded self. 
+
+Though these two framework has similar prediction for the studies with moral character such as "good-person", "neutral person", and "bad person", they have different prediction when we have orthogonal design with identity and moral valence. With an orthogonal design, we have good, bad, and neutral conditions for both self and other. In this case the identity become salient and participants are less likely to spontaneously identify good-person as self, but the value of good-person still exists. This means that the self-expanding theory predicts participants prioritize good-self but not good-other, while reward-based attention theory predicts participants are both prioritized. Also, as in @Hu_2020_GoodSelf, people may also only identify with good-self instead of neutral or bad self. That is, people will show a unique pattern of self-identification: only good-self is identified as "self" while all the others categories were excluded.
+
+The second framework is self-categorization theory, which states that self-relatedness or self-relevance. Under this framework, .....
+
+As previous studies in social psychology and cognitive psychology found the perceiving self and perceiving others has huge difference, therefore, a question immediately followed is, how the self- and other-related moral character information are processed in perceptual decision-making. To investigate this phenomenon, we included both self- and other-related moral character information in the self-tagging paradigm. abstract moral concepts are prioritized in perceptual decision-making? There are several possible predictions. 
+
+However, the above prediction was based on vague theory that are not strongly linked with the prediction []. To make stronger theoretical prediction, we listed our implicit assumptions of our prediction.
+
+In our experimental setting, we have the following assumptions, these assumption is not ecologically valid, but can help us to reveal some interesting part of the phenomena:
+(1) The semantic concept of moral character can activate the moral character concept in people's mind. Or at least partially.
+(2) Visual stimuli associated with moral character can serve a the visual cue for that moral character in the current task: perceptual matching. (repeated recognition?)
+(3) The perceptual decision-making will show certain pattern under certain task demand. In our case, it's the forced, speed, two-option choice task.
+
+Additional assumption about the self-moral id:
+(5) People will automatically enhance their moral concept, therefore prefer the positive moral self-concept.
+
+What is the prediction of the model/theory?
+
+Valence; valence is self-relevance in effect. But how self-relevance works? Two possibility: assimilation, i.e., include moral character in the self-concept; dissimilation, i.e., view the people of different moral character as alien to self and assessing it's threaten or collaborative value.  Both mechanisms works but may of different strength in different situation. one possibility is that they are categorized by self-relatedness or self-similarity (psychological distance between participants) or personal construal based on abstract concept [@freeman_dynamic_2011]. what is the differences between the self-related and other-related moral character concepts are processed? is the perception of moral character of others related to the self?
+
+(new idea: categorize based on newly acquired social feature vs. based on physical features, color, shape, etc; dimension of social cognition in language: not only about the distinctiveness of the words, but also the overlapping between them; Reaction times in judging those faces in PSA001). 
+
+self-categorization and identity fusion
+
+Identification: the degree to which an individual feels connected to an ingroup or includes the ingroup in his or her self-concept. (self is not bad; )
+
+People are more likely to identify themselves with trustworthy faces [@verosky_differential_2010] (trustworthy faces has longer RTs).
+
+It's less known, however, how the moral self-image related information is processed at the first lower cognitive stage, for example, in perceptual process where participant need to decide their priority of information processing who the information should be processed. Though rarely appeared in moral related studies, the role of perception in understanding our cognition had been long root in psychology, social psychology is not exceptional. In 1950s, @bruner_perceptual_1957 had proposed the "New Look" approach of perception, which was resurrected by accumulating evidence [@stolier_functional_2016; @xiao_perceiving_2016]. These studies supported the view that there is a bidirectional interplay between perception and higher-level cognition, such as stereotype [@stolier_functional_2016; @xiao_perceiving_2016], and self-relevance [@Sui_2012_JEPHPP]. Few studies also tested whether moral-laden information was prioritized in the perception [@anderson_visual_2011; @gantman_moral_2014]. Still, the moral self-image information has rarely been studied (except @Hu_2020_GoodSelf).
+
+It's logically followed, then, that the self-related moral information might be prioritized in perception.
+
+Morally good is important because it's a signal for cooperation, so it might influence perceptual processing.
+Moral character is self-referential or self-referential moral character has a stronger effect?
+especially when it is self-relevant. why? because self-relevant is the root of all values, without self-relevance, there will be no value at all. So we need two have two-layer framework: 1st, morally good is important, 2nd, morally good is important mainly when it is self-relevant.
+
+These observation supported the view that the motivation of maintaining a positive self-image, especially on the aspect that are crucial to oneself [], can distort the cognitive processing [Greenwarld, 1988]. All the available model and evidence suggest that this positive self motivation also impact our perception processing.
+
+To test this hypothesis, we adopted a self-tagging paradigm. 
+
+Outline:
+
+Perceptual decision-making is an important window for understanding the cognition [@shadlen_decision_2013], it's also has bi-directional interplay with higher-level cognition [@gilbert_top-down_2013; @bruner_perceptual_1957]. Recently, there are accumulating evidence that perception also has bidirectional interplay with social cognition, such as morality [@anderson_visual_2011; @gantman_moral_2014], stereotype [@stolier_functional_2016; @xiao_perceiving_2016], and self-relevance [@Sui_2012_JEPHPP].
+
+One important feature of perception is the salience of the stimuli around us. Previous studies showed that emotional stimuli are salient and are prioritized. However, important modulate is whether the stimuli is self-relevant when they are physically and emotional equally salient. 
 
 Here we investigated how the instantly learned moral valence changed the perceptual decision-making and the underlying psychological processes.
 
-Given the importance of morality in social life (DeScioli, 2016) and identity (Freitas, Cikara, Grossmann, & Schlegel, 2017; Strohminger, Knobe, & Newman, 2017; Zhang, Chen, Schlegel, Hicks, & Chen, 2019), and evidence that moral character impacts how people evaluate themselves [XXXX], desired personality change (Sun & Goodwin, 2020), memory (Carlson, Maréchal, Oud, Fehr, & Crockett, 2020; Kouchaki & Gino, 2016; Shu, Gino, & Bazerman, 2011; Stanley & De Brigard, 2019), one would expect that moral character, the morality related trait, will also reflected in perceptual decision-making. Yet, this effect was less studied (Anderson et al., 2011; Gantman & Van Bavel, 2014). This moral perception effect was driven by motivation (Gantman & Van Bavel, 2016) and influenced the information spreading online [@brady_attentional_2020]. Especially lacking is the process of this effect. 
+Given the importance of morality in social life [@descioli_side-taking_2016] and identity [@freitas_origins_2017; @strohminger_true_2017; @zhang_authentic_2019], and evidence that moral character impacts how people evaluate themselves [XXXX], desired personality change (Sun & Goodwin, 2020), memory (Carlson, Maréchal, Oud, Fehr, & Crockett, 2020; Kouchaki & Gino, 2016; Shu, Gino, & Bazerman, 2011; Stanley & De Brigard, 2019), one would expect that moral character, the morality related trait, will also reflected in perceptual decision-making. Yet, this effect was less studied . This moral perception effect was driven by motivation [@gantman_exposure_2016] and influenced the information spreading online [@brady_attentional_2020]. Especially lacking is the process of this effect. 
 
-The current study first explored and confirmed a positive effect of moral character in perceptual decision-making, using an associative learning task, then attempted to provide a mechanistic explanation for this positivity effect: spontaenous self-identification with the moral good character (@juechems_where_2019: Self-relevance is an important dimension in determine the value, i.e., intrinsic goal), both implicitly and explicitly. Finally, this positivity  effect was also found in other social traits (beauty) but not non-social, emotional states.
+The current study first explored and confirmed a positive effect of moral character in perceptual decision-making, using an associative learning task, then attempted to provide a mechanistic explanation for this positivity effect: spontaneous self-identification with the moral good character (@juechems_where_2019: Self-relevance is an important dimension in determine the value, i.e., intrinsic goal), both implicitly and explicitly. Finally, this positivity  effect was also found in other social traits (beauty) but not non-social, emotional states.
 
 Potential theoretical discussion points:
 Close distance of the semantic representation of self and moral character (attractor network) (Freeman & Ambady, 2011).
 The core/true/authentic self concept.
+social meter theory of self-esteem.
+evolutionary perspective of morality and moral self-conception, moral identity.
 
 We reported behavioral results from eleven experiments. In first set of experiments, we found that shapes associated with morally positive person label were responded faster and more accurately. In the second set of experiments, we explore the potential role of good self in perceptual matching task and added one more independent variable, we found that the effect was mainly on good self. In the third part we tested whether the morality will automatically binds with self but not other. Finally, we explore the correlation between behavioral task and questionnaire scores.
 
@@ -1391,6 +1453,34 @@ p_dist_2 <- ggcorrplot::ggcorrplot(dist.cor$r, hc.order = TRUE, type = "lower",
           strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(0, "lines")) 
 
+# correlation bewteen self-reported measures
+dist.cor2 <- df.scale.fs %>%
+  dplyr::select(mrlIdInt:NeutBad) %>%
+  as.matrix() %>%
+  Hmisc::rcorr(., type = 'spearman')
+
+p_dist_3 <- ggcorrplot::ggcorrplot(dist.cor2$r, hc.order = TRUE, type = "lower",
+     outline.col = "white", colors = c('red', 'white', 'blue'),  insig = "blank",
+     lab = TRUE, p.mat = dist.cor2$P) +
+  #theme_bw() +
+  scale_y_discrete(position='right') +
+  theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =12),
+          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 12, color = 'black'),
+          axis.title = element_text (size = 12),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          #axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          #axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(0, "lines")) 
 # 
 # corrplot(dist.cor$r, type = "upper", order = "hclust", 
 #          tl.col = "black", tl.srt = 45,
@@ -1523,7 +1613,7 @@ res.cor_all <-df.corr %>%
   as.matrix() %>%
   Hmisc::rcorr(., type = 'spearman')
 
-# heatmap(x = res.cor_all$r, col = col, symm = TRUE)
+#heatmap(x = res.cor_all$r, col = col, symm = TRUE)
 
 p.mat <- res.cor_all$P %>%
   tidyr::replace_na(1)
