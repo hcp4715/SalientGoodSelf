@@ -1,17 +1,17 @@
 # this script is used for initializing the analysis
 # preparing necessary functions used in current analysis
 
+# set local encoding to English
 if (.Platform$OS.type == 'windows') {
   Sys.setlocale(category = 'LC_ALL','English_United States.1250')
 } else {
   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 }
 
-#Sys.setlocale("LC_ALL", "English")  # set local encoding to English
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
-#rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
+# rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 pkgTest <- function(x){
   if (!require(x, character.only = TRUE)){
     install.packages(x, dep = TRUE)
@@ -58,9 +58,10 @@ apatheme = theme_bw()+
               axis.title = element_text (size = 14),
               axis.line.x = element_line(color='black', size = 1),   # increase the size of font
               axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
+              axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the space betwen title and x axis
               axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
 
+#  a theme with no ext on x-axis
 apatheme_x = theme_bw()+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -84,6 +85,7 @@ apatheme_x = theme_bw()+
         strip.text.x = element_text(size = 12, colour = "black"),
         strip.text.y = element_text(size = 12, colour = "black"))  # increase the space between title and y axis
 
+# a theme with small font size
 apatheme_s = theme_bw()+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -94,17 +96,17 @@ apatheme_s = theme_bw()+
         legend.text = element_text(size =12),
         legend.position="none",
         #legend.position='top',
-        plot.title = element_text(lineheight=.8, face="bold", size = 10),
+        plot.title = element_text(lineheight=.8, face="bold", size = 8),
         #              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
-        axis.text = element_text (size = 8, color = 'black'),
+        axis.text = element_text (size = 6, color = 'black'),
         #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
         axis.title = element_text (size = 8),
         axis.line.x = element_line(color='black', size = 1),   # increase the size of font
         axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-        axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-        axis.title.y = element_text(margin=margin(0,12,0,0)),
-        strip.text.x = element_text(size = 8, colour = "black"),
-        strip.text.y = element_text(size = 8, colour = "black"))  # increase the space between title and y axis
+        axis.title.x = element_text(margin=margin(6,0,0,0)),  # increase the sapce betwen title and x axis
+        axis.title.y = element_text(margin=margin(0,8,0,0)),
+        strip.text.x = element_text(size = 6, colour = "black"),
+        strip.text.y = element_text(size = 6, colour = "black"))  # increase the space between title and y axis
 
 # define the d prime function
 dprime <- function(hit,fa) {
@@ -472,7 +474,7 @@ Val_plot_NHST <- function(df.rt, df.d){
                                          #group = Identity, 
                                          colour = as.factor(Valence),
     ), 
-    shape = 18, position = pd1, size = 6) +
+    shape = 18, position = pd1, size = 5) +
     geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(Valence),  # group error bar.
                                             y = value, # group = Identity, 
                                             colour = as.factor(Valence),
@@ -491,15 +493,15 @@ Val_plot_NHST <- function(df.rt, df.d){
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
+          legend.text = element_text(size =6),
           plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          axis.text = element_text (size = 8, color = 'black'),
+          axis.title = element_text (size = 8),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 6, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")
     ) +
     facet_wrap( ~ DVs,

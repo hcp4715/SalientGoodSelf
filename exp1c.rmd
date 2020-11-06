@@ -21,7 +21,7 @@ Data was analyzed as in experiment 1a.
 ### Results
 
 ```{r 'ex1c-dprime-rt', fig.cap="RT and *d* prime of Experiment 1c.", fig.height=6, fig.width=10, warning=FALSE}
-Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
+p_1c_d_rt <- Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
 ```
 
 ```{r 1c_rt_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -107,8 +107,8 @@ exp1c_rt_p <- exp1c_rt_m1 %>%
 
 
 ```{r plot-exp1c-BGLM, fig.cap="Exp1c: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
-library(patchwork)
-exp1c_rt_p + exp1c_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+# library(patchwork)
+# exp1c_rt_p + exp1c_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 
@@ -129,7 +129,7 @@ params_p <- df1c.hddm.group.trace %>%
   dplyr::arrange(., param) %>%
   tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
 
-params_p %>% 
+p_1c_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
@@ -146,15 +146,15 @@ params_p %>%
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
-          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          legend.text = element_text(size = 8),
+          plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
+          axis.text = element_text (size = 8, color = 'black'),
+          axis.title = element_text (size = 8),
           #axis.title.x = element_blank(),
           #axis.title.y = element_blank(),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")
     ) 
 ```

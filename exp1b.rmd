@@ -25,7 +25,7 @@ Data was analyzed as in experiment 1a.
 
 # Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
 
-Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
+p_1b_d_rt <- Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
 ```
 
 Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experiment 1b. 
@@ -153,8 +153,8 @@ exp1b_rt_p <- exp1b_rt_m1 %>%
 ```
 
 ```{r plot-exp1b-BGLM, fig.cap="Exp1b: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
-library(patchwork)
-exp1b_rt_p + exp1b_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+# library(patchwork)
+# exp1b_rt_p + exp1b_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1b-BGLM).
@@ -175,7 +175,7 @@ params_p <- df1b.hddm.group.trace %>%
   dplyr::arrange(., param) %>%
   tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
 
-params_p %>% 
+p_1b_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
@@ -192,15 +192,15 @@ params_p %>%
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
-          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          legend.text = element_text(size =8),
+          plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
+          axis.text = element_text (size = 8, color = 'black'),
+          axis.title = element_text (size = 8),
           #axis.title.x = element_blank(),
           #axis.title.y = element_blank(),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")
     ) 
 ```

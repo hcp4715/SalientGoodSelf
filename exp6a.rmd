@@ -27,10 +27,7 @@ Data was analyzed as in experiment 1a.
 #### NHST
 
 ```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
-# rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-# Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
-
-Val_plot_NHST(df.rt = df6a.v.rt_m, df.d = df6a.v.dprime_l)
+p_6a_d_rt <- Val_plot_NHST(df.rt = df6a.v.rt_m, df.d = df6a.v.dprime_l)
 
 ```
 
@@ -163,9 +160,9 @@ exp6a_rt_p <- exp6a_rt_m1 %>%
 ```
 
 ```{r plot-exp6a-BGLM, fig.cap="Exp6a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
-library(patchwork)
+# library(patchwork)
 # exp6a_sdt_p[[1]] + exp6a_sdt_p[[2]] + exp6a_sdt_p[[3]] + exp6a_sdt_p[[4]] + exp6a_rt_p[[1]] + exp6a_rt_p[[2]] + exp6a_rt_p[[3]] + exp6a_rt_p[[4]] + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
-exp6a_sdt_p + exp6a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+# exp6a_sdt_p + exp6a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
 ```
 
 ### HDDM
@@ -183,7 +180,7 @@ params_p <- df6a.hddm.group.trace %>%
   dplyr::arrange(., param) %>%
   tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'valence'), names_from = 'param', values_from = 'value')
 
-params_p %>% 
+p_6a_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
@@ -200,15 +197,15 @@ params_p %>%
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =16),
-          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 16, color = 'black'),
-          axis.title = element_text (size = 16),
+          legend.text = element_text(size = 8),
+          plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
+          axis.text = element_text (size = 8, color = 'black'),
+          axis.title = element_text (size = 8),
           #axis.title.x = element_blank(),
           #axis.title.y = element_blank(),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(3, "lines")
     ) 
 ```

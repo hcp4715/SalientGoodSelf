@@ -57,6 +57,9 @@ output            :
   papaja::apa6_pdf:
     latex_engine  : xelatex
 
+header-includes:
+  - \usepackage{rotating}
+  - \DeclareDelayedFloatFlavor{sidewaysfigure}{figure}
 ---
  <!-- This documents -->
  
@@ -115,7 +118,7 @@ In exp 3a, 3b, and 6b, we found that (1) good-self is always faster than neutral
 
 [what we care? valence of the self exp4a or identity of the good exp4b?] We go further to disentangle the good-self complex: is it because the special role of good-self or because of social categorization. We designed two complementary experiments. in experiment 4a, participants only learned the association between self and other, the words "good-person", "neutral person", and "bad person" were presented as task-irrelevant stimuli, while in experiment 4b, participants learned the associations between "good-person", "neutral-person", and "bad-person", and the "self" and "other" were presented as task-irrelevant stimuli. These two experiment can be used to distinguish the "good-self" as anchor account and the "good-self-based social categorization" account. If good-self as an anchor is true, then, in both experiment, good-self will show advantage over other stimuli. More specifically, in experiment 4a, in the self condition, there will be advantage for good as task-irrelevant condition than the other two self conditions; in experiment 4b, in the good condition, there will be an advantage for self as task-irrelevant condition over other as task-irrelevant condition. If good-self-based social categorization if true, then, the prioritization effect will depends on whether the stimuli can be categorized as the same group of good-self. More specifically, in experiment 4a, there will be good-as-task-irrelevant stimuli than other condition in self conditions, this prediction is the same as the "good-self as anchor" account; however, for experiment 4b, there will be no self-as-task-irrelevant stimuli than other-as-task-irrelevant condition.
 
-[Good self in self-reported data] As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person. We explored the general pattern and the correlation between self-reported distance and reaction-based indices.
+[Good self in self-reported data] As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person, moral identity, moral self-image, and self-esteem. All these data are available [see @Liu_2020_JOPD]. We explored the correlation between self-reported distance and these questionnaires as well as the questionnaires and behavioral data. However, given that the correlation between self-reported score and behavioral data has low correlation [@dang_why_2020], we didn't expect a high correlation between these self-reported measures and the behavioral data.
 
 [whether categorize self as positive is not limited to morality] Finally, we explored the pattern is generalized to all positive traits or only to morality. We found that self-categorization is not limited to morality, but a special case of categorization in perpetual processing. 
 
@@ -363,8 +366,8 @@ fun_rt_val_id <- function(exp_name) {
 ```{r child = "general_method.rmd"}
 ```
 
-# Part 1: Moral valence effect
-In this part, we report five experiments that aimed at testing whether the instantly acquired association between shapes and good person would be prioritized in perceptual decision-making.
+# Part 1: Perceptual processing moral character related inforation
+In this part, we report five experiments that aimed at testing whether an associative learning task, in which concepts of moral character are associated with geometric shapes, will impact the perceptual decision-making.
 
 ```{r child = "exp1a.rmd"}
 ```
@@ -380,6 +383,16 @@ In this part, we report five experiments that aimed at testing whether the insta
 
 ```{r child = "exp6a.rmd"}
 ```
+
+  <!-- plot all graphs form the first part together -->
+  
+```{r fig.env = "sidewaysfigure", fig.cap="Results for part 1.", fig.height=9, fig.width=15, warning=FALSE}
+library(patchwork)
+(p_1a_d_rt | p_1b_d_rt | p_1c_d_rt | p_2_d_rt | p_6a_d_rt) / 
+  (exp1a_rt_p | exp1a_sdt_p | exp1b_rt_p | exp1b_sdt_p | exp1c_rt_p | exp1c_sdt_p | exp2_rt_p | exp2_sdt_p | exp6a_rt_p | exp6a_sdt_p) / 
+  (p_1a_hddm | p_1b_hddm | p_1c_hddm | p_2_hddm | p_6a_hddm) 
+```
+
 
 # Part 2: interaction between valence and identity
 

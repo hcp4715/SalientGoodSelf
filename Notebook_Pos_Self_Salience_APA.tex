@@ -130,6 +130,8 @@ Correspondence concerning this article should be addressed to Hu Chuan-Peng, Lan
 
 \linenumbers
 \usepackage{csquotes}
+\usepackage{rotating}
+\DeclareDelayedFloatFlavor{sidewaysfigure}{figure}
 \ifxetex
   % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
   \usepackage{polyglossia}
@@ -192,7 +194,7 @@ In exp 3a, 3b, and 6b, we found that (1) good-self is always faster than neutral
 
 {[}what we care? valence of the self exp4a or identity of the good exp4b?{]} We go further to disentangle the good-self complex: is it because the special role of good-self or because of social categorization. We designed two complementary experiments. in experiment 4a, participants only learned the association between self and other, the words \enquote{good-person}, \enquote{neutral person}, and \enquote{bad person} were presented as task-irrelevant stimuli, while in experiment 4b, participants learned the associations between \enquote{good-person}, \enquote{neutral-person}, and \enquote{bad-person}, and the \enquote{self} and \enquote{other} were presented as task-irrelevant stimuli. These two experiment can be used to distinguish the \enquote{good-self} as anchor account and the \enquote{good-self-based social categorization} account. If good-self as an anchor is true, then, in both experiment, good-self will show advantage over other stimuli. More specifically, in experiment 4a, in the self condition, there will be advantage for good as task-irrelevant condition than the other two self conditions; in experiment 4b, in the good condition, there will be an advantage for self as task-irrelevant condition over other as task-irrelevant condition. If good-self-based social categorization if true, then, the prioritization effect will depends on whether the stimuli can be categorized as the same group of good-self. More specifically, in experiment 4a, there will be good-as-task-irrelevant stimuli than other condition in self conditions, this prediction is the same as the \enquote{good-self as anchor} account; however, for experiment 4b, there will be no self-as-task-irrelevant stimuli than other-as-task-irrelevant condition.
 
-{[}Good self in self-reported data{]} As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person. We explored the general pattern and the correlation between self-reported distance and reaction-based indices.
+{[}Good self in self-reported data{]} As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person, moral identity, moral self-image, and self-esteem. All these data are available (see Liu et al., 2020). We explored the correlation between self-reported distance and these questionnaires as well as the questionnaires and behavioral data. However, given that the correlation between self-reported score and behavioral data has low correlation (Dang, King, \& Inzlicht, 2020), we didn't expect a high correlation between these self-reported measures and the behavioral data.
 
 {[}whether categorize self as positive is not limited to morality{]} Finally, we explored the pattern is generalized to all positive traits or only to morality. We found that self-categorization is not limited to morality, but a special case of categorization in perpetual processing.
 
@@ -393,10 +395,10 @@ Based on results form the experiment, we reason that the correlation between beh
 
 Then we confirmed the significant results from the data without self- and other-referential (exp1a, 1b, 1c, 2, 5, 6a). In this confirmatory analysis, we used alpha = 0.05 and used bootstrap by \texttt{BootES} package (Kirby \& Gerlanc, 2013) to estimate the correlation. To avoid false positive, we further determined the threshold for significant by permutation. More specifically, for each pairs that initially with \(p < .05\), we randomly shuffle the participants data of each score and calculated the correlation between the shuffled vectors. After repeating this procedure for 5000 times, we choose arrange these 5000 correlation coefficients and use the 95\% percentile number as our threshold.
 
-\hypertarget{part-1-moral-valence-effect}{%
-\section{Part 1: Moral valence effect}\label{part-1-moral-valence-effect}}
+\hypertarget{part-1-perceptual-processing-moral-character-related-inforation}{%
+\section{Part 1: Perceptual processing moral character related inforation}\label{part-1-perceptual-processing-moral-character-related-inforation}}
 
-In this part, we report five experiments that aimed at testing whether the instantly acquired association between shapes and good person would be prioritized in perceptual decision-making.
+In this part, we report five experiments that aimed at testing whether an associative learning task, in which concepts of moral character are associated with geometric shapes, will impact the perceptual decision-making.
 
 \hypertarget{experiment-1a}{%
 \subsection{Experiment 1a}\label{experiment-1a}}
@@ -417,8 +419,10 @@ Three geometric shapes were used in this experiment: triangle, square, and circl
 \hypertarget{procedure}{%
 \paragraph{Procedure}\label{procedure}}
 
-This experiment had two phases. First, there was a brief learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, \enquote{bad person is a circle; good person is a triangle; and a neutral person is represented by a square.} After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task.
-In the experimental task, participants judged whether shape--label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape--label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, \enquote{too slow} was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60\%.
+This experiment had two phases. First, there was a brief learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different concepts of moral character (bad person, a good person, or a neutral person). For example, a participant was told, \enquote{bad person is a circle; good person is a triangle; and a neutral person is a square.} After participant remembered the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task.
+
+In the experimental task, participants judged whether shape--label pairs, which were subsequently presented, were correct (i.e., the same as they learned). Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape--label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, \enquote{too slow} was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60\%.
+
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 \hypertarget{data-analysis-1}{%
@@ -429,19 +433,13 @@ As described in general methods section, this experiment used three approaches t
 \hypertarget{results}{%
 \subsubsection{Results}\label{results}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1a-dprime-rt-1.pdf}
-\caption{\label{fig:ex1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
-\end{figure}
-
 \hypertarget{classic-nhst-1}{%
 \paragraph{Classic NHST}\label{classic-nhst-1}}
 
 \hypertarget{d-prime}{%
 \subparagraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime}}
 
-Figure \ref{fig:ex1a-dprime-rt} shows \emph{d} prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA.
+Figure \ref{fig:ex1a-dprime-rt} shows \emph{d}' and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA.
 
 We found the effect of Valence (\(F(1.96, 97.84) = 6.19\), \(\mathit{MSE} = 0.27\), \(p = .003\), \(\hat{\eta}^2_G = .020\)). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater \emph{d} prime than shapes associated with Bad-person (1.75, SE = 0.14), \emph{t}(50) = 3.304, \emph{p} = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, \emph{t}(50) = 1.54, \emph{p} = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, \emph{t}(50) = 2.109, \emph{p} = .098.
 
@@ -458,29 +456,17 @@ We then carried out two separate ANOVA for Match and Mismatched trials. For matc
 \hypertarget{d-prime-1}{%
 \subparagraph{d prime}\label{d-prime-1}}
 
-We fitted a Bayesian hierarchical GLM for signal detection theory approach. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity (\(d'\)) and criteria (\(c\)) were both influence. For the \(d'\), we found that the shapes tagged with morally good person (2.46, 95\% CI{[}2.21 2.72{]}) is greater than shapes tagged with moral bad (2.07, 95\% CI{[}1.83 2.32{]}), \(P_{PosteriorComparison} = 1\). Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95\% CI{[}1.95 2.49{]}), \(P_{PosteriorComparison} = 0.97\). Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, \(P_{PosteriorComparison} = 0.92\).
+We fitted a Bayesian hierarchical GLM for signal detection theory. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity (\(d'\)) and criteria (\(c\)) were both influenced. For the \(d'\), we found that the shapes associated with good person (2.46, 95\% CI{[}2.21 2.72{]}) is greater than shapes tagged with moral bad (2.07, 95\% CI{[}1.83 2.32{]}), \(P_{PosteriorComparison} = 1\). Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95\% CI{[}1.95 2.49{]}), \(P_{PosteriorComparison} = 0.97\). Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, \(P_{PosteriorComparison} = 0.92\).
 
 Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, {[}-1.14 -0.88{]}), followed by shapes tagged with neutral person(-1.06, {[}-1.21 -0.92{]}), and then the shapes tagged with bad person(-1.11, {[}-1.25 -0.97{]}). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
 
 \hypertarget{reaction-times-1}{%
 \subparagraph{Reaction times}\label{reaction-times-1}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1a-BGLM-1.pdf}
-\caption{\label{fig:plot-exp1a-BGLM}Exp1a: Results of Bayesian GLM analysis.}
-\end{figure}
-
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = 1\)). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, \(P_{PosteriorComparison} = .99\), it was also faster than the Bad condition, \(P_{PosteriorComparison} = 1\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = .99\). However, the mismatched trials are largely overlapped. See Figure \ref{fig:plot-exp1a-BGLM}.
 
 \hypertarget{hddm}{%
 \paragraph{HDDM}\label{hddm}}
-
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1a-HDDM-1.pdf}
-\caption{\label{fig:plot-exp1a-HDDM}Exp1a: Results of HDDM.}
-\end{figure}
 
 We fitted our data with HDDM, using the response-coding (See also, Hu et al., 2020). We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see Figure \ref{fig:plot-exp1a-HDDM}).
 
@@ -520,12 +506,6 @@ Data was analyzed as in experiment 1a.
 \hypertarget{nhst}{%
 \paragraph{NHST}\label{nhst}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1b-dprime-rt-1.pdf}
-\caption{\label{fig:ex1b-dprime-rt}RT and \emph{d} prime of Experiment 1b.}
-\end{figure}
-
 Figure \ref{fig:ex1b-dprime-rt} shows \emph{d} prime and reaction times of experiment 1b.
 
 \hypertarget{d-prime-2}{%
@@ -551,24 +531,12 @@ Interesting, we also found the criteria for three conditions also differ, the sh
 \hypertarget{reaction-time}{%
 \subparagraph{Reaction time}\label{reaction-time}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1b-BGLM-1.pdf}
-\caption{\label{fig:plot-exp1b-BGLM}Exp1b: Results of Bayesian GLM analysis.}
-\end{figure}
-
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = 1\)). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, \(P_{PosteriorComparison} = .99\), it was also faster than the Bad condition, \(P_{PosteriorComparison} = 1\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = .99\). However, the mismatched trials are largely overlapped. See Figure \ref{fig:plot-exp1b-BGLM}.
 
 \hypertarget{hddm-1}{%
 \paragraph{HDDM}\label{hddm-1}}
 
 We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \ref{fig:plot-exp1b-HDDM}).
-
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1b-HDDM-1.pdf}
-\caption{\label{fig:plot-exp1b-HDDM}Exp1b: Results of HDDM.}
-\end{figure}
 
 \hypertarget{discussion}{%
 \subsubsection{Discussion}\label{discussion}}
@@ -609,12 +577,6 @@ Data was analyzed as in experiment 1a.
 \hypertarget{results-2}{%
 \subsubsection{Results}\label{results-2}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex1c-dprime-rt-1.pdf}
-\caption{\label{fig:ex1c-dprime-rt}RT and \emph{d} prime of Experiment 1c.}
-\end{figure}
-
 Figure \ref{fig:ex1c-dprime-rt} shows \emph{d} prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on \emph{d} prime, \(F(1.93, 42.56) = 0.23\), \(\mathit{MSE} = 0.41\), \(p = .791\), \(\hat{\eta}^2_G = .005\). Neither the effect of valence on RT (\(F(1.63, 35.81) = 0.22\), \(\mathit{MSE} = 2,212.71\), \(p = .761\), \(\hat{\eta}^2_G = .001\)) or interaction between valence and matchness on RT (\(F(1.79, 39.43) = 1.20\), \(\mathit{MSE} = 1,973.91\), \(p = .308\), \(\hat{\eta}^2_G = .005\)).
 
 \hypertarget{signal-detection-theory-analysis-of-accuracy-1}{%
@@ -629,22 +591,10 @@ Interesting, we also found the criteria for three conditions also differ, the sh
 
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = .75\)). We focused on matched trials only, and compared different conditions: Good () is not faster than the neutral (), \(P_{PosteriorComparison} = .5\), it was faster than the Bad condition (), \(P_{PosteriorComparison} = .88\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = .95\). However, the mismatched trials are largely overlapped.
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1c-BGLM-1.pdf}
-\caption{\label{fig:plot-exp1c-BGLM}Exp1c: Results of Bayesian GLM analysis.}
-\end{figure}
-
 \hypertarget{hddm-2}{%
 \subsubsection{HDDM}\label{hddm-2}}
 
 We fitted our data with HDDM, using the response-coding (also see Hu et al., 2020). We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \ref{fig:plot-exp1c-HDDM})).
-
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp1c-HDDM-1.pdf}
-\caption{\label{fig:plot-exp1c-HDDM}Exp1c: Results of HDDM.}
-\end{figure}
 
 \hypertarget{experiment-2-sequential-presenting}{%
 \subsection{Experiment 2: Sequential presenting}\label{experiment-2-sequential-presenting}}
@@ -676,12 +626,6 @@ Data was analyzed as in study 1a.
 \hypertarget{nhst-1}{%
 \paragraph{NHST}\label{nhst-1}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex2-dprime-rt-1.pdf}
-\caption{\label{fig:ex2-dprime-rt}RT and \emph{d} prime of Experiment 2.}
-\end{figure}
-
 Figure \ref{fig:ex2-dprime-rt} shows \emph{d} prime and reaction times of experiment 2. Less than 0.2\% correct trials with less than 200ms reaction times were excluded.
 
 \hypertarget{d-prime.}{%
@@ -709,12 +653,6 @@ Interesting, we also found the criteria for three conditions also differ, the sh
 \hypertarget{reaction-times-3}{%
 \subparagraph{Reaction times}\label{reaction-times-3}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp2-BGLM-1.pdf}
-\caption{\label{fig:plot-exp2-BGLM}Exp2: Results of Bayesian GLM analysis.}
-\end{figure}
-
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = .75\)). We focused on matched trials only, and compared different conditions: Good () is not faster than the neutral (), \(P_{PosteriorComparison} = .5\), it was faster than the Bad condition (), \(P_{PosteriorComparison} = .88\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = .95\). However, the mismatched trials are largely overlapped.
 
 \hypertarget{hddm-3}{%
@@ -722,12 +660,6 @@ We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as
 
 We fitted our data with HDDM, using the response-coding (also see Hu et al., 2020). We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure @ref(fig:plot-exp1c
 -HDDM))).
-
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp2-HDDM-1.pdf}
-\caption{\label{fig:plot-exp2-HDDM}Exp2: Results of HDDM.}
-\end{figure}
 
 \hypertarget{discussion-1}{%
 \subsection{Discussion}\label{discussion-1}}
@@ -779,12 +711,6 @@ Data was analyzed as in experiment 1a.
 \hypertarget{nhst-2}{%
 \paragraph{NHST}\label{nhst-2}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/ex6a-dprime-rt-1.pdf}
-\caption{\label{fig:ex6a-dprime-rt}RT and \emph{d} prime of Experiment 6a.}
-\end{figure}
-
 Only the behavioral results were reported here. Figure \ref{fig:ex6a-dprime-rt} shows \emph{d} prime and reaction times of experiment 6a.
 
 \hypertarget{d-prime-3}{%
@@ -808,24 +734,16 @@ We found intercation between Matchness and Valence (\(F(1.97, 45.20) = 20.45\), 
 \hypertarget{reaction-time-3}{%
 \subparagraph{Reaction time}\label{reaction-time-3}}
 
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp6a-BGLM-1.pdf}
-\caption{\label{fig:plot-exp6a-BGLM}Exp6a: Results of Bayesian GLM analysis.}
-\end{figure}
-
 \hypertarget{hddm-4}{%
 \subsubsection{HDDM}\label{hddm-4}}
-
-\begin{figure}
-\centering
-\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp6a-HDDM-1.pdf}
-\caption{\label{fig:plot-exp6a-HDDM}exp6a: Results of HDDM.}
-\end{figure}
 
 We fitted our data with HDDM, using the response-coding (also see Hu et al., 2020). We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that, similar to experiment 2, the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person, but only for the self-referential condition. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation, and this effect also exist only for the self-referential condition.
 
 Interestingly, we found that in both self-referential and other-referential conditions, the shapes associated bad valence have higher drift rate and higher boundary separation. which might suggest that the shape associated with bad stimuli might be prioritized in the non-match trials (see figure \ref{fig:plot-exp6a-HDDM}).
+
+\begin{sidewaysfigure}
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/unnamed-chunk-7-1} \caption{Results for part 1.}\label{fig:unnamed-chunk-7}
+\end{sidewaysfigure}
 
 \hypertarget{part-2-interaction-between-valence-and-identity}{%
 \section{Part 2: interaction between valence and identity}\label{part-2-interaction-between-valence-and-identity}}
@@ -1464,6 +1382,9 @@ Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M.
 
 \leavevmode\hypertarget{ref-Cooper_2009_handbook}{}%
 Cooper, H., Hedges, L. V., \& Valentine, J. C. (2009). \emph{The handbook of research synthesis and meta-analysis} (2nd ed.). Book, New York: Sage.
+
+\leavevmode\hypertarget{ref-dang_why_2020}{}%
+Dang, J., King, K. M., \& Inzlicht, M. (2020). Why are self-report and behavioral measures weakly correlated? \emph{Trends in Cognitive Sciences}, \emph{24}(4), 267--269. \url{https://doi.org/10.1016/j.tics.2020.01.007}
 
 \leavevmode\hypertarget{ref-DeCarlo_1998}{}%
 DeCarlo, L. T. (1998). Signal detection theory and generalized linear models. \emph{Psychological Methods}, \emph{3}(2), 186--205. Journal Article. \url{https://doi.org/10.1037/1082-989X.3.2.186}
