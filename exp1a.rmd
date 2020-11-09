@@ -7,80 +7,21 @@
 Three geometric shapes were used in this experiment: triangle, square, and circle. These shapes were paired with three labels (bad person, good person or neutral person). The pairs were counterbalanced across participants. 
 
 #### Procedure
-This experiment had two phases. First, there was a brief learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different concepts of moral character (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is a square.” After participant remembered the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task. 
+This experiment had two phases. First, there was a brief learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different concepts of moral character (bad person, a good person, or a neutral person). For example, a participant was told, “bad person is a circle; good person is a triangle; and a neutral person is a square.” After participants remembered the associations (usually in a few minutes), they started a practicing phase of matching task which had the exact task as in the experimental task. 
 
 In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct (i.e., the same as they learned). Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
 
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 #### Data analysis
-As described in general methods section, this experiment used three approaches to analyze the behavioral data: Classical NHST, Bayesian Hierarchical Generalized Linear Model, and Hierarchical drift diffusion model. 
+As described in general methods section, we used three approaches to analyze the behavioral data: Classical NHST, Bayesian Hierarchical Generalized Linear Model, and Hierarchical drift diffusion model. 
  <!-- Shall I write more about HDDM here, or just refer the interested reader to the paper? -->
 
 ### Results
 
-```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
-p_1a_d_rt <- Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
-```
+[will only plot matching, all other plots will be in supplementary materials]
 
-#### Classic NHST
-##### *d* prime
-Figure \@ref(fig:ex1a-dprime-rt) shows *d*' and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
-
-```{r 1a_dprime_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
-df1a_dprime_anova_apa <- df1a_dprime_anova %>% papaja::apa_print.afex_aov()
-
-posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_1a_d)
-```
-
-```{r results='asis', echo = F, eval=F}
-# knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-papaja::apa_table(df1a_dprime_anova_apa$table
-  , caption = "Repeated measure ANOVA of *d* prime from Experiment 1a"
-  , note = "*d* prime was calculated in a signal detection way.")
-
-```
-
-We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, *t*(50) = 2.109, *p* = .098.
-
-##### Reaction times
-```{r 1a_RT_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
-
-df1a_RT_anova_apa <- df1a_RT_anova %>% papaja::apa_print.afex_aov()
-
-df1a.v.rt_m1 <- df1a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
-df1a_RT_anova_m_apa <- df1a_RT_anova_m %>% papaja::apa_print.afex_aov()
-
-df1a.v.rt_m2 <- df1a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
-df1a_RT_anova_nm_apa <- df1a_RT_anova_nm %>% papaja::apa_print.afex_aov()
-
-posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
-# pairs(posthoc_1a_rt)
-```
-We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and interaction between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
-
-We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
-
-#### Bayesian hierarchical GLM
+#### Hypothesis testing
 ##### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1a_sdt_m1 <- fun_sdt_val('1a')
@@ -107,6 +48,33 @@ exp1a_sdt_p <- exp1a_sdt_m1 %>%
   stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
   facet_grid(cols = vars(ismatch), scales = "free_y") +
   theme_classic()
+
+exp1a_sdt_p %>%  tidyr::pivot_wider(., id_cols = c('.draw', 'Valence'), names_from = 'ismatch', values_from = '.value')  %>%
+  ggplot2::ggplot(., aes(x = `d prime`, y = criterion, group = Valence, color = Valence)) +
+  geom_point() + 
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  #facet_grid(~ matchness) +
+  ylab(expression(paste("Criterion ",italic("c"), sep = ' '))) +
+  xlab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+  theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =8),
+          plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
+          axis.text = element_text (size = 8, color = 'black'),
+          axis.title = element_text (size = 8),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
 ```
 We fitted a Bayesian hierarchical GLM for signal detection theory. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influenced. For the $d'$, we found that the shapes associated with good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
 

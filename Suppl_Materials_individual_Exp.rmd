@@ -352,7 +352,7 @@ $$\mu_{k} \sim N(\mu, \sigma)$$
 
 ## Results
 
-```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
+```{r 'exp1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
 # rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
