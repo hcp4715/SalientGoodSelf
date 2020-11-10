@@ -49,6 +49,10 @@ For experiments that had 2 (matching: match vs. non-match) by 3 (moral character
 
 `saymatch ~ 0 + Valence + Valence:ismatch + (0 + Valence + Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
+For experiments that had two by two by three design, we used the follow formula for the BGLM:
+
+`saymatch ~ 0 + ID:Valence + ID:Valence:ismatch + (0 + ID:Valence + ID:Valence:ismatch | Subject), family = bernoulli(link="probit")`
+
 For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response. The reaction time is a linear function of trial type:
 
 $$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
@@ -60,15 +64,21 @@ $y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
 $$\mu_{j} \sim N(\mu, \sigma)$$
 
 $$\sigma_{j} \sim Cauchy()$$
+Formula used for modeling the data as follow:
 
+`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = shifted_lognormal()`
+
+or 
+
+`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = shifted_lognormal()`
 
 #### Hierarchical drift diffusion model (HDDM)
-To further explore the psychological mechanism under perceptual decision-making, we used a generative mode drift diffusion model to model our RTs and accuracy data. As the hypothesis testing part, we also used hierarchical Bayesian model to fit the DDM. The package we used was the HDDM [@wiecki_hddm_2013], a python package for fitting hierarchical DDM. We used the prior implemented in HDDM, that is, weakly informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009]. As reported in @Hu_2020_GoodSelf, we used the stimulus code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
+To further explore the psychological mechanism under perceptual decision-making, we used a generative mode drift diffusion model (DDM) to model our RTs and accuracy data. As the hypothesis testing part, we also used hierarchical Bayesian model to fit the DDM. The package we used was the HDDM [@wiecki_hddm_2013], a python package for fitting hierarchical DDM. We used the prior implemented in HDDM, that is, weakly informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009]. As reported in @Hu_2020_GoodSelf, we used the stimulus code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
 
 ### Synthesized results
-We also reported the synthesized results from the experiments, because many of them shared the similar experimental design. We reported the results in five parts: valence effect, explicit interaction between valence and self-relevance, implicit interaction between valence and self-relevance, specificity of valence effect, and behavior-questionnaire correlation. 
+Given that multiple experiments in the current study shared similar experimental designs, We also synthesized their results to get a more precise and robust estimation of the effect. 
 
-We estimated the synthesized effect size using Bayesian hierarchical model, which extended the two-level hierarchical model in each experiment into three-level model, which experiment as an additional level. For SDT, we can use a nested hierarchical model to model all the experiment with similar design:
+We used Bayesian hierarchical GLM model to synthesize the effect across different studies by extending two-level hierarchical model into a three-level model, which experiment as an additional level. For SDT, we can use a nested hierarchical model to model all the experiment with similar design:
 $$y_{ijk} \sim Bernoulli(p_{ijk})$$
 where 
 $$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
@@ -89,7 +99,7 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix}, \sum)$$
 in which $\mu_{0}$ and $\mu_{1}$ means the population level parameter.
 
-This model can be easily expand to three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+In similar way, we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
 
 $$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
 
@@ -103,17 +113,17 @@ $$\theta_{k} \sim Cauchy()$$
 
 
 
-Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
+Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ and RT across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
 
 
-#### Valence effect
-We synthesized effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5 and 6a for the valence effect. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach [@Goh_2016_mini]. 
+##### Effect of moral character
+We synthesized effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach [@Goh_2016_mini]. 
 
-#### Explicit interaction between Valence and self-relevance
-The results from experiment 3a, 3b, 6b, 7a, and 7b. These experiments explicitly included both moral valence and self-reference. 
+#### Effect of moral self
+We further synthesized the effect of moral self, which included results from experiment 3a, 3b, and 6b. In these experiment, we directly tested two possible explanations: moral self as social categorization process and value-based attention. 
 
 #### Implicit interaction between valence and self-relevance
-In the third part, we focused on experiment 4a and 4b, which were designed to examine the implicit effect of the interaction between moral valence and self-referential processing. We are interested in one particular question: will self-referential and morally positive valence had a mutual facilitation effect. That is, when moral valence (experiment 4a) or self-referential (experiment 4a) was presented as task-irrelevant stimuli, whether they would facilitate self-referential or valence effect on perceptual decision-making. For experiment 4a, we reported the comparisons between different valence conditions under the self-referential task and other-referential task. For experiment 4b, we first calculated the effect of valence for both self- and other-referential conditions and then compared the effect size of these three contrast from self-referential condition and from other-referential condition. Note that the results were also analyzed in a standard repeated measure ANOVA (see supplementary materials).
+In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the morally Good (4b).
 
 #### Specificity of the valence effect
 In this part, we reported the data from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, aesthetic of person, aesthetic of scene, and emotion. This experiment was design to test whether the positive bias is specific to morality.
@@ -122,10 +132,6 @@ In this part, we reported the data from experiment 5, which included positive, n
 
 Finally, we explored correlation between results from behavioral results and self-reported measures. 
 
-For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all data were reported in [@Liu_2020_JOPD].
+For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all questionnaire data were reported in [@Liu_2020_JOPD].
 
-For the behavioral task part, we used three parameters from drift diffusion model: drift rate (*v*), boundary separation (*a*), and non decision-making time (*t*), because these parameters has relative clear psychological meaning. We used the mean of parameter posterior distribution as the estimate of each parameter for each participants in the correlation analysis.
-
-Based on results form the experiment, we reason that the correlation between behavioral result in self-referential will appear in the data without mentioning the self/other (exp 3a, 3b, 6a, 7a, 7b). To this end, we first calculated the correlation between behavioral indicators and questionnaires for self-referential and other-referential separately. Given the small sample size of the data (N = ), we used a relative liberal threshold for these exploration (alpha = 0.1). 
-
-Then we confirmed the significant results from the data without self- and other-referential (exp1a, 1b, 1c, 2, 5, 6a). In this confirmatory analysis, we used alpha = 0.05 and used bootstrap by `BootES` package [@kirby_bootes_2013] to estimate the correlation. To avoid false positive, we further determined the threshold for significant by permutation. More specifically, for each pairs that initially with  $p < .05$, we randomly shuffle the participants data of each score and calculated the correlation between the shuffled vectors. After repeating this procedure for 5000 times, we choose arrange these 5000 correlation coefficients and use the 95% percentile number as our threshold.
+For the behavioral task part, we used three parameters from drift diffusion model: drift rate (*v*), boundary separation (*a*), and non decision-making time (*t*), because these parameters has relative clear psychological meaning. We used the mean of parameter posterior distribution as the estimate of each parameter for each participants in the correlation analysis. We used alpha = 0.05 and used bootstrap by `BootES` package [@kirby_bootes_2013] to estimate the correlation. 

@@ -19,7 +19,7 @@ As described in general methods section, we used three approaches to analyze the
 
 ### Results
 
-[will only plot matching, all other plots will be in supplementary materials]
+We only reported the Bayesian hierarchical GLM results for hypothesis testing, all the classic NHST results can be found in the online supplementary results. Also, we only presented the plots for match trials, all plots for nonmatch trials were in the online supplementary results.
 
 #### Hypothesis testing
 ##### d prime
@@ -76,14 +76,14 @@ exp1a_sdt_p %>%  tidyr::pivot_wider(., id_cols = c('.draw', 'Valence'), names_fr
           panel.spacing = unit(3, "lines")
     ) 
 ```
-We fitted a Bayesian hierarchical GLM for signal detection theory. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influenced. For the $d'$, we found that the shapes associated with good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
+We fitted a Bayesian hierarchical GLM for signal detection theory. The results showed that when the shapes were tagged with labels with different moral character, the sensitivity ($d'$) and criteria ($c$) were both influenced. For the $d'$, we found that the shapes associated with good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
 
 Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(-1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
 
 ##### Reaction times
 ```{r 1a_rt_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# fit a three-level hierarchical model for RT, didn't specify the prior
 exp1a_rt_m1 <- fun_rt_val('1a')
+
 #plot(exp1a_rt_m1, "b_")
 summary(exp1a_rt_m1)  # n
 # pp_check(exp1a_rt_m1)
@@ -108,12 +108,13 @@ exp1a_rt_p <- exp1a_rt_m1 %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
               Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::filter(ismatch == 'match') %>%  # only plot the match trials
   dplyr::rename(log_RT = .value) %>%
   dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
   ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
   tidybayes::stat_halfeye() +
   ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
-  facet_grid(~ ismatch) +
+#  facet_grid(~ ismatch) +
   theme_classic()
 ```
 
@@ -142,11 +143,12 @@ params_p <- df1a.hddm.group.trace %>%
 p_1a_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  dplyr::filter(matchness == 'Nonmatch') %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(~ matchness) +
+  # facet_grid(~ matchness) +
   ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
   xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
   theme_bw()+
