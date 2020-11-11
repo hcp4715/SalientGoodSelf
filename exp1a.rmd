@@ -14,20 +14,19 @@ In the experimental task, participants judged whether shape–label pairs, which
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 #### Data analysis
-As described in general methods section, we used three approaches to analyze the behavioral data: Classical NHST, Bayesian Hierarchical Generalized Linear Model, and Hierarchical drift diffusion model. 
+As described in general methods section, we used Bayesian Bayesian Hierarchical Generalized Linear Model for hypothesis testing and Hierarchical drift diffusion model. We also included the classic NHST results in the online supplementary results. 
  <!-- Shall I write more about HDDM here, or just refer the interested reader to the paper? -->
 
 ### Results
-
-We only reported the Bayesian hierarchical GLM results for hypothesis testing, all the classic NHST results can be found in the online supplementary results. Also, we only presented the plots for match trials, all plots for nonmatch trials were in the online supplementary results.
-
 #### Hypothesis testing
 ##### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1a_sdt_m1 <- fun_sdt_val('1a')
 
 summary(exp1a_sdt_m1)    # check summary
-# pp_check(exp1a_sdt_m1)  # posterior predictive check
+
+# brms::pp_check(exp1a_sdt_m1) # posterior predictive check
+# bayesplot::pp_check(exp1a_sdt_m1)
 
 hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.97
 hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
@@ -36,6 +35,9 @@ hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.82
 hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .95
 hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.81
 
+## Get the predicted responses?
+## pp <- predict(exp1a_sdt_m1)
+
 # exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
 exp1a_sdt_p <- exp1a_sdt_m1 %>%
   emmeans::emmeans( ~ ismatch | Valence) %>%
@@ -43,12 +45,15 @@ exp1a_sdt_p <- exp1a_sdt_m1 %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::filter(ismatch == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
-  facet_grid(cols = vars(ismatch), scales = "free_y") +
+  ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+  #facet_grid(cols = vars(ismatch), scales = "free_y") +
   theme_classic()
 
+## plot d prime and c as scatter points?
 exp1a_sdt_p %>%  tidyr::pivot_wider(., id_cols = c('.draw', 'Valence'), names_from = 'ismatch', values_from = '.value')  %>%
   ggplot2::ggplot(., aes(x = `d prime`, y = criterion, group = Valence, color = Valence)) +
   geom_point() + 
@@ -97,10 +102,13 @@ summary(exp1a_rt_m1)  # n
 # ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
 # ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
 
-hypothesis(exp1a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
+hypothesis(exp1a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < nonmatch, p = 1
 hypothesis(exp1a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
 hypothesis(exp1a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
 hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
+
+## Get the predicted responses?
+# pp <- predict(exp1a_rt_m1)
 
 #exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
 exp1a_rt_p <- exp1a_rt_m1 %>%
