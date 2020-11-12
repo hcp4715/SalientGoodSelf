@@ -367,7 +367,7 @@ fun_rt_val_id <- function(exp_name) {
 ```
 
 # Part 1: Perceptual processing moral character related inforation
-In this part, we report five experiments that aimed at testing whether an associative learning task, in which concepts of moral character are associated with geometric shapes, will impact the perceptual decision-making.
+In this part, we report five experiments that tested whether an associative learning task, in which concepts of moral character are associated with geometric shapes, will impact the perceptual decision-making.
 
 ```{r child = "exp1a.rmd"}
 ```

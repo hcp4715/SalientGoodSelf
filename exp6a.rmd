@@ -114,6 +114,7 @@ exp6a_sdt_p <- exp6a_sdt_m1 %>%
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
                 #,Identity = factor(Identity, levels = c('Self', 'Other'))
                 ) %>%
+  dplyr::filter(ismatch == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
@@ -122,8 +123,10 @@ exp6a_sdt_p <- exp6a_sdt_m1 %>%
                #,position=position_dodge(width = 0.1)
                ) +
   #scale_fill_brewer() +
-  facet_grid(cols = vars(ismatch), scales = "free_y") +
-  theme_classic()
+  #facet_grid(cols = vars(ismatch), scales = "free_y") +
+  ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
 ```
 ##### Reaction time
 
@@ -146,6 +149,7 @@ exp6a_rt_p <- exp6a_rt_m1 %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
               Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::filter(ismatch == 'match') %>%
               #Identity = factor(Identity, levels = c('Self', 'Other'))
   dplyr::rename(log_RT = .value) %>%
   dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
@@ -155,8 +159,9 @@ exp6a_rt_p <- exp6a_rt_m1 %>%
   tidybayes::stat_halfeye() +
   ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
   #scale_fill_brewer() +
-  facet_grid(~ ismatch) +
-  theme_classic()
+  # facet_grid(~ ismatch) +
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
 ```
 
 ```{r plot-exp6a-BGLM, fig.cap="Exp6a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
@@ -183,11 +188,12 @@ params_p <- df6a.hddm.group.trace %>%
 p_6a_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  dplyr::filter(matchness == 'Match') %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(~ matchness) +
+  #facet_grid(~ matchness) +
   ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
   xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
   theme_bw()+
@@ -198,6 +204,7 @@ p_6a_hddm <- params_p %>%
           text=element_text(family='Times'),
           legend.title=element_blank(),
           legend.text = element_text(size = 8),
+          legend.position="bottom",
           plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
           axis.text = element_text (size = 8, color = 'black'),
           axis.title = element_text (size = 8),

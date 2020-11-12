@@ -19,6 +19,11 @@ As described in general methods section, we used Bayesian Bayesian Hierarchical 
 
 ### Results
 #### Hypothesis testing
+
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=6, fig.width=10, warning=FALSE}
+p_1a_d_rt <- Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
+```
+
 ##### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1a_sdt_m1 <- fun_sdt_val('1a')
@@ -38,7 +43,7 @@ hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.81
 ## Get the predicted responses?
 ## pp <- predict(exp1a_sdt_m1)
 
-# exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
+# plot d prime
 exp1a_sdt_p <- exp1a_sdt_m1 %>%
   emmeans::emmeans( ~ ismatch | Valence) %>%
   tidybayes::gather_emmeans_draws() %>%
@@ -46,40 +51,42 @@ exp1a_sdt_p <- exp1a_sdt_m1 %>%
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
   dplyr::filter(ismatch == 'd prime') %>%
+  dplyr::mutate(DV = 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
   ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
   #facet_grid(cols = vars(ismatch), scales = "free_y") +
-  theme_classic()
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
 
 ## plot d prime and c as scatter points?
-exp1a_sdt_p %>%  tidyr::pivot_wider(., id_cols = c('.draw', 'Valence'), names_from = 'ismatch', values_from = '.value')  %>%
-  ggplot2::ggplot(., aes(x = `d prime`, y = criterion, group = Valence, color = Valence)) +
-  geom_point() + 
-  scale_colour_brewer(palette = "Dark2") +
-  scale_fill_brewer(palette = "Dark2") +
-  #facet_grid(~ matchness) +
-  ylab(expression(paste("Criterion ",italic("c"), sep = ' '))) +
-  xlab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
-  theme_bw() +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          text=element_text(family='Times'),
-          legend.title=element_blank(),
-          legend.text = element_text(size =8),
-          plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
-          axis.text = element_text (size = 8, color = 'black'),
-          axis.title = element_text (size = 8),
-          #axis.title.x = element_blank(),
-          #axis.title.y = element_blank(),
-          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(3, "lines")
-    ) 
+# exp1a_sdt_p %>%  tidyr::pivot_wider(., id_cols = c('.draw', 'Valence'), names_from = 'ismatch', values_from = '.value')  %>%
+#   ggplot2::ggplot(., aes(x = `d prime`, y = criterion, group = Valence, color = Valence)) +
+#   geom_point() + 
+#   scale_colour_brewer(palette = "Dark2") +
+#   scale_fill_brewer(palette = "Dark2") +
+#   #facet_grid(~ matchness) +
+#   ylab(expression(paste("Criterion ",italic("c"), sep = ' '))) +
+#   xlab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+#   theme_bw() +
+#     theme(panel.grid.major = element_blank(),
+#           panel.grid.minor = element_blank(),
+#           panel.background = element_blank(),
+#           panel.border = element_blank(),
+#           text=element_text(family='Times'),
+#           legend.title=element_blank(),
+#           legend.text = element_text(size =8),
+#           plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
+#           axis.text = element_text (size = 8, color = 'black'),
+#           axis.title = element_text (size = 8),
+#           #axis.title.x = element_blank(),
+#           #axis.title.y = element_blank(),
+#           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+#           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+#           strip.text = element_text (size = 8, color = 'black'), # size of text in strips, face = "bold"
+#           panel.spacing = unit(3, "lines")
+#     ) 
 ```
 We fitted a Bayesian hierarchical GLM for signal detection theory. The results showed that when the shapes were tagged with labels with different moral character, the sensitivity ($d'$) and criteria ($c$) were both influenced. For the $d'$, we found that the shapes associated with good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
 
@@ -110,7 +117,7 @@ hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Ma
 ## Get the predicted responses?
 # pp <- predict(exp1a_rt_m1)
 
-#exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
+# plot matching
 exp1a_rt_p <- exp1a_rt_m1 %>%
   emmeans::emmeans( ~ ismatch | Valence) %>%
   tidybayes::gather_emmeans_draws() %>%
@@ -122,8 +129,20 @@ exp1a_rt_p <- exp1a_rt_m1 %>%
   ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
   tidybayes::stat_halfeye() +
   ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
-#  facet_grid(~ ismatch) +
-  theme_classic()
+  #facet_grid(~ ismatch) +
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
+
+# exp1a_p <- exp1a_rt_p %>%
+#   rbind(exp1a_sdt_p) %>%
+#   dplyr::mutate(DV=factor(DV, levels = c('Reaction times (ms)', 'd prime'))) %>%
+#   ggplot2::ggplot(aes(x = Valence, y = `.value`)) +
+#   tidybayes::stat_halfeye() +
+#   ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
+#   facet_wrap( ~ DV, scales = "free_y", nrow = 1) +
+#   # facet_grid(cols = vars(label), scales = "free_y") +
+#   theme_classic() + 
+#   theme(axis.title.x = element_blank())
 ```
 
 ```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.height=4.5, fig.width=9, warning=FALSE}
@@ -151,7 +170,7 @@ params_p <- df1a.hddm.group.trace %>%
 p_1a_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
-  dplyr::filter(matchness == 'Nonmatch') %>%
+  dplyr::filter(matchness == 'Match') %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +
@@ -167,6 +186,7 @@ p_1a_hddm <- params_p %>%
           text=element_text(family='Times'),
           legend.title=element_blank(),
           legend.text = element_text(size =8),
+          legend.position="bottom",
           plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
           axis.text = element_text (size = 8, color = 'black'),
           axis.title = element_text (size = 8),

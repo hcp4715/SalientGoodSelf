@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  6 NOV 2020 10:50
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  12 NOV 2020 09:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1041,33 +1041,28 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 153
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-] [2] [3] [4] [5]
+]
+Underfull \vbox (badness 1838) has occurred while \output is active []
+
+[2] [3] [4] [5] [6]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[6] [7]
+[7] [8]
 Underfull \vbox (badness 7649) has occurred while \output is active []
 
-[8]
+[9]
 Underfull \vbox (badness 7649) has occurred while \output is active []
 
-[9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23]
-Underfull \vbox (badness 3977) has occurred while \output is active []
+[10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24]
 
-[24]
+LaTeX Warning: Reference `fig:plot-exp1a-BGLM' on page 25 undefined on input li
+ne 440.
 
-LaTeX Warning: Reference `fig:ex1a-dprime-rt' on page 25 undefined on input lin
-e 442.
+
+LaTeX Warning: Reference `fig:plot-exp1a-HDDM' on page 25 undefined on input li
+ne 445.
 
 [25]
-
-LaTeX Warning: Reference `fig:plot-exp1a-BGLM' on page 26 undefined on input li
-ne 466.
-
-[26]
-
-LaTeX Warning: Reference `fig:plot-exp1a-HDDM' on page 27 undefined on input li
-ne 471.
-
 Missing character: There is no 恶 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 恶 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 恶 in font [lmroman12-regular]:mapping=tex-text;!
@@ -1082,39 +1077,39 @@ Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;
 Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;!
 File: exp1b/Familiarity_ratings/df1b_fami_rating.pdf Graphic file (type pdf)
 <use exp1b/Familiarity_ratings/df1b_fami_rating.pdf>
-[27]
-Underfull \vbox (badness 4378) has occurred while \output is active []
 
-[28]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-LaTeX Warning: Reference `fig:ex1b-dprime-rt' on page 29 undefined on input lin
-e 509.
+[26]
 
-[29]
+LaTeX Warning: Reference `fig:ex1b-dprime-rt' on page 27 undefined on input lin
+e 483.
 
-LaTeX Warning: Reference `fig:plot-exp1b-BGLM' on page 30 undefined on input li
-ne 534.
+[27] [28]
+
+LaTeX Warning: Reference `fig:plot-exp1b-BGLM' on page 29 undefined on input li
+ne 508.
 
 
-LaTeX Warning: Reference `fig:plot-exp1b-HDDM' on page 30 undefined on input li
-ne 539.
+LaTeX Warning: Reference `fig:plot-exp1b-HDDM' on page 29 undefined on input li
+ne 513.
 
-[30] [31]
+[29] [30]
 
-LaTeX Warning: Reference `fig:ex1c-dprime-rt' on page 32 undefined on input lin
-e 580.
+LaTeX Warning: Reference `fig:ex1c-dprime-rt' on page 31 undefined on input lin
+e 554.
 
-[32]
+[31]
 
-LaTeX Warning: Reference `fig:plot-exp1c-HDDM' on page 33 undefined on input li
-ne 597.
+LaTeX Warning: Reference `fig:plot-exp1c-HDDM' on page 32 undefined on input li
+ne 571.
 
-[33] [34]
+[32] [33]
 
-LaTeX Warning: Reference `fig:ex2-dprime-rt' on page 35 undefined on input line
- 629.
+LaTeX Warning: Reference `fig:ex2-dprime-rt' on page 34 undefined on input line
+ 603.
 
-[35] [36] [37]
+[34] [35] [36]
 Missing character: There is no 坏 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 坏 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 坏 in font [lmroman12-regular]:mapping=tex-text;!
@@ -1127,22 +1122,27 @@ Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;
 Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 常 in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no 人 in font [lmroman12-regular]:mapping=tex-text;!
+[37]
+
+LaTeX Warning: Reference `fig:ex6a-dprime-rt' on page 38 undefined on input lin
+e 688.
+
 [38]
 
-LaTeX Warning: Reference `fig:ex6a-dprime-rt' on page 39 undefined on input lin
-e 714.
-
-[39] [40]
-
-LaTeX Warning: Reference `fig:plot-exp6a-HDDM' on page 41 undefined on input li
-ne 742.
+LaTeX Warning: Reference `fig:plot-exp6a-HDDM' on page 39 undefined on input li
+ne 716.
 
 \openout4 = `Notebook_Pos_Self_Salience_APA.fff'.
 
-(Notebook_Pos_Self_Salience_APA.fff) [41] [42] [43] [44] [45] [46] [47] [48] [4
-9] [50] [51] [52] [53] [54] [55] [56] [57] [58] [59] [60] [61] [62] [63] [64] [
-65] [66] [67] [68] [69] [70] [71] [72] AED endfloat: Processing end Figures and
- Tables [73] (./Notebook_Pos_Self_Salience_APA.fff
+(Notebook_Pos_Self_Salience_APA.fff)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[39] [40] [41] [42] [43] [44] [45] [46] [47] [48] [49] [50] [51] [52] [53] [54]
+[55] [56] [57] [58] [59] [60] [61] [62] [63]
+Underfull \vbox (badness 5460) has occurred while \output is active []
+
+[64] [65] [66] [67] [68] [69] [70] AED endfloat: Processing end Figures and Tab
+les [71] (./Notebook_Pos_Self_Salience_APA.fff
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/unnamed-chunk-7-1.pdf G
 raphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/unnamed-chunk-7-1.pdf>
@@ -1259,26 +1259,26 @@ braces):
 >  {english/babelname}  =>  {american}
 >  {english/localnumeral}  =>  {polyglossia@C@localnumeral}
 >  {english/Localnumeral}  =>  {polyglossia@C@localnumeral}.
-[74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86] [87] [88] [89]
-[90] [91] [92] (./Notebook_Pos_Self_Salience_APA.aux
+[72] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86] [87]
+[88] [89] [90] (./Notebook_Pos_Self_Salience_APA.aux
 LaTeX Info: Redefining \rmfamily on input line 19.
 LaTeX Info: Redefining \sffamily on input line 19.
 LaTeX Info: Redefining \ttfamily on input line 19.
 )
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 5F943C7EDD359B0C724016789BFBF364;9776.
+(rerunfilecheck)             Checksum: 726DDF13A8668204001FA8BB4ED43E4E;9604.
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 21163 strings out of 479426
- 379071 string characters out of 5880680
- 861569 words of memory out of 5000000
- 40168 multiletter control sequences out of 15000+600000
+ 21159 strings out of 479426
+ 378986 string characters out of 5880680
+ 861395 words of memory out of 5000000
+ 40164 multiletter control sequences out of 15000+600000
  553263 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  94i,12n,118p,2269b,536s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (92 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (90 pages).

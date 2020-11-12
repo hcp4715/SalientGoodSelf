@@ -68,11 +68,14 @@ exp1c_sdt_p <- exp1c_sdt_m1 %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::filter(ismatch == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
-  facet_grid(cols = vars(ismatch), scales = "free_y") +
-  theme_classic()
+  ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+  #facet_grid(cols = vars(ismatch), scales = "free_y") +
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
 ```
 
 #### Reaction time
@@ -96,13 +99,15 @@ exp1c_rt_p <- exp1c_rt_m1 %>%
   tidybayes::gather_emmeans_draws() %>%
   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
               Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  dplyr::filter(ismatch == 'match') %>%
   dplyr::rename(log_RT = .value) %>%
   dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
   ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`)) +
   tidybayes::stat_halfeye() +
   ggplot2::stat_summary(aes(group = NA), fun.y = mean, geom = "line") +
-  facet_grid(~ ismatch) +
-  theme_classic()
+  #facet_grid(~ ismatch) +
+  theme_classic() + 
+  theme(axis.title.x = element_blank())
 ```
 
 
@@ -132,11 +137,12 @@ params_p <- df1c.hddm.group.trace %>%
 p_1c_hddm <- params_p %>% 
   dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
                 matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness)) %>%
+  dplyr::filter(matchness == 'Match') %>%
   ggplot2::ggplot(., aes(x = v, y = a, group = valence, color = valence)) +
   geom_point() + 
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(~ matchness) +
+  # facet_grid(~ matchness) +
   ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
   xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
   theme_bw()+
@@ -147,6 +153,7 @@ p_1c_hddm <- params_p %>%
           text=element_text(family='Times'),
           legend.title=element_blank(),
           legend.text = element_text(size = 8),
+          legend.position="bottom",
           plot.title = element_text(lineheight=.8, face="bold", size = 9, margin=margin(0,0,10,0)),
           axis.text = element_text (size = 8, color = 'black'),
           axis.title = element_text (size = 8),

@@ -493,7 +493,9 @@ Val_plot_NHST <- function(df.rt, df.d){
           panel.border = element_blank(),
           text=element_text(family='Times'),
           legend.title=element_blank(),
-          legend.text = element_text(size =6),
+          #legend.text = element_text(size =6),
+          legend.text = element_blank(),
+          legend.position = 'none',
           plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
           axis.text = element_text (size = 8, color = 'black'),
           axis.title = element_text (size = 8),
@@ -502,7 +504,7 @@ Val_plot_NHST <- function(df.rt, df.d){
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
           strip.text = element_text (size = 6, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(3, "lines")
+          panel.spacing = unit(1.5, "lines")
     ) +
     facet_wrap( ~ DVs,
                 scales = "free_y", nrow = 1,
