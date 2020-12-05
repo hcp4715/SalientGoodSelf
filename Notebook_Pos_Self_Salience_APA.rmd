@@ -110,7 +110,7 @@ Our first question is, whether the words used the in the associative paradigm is
 
 Another possibility is that we will perceive those moral character as person and automatic categorize whether they are ingroup or ougroup, that is, the social categorization process. This account assumed that moral character served as a way to categorize other. In the first four experiments' situation, the identity of the moral character is ambiguous, participants may automatically categorize morally good people as ingroup and therefore preferentially processed these information. 
 
-However, the above four experiments can not distinguish between these two possibilities, because the concept "good-peron" can both be rewarding and be categorized as ingroup memeber, and previous studies using associative learning paradigm revealed that both rewarding stimuli [e.g., @Sui_2012_JEPHPP] and in-group information [@enock_self_2018; enock_overlap_2020] are prioritized.  
+However, the above four experiments can not distinguish between these two possibilities, because the concept "good-peron" can both be rewarding and be categorized as ingroup member, and previous studies using associative learning paradigm revealed that both rewarding stimuli [e.g., @Sui_2012_JEPHPP] and in-group information [@enock_self_2018; enock_overlap_2020] are prioritized.  
 
 [Distinguish two explanations by make self salient, exp3a, 3b, 6b] Though these two frameworks can both account for the positivity effect found in first four experiments (i.e., prioritization of "good-person", but not "neutral person" and "bad person"), they have different prediction if the experiment design include both identity and moral valence where the valence (good, bad, and neutral) conditions can describe both self and other. In this case the identity become salient and participants are less likely to spontaneously identify a good-person other than self as the extension of self, but the value of good-person still exists. Actually, the rewarding value of good-other might be even stronger than good-self because the former indicate potential cooperation and material rewards, but the latter is more linked to personal belief. This means that the social categorization theory predicts participants prioritize good-self but not good-other, while reward-based attention theory predicts participants are both prioritized. Also, as in @Hu_2020_GoodSelf, people may also only identify with good-self instead of bad self. That is, people will show a unique pattern of self-identification: only good-self is identified as "self" while all the others categories were excluded.
 
@@ -1351,6 +1351,20 @@ df.scales <- df.scales %>%
                 mrlSlfImg_sum = rowSums(.[mrlslfImgNames]))
 
 df.scale.fs <- df.scales %>% dplyr::select(expID, subjID, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum)
+
+# export data try to model individual predictor using exp1b's data
+df1b.scale.fs <- df.scale.fs %>%
+  dplyr::filter(expID == 'Exp1b') %>%
+  dplyr::full_join(df1b.v, ., by =c ('Subject' = 'subjID' )) %>%
+  dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
+  dplyr::mutate(RT = RT/1000,
+                stim = ifelse(Matchness == "Match", 1, 0), 
+                response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
+  dplyr::select(Subject, Matchness, Valence, stim, response, RT, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum) %>%   # select columns
+  dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) %>%  # rename columns
+  dplyr::filter(!is.na(mrlIdInt_sum))
+
+write.csv(df1b.scale.fs, file = paste(curDir,'/HDDM/', 'df1bv.hddm_stim.reg.csv', sep = ''), row.names = F)
 
 FS.m.id1 <- 'mrlIdInt =~ morId_1 + morId_2 + morId_5_r + morId_8 + morId_10 + morId_11 + morId_12 + morId_13 + morId_14
              

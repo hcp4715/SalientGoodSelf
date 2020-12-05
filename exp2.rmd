@@ -34,7 +34,7 @@ df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print.afex_aov()
 posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_2_d)
 ```
-There was evidence for the main effect of valence, `r df2_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (2.79 $\pm$ 0.17) was with greater *d* prime than Netural condition (2.21 $\pm$ 0.16, *t*(33) = 4.723, *p* = 0.001) and Bad-person condition (2.41 $\pm$ 0.14), *t*(33) = 4.067, *p* = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, *t*(33) = -1,802, *p* = 0.185.
+There was evidence for the main effect of valence, `r df2_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (2.79 $\pm$ 0.17) was with greater *d* prime than Netural condition (2.21 $\pm$ 0.16, *t*(33) = 4.723, *p* = 0.001) and Bad-person condition (2.41 $\pm$ 0.14), *t*(33) = 4.067, *p* = 0.008). There was no-significant difference between Neutral-person and Bad-person condition, *t*(33) = -1,802, *p* = 0.185.
 
 ##### Reaction time
 The results of reaction times of matchness trials showed similar pattern as the *d* prime data.
