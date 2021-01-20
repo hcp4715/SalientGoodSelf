@@ -24,6 +24,31 @@ As described in general methods section, we used Bayesian Bayesian Hierarchical 
 p_1a_d_rt <- Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
 ```
 
+<!-- Here I briefly checked the pattern of accuracy -->
+```{r}
+df.plot <- df1a.v %>%
+        dplyr::group_by(Subject, Matchness, Valence) %>%
+        dplyr::summarise(mean_acc = mean(ACC)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(Matchness, Valence) %>%
+        dplyr::summarise(grand_mean_acc = mean(mean_acc))
+    #dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
+    #dplyr::rename(RT = RT_m) %>%
+    #dplyr::full_join(., df.d) %>%  
+    #tidyr::pivot_longer(., cols = c(RT, dprime), 
+    #                    names_to = 'DVs', 
+    #                    values_to = "value") %>% # to longer format
+    dplyr::mutate(Valence =factor(Valence, levels = c('Good','Neutral', 'Bad')),
+                  DVs = factor(DVs, levels = c('RT', 'dprime')),
+                  # create an extra column for ploting the individual data cross different conditions.
+                  Conds = mosaic::derivedFactor("1" = (Valence == 'Good'), 
+                                                "2" = (Valence == 'Neutral'),
+                                                "3" = (Valence == 'Bad'),
+                                                method ="first", .default = NA),
+                  Conds = as.numeric(as.character(Conds)),
+    ) 
+```
+
 ##### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1a_sdt_m1 <- fun_sdt_val('1a')

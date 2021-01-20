@@ -11,22 +11,34 @@ if (.Platform$OS.type == 'windows') {
 Sys.setenv(LANG = "en") # set the feedback language to English
 options(scipen = 999)   # force R to output in decimal instead of scientifc notion
 options(digits=5)       # limit the number of reporting
-# rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
-pkgTest <- function(x){
-  if (!require(x, character.only = TRUE)){
-    install.packages(x, dep = TRUE)
-    if(!require(x, character.only = TRUE)) stop("Package not found")
-  }
-}
 
-pkgNeeded <- (c('here', "tidyverse", "readr", 'mosaic', 'matrixStats',
+# rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
+
+library(groundhog)  # use groundhog to ensure reproducibility
+
+groundhog.day <- '2021-01-18'
+
+#groundhog.library('tidyverse', groundhog.day)
+#groundhog.library('mosaic', groundhog.day)
+#groundhog.library('rio', Analysis_Date)
+
+#pkgTest <- function(x){
+#  if (!require(x, character.only = TRUE)){
+#    install.packages(x, dep = TRUE)
+#    if(!require(x, character.only = TRUE)) stop("Package not found")
+#  }
+#}
+
+pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats',
                 "afex", 'emmeans', 'lme4',
                 "metafor", "Hmisc",  
                 "BayesFactor", 'brms', 
                 "corrplot", 'patchwork',
-                "psych", "lavaan", "semPlot"))
+                "psych", "lavaan", "semPlot")
 
-lapply(pkgNeeded,pkgTest)
+groundhog.library(pkgNeeded, groundhog.day)
+
+# lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
 # Install devtools package if necessary
@@ -165,7 +177,6 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   
   return (datac)
 }
-
 
 ### function of multiplot
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -429,11 +440,13 @@ Val_plot_NHST <- function(df.rt, df.d){
     dplyr::mutate(Valence =factor(Valence, levels = c('Good','Neutral', 'Bad')),
                   DVs = factor(DVs, levels = c('RT', 'dprime')),
                   # create an extra column for ploting the individual data cross different conditions.
-                  Conds = mosaic::derivedFactor("1" = (Valence == 'Good'), 
-                                                "2" = (Valence == 'Neutral'),
-                                                "3" = (Valence == 'Bad'),
-                                                method ="first", .default = NA),
-                  Conds = as.numeric(as.character(Conds)),
+                  Conds = ifelse(Valence == 'Good', 1, 
+                                 ifelse(Valence == 'Neutral'), 2, 3)
+                  # Conds = mosaic::derivedFactor("1" = (Valence == 'Good'), 
+                  #                               "2" = (Valence == 'Neutral'),
+                  #                               "3" = (Valence == 'Bad'),
+                  #                               method ="first", .default = NA),
+                  # Conds = as.numeric(as.character(Conds)),
     ) 
   
   df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add gitter to x
@@ -525,13 +538,20 @@ Val_id_plot_NHST <- function(df.rt, df.d){
                   Identity = factor(Identity, levels = c("Self", 'Other')),
                   DVs = factor(DVs, levels = c('RT', 'dprime')),
                   # create an extra column for plotting the individual data cross different conditions.
-                  Conds = mosaic::derivedFactor("0.8" = (Valence == 'Good' & Identity == 'Self'),
-                                                "1.2" = (Valence == 'Good' & Identity == 'Other'),
-                                                "1.8" = (Valence == 'Neutral' & Identity == 'Self'),
-                                                "2.2" = (Valence == 'Neutral' & Identity == 'Other'),
-                                                "2.8" = (Valence == 'Bad' & Identity == 'Self'),
-                                                "3.2" = (Valence == 'Bad' & Identity == 'Other'),
-                                                method ="first", .default = NA),
+                  Conds = case_when((Valence == 'Good' & Identity == 'Self') ~ "0.8",
+                                    (Valence == 'Good' & Identity == 'Other') ~ "1.2",
+                                    (Valence == 'Neutral' & Identity == 'Self') ~ "1.8",
+                                    (Valence == 'Neutral' & Identity == 'Other') ~ "2.2",
+                                    (Valence == 'Bad' & Identity == 'Self') ~ "2.8",
+                                    (Valence == 'Bad' & Identity == 'Other') ~ "3.2",
+                                    RUE ~ NA),
+                  # Conds = mosaic::derivedFactor("0.8" = (Valence == 'Good' & Identity == 'Self'),
+                  #                               "1.2" = (Valence == 'Good' & Identity == 'Other'),
+                  #                               "1.8" = (Valence == 'Neutral' & Identity == 'Self'),
+                  #                               "2.2" = (Valence == 'Neutral' & Identity == 'Other'),
+                  #                               "2.8" = (Valence == 'Bad' & Identity == 'Self'),
+                  #                               "3.2" = (Valence == 'Bad' & Identity == 'Other'),
+                  #                               method ="first", .default = NA),
                   Conds = as.numeric(as.character(Conds)),
     ) 
   
@@ -604,3 +624,4 @@ Val_id_plot_NHST <- function(df.rt, df.d){
                 labeller = label_parsed)
   return(p_df_sum)
 }
+
