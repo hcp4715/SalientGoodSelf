@@ -1,3 +1,12 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics[width=5.20833in,height=\textheight]{exp1b/Familiarity_ratings/df1b_fami_rating.pdf}
+\caption{Ratings of words in exp 1b}
+\end{figure*}
+\efloatseparator
+ 
 \begin{sidewaysfigure}
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/unnamed-chunk-7-1} \caption{Results for part 1.}\label{fig:unnamed-chunk-7}
 \end{sidewaysfigure}
