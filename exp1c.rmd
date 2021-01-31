@@ -29,15 +29,16 @@ p_1c_d_rt <- Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
 df1c_dprime_anova <- afex::aov_ez('Subject','dprime',df1c.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
 
-df1c_dprime_anova_apa <- df1c_dprime_anova %>% papaja::apa_print.afex_aov()
+# df1c_dprime_anova_apa <- df1c_dprime_anova %>% papaja::apa_print.afex_aov()
+df1c_dprime_anova_apa <- df1c_dprime_anova %>% papaja::apa_print()
 
 posthoc_1c_d <- emmeans::emmeans(df1c_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1c_d)
 
 df1c_RT_anova <- afex::aov_ez('Subject','RT_m',df1c.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
-df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print.afex_aov()
-
+# df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print.afex_aov()
+df1c_RT_anova_apa <- df1c_RT_anova %>% papaja::apa_print()
 ```
 
 Figure \@ref(fig:ex1c-dprime-rt) shows *d* prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on *d* prime, `r df1c_dprime_anova_apa$full$Valence`. Neither the effect of valence on RT (`r df1c_RT_anova_apa$full$Valence`) or interaction between valence and matchness on RT (`r df1c_RT_anova_apa$full$Matchness_Valence`).

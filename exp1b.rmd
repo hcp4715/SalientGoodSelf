@@ -37,7 +37,8 @@ Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experimen
 ```{r 1b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df1b_dprime_anova <- afex::aov_ez('Subject','dprime',df1b.v.dprime_l, within = c('Valence'))
-df1b_dprime_anova_apa <- df1b_dprime_anova %>% papaja::apa_print.afex_aov()
+df1b_dprime_anova_apa <- df1b_dprime_anova %>% papaja::apa_print()
+# df1b_dprime_anova_apa <- df1b_dprime_anova %>% apa_print.afex_aov()
 
 posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_1b_d)
@@ -48,7 +49,8 @@ Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_ap
 
 ```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m, within = c('Matchness','Valence'))
-df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print.afex_aov()
+# df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print.afex_aov()
+df1b_RT_anova_apa <- df1b_RT_anova %>% papaja::apa_print()
 
 df1b.v.rt_m1 <- df1b.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Match") %>%
@@ -65,7 +67,8 @@ df1b.v.rt_m %>%
 
 df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m', df1b.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print.afex_aov()
+# df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print.afex_aov()
+df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% papaja::apa_print()
 
 df1b.v.rt_m2 <- df1b.v %>%
   dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
@@ -76,7 +79,8 @@ df1b.v.rt_m2 <- df1b.v %>%
 
 df1b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print.afex_aov()
+# df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print.afex_aov()
+df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% papaja::apa_print()
 posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_1b_rt)
 ```

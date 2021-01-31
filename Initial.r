@@ -14,38 +14,35 @@ options(digits=5)       # limit the number of reporting
 
 # rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 
-#library(groundhog)  # use groundhog to ensure reproducibility
+pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats',
+               "afex", 'emmeans', 'lme4',
+               "metafor", "Hmisc",
+               "BayesFactor", 'brms', 'tidybayes',
+               "corrplot", 'patchwork',
+               "psych", "lavaan", "semPlot", 'devtools')
 
-#groundhog.day <- '2021-01-18'
+# Use_hog <- TRUE  # whether use goundhog
+Use_hog <- FALSE  # Not use goundhog
 
-pkgTest <- function(x){
- if (!require(x, character.only = TRUE)){
-   install.packages(x, dep = TRUE)
-   if(!require(x, character.only = TRUE)) stop("Package not found")
- }
+if (Use_hog) {
+        library(groundhog)  # use groundhog to ensure reproducibility
+        groundhog.day <- '2021-01-18'
+        groundhog.library(pkgNeeded, groundhog.day)
+}else{
+        pkgTest <- function(x){
+                if (!require(x, character.only = TRUE)){
+                        install.packages(x, dep = TRUE)
+                        if(!require(x, character.only = TRUE)) stop("Package not found")
+                }
+        }
+        lapply(pkgNeeded,pkgTest)
 }
 
-pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats',
-                "afex", 'emmeans', 'lme4',
-                "metafor", "Hmisc",
-                "BayesFactor", 'brms',
-                "corrplot", 'patchwork',
-                "psych", "lavaan", "semPlot")
-
-# groundhog.library(pkgNeeded, groundhog.day)
-
-lapply(pkgNeeded,pkgTest)
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
-# Install devtools package if necessary
-if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
-
 # Install the stable development verions from GitHub
-if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja")
-
-# run the geo_flat_violin.r, which is from:https://gist.githubusercontent.com/
-# benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R
-source("geom_flat_violin.R")
+if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
+library(papaja)
 
 # Save some time and stor APA format-related code in an object so you can easily
 # use it in multiple plots

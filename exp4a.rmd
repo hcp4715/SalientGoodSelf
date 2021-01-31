@@ -38,7 +38,7 @@ Figure \@ref(fig:exp4a-dprime-rt) shows *d* prime and reaction times of experime
 ```{r 4a_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df4a_dprime_anova <- afex::aov_ez('Subject','dprime',df4a.v.dprime_l, within = c('Identity','Valence'))
-df4a_dprime_anova_apa <- df4a_dprime_anova %>% papaja::apa_print.afex_aov()
+df4a_dprime_anova_apa <- df4a_dprime_anova %>% papaja::apa_print()
 
 posthoc_4a_d <- emmeans::emmeans(df4a_dprime_anova, ~ Valence| Identity) # compare each valence for both self and other condition
 pairs(posthoc_4a_d)
@@ -46,14 +46,14 @@ pairs(posthoc_4a_d)
 df4a_dprime_s_anova <- df4a.v.dprime_l %>%
   dplyr::filter(Identity == 'Self') %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df4a_dprime_s_anova_apa <- df4a_dprime_s_anova %>% papaja::apa_print.afex_aov()
+df4a_dprime_s_anova_apa <- df4a_dprime_s_anova %>% papaja::apa_print()
 posthoc_4a_d_s <- emmeans::emmeans(df4a_dprime_s_anova, "Valence")
 pairs(posthoc_4a_d_s)
 
 df4a_dprime_o_anova <- df4a.v.dprime_l %>%
   dplyr::filter(Identity == 'Other') %>%
   afex::aov_ez('Subject','dprime', ., within = c('Valence'))
-df4a_dprime_o_anova_apa <- df4a_dprime_o_anova %>% papaja::apa_print.afex_aov()
+df4a_dprime_o_anova_apa <- df4a_dprime_o_anova %>% papaja::apa_print()
 posthoc_4a_d_o <- emmeans::emmeans(df4a_dprime_o_anova, "Valence")
 pairs(posthoc_4a_d_o)
 
@@ -67,7 +67,7 @@ We then conducted separated ANOVA for self-referential and other-referential tri
 ```{r 4a_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df4a_RT_anova <- afex::aov_ez('Subject','RT_m',df4a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Identity','Valence'))
-df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print.afex_aov()
+df4a_RT_anova_apa <- df4a_RT_anova %>% papaja::apa_print()
 ```
 
 We found interaction between Matchness and Valence (`r df4a_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and nonmatch trials separately, as in previous experiments.
@@ -78,7 +78,7 @@ df4a_RT_anova_m <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Identity','Valence'))
 
-df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print.afex_aov()
+df4a_RT_anova_m_apa <- df4a_RT_anova_m %>% papaja::apa_print()
 
 #posthoc_4a_rt <- emmeans::emmeans(df4a_RT_anova_m, c('Identity',"Valence")) # compare each valence for both self and other condition
 # pairs(posthoc_4a_rt)
@@ -87,7 +87,7 @@ df4a_RT_anova_m_s <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Valence'))
 
-df4a_RT_anova_m_s_apa <- df4a_RT_anova_m_s %>% papaja::apa_print.afex_aov()
+df4a_RT_anova_m_s_apa <- df4a_RT_anova_m_s %>% papaja::apa_print()
 
 posthoc_4a_rt_m_s <- emmeans::emmeans(df4a_RT_anova_m_s, 'Valence')
 pairs(posthoc_4a_rt_m_s)
@@ -96,14 +96,14 @@ df4a_RT_anova_m_o <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
   afex::aov_ez('Subject','RT_m',., within = c('Valence'))
 
-df4a_RT_anova_m_o_apa <- df4a_RT_anova_m_o %>% papaja::apa_print.afex_aov()
+df4a_RT_anova_m_o_apa <- df4a_RT_anova_m_o %>% papaja::apa_print()
 
 # nonmatch trials
 df4a_RT_anova_nm <- df4a.v.rt_m %>%
   dplyr::filter(Matchness == "Mismatch") %>%
   afex::aov_ez('Subject','RT_m', ., within = c('Identity','Valence'))
 
-df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print.afex_aov()
+df4a_RT_anova_nm_apa <- df4a_RT_anova_nm %>% papaja::apa_print()
 ```
 For the match trials, we found that the interaction between identity and valence, `r df4a_RT_anova_m_apa$full$Identity_Valence`, as well as the main effect of valence `r df4a_RT_anova_m_apa$full$Valence`, but not the effect of identity `r df4a_RT_anova_m_apa$full$Identity`. As for the *d* prime, we separated analyzed the self-referential and other-referential trials. For the Self-referential trials, we found the main effect of valence, `r df4a_RT_anova_m_s_apa$full$Valence`; for the other-referential trials, the effect of valence is weaker, `r df4a_RT_anova_m_o_apa$full$Valence`. We then focused on the self conditions: the good-self condition (713 $\pm$ 12) is faster than neutral- (776 $\pm$ 11.8), *t*(34) = -7.396, *p* < .0001 , and bad-self (772 $\pm$ 10.1) conditions,  *t*(34) = -5.66, *p* < .0001. But there is not difference between neutral- and bad-self conditions, *t*(34) = 0.481, *p* = 0.881.
 

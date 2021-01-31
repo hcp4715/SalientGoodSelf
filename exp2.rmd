@@ -29,8 +29,8 @@ Figure \@ref(fig:ex2-dprime-rt) shows *d* prime and reaction times of experiment
 ```{r 2_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # anova for d prime
 df2_dprime_anova <- afex::aov_ez('Subject','dprime',df2.v.dprime_l, within = c('Valence'))
-df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print.afex_aov()
-
+# df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print()
+df2_dprime_anova_apa <- df2_dprime_anova %>% papaja::apa_print()
 posthoc_2_d <- emmeans::emmeans(df2_dprime_anova, "Valence") # compare each valence for both self and other condition
 #pairs(posthoc_2_d)
 ```
@@ -41,7 +41,7 @@ The results of reaction times of matchness trials showed similar pattern as the 
 
 ```{r 2_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df2_RT_anova <- afex::aov_ez('Subject','RT_m',df2.v.rt_m, within = c('Matchness','Valence'))
-df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print.afex_aov()
+df2_RT_anova_apa <- df2_RT_anova %>% papaja::apa_print()
 
 # match trials
 df2.v.rt_m1 <- df2.v %>%
@@ -54,7 +54,7 @@ df2.v.rt_m1 <- df2.v %>%
 
 df2_RT_anova_m <- afex::aov_ez('Subject','RT_m',df2.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print.afex_aov()
+df2_RT_anova_m_apa <- df2_RT_anova_m %>% papaja::apa_print()
 
 posthoc_2_rt <- emmeans::emmeans(df2_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_2_rt)
@@ -69,7 +69,7 @@ df2.v.rt_m2 <- df2.v %>%
 
 df2_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df2.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print.afex_aov()
+df2_RT_anova_nm_apa <- df2_RT_anova_nm %>% papaja::apa_print()
 
 ```
 We found interaction between Matchness and Valence (`r df2_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df2_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (548 $\pm$ 9.4) were responded faster than Neutral-Person (582 $\pm$ 10.9), (*t*(33) = -3.95, *p* = 0.0011) and Bad Person (582 $\pm$ 10.2), *t*(33) = -3.9, *p* = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (*t*(33) = -0.01, *p* = 0.999).  For non-matched trials, there was no significant effect of Valence (`r df2_RT_anova_nm_apa$full$Valence`).

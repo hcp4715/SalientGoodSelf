@@ -6,30 +6,30 @@ author:
   - name          : "Hu Chuan-Peng"
     affiliation   : "1,2"
     corresponding : yes    # Define only one corresponding author
-    address       : "Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany"
+    address       : "Ninghai Road 122, Gulou District, Nanjing 210025, China"
     email         : "hcp4715@gmail.com"
   - name          : "Kaiping Peng"
-    affiliation   : "1"
+    affiliation   : "2"
   - name          : "Jie Sui"
-    affiliation   : "1,3"
+    affiliation   : "3"
 
 affiliation:
   - id            : "1"
-    institution   : "Tsinghua University, 100084 Beijing, China"
+    institution   : "Nanjing Normal University, 100084 Beijing, China"
   - id            : "2"
-    institution   : "Leibniz Institute for Resilience Research, 55131 Mainz, Germany"
+    institution   : "Tsinghua University, 100084 Beijing, China""
   - id            : "3"
     institution   : "University of Aberdeen, Aberdeen, Scotland"
 
 authornote: |
-  Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+  Hu Chuan-Peng, School of Psychology, Nanjing Normal University, 210025, China.
   Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
   Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
 
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP & JS supported this project.
 
 abstract: |
-  To navigate in a complex social world, individual has learnt to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized (Anderson, Siegel, et al., 2011, Science; Gantman & Van Bavel, 2014, Cognition). Using social associative learning paradigm, we found that when geometric shapes, without soical meaning, were associated with different moral valence (morally good, neutral, or bad), the shapes that associated with positive moral valence were prioritized in moral matching task. This patterns of results were robust across different procedures. Further, we tested whether this positive effect was modulated by self-relevance by manipulating the self-referential explicitly and found that the positive bias showed a large effect when positive valued stimuli were related to the self. This effect exist also when the self related information were presented as a task-irrelevant information. We also tested the specificity of the positive valence and found that this effect was not limited to moral domain. Interestingly, the better performance in reaction time is not correpsonding to self-rated psychological distance between self and a morally good-person, but with distance between self and morall bad-person. These results may suggest that our participants (College students in two different cities in China) have a positive moral self bias in perceptual processing, which drive the facilitated processing of morally good stimuli because of the spontaneous self-referential processing, and this trendency is not correlated with explicit rating of moral self.
+  To navigate in a complex social world, individual has to prioritize valuable information. Previous studies suggested the moral related stimuli was prioritized (Anderson, Siegel, et al., 2011, Science; Gantman & Van Bavel, 2014, Cognition). Using social associative learning paradigm, we found that when geometric shapes, without soical meaning, were associated with different moral valence (morally good, neutral, or bad), the shapes that associated with positive moral valence were prioritized in moral matching task. This patterns of results were robust across different procedures. Further, we tested whether this positive effect was modulated by self-relevance by manipulating the self-referential explicitly and found that the positive bias showed a large effect when positive valued stimuli were related to the self. This effect exist also when the self related information were presented as a task-irrelevant information. We also tested the specificity of the positive valence and found that this effect was not limited to moral domain. Interestingly, the better performance in reaction time is not correpsonding to self-rated psychological distance between self and a morally good-person, but with distance between self and morall bad-person. These results may suggest that our participants (College students in two different cities in China) have a positive moral self bias in perceptual processing, which drive the facilitated processing of morally good stimuli because of the spontaneous self-referential processing, and this trendency is not correlated with explicit rating of moral self.
   
   <!-- https://tinyurl.com/ybremelq -->
   

@@ -38,7 +38,9 @@ Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt)
 # anova for d prime with 2*2 design
 df6a_dprime_anova <- afex::aov_ez('Subject','dprime',df6a.v.dprime_l,  # using afex's function 
                                   within = c('Valence'))
-df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print.afex_aov()
+# df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print.afex_aov()
+
+df6a_dprime_anova_apa <- df6a_dprime_anova %>% papaja::apa_print()
 
 posthoc_6a_d <- lsmeans::lsmeans(df6a_dprime_anova, specs = 'Valence')
 graphics::pairs(posthoc_6a_d)
@@ -52,7 +54,7 @@ The results of reaction times of matchness trials showed similar pattern as the 
 
 df6a_RT_anova <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m,     # using afex's function 
                                   within = c('Matchness','Valence'))
-df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print.afex_aov()
+df6a_RT_anova_apa <- df6a_RT_anova %>% papaja::apa_print()
 
 # match trials
 df6a.v.rt_m1 <- df6a.v %>%
@@ -65,7 +67,7 @@ df6a.v.rt_m1 <- df6a.v %>%
 
 df6a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df6a.v.rt_m1,     # using afex's function 
                                   within = c('Valence'))
-df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print.afex_aov()
+df6a_RT_anova_m_apa <- df6a_RT_anova_m %>% papaja::apa_print()
 
 posthoc_6a_rt <- emmeans::emmeans(df6a_RT_anova_m, "Valence") # compare each valence for both self and other condition
 # pairs(posthoc_6a_rt)
@@ -80,7 +82,7 @@ df6a.v.rt_m2 <- df6a.v %>%
 
 df6a_RT_anova_nm <- afex::aov_ez('Subject','RT_m', df6a.v.rt_m2,     # using afex's function 
                                   within = c('Valence'))
-df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print.afex_aov()
+df6a_RT_anova_nm_apa <- df6a_RT_anova_nm %>% papaja::apa_print()
 
 ```
 

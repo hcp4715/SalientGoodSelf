@@ -8,9 +8,7 @@ For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we included self-reference as ano
 
 Experiment 4a and 4b were design to explore the mechanism behind the prioritization of good-self. In 4a, we used only two labels (self vs. other) and two shapes (circle, square). To manipulate the moral valence, we added the moral-related words within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-reference and valence in the task: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words related to identity, "self" or "other", were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task. 
 
-Finally, experiment 5 was design to test the specificity of the moral valence. We extended experiment 1a with an additional independent variable: domains of the valence words. More specifically, besides the moral valence, we also added valence from other domains: appearance of person (beautiful, neutral, ugly), appearance of a scene (beautiful, neutral, ugly), and emotion (happy, neutral, and sad). Label-shape pairs from different domains were separated into different blocks. 
-
-E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab Psychtoolbox [@Brainard_1997;@Pelli_1997]. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about $3.7^\circ × 3.7^\circ$, the fixation cross is of ($0.8^\circ × 0.8^\circ$ of visual angle) at the center of the screen. The words were of $3.6^\circ$ × $1.6^\circ$ visual angle. The distance between the center of the shape or the word and the fixation cross was $3.5^\circ$ of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’s chin were not fixed.
+E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab Psychtoolbox [@Brainard_1997;@Pelli_1997]. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about $3.7^\circ × 3.7^\circ$, the fixation cross is of $0.8^\circ × 0.8^\circ$ visual angle at the center of the screen. The words were of $3.6^\circ$ × $1.6^\circ$ visual angle. The distance between the center of the shape or the word and the fixation cross was $3.5^\circ$ of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’ chin were not fixed.
 
 In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2020_JOPD]. See Table S1 for a summary information about all the experiments. 
 
@@ -19,11 +17,11 @@ In most of these experiments, participant were also asked to fill a battery of q
 ### Analysis of individual study
 We used the `tidyverse` of r (see script `Load_save_data.r`) to exclude the practicing trials, invalid trials of each participants, and invalid participants, if there were any, in the raw data. Results of each experiment were then analyzed in two Bayesian approaches. 
 
-#### Bayesian hierarchical generalized linear model (GLM)
-We first tested the effect of experimental manipulation using Bayesian hierarchical generalized linear model (BGLM), because it provided three advantages over the classic NHST approach (repeated measure ANOVA or t-tests): first, Bayesian models use posterior distribution of parameter for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT],second, BGLM can use distribution that fit the real distribution, which is the case for reaction time data [@Rousselet_2019], third, BGLM also integrated different levels of analysis, fully account the variability from each participants. We used the r package `BRMs` [@Bürkner_2017] to build the model, which used Stan [@Carpenter_2017_stan] to sample from the posterior. 
+#### Bayesian hierarchical model
+We first tested the effect of experimental manipulation using Bayesian hierarchical model. More specifically, we used the Bayesian hierarchical model (or Bayesian generalized linear mixed model, GLMM), because it provided three advantages over the classic NHST approach (repeated measure ANOVA or t-tests): first, BHM use posterior distribution of parameter for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT], second, BHM can use distribution that fit the real distribution, which is the case for reaction time data [@Rousselet_2019], third, BHM provided an unified framework to analyze data from different levels and different sources, avoid the problem of two-stage modeling. We used the `r` package `BRMs` [@Bürkner_2017] to build the models, which used Stan [@Carpenter_2017_stan] to sample from the posterior. 
 
-#### Signal detection theory
-As in [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP], we also used signal detection approach to analyze the accuracy data. More specifically, we assume the match trials are sigal and the non-match trials are noise. To estimate the sensitivity and criterion of SDT, we adopted the Bayesian hierarchical GLM approach from [@Rouder_2005_BHM_SDT]. When modelling the accuracy data for one participant, we assume that the accuracy of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+##### Signal detection theory for accuracy
+We followed practice of previous [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, we assume the match trials are signal and the non-match trials are noise. To estimate the sensitivity and criterion of SDT, we adopted the Bayesian GLMM approach from [@Rouder_2005_BHM_SDT]. When modeling the accuracy data for one participant, we assume that the accuracy of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
 
 $$ y_{i} \sim Bernoulli(p_{i})$$
 In the perceptual matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
@@ -53,7 +51,8 @@ For experiments that had two by two by three design, we used the follow formula 
 
 `saymatch ~ 0 + ID:Valence + ID:Valence:ismatch + (0 + ID:Valence + ID:Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
-For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the logNormal distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response. The reaction time is a linear function of trial type:
+##### Log normal for reaction times
+For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response. The reaction time is a linear function of trial type:
 
 $$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
 
@@ -110,11 +109,7 @@ $$\sigma_{jk} \sim Cauchy()$$
 $$\mu_{k} \sim N(\mu, \sigma)$$
 $$\theta_{k} \sim Cauchy()$$
 
-
-
-
 Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ and RT across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
-
 
 ##### Effect of moral character
 We synthesized effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach [@Goh_2016_mini]. 
@@ -124,9 +119,6 @@ We further synthesized the effect of moral self, which included results from exp
 
 #### Implicit interaction between valence and self-relevance
 In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the morally Good (4b).
-
-#### Specificity of the valence effect
-In this part, we reported the data from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, aesthetic of person, aesthetic of scene, and emotion. This experiment was design to test whether the positive bias is specific to morality.
 
 #### Behavior-Questionnaire correlation
 

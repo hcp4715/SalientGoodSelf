@@ -39,6 +39,7 @@
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
   pdftitle={Good-self based social categorization in perceptual matching},
+  pdfauthor={Hu Chuan-Peng1,2, Kaiping Peng2, \& Jie Sui3},
   pdflang={en-EN},
   pdfkeywords={Perceptual decision-making, Self positivity bias, morality},
   hidelinks,
@@ -100,26 +101,32 @@
 % \setlength{\parindent}{0.5in}
 % \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
 % \usepackage{etoolbox}
 \makeatletter
 \patchcmd{\HyOrg@maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
 \makeatother
 \shorttitle{Positivity as spontaneous self-referential processing}
-\author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{3}, \& Jie Sui\textsuperscript{3,4}}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} School of Psychology, Nanjing Normal University\\\textsuperscript{2} Leibniz Institute for Resilience Research, 55131 Mainz, Germany\\\textsuperscript{3} Tsinghua University, 100084 Beijing, China\\\textsuperscript{4} University of Aberdeen, Aberdeen, Scotland}
-\authornote{Hu Chuan-Peng, Leibniz Institute for Resilience Research (LIR).
-Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
-Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
-
-Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
-
-
-Correspondence concerning this article should be addressed to Hu Chuan-Peng, School of Psychology, Nanjing Normal University, Ninghai Road 122, Gulou District, 210024 Nanjing, China. E-mail: hcp4715@gmail.com}
 \keywords{Perceptual decision-making, Self positivity bias, morality\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
@@ -165,12 +172,29 @@ Correspondence concerning this article should be addressed to Hu Chuan-Peng, Sch
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{Good-self based social categorization in perceptual matching}
-
+\author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{2}, \& Jie Sui\textsuperscript{3}}
 \date{}
+
+
+\authornote{
+
+Hu Chuan-Peng, School of Psychology, Nanjing Normal University, 210024 Nanjing, China.
+Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
+
+Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
+
+Correspondence concerning this article should be addressed to Hu Chuan-Peng, School of Psychology, Nanjing Normal University, Ninghai Road 122, Gulou District, 210024 Nanjing, China. E-mail: \href{mailto:hcp4715@gmail.com}{\nolinkurl{hcp4715@gmail.com}}
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} School of Psychology, Nanjing Normal University\\\textsuperscript{2} Tsinghua University, 100084 Beijing, China\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
 
 \abstract{
 To navigate in a complex social world, individuals are constantly evaluating others' moral character. Also, they are managing a moral self-view that is aligned with their goals. Though moral character in person perception and moral self-enhancement had been extensively studied, the perceptual process of moral character is unkonwn, we examined the influence of immediately acquired moral information on perceptual matching processing by using social associative learning paradigm (self-tagging paradigm). In a series of experiments, participants learned the concept of moral character and visual cues (shapes) and then perform a perceptual matching task. The results showed that when geometric shapes, without soical meaning, that associated with good moral character were prioritized. This patterns of results were robust when we change different semantic words or using behiavioral history as an proxy of mroal character. Also, this patterns were robust in both simutanouly presentation and sequential presentation. We then examined two competing explanation for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but not for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. The evidence suggested that human are more likely has a good-person based categorization instead of a unique good-self. Finally, we explored whether the positivity effect only exist in moral domain and found that this effect was not limited to moral domain but also aesthetic domain, but not affective valence \emph{per se}. Exploratory analyses on task-questionnaire relationship found that there are weak correlation between self-bad distance and behavioral pattern. These results suggest that there exist a social categorization in perceptual decision-making, which is based on personal traits (moral character) but not affective valence.
 }
+
+
 
 \begin{document}
 \maketitle
@@ -424,7 +448,7 @@ In this part, we report five experiments that tested whether an associative lear
 \hypertarget{participants}{%
 \paragraph{Participants}\label{participants}}
 
-57 college students (38 female, age = 20.75 \(\pm\) 2.54 years) participated. 39 of them were recruited from Tsinghua University community in 2014; 18 were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participant's data were excluded from analysis because nearly random level of accuracy, leaving 51 participants (34 female, age = 20.72 \(\pm\) 2.44 years).
+57 college students (38 female, age = 20.75 \(\pm\) 2.54 years) participated. 39 of them were recruited from Tsinghua University community in 2014; 18 were recruited from Wenzhou University in 2017. All participants were right-handed except one, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committees. 6 participants' data were excluded from analysis because nearly random level of accuracy, leaving 51 participants (34 female, age = 20.72 \(\pm\) 2.44 years).
 
 \hypertarget{stimuli-and-tasks}{%
 \paragraph{Stimuli and Tasks}\label{stimuli-and-tasks}}
@@ -1372,16 +1396,16 @@ Amodio, D. M. (2019). Social cognition 2.0: An interactive memory systems accoun
 Anderson, E., Siegel, E. H., Bliss-Moreau, E., \& Barrett, L. F. (2011). The visual impact of gossip. \emph{Science}, \emph{332}(6036), 1446--1448. \url{https://doi.org/10.1126/science.1201574}
 
 \leavevmode\hypertarget{ref-Brainard_1997}{}%
-Brainard, D. H. (1997). The psychophysics toolbox. \emph{Spatial Vision}, \emph{10}(4), 433--436. Journal Article.
+Brainard, D. H. (1997). The psychophysics toolbox {[}Journal Article{]}. \emph{Spatial Vision}, \emph{10}(4), 433--436.
 
 \leavevmode\hypertarget{ref-Buxfcrkner_2017}{}%
-Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Journal Article. Retrieved from \url{https://www.jstatsoft.org/v080/i01\%20http://dx.doi.org/10.18637/jss.v080.i01}
+Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan {[}Journal Article{]}. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Retrieved from \url{https://www.jstatsoft.org/v080/i01\%20http://dx.doi.org/10.18637/jss.v080.i01}
 
 \leavevmode\hypertarget{ref-carlson_motivated_2020}{}%
 Carlson, R. W., Maréchal, M. A., Oud, B., Fehr, E., \& Crockett, M. J. (2020). Motivated misremembering of selfish decisions. \emph{Nature Communications}, \emph{11}(1), 2100. \url{https://doi.org/10.1038/s41467-020-15602-4}
 
 \leavevmode\hypertarget{ref-Carpenter_2017_stan}{}%
-Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A probabilistic programming language. \emph{Journal of Statistical Software}, \emph{76}(1). Journal Article. \url{https://doi.org/10.18637/jss.v076.i01}
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A probabilistic programming language {[}Journal Article{]}. \emph{Journal of Statistical Software}, \emph{76}(1). \url{https://doi.org/10.18637/jss.v076.i01}
 
 \leavevmode\hypertarget{ref-dang_why_2020}{}%
 Dang, J., King, K. M., \& Inzlicht, M. (2020). Why are self-report and behavioral measures weakly correlated? \emph{Trends in Cognitive Sciences}, \emph{24}(4), 267--269. \url{https://doi.org/10.1016/j.tics.2020.01.007}
@@ -1411,7 +1435,7 @@ Freeman, J. B., \& Ambady, N. (2011). A dynamic interactive theory of person con
 Gantman, A. P., \& Van Bavel, J. J. (2014). The moral pop-out effect: Enhanced perceptual awareness of morally relevant stimuli. \emph{Cognition}, \emph{132}(1), 22--29. \url{https://doi.org/10.1016/j.cognition.2014.02.007}
 
 \leavevmode\hypertarget{ref-Goh_2016_mini}{}%
-Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own studies: Some arguments on why and a primer on how. \emph{Social and Personality Psychology Compass}, \emph{10}(10), 535--549. Journal Article. \url{https://doi.org/10.1111/spc3.12267}
+Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own studies: Some arguments on why and a primer on how {[}Journal Article{]}. \emph{Social and Personality Psychology Compass}, \emph{10}(10), 535--549. \url{https://doi.org/10.1111/spc3.12267}
 
 \leavevmode\hypertarget{ref-goodwin_moral_2015}{}%
 Goodwin, G. P. (2015). Moral character in person perception. \emph{Current Directions in Psychological Science}, \emph{24}(1), 38--44. \url{https://doi.org/10.1177/0963721414550709}
@@ -1426,7 +1450,7 @@ Henrich, J., Heine, S. J., \& Norenzayan, A. (2010). The weirdest people in the 
 Hofmann, W., Wisneski, D. C., Brandt, M. J., \& Skitka, L. J. (2014). Morality in everyday life. \emph{Science}, \emph{345}(6202), 1340--1343. \url{https://doi.org/10.1126/science.1251560}
 
 \leavevmode\hypertarget{ref-Hu_2020_GoodSelf}{}%
-Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? \emph{Collabra: Psychology}, \emph{6}(1), 20. Journal Article. \url{https://doi.org/10.1525/collabra.301}
+Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? {[}Journal Article{]}. \emph{Collabra: Psychology}, \emph{6}(1), 20. \url{https://doi.org/10.1525/collabra.301}
 
 \leavevmode\hypertarget{ref-jones_which_2020}{}%
 Jones, B. C., DeBruine, L. M., Flake, J. K., Liuzza, M. T., Antfolk, J., Arinze, N. C., \ldots{} Coles, N. A. (2020). To which world regions does the valence-dominance model of social perception apply? \emph{Nature Human Behaviour}. \url{https://doi.org/10.31234/osf.io/n26dy}
@@ -1441,7 +1465,7 @@ Kirby, K. N., \& Gerlanc, D. (2013). {BootES}: An r package for bootstrap confid
 Klein, N., \& Epley, N. (2016). Maybe holier, but definitely less evil, than you: Bounded self-righteousness in social judgment. \emph{Journal of Personality and Social Psychology}, \emph{110}(5), 660--674. \url{https://doi.org/10.1037/pspa0000050}
 
 \leavevmode\hypertarget{ref-Liu_2020_JOPD}{}%
-Liu, Q., Wang, F., Yan, W., Peng, K., Sui, J., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. Journal Article. \url{https://doi.org/10.5334/jopd.49/}
+Liu, Q., Wang, F., Yan, W., Peng, K., Sui, J., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale {[}Journal Article{]}. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. \url{https://doi.org/10.5334/jopd.49/}
 
 \leavevmode\hypertarget{ref-matzke_psychological_2009}{}%
 Matzke, D., \& Wagenmakers, E.-J. (2009). Psychological interpretation of the ex-gaussian and shifted wald parameters: A diffusion model analysis. \emph{Psychonomic Bulletin \& Review}, \emph{16}(5), 798--817. \url{https://doi.org/10.3758/PBR.16.5.798}
@@ -1456,19 +1480,19 @@ McNeish, D., \& Wolf, M. G. (2020). Thinking twice about sum scores. \emph{Behav
 Monin, B., \& Jordan, A. H. (2009). The dynamic moral self: A social psychological perspective. In \emph{Personality, identity, and character: Explorations in moral psychology} (pp. 341--354). New York, {NY}, {US}: Cambridge University Press. \url{https://doi.org/10.1017/CBO9780511627125.016}
 
 \leavevmode\hypertarget{ref-Pelli_1997}{}%
-Pelli, D. G. (1997). The VideoToolbox software for visual psychophysics: Transforming numbers into movies. \emph{Spatial Vision}, \emph{10}(4), 437--442. Journal Article.
+Pelli, D. G. (1997). The VideoToolbox software for visual psychophysics: Transforming numbers into movies {[}Journal Article{]}. \emph{Spatial Vision}, \emph{10}(4), 437--442.
 
 \leavevmode\hypertarget{ref-reicher_perception_2016}{}%
 Reicher, S., \& Hopkins, N. (2016). Perception, action, and the social dynamics of the variable self. \emph{Psychological Inquiry}, \emph{27}(4), 341--347. \url{https://doi.org/10.1080/1047840X.2016.1217584}
 
 \leavevmode\hypertarget{ref-Rouder_2005_BHM_SDT}{}%
-Rouder, J. N., \& Lu, J. (2005). An introduction to bayesian hierarchical models with an application in the theory of signal detection. \emph{Psychonomic Bulletin \& Review}, \emph{12}(4), 573--604. Journal Article. \url{https://doi.org/10.3758/bf03196750}
+Rouder, J. N., \& Lu, J. (2005). An introduction to bayesian hierarchical models with an application in the theory of signal detection {[}Journal Article{]}. \emph{Psychonomic Bulletin \& Review}, \emph{12}(4), 573--604. \url{https://doi.org/10.3758/bf03196750}
 
 \leavevmode\hypertarget{ref-Rousselet_2019}{}%
-Rousselet, G. A., \& Wilcox, R. R. (2019). Reaction times and other skewed distributions: Problems with the mean and the median. \emph{Meta-Psychology}. preprint. \url{https://doi.org/10.1101/383935}
+Rousselet, G. A., \& Wilcox, R. R. (2019). Reaction times and other skewed distributions: Problems with the mean and the median {[}Preprint{]}. \emph{Meta-Psychology}. \url{https://doi.org/10.1101/383935}
 
 \leavevmode\hypertarget{ref-Simmons_2013_life}{}%
-Simmons, J. P., Nelson, L. D., \& Simonsohn, U. (2013). Life after p-hacking. Conference Proceedings. \url{https://doi.org/10.2139/ssrn.2205186}
+Simmons, J. P., Nelson, L. D., \& Simonsohn, U. (2013). \emph{Life after p-hacking} {[}Conference Proceedings{]}. \url{https://doi.org/10.2139/ssrn.2205186}
 
 \leavevmode\hypertarget{ref-stanley_moral_2019}{}%
 Stanley, M. L., \& De Brigard, F. (2019). Moral memories and the belief in the good self. \emph{Current Directions in Psychological Science}, \emph{28}(4), 387--391. \url{https://doi.org/10.1177/0963721419847990}
@@ -1483,7 +1507,7 @@ Stolier, R. M., \& Freeman, J. B. (2016). Functional and temporal considerations
 Strohminger, N., Knobe, J., \& Newman, G. (2017). The true self: A psychological concept distinct from the self: \emph{Perspectives on Psychological Science}. \url{https://doi.org/10.1177/1745691616689495}
 
 \leavevmode\hypertarget{ref-Sui_2012_JEPHPP}{}%
-Sui, J., He, X., \& Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{38}(5), 1105--1117. Journal Article. \url{https://doi.org/10.1037/a0029792}
+Sui, J., He, X., \& Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching {[}Journal Article{]}. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{38}(5), 1105--1117. \url{https://doi.org/10.1037/a0029792}
 
 \leavevmode\hypertarget{ref-tappin_illusion_2017}{}%
 Tappin, B. M., \& McKay, R. T. (2017). The illusion of moral superiority. \emph{Social Psychological and Personality Science}, \emph{8}(6), 623--631. \url{https://doi.org/10.1177/1948550616673878}
@@ -1515,5 +1539,6 @@ Xiao, Y. J., Coppin, G., \& Bavel, J. J. V. (2016). Perceiving the world through
 \end{CSLReferences}
 
 \endgroup
+
 
 \end{document}
