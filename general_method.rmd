@@ -14,27 +14,34 @@ In most of these experiments, participant were also asked to fill a battery of q
 
 ## Data analysis
 
-### Analysis of individual study
-We used the `tidyverse` of r (see script `Load_save_data.r`) to exclude the practicing trials, invalid trials of each participants, and invalid participants, if there were any, in the raw data. Results of each experiment were then analyzed in two Bayesian approaches. 
+We used the `tidyverse` of r (see script `Load_save_data.r`) to exclude the practicing trials, invalid trials of each participants, and invalid participants, if there were any, in the raw data. Results of each experiment were then analyzed in two Bayesian approaches and reported in supplementary materials.
 
 #### Bayesian hierarchical model
-We first tested the effect of experimental manipulation using Bayesian hierarchical model. More specifically, we used the Bayesian hierarchical model (or Bayesian generalized linear mixed model, GLMM), because it provided three advantages over the classic NHST approach (repeated measure ANOVA or t-tests): first, BHM use posterior distribution of parameter for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT], second, BHM can use distribution that fit the real distribution, which is the case for reaction time data [@Rousselet_2019], third, BHM provided an unified framework to analyze data from different levels and different sources, avoid the problem of two-stage modeling. We used the `r` package `BRMs` [@Bürkner_2017] to build the models, which used Stan [@Carpenter_2017_stan] to sample from the posterior. 
+We first tested the effect of experimental manipulation using Bayesian hierarchical model. More specifically, we used the Bayesian hierarchical model (BHM, or Bayesian generalized linear mixed model, BGLMM) to model the reaction time and accuracy data. We used Bayesian hierarchical model because BHM provided three advantages over the classic NHST approach (repeated measure ANOVA or *t*-tests): first, BHM estimate the posterior distributions of parameters for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT]. Second, BHM, as generalized linear mixed models, can use distribution that fit the distribution of real data instead of using normal distribution for all data. Using appropriate distributions for the data will avoid misleading results and provide better fitting of the data. For example, Reaction times are not normally distributed but right skewed, and the linear assumption in ANOVAs is not satisfied [@Rousselet_2019]. Third, BHM provided an unified framework to analyze data from different levels and different sources, avoid the information loss when we need to combine data from different levels. 
 
-##### Signal detection theory for accuracy
-We followed practice of previous [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, we assume the match trials are signal and the non-match trials are noise. To estimate the sensitivity and criterion of SDT, we adopted the Bayesian GLMM approach from [@Rouder_2005_BHM_SDT]. When modeling the accuracy data for one participant, we assume that the accuracy of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+We first used the `r` package `BRMs` [@Bürkner_2017], which used Stan [@Carpenter_2017_stan] to sample from the posterior, to build the model for RTs and accuracy separately. Using the Bayesian hierarchical model, we can directly estimate the over-all effect across similar experiments with similar experimental design, instead of using a two-step approach where we first estimate parameters, e.g., $d'$ for each participant, and then use a random effect model meta-analysis to synthesize the effect [@Goh_2016_mini]. We also we used HDDM to model RTs and accuracy data together using drift diffusion model as the data generative model. 
+
+##### Accuracy
+We followed practice of previous studies [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and the non-match trials are noise. As we mentioned above, we estimated the sensitivity and criterion of SDT by BHM [@Rouder_2005_BHM_SDT]. Because the BHM can model different level's data using a single unified model, we used a three-level HBM to model the valence effect, which include five experiments: 1a, 1b, 1c, 2, and 6a. Also, we modelled the experiments with both identity and moral valence with a three-level HBM model, which includes 3a, 3b, and 6b. For experiment 4a and 4b, we used two-level models for each separately. However, we compared the posterior of parameters directly because we have full posterior distribution of the effect and can directly compare the posteriors.
+
+We used the Bernoulli distribution to model the accuracy data. For a single participant, we assume that the accuracy of $i$th trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
 
 $$ y_{i} \sim Bernoulli(p_{i})$$
-In the perceptual matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
+and the probability of choosing "match" $p_{i}$ at the $i$th trial is a function of the trial type:
 
-$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}  * Valence_{i} $$
-The outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
+$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
+therefore, the outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on the $i$th trial, 1 if they responded "match". We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. In this way, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increased probability of responding "match" when the trial type is "match", in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
 
-In each experiment, we had multiple participants, to estimate the group-level parameters, we need to estimate parameters on individual level and the group level parameter simultaneously. In this case, as above, we first assume that the outcome of each trial is Bernoulli distributed, with probability $p_{ij}$ that $y_{ij} = 1$. 
+In our experimental design, there are three conditions for both match and non-match trials, we can estimate the $d'$ and $c$ separately for each condition. In this case, the criterion $c$ is modeled as the main effect of valence, and the $d'$ can be modeled as the interaction between valence and match, and we explicitly removed the intercept:
+
+$$ \Phi(p_{i}) = 0 + \beta_{0}Valence_{i} + \beta_{1}IsMatch_{i}  * Valence_{i} $$
+
+In each experiment, we had multiple participants. We can estimate the group-level parameters by extending the above model into a two-leve model, where we can estimate parameters on individual level and the group level parameter simultaneously. The probability that the $j$th subject responded "match" ($y_{ij} = 1$) at the $i$th trial $p_{ij}$. In the same vein, we have
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
-And the the generalized linear model was re-written to include two levels:
-$$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij} * Valence_{ij}$$
-The outcomes $y_{ij}$ are 0 if participant $j$ responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+The the generalized linear model can be re-written to include two levels:
+$$ \Phi(p_{ij}) = 0 + \beta_{0j}Valence_{ij} + \beta_{1j}IsMatch_{ij} * Valence_{ij}$$
+We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
 
 The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
 $$ \begin{bmatrix}\beta_{0j}\\
@@ -43,7 +50,7 @@ $$ \begin{bmatrix}\beta_{0j}\\
 \theta_{1}\\
 \end{bmatrix}, \sum) $$
 
-For experiments that had 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad), i.e., experiment 1a, 1b, 1c, 2, 5, and 6a, the formula for BGLM is as follow:
+For experiments that had 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad), i.e., experiment 1a, 1b, 1c, 2, 5, and 6a, the formula for accuracy in `BRMs` is as follow:
 
 `saymatch ~ 0 + Valence + Valence:ismatch + (0 + Valence + Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
@@ -51,37 +58,11 @@ For experiments that had two by two by three design, we used the follow formula 
 
 `saymatch ~ 0 + ID:Valence + ID:Valence:ismatch + (0 + ID:Valence + ID:Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
-##### Log normal for reaction times
-For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response. The reaction time is a linear function of trial type:
-
-$$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
-
-while the log of the reaction time is log-normal distributed:
-$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
-$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
-
-$$\mu_{j} \sim N(\mu, \sigma)$$
-
-$$\sigma_{j} \sim Cauchy()$$
-Formula used for modeling the data as follow:
-
-`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = shifted_lognormal()`
-
-or 
-
-`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = shifted_lognormal()`
-
-#### Hierarchical drift diffusion model (HDDM)
-To further explore the psychological mechanism under perceptual decision-making, we used a generative mode drift diffusion model (DDM) to model our RTs and accuracy data. As the hypothesis testing part, we also used hierarchical Bayesian model to fit the DDM. The package we used was the HDDM [@wiecki_hddm_2013], a python package for fitting hierarchical DDM. We used the prior implemented in HDDM, that is, weakly informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009]. As reported in @Hu_2020_GoodSelf, we used the stimulus code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
-
-### Synthesized results
-Given that multiple experiments in the current study shared similar experimental designs, We also synthesized their results to get a more precise and robust estimation of the effect. 
-
-We used Bayesian hierarchical GLM model to synthesize the effect across different studies by extending two-level hierarchical model into a three-level model, which experiment as an additional level. For SDT, we can use a nested hierarchical model to model all the experiment with similar design:
+In the same vein, we can estimate the posterior of parameters across different experiments. We can use a nested hierarchical model to model all the experiment with similar design:
 $$y_{ijk} \sim Bernoulli(p_{ijk})$$
-where 
-$$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
-The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "nonmatch" on trial $i$, 1 if they responded "match". 
+the generalized linear model is then
+$$ \Phi(p_{ijk}) =  0 + \beta_{0jk}Valence_{ijk} + \beta_{1j}IsMatch_{ijk} * Valence_{ijk}$$
+The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "mismatch" on trial $i$, 1 if they responded "match". 
 
 $$\begin{bmatrix}\beta_{0jk}\\
 \beta_{1jk}\\
@@ -96,9 +77,29 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
 \mu_{1}\\
 \end{bmatrix}, \sum)$$
-in which $\mu_{0}$ and $\mu_{1}$ means the population level parameter.
+in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
 
-In similar way, we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+##### Reaction times
+For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. Although the log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response, we found that the additional parameter didnt' improved the model fitting and therefore used the logNormal in our final analysis. 
+
+The reaction time of the $j$th subject on $i$th trial is a linear function of trial type: $$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
+
+while the log of the reaction time is log-normal distributed:
+$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
+
+$$\mu_{j} \sim N(\mu, \sigma)$$
+
+$$\sigma_{j} \sim Cauchy()$$
+Formula used for modeling the data as follow:
+
+`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = lognormal()`
+
+or 
+
+`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = lognormal()`
+
+we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
 
 $$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
 
@@ -109,21 +110,21 @@ $$\sigma_{jk} \sim Cauchy()$$
 $$\mu_{k} \sim N(\mu, \sigma)$$
 $$\theta_{k} \sim Cauchy()$$
 
-Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ and RT across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
-
 ##### Effect of moral character
 We synthesized effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach [@Goh_2016_mini]. 
 
-#### Effect of moral self
+##### Effect of moral self
 We further synthesized the effect of moral self, which included results from experiment 3a, 3b, and 6b. In these experiment, we directly tested two possible explanations: moral self as social categorization process and value-based attention. 
 
-#### Implicit interaction between valence and self-relevance
+##### Implicit interaction between valence and self-relevance
 In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the morally Good (4b).
-
-#### Behavior-Questionnaire correlation
 
 Finally, we explored correlation between results from behavioral results and self-reported measures. 
 
 For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all questionnaire data were reported in [@Liu_2020_JOPD].
 
 For the behavioral task part, we used three parameters from drift diffusion model: drift rate (*v*), boundary separation (*a*), and non decision-making time (*t*), because these parameters has relative clear psychological meaning. We used the mean of parameter posterior distribution as the estimate of each parameter for each participants in the correlation analysis. We used alpha = 0.05 and used bootstrap by `BootES` package [@kirby_bootes_2013] to estimate the correlation. 
+
+
+#### Hierarchical drift diffusion model (HDDM)
+To further explore the psychological mechanism under perceptual decision-making, we used a generative mode drift diffusion model (DDM) to model our RTs and accuracy data. As the hypothesis testing part, we also used hierarchical Bayesian model to fit the DDM. The package we used was the HDDM [@wiecki_hddm_2013], a python package for fitting hierarchical DDM. We used the prior implemented in HDDM, that is, weakly informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009]. As reported in @Hu_2020_GoodSelf, we used the stimulus code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
