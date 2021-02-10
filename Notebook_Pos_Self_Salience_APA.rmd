@@ -435,7 +435,6 @@ In this part, we report results from five experiments that tested whether an ass
 
 ```{r first meta,echo=FALSE,results='hide'}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
-
 selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness','Valence', 'RESP', 'ACC','RT')
 df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
                              df1b.v_meta[selected_columns],
@@ -480,10 +479,11 @@ std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch +
                        data = df_moral,
                        control = list(adapt_delta = .95),
                        cores = parallel::detectCores(),
+                       backend = 'cmdstanr',  # with cmdstanr
                        file = here::here("glmmModels/sdt_val_DummyCode_3_level"))
 
 summary(std_val_m1)
-stancode(std_val_m1)
+# stancode(std_val_m1)
 
 plot(hypothesis(std_val_m1,
                 "ValenceBad:ismatch > ValenceNeutral:ismatch"))
@@ -491,19 +491,37 @@ plot(hypothesis(std_val_m1,
 plot(hypothesis(std_val_m1,
                 "ValenceGood:ismatch > ValenceNeutral:ismatch"))
 
-# will change this plot, seems not correct to use emmeans.
+# std_val_m1_p <- std_val_m1 %>%
+#   emmeans::emmeans( ~ ismatch | Valence) %>%
+#   tidybayes::gather_emmeans_draws() %>%
+#   dplyr::filter(ismatch == 'd prime') %>%
+#   ggplot2::ggplot(aes(x = Valence, y = .value)) +
+#   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+#   stat_summary(aes(group = NA), fun = mean, geom = "line") +
+#   ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+#   facet_grid(cols = vars(ismatch), scales = "free_y") +
+#   theme_classic() + 
+#   theme(axis.title.x = element_blank())
+
+# plot the trace of d primes
 std_val_m1_p <- std_val_m1 %>%
-  emmeans::emmeans( ~ ismatch | Valence) %>%
-  tidybayes::gather_emmeans_draws() %>%
-  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
-                ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
+  dplyr::mutate(Valence = dplyr::case_when((.variable == "b_ValenceBad") | (.variable == "b_ValenceBad:ismatch") ~ "Bad",
+                                (.variable == "b_ValenceNeutral") | (.variable == "b_ValenceNeutral:ismatch") ~ "Neutral",
+                                (.variable == "b_ValenceGood") | (.variable == "b_ValenceGood:ismatch")  ~ "Good"),
+                params = dplyr::case_when(
+                  (.variable == "b_ValenceBad") | (.variable == "b_ValenceNeutral") |  (.variable == "b_ValenceGood")  ~ "criterion",
+                  (.variable=="b_ValenceBad:ismatch")|(.variable=="b_ValenceNeutral:ismatch")|(.variable=="b_ValenceGood:ismatch")~"d prime")) %>%
+  dplyr::mutate(params = factor(params, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
-  dplyr::filter(ismatch == 'd prime') %>%
+  dplyr::filter(params == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun = mean, geom = "line") +
   ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
-  facet_grid(cols = vars(ismatch), scales = "free_y") +
+  facet_grid(cols = vars(params), scales = "free_y") +
   theme_classic() + 
   theme(axis.title.x = element_blank())
 
@@ -516,16 +534,16 @@ df_m1_post_sdt_exp <- std_val_m1 %>%
 
 pop_mean <- std_val_m1 %>%
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-tmp <- std_val_m1 %>% 
+df_sdt_m1_pop <- std_val_m1 %>% 
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch_num`, `b_ValenceNeutral:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
@@ -533,32 +551,40 @@ tmp <- std_val_m1 %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-tmp2 <- merge(tmp, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+df_m1_post_sdt_exp_update <- merge(df_sdt_m1_pop, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population level value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_plot_sdt <- tmp %>%
+df_m1_plot_sdt <- df_sdt_m1_pop %>%
   dplyr::mutate(condition = 'Overall') %>%
   dplyr::rename(value = pop_mean) %>%
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., tmp2) %>%
+  dplyr::bind_rows(., df_m1_post_sdt_exp_update) %>%
   dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
                                                          "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
                                                          "Exp5_THU",  "Exp6a_THU","Overall")),
                 condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
-                term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
-                                             "c_neutral" = (term == "ValenceNeutral"),
-                                             "c_good" = (term == "ValenceGood"),
-                                             "dprime_bad" = (term == "ValenceBad:ismatch_num"),
-                                             "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
-                                             "dprime_good" = (term == "ValenceGood:ismatch_num"),
-                                             .method ="first", .default = NA),
-                term = factor(term, levels = c("c_bad", ","c_neutral", "c_good
-                                               "dprime_bad", "dprime_neutral", "dprime_good"))) %>%
+                term = dplyr::case_when((term == "ValenceBad") ~ "c_bad",
+                                    (term == "ValenceNeutral") ~ "c_neutral",
+                                    (term == "ValenceGood") ~ "c_good",
+                                    (term == "ValenceBad:ismatch") ~ "dprime_bad",
+                                    (term == "ValenceNeutral:ismatch") ~ "dprime_neutral",
+                                    (term == "ValenceGood:ismatch") ~ "dprime_good"),
+                # term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
+                #                              "c_neutral" = (term == "ValenceNeutral"),
+                #                              "c_good" = (term == "ValenceGood"),
+                #                              "dprime_bad" = (term == "ValenceBad:ismatch_num"),
+                #                              "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
+                #                              "dprime_good" = (term == "ValenceGood:ismatch_num"),
+                #                              .method ="first", .default = NA),
+                term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
+                                               "dprime_bad", "dprime_neutral", "dprime_good"))) 
+
+df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
   tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between coditions
+  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between conditions
                 diff_GN_c = c_good - c_neutral,
                 diff_BN_c = c_bad - c_neutral,
                 diff_GB_dprm = dprime_good - dprime_bad,
@@ -571,26 +597,95 @@ df_m1_plot_sdt <- tmp %>%
   dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
                                                          'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
+# check the nrows in each condition
 df_m1_plot_sdt %>% 
   dplyr::group_by(condition, term_diff, .chain) %>%
   dplyr::tally()
 
-# plot the posterior of c
-df_m1_plot_sdt  %>%
-  dplyr::filter(str_detect(term_diff, '_c')) %>%
+# plot the posterior of the d prime
+df_m1_plot_sdt %>%
+  tidyr::separate(term, c('params', 'Valence')) %>% 
+  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+  dplyr::filter(params == 'dprime') %>%
+  dplyr::rename(Experiments = condition) %>%
+  # dplyr::filter(str_detect(term, 'dprime')) %>%
+  ggplot2::ggplot(aes(y = Experiments, x = value)) +
+  # tidybayes::geom_halfeyeh(color = Valence)
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap( ~ Valence, # scales = "free_y", 
+               nrow = 1,
+               labeller = label_parsed)
+
+df_m1_plot_sdt %>%
+  tidyr::separate(term, c('params', 'Valence')) %>% 
+  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+  dplyr::filter(params == 'dprime') %>%
+  dplyr::rename(Experiments = condition) %>%
+  # dplyr::filter(str_detect(term, 'dprime')) %>%
+  ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+  # tidybayes::geom_halfeyeh(color = Valence)
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  facet_wrap( ~ Valence, # scales = "free_y", 
+               nrow = 1,
+               labeller = label_parsed)
+
+df_m1_plot_sdt %>% 
+  dplyr::filter(str_detect(term, 'dprime')) %>%
+  dplyr::group_by(condition) %>% 
+  dplyr::summarize(Mean = mean(value)) %>%
+  dplyr::arrange(Mean)
+
+df_m1_plot_sdt %>%
+  tidyr::separate(term, c('params', 'Valence')) %>% 
+  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+  dplyr::filter(params == 'dprime') %>%
+  dplyr::rename(Experiments = condition) %>%
+  dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+                                                         "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp1a_WZU",  "Exp6a_THU","Overall"))) %>%
+  dplyr::mutate(Experiments = fct_rev(Experiments)) %>%
+  ggplot(aes(y = Experiments)) +
+  ggridges::geom_density_ridges(
+    aes(x = value, fill = paste(Experiments, Valence)), 
+    alpha = .7, color = "gray") + # , from = 1, to = 4
+  labs(
+    x = "d prime",
+    y = "Experiments",
+    title = "D prime across experiments",
+    subtitle = "Overall is the populational level",
+    caption = "Salient Moral Character"
+  ) +
+  #scale_y_discrete(expand = c(0, 0)) +
+  #scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_cyclical(
+    breaks = c("Exp1a_THU good", "Exp1a_THU neutral", "Exp1a_THU bad"),
+    labels = c(`Exp1a_THU good` = "Good", `Exp1a_THU neutral` = "Neutral", `Exp1a_THU bad` = "Bad"),
+    values = c("#ff8080", "#8080ff", "#90EE90"), # "#ff0000", "#0000ff", "#008000", 
+    name = "Valence", guide = "legend"
+  ) #+
+  #coord_cartesian(clip = "off") +
+  #theme_ridges(grid = FALSE)
+
+# plot the posterior of the difference between d prime
+df_m1_plot_sdt_diff %>%
+  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeyeh() +
+  tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
   facet_wrap( ~ term_diff,
                scales = "free_y", nrow = 1,
                labeller = label_parsed)
 
-# plot the posterior of dprime
-df_m1_plot_sdt %>%
-  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+
+
+# plot the posterior of difference between c, supplementary figure
+df_m1_plot_sdt_diff  %>%
+  dplyr::filter(str_detect(term_diff, '_c')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeyeh() +
+  tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
   facet_wrap( ~ term_diff,
@@ -611,12 +706,13 @@ df_m1_plot_sdt %>%
 
 # have a look at a few participants' data
 set.seed(123)
-random_sub <- sample(unique(df_moral$Subject), 4)
+random_sub <- sample(unique(df_moral$Subject), 10)
 random_sub
 
+# plot the distribution of 10 randomaly selected paraticipants
 df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
+  dplyr::mutate(RT_sec = RT/1000) %>%  # log RT in seconds
+  dplyr::filter(ACC == 1) %>%          # only correct trials
   dplyr::filter(Subject %in% random_sub) %>%
   dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
                 RT_log = log(RT_sec))%>%
@@ -625,19 +721,35 @@ df_moral %>%
     facet_grid(~Subject) +  # One panel per id
     coord_cartesian(xlim=c(-2, 1))
 
+# fit a three-level hierarchical model for RT, didn't specify the prior, shifted_lognormal, effective coding
 
-# fit a three-level hierarchical model for RT, didn't specify the prior
+# Total execution time: 124845.8 seconds = 34.7 hours
+# RT_val_m1 <- df_moral %>%
+#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#   dplyr::filter(ACC == 1) %>%         # only correct trials
+#   brms::brm(RT_sec ~ Valence*ismatch + 
+#               (Valence*ismatch | ExpID_new) +   
+#               (Valence*ismatch  | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             control = list(adapt_delta = .95),
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_val_DummyCode_3_level"))
+
 RT_val_m1 <- df_moral %>%
   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
+  dplyr::filter(ACC == 1) %>%         # only correct trials
   brms::brm(RT_sec ~ Valence*ismatch_num + 
               (Valence*ismatch_num | ExpID_new) +   
-              (Valence*ismatch_num  | ExpID_new:Subject),
+              (Valence*ismatch_num | ExpID_new:Subject),
             family=shifted_lognormal(),
             data = .,
             control = list(adapt_delta = .95),
             cores = parallel::detectCores(),
+            backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_val_EffectCode_3_level"))
+
 #plot(RT_val_m1, "b_")
 summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
 pp_check(RT_val_m1)
@@ -690,9 +802,9 @@ pp_check(RT_val_m3_trunc)
 #plot(RT_val_m3_trunc, "b_")
 
 # compare three models
-loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc)
+loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc) # takes about XX mins
 bayes_factor(RT_val_m1,RT_val_m2)
-#Monte Carlo SE of elpd_loo is 0.4.
+# Monte Carlo SE of elpd_loo is 0.4.
 
 #All Pareto k estimates are good (k < 0.5).
 #See help('pareto-k-diagnostic') for details.
@@ -729,7 +841,7 @@ rt_pop_post <- RT_val_m1 %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-rt_post_tmp <- merge(rt_pop_post, df_rt_m1_post_exp, 
+rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
                      by = c('term','.chain','.iteration', '.draw'), all = T) %>%
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
@@ -785,7 +897,7 @@ df_m1_rt_mean <- df_m1_rt_plot %>%
 df_m1_rt_plot  %>%
   dplyr::filter(str_detect(term_diff, '_NM')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
+  tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
   facet_wrap( ~ term_diff,
@@ -796,7 +908,7 @@ df_m1_rt_plot  %>%
 df_m1_rt_plot %>%
   dplyr::filter(str_detect(term_diff, '_M')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeyeh() +
+  tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
   facet_wrap( ~ term_diff,
@@ -905,16 +1017,9 @@ library(patchwork)
 
 # Part 2: interaction between valence and identity
 
-In this part, we report two experiments that aimed at testing whether the moral valence effect found in the previous experiment can be modulated by the self-referential processing.
+In this part, we report three experiments that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing.
 
-```{r child = "exp3a.rmd"}
-```
 
-```{r child = "exp3b.rmd"}
-```
-
-```{r child = "exp6b.rmd"}
-```
 
 # Part 3: Implicit binding between valence and identity
 

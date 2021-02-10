@@ -17,7 +17,7 @@ options(digits=5)       # limit the number of reporting
 pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats',
                "afex", 'emmeans', 'lme4',
                "metafor", "Hmisc",
-               "BayesFactor", 'brms', 'tidybayes',
+               "BayesFactor", 'brms', 'tidybayes', 'cmdstanr',
                "corrplot", 'patchwork',
                "psych", "lavaan", "semPlot", 'devtools')
 
@@ -43,6 +43,8 @@ rm('pkgNeeded') # remove the variable 'pkgNeeded';
 # Install the stable development verions from GitHub
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
 library(papaja)
+
+set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # Save some time and stor APA format-related code in an object so you can easily
 # use it in multiple plots
