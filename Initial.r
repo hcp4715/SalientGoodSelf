@@ -14,7 +14,7 @@ options(digits=5)       # limit the number of reporting
 
 # rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 
-pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats',
+pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats', 'ggridges',
                "afex", 'emmeans', 'lme4',
                "metafor", "Hmisc",
                "BayesFactor", 'brms', 'tidybayes', 'cmdstanr',

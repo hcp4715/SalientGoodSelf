@@ -26,7 +26,7 @@ authornote: |
   Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
   Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
 
-  Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP & JS supported this project.
+  Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
         To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that when geometric shapes that associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
@@ -88,7 +88,7 @@ Our information processing system had been evolved in a way that top-down factor
 
 [Morality is the central of human social life]. People experience a substantial amount of moral events in everyday life [e.g., @hofmann_morality_2014]. When experiencing these events, it always involves judging "good" or "bad". By judging "right" or "wrong", people are implicitly judging the moral character of involved parties as "good" vs. "bad" [@uhlmann_person-centered_2015]. The central role of moral character also supported by the extensive studies from person perception and social evaluation, where morality is a basic dimension for social evaluation [@goodwin_moral_2014; @goodwin_moral_2015; @abele_navigating_2020; @willis_first_2006] and the most important aspect to evaluate the continuity of identity [@strohminger_true_2017]. 
 
-Given the importance of moral character, to successfully navigate in a social world, a person needs to both evaluate others' moral character and behave in a way that she/he is perceived as a moral person, or at least not a morally bad person. Maintaining a moral self-view is as important as making judgments about others' moral character [@ellemers_psychology_2019]. Indeed, previous studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@strohminger_true_2017; @klein_maybe_2016; @tappin_illusion_2017]. Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to whistleblow depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
+Given the importance of moral character, to successfully navigate in a social world, a person needs to both evaluate others' moral character and behave in a way that she/he is perceived as a moral person, or at least not a morally bad person. Maintaining a moral self-view is as important as making judgments about others' moral character [@ellemers_psychology_2019]. Indeed, previous studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@strohminger_true_2017; @klein_maybe_2016; @tappin_illusion_2017]. Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to expose an unethical behavior depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
 
 To date, however, as @freeman_dynamic_2011 put it, studies in the perception of moral character didn't try to explain the perceptual process, rather, they are trying to explain the higher-order social cognitive processes that come after. Essentially, these studies are perception of moral character without perceptual process. Without knowledge of perceptual processes, we can not have a full picture of how moral character is processed in our cognition. As an increasing attention is paid to perceptual process underlying social cognition, it's clear that perceptual processes are strongly influenced by social factors, such as group-categorization, stereotype [see @bagnis_toward_2019; @xiao_perceiving_2016;@stolier_functional_2016]. Given the importance of moral character and that moral character related information has strong influence on learning and memory [@stanley_moral_2019; @carlson_motivated_2020], one might expect that moral character related information could also play a role in perceptual process.
 
@@ -521,12 +521,12 @@ std_val_m1_p <- std_val_m1 %>%
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun = mean, geom = "line") +
   ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
-  facet_grid(cols = vars(params), scales = "free_y") +
+  #facet_grid(cols = vars(params), scales = "free_y") +
   theme_classic() + 
   theme(axis.title.x = element_blank())
 
-# Get the variables in the model
-var_name_m1 <- tidybayes::get_variables(std_val_m1)
+# # Get the variables in the model
+# var_name_m1 <- tidybayes::get_variables(std_val_m1)
 
 df_m1_post_sdt_exp <- std_val_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
@@ -572,13 +572,6 @@ df_m1_plot_sdt <- df_sdt_m1_pop %>%
                                     (term == "ValenceBad:ismatch") ~ "dprime_bad",
                                     (term == "ValenceNeutral:ismatch") ~ "dprime_neutral",
                                     (term == "ValenceGood:ismatch") ~ "dprime_good"),
-                # term = mosaic::derivedFactor("c_bad" = (term == "ValenceBad"),
-                #                              "c_neutral" = (term == "ValenceNeutral"),
-                #                              "c_good" = (term == "ValenceGood"),
-                #                              "dprime_bad" = (term == "ValenceBad:ismatch_num"),
-                #                              "dprime_neutral" = (term == "ValenceNeutral:ismatch_num"),
-                #                              "dprime_good" = (term == "ValenceGood:ismatch_num"),
-                #                              .method ="first", .default = NA),
                 term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
                                                "dprime_bad", "dprime_neutral", "dprime_good"))) 
 
@@ -598,9 +591,9 @@ df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
                                                          'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
 # check the nrows in each condition
-df_m1_plot_sdt %>% 
-  dplyr::group_by(condition, term_diff, .chain) %>%
-  dplyr::tally()
+# df_m1_plot_sdt %>% 
+#   dplyr::group_by(condition, term_diff, .chain) %>%
+#   dplyr::tally()
 
 # plot the posterior of the d prime
 df_m1_plot_sdt %>%
@@ -617,25 +610,31 @@ df_m1_plot_sdt %>%
                nrow = 1,
                labeller = label_parsed)
 
-df_m1_plot_sdt %>%
-  tidyr::separate(term, c('params', 'Valence')) %>% 
-  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
-  dplyr::filter(params == 'dprime') %>%
-  dplyr::rename(Experiments = condition) %>%
-  # dplyr::filter(str_detect(term, 'dprime')) %>%
-  ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
-  # tidybayes::geom_halfeyeh(color = Valence)
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  facet_wrap( ~ Valence, # scales = "free_y", 
-               nrow = 1,
-               labeller = label_parsed)
+# use the overall mean values as the vlines
+vlines <- df_m1_plot_sdt %>% 
+        tidyr::separate(term, c('params', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+        dplyr::filter(params == 'dprime') %>%
+        dplyr::filter(condition == "Overall") %>%
+        dplyr::group_by(Valence) %>% 
+        dplyr::summarize(Mean = mean(value)) # %>%
+        # dplyr::arrange(Mean)
 
-df_m1_plot_sdt %>% 
-  dplyr::filter(str_detect(term, 'dprime')) %>%
-  dplyr::group_by(condition) %>% 
-  dplyr::summarize(Mean = mean(value)) %>%
-  dplyr::arrange(Mean)
+# THIS is the one which the final plot will based on!!!
+p_dprime1 <- df_m1_plot_sdt %>%
+        tidyr::separate(term, c('params', 'Valence')) %>%
+        dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+        dplyr::filter(params == 'dprime') %>%
+        dplyr::rename(Experiments = condition) %>%
+        dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+                                                                   "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+                                                                   "Exp1a_WZU",  "Exp6a_THU","Overall")),
+                      Experiments = fct_rev(Experiments)) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        labs(x=expression('Posteior distribution of '~italic(d)~' prime'))
+
 
 df_m1_plot_sdt %>%
   tidyr::separate(term, c('params', 'Valence')) %>% 
