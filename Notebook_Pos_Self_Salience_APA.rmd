@@ -15,7 +15,7 @@ author:
 
 affiliation:
   - id            : "1"
-    institution   : "School of Psychology, Nanjing Normal University, 210024 Nanjing, China"
+    institution   : "Nanjing Normal University, 210024 Nanjing, China"
   - id            : "2"
     institution   : "Tsinghua University, 100084 Beijing, China"
   - id            : "3"
@@ -29,9 +29,9 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
-        To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that when geometric shapes that associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
+ To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that when geometric shapes that associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
   
-  <!-- https://tinyurl.com/ybremelq -->
+ <!-- https://tinyurl.com/ybremelq -->
   
 keywords          : "Perceptual decision-making, Self positivity bias, moral character"
 wordcount         : "X"
@@ -433,7 +433,7 @@ fun_rt_val_id <- function(exp_name) {
 # Part 1: Perceptual processing moral character related information
 In this part, we report results from five experiments that tested whether an associative learning task. These five experiments revealed a robust effect of moral character on perceptual matching task.
 
-```{r first meta,echo=FALSE,results='hide'}
+```{r prepare data for first meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
 selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness','Valence', 'RESP', 'ACC','RT')
 df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
@@ -469,10 +469,13 @@ with(df_moral, table(Subject, ExpID_new)) %>%
     ylab = "ExpID"
   )
 
+```
+
+```{r first meta sdt, echo=FALSE, results='hide', warning=FALSE}
 # fit a three-level hierarchical model for SDT, didn't specify the prior; dummy coding
 # about 20 hours to finish this sampling using ntel® Xeon(R) CPU E3-1505M v5 @ 2.80GHz × 8 machine.
 # 87432.5 = 24.3 hours
-std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
+sdt_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
                          (0 + Valence + Valence:ismatch | ExpID_new) + 
                          (0 + Valence + Valence:ismatch  | ExpID_new:Subject),
                        family = bernoulli(link="probit"),
@@ -482,16 +485,15 @@ std_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch +
                        backend = 'cmdstanr',  # with cmdstanr
                        file = here::here("glmmModels/sdt_val_DummyCode_3_level"))
 
-summary(std_val_m1)
-# stancode(std_val_m1)
+summary(sdt_val_m1)
+# stancode(sdt_val_m1)
 
-plot(hypothesis(std_val_m1,
-                "ValenceBad:ismatch > ValenceNeutral:ismatch"))
+# plot(hypothesis(sdt_val_m1, "ValenceBad:ismatch > ValenceNeutral:ismatch"))
+# 
+# plot(hypothesis(sdt_val_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch"))
 
-plot(hypothesis(std_val_m1,
-                "ValenceGood:ismatch > ValenceNeutral:ismatch"))
-
-# std_val_m1_p <- std_val_m1 %>%
+# combined with emmeans, no longer used
+# sdt_val_m1_p <- sdt_val_m1 %>%
 #   emmeans::emmeans( ~ ismatch | Valence) %>%
 #   tidybayes::gather_emmeans_draws() %>%
 #   dplyr::filter(ismatch == 'd prime') %>%
@@ -503,36 +505,41 @@ plot(hypothesis(std_val_m1,
 #   theme_classic() + 
 #   theme(axis.title.x = element_blank())
 
-# plot the trace of d primes
-std_val_m1_p <- std_val_m1 %>%
+# plot the population level parameter (d prime)
+sdt_val_m1_p <- sdt_val_m1 %>%
+  # get the traces of population level parameters
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
                           `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
                           `b_ValenceGood:ismatch`) %>%
+  # create two columns for two independent factors.
   dplyr::mutate(Valence = dplyr::case_when((.variable == "b_ValenceBad") | (.variable == "b_ValenceBad:ismatch") ~ "Bad",
                                 (.variable == "b_ValenceNeutral") | (.variable == "b_ValenceNeutral:ismatch") ~ "Neutral",
                                 (.variable == "b_ValenceGood") | (.variable == "b_ValenceGood:ismatch")  ~ "Good"),
                 params = dplyr::case_when(
                   (.variable == "b_ValenceBad") | (.variable == "b_ValenceNeutral") |  (.variable == "b_ValenceGood")  ~ "criterion",
-                  (.variable=="b_ValenceBad:ismatch")|(.variable=="b_ValenceNeutral:ismatch")|(.variable=="b_ValenceGood:ismatch")~"d prime")) %>%
-  dplyr::mutate(params = factor(params, levels = c('d prime', 'criterion')),
+                  (.variable=="b_ValenceBad:ismatch")|(.variable=="b_ValenceNeutral:ismatch")|(.variable=="b_ValenceGood:ismatch")~"d prime"),
+                params = factor(params, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  # select only d prime
   dplyr::filter(params == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = NA), fun = mean, geom = "line") +
-  ylab(expression(paste("Sensitivity ",italic("d'"), sep = ' '))) +
+  ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
+  # xlab("Valence") +
   #facet_grid(cols = vars(params), scales = "free_y") +
-  theme_classic() + 
-  theme(axis.title.x = element_blank())
+  theme_classic() # + 
+  # theme(axis.title.x = element_blank())
 
+#### plot both overall parameters and experimental levels.
 # # Get the variables in the model
-# var_name_m1 <- tidybayes::get_variables(std_val_m1)
+# var_name_m1 <- tidybayes::get_variables(sdt_val_m1)
 
-df_m1_post_sdt_exp <- std_val_m1 %>% 
+df_m1_post_sdt_exp <- sdt_val_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
-pop_mean <- std_val_m1 %>%
+pop_mean <- sdt_val_m1 %>%
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
                           `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
                           `b_ValenceGood:ismatch`) %>%
@@ -540,7 +547,7 @@ pop_mean <- std_val_m1 %>%
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-df_sdt_m1_pop <- std_val_m1 %>% 
+df_sdt_m1_pop <- sdt_val_m1 %>% 
   tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
                           `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
                           `b_ValenceGood:ismatch`) %>%
@@ -566,23 +573,23 @@ df_m1_plot_sdt <- df_sdt_m1_pop %>%
                                                          "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
                                                          "Exp5_THU",  "Exp6a_THU","Overall")),
                 condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
-                term = dplyr::case_when((term == "ValenceBad") ~ "c_bad",
-                                    (term == "ValenceNeutral") ~ "c_neutral",
-                                    (term == "ValenceGood") ~ "c_good",
-                                    (term == "ValenceBad:ismatch") ~ "dprime_bad",
-                                    (term == "ValenceNeutral:ismatch") ~ "dprime_neutral",
-                                    (term == "ValenceGood:ismatch") ~ "dprime_good"),
-                term = factor(term, levels = c("c_bad", "c_neutral", "c_good",
-                                               "dprime_bad", "dprime_neutral", "dprime_good"))) 
+                term = dplyr::case_when((term == "ValenceBad") ~ "c_Bad",
+                                    (term == "ValenceNeutral") ~ "c_Neutral",
+                                    (term == "ValenceGood") ~ "c_Good",
+                                    (term == "ValenceBad:ismatch") ~ "dprime_Bad",
+                                    (term == "ValenceNeutral:ismatch") ~ "dprime_Neutral",
+                                    (term == "ValenceGood:ismatch") ~ "dprime_Good"),
+                term = factor(term, levels = c("c_Bad", "c_Neutral", "c_Good",
+                                               "dprime_Bad", "dprime_Neutral", "dprime_Good"))) 
 
 df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
   tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_c = c_good - c_bad,                           # calculate the differences between conditions
-                diff_GN_c = c_good - c_neutral,
-                diff_BN_c = c_bad - c_neutral,
-                diff_GB_dprm = dprime_good - dprime_bad,
-                diff_GN_dprm = dprime_good - dprime_neutral,
-                diff_BN_dprm = dprime_bad - dprime_neutral) %>%
+  dplyr::mutate(diff_GB_c = c_Good - c_Bad,                           # calculate the differences between conditions
+                diff_GN_c = c_Good - c_Neutral,
+                diff_BN_c = c_Bad - c_Neutral,
+                diff_GB_dprm = dprime_Good - dprime_Bad,
+                diff_GN_dprm = dprime_Good - dprime_Neutral,
+                diff_BN_dprm = dprime_Bad - dprime_Neutral) %>%
   dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
                diff_GB_c,diff_GN_c, diff_BN_c,
                diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
@@ -590,30 +597,11 @@ df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
   dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
                                                          'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
 
-# check the nrows in each condition
-# df_m1_plot_sdt %>% 
-#   dplyr::group_by(condition, term_diff, .chain) %>%
-#   dplyr::tally()
-
 # plot the posterior of the d prime
-df_m1_plot_sdt %>%
-  tidyr::separate(term, c('params', 'Valence')) %>% 
-  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
-  dplyr::filter(params == 'dprime') %>%
-  dplyr::rename(Experiments = condition) %>%
-  # dplyr::filter(str_detect(term, 'dprime')) %>%
-  ggplot2::ggplot(aes(y = Experiments, x = value)) +
-  # tidybayes::geom_halfeyeh(color = Valence)
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  facet_wrap( ~ Valence, # scales = "free_y", 
-               nrow = 1,
-               labeller = label_parsed)
-
 # use the overall mean values as the vlines
 vlines <- df_m1_plot_sdt %>% 
         tidyr::separate(term, c('params', 'Valence')) %>% 
-        dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
         dplyr::filter(params == 'dprime') %>%
         dplyr::filter(condition == "Overall") %>%
         dplyr::group_by(Valence) %>% 
@@ -623,92 +611,62 @@ vlines <- df_m1_plot_sdt %>%
 # THIS is the one which the final plot will based on!!!
 p_dprime1 <- df_m1_plot_sdt %>%
         tidyr::separate(term, c('params', 'Valence')) %>%
-        dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
         dplyr::filter(params == 'dprime') %>%
         dplyr::rename(Experiments = condition) %>%
-        dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
-                                                                   "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
-                                                                   "Exp1a_WZU",  "Exp6a_THU","Overall")),
-                      Experiments = fct_rev(Experiments)) %>%
+        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
+        #               Experiments = fct_rev(Experiments)) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
         geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
-        labs(x=expression('Posteior distribution of '~italic(d)~' prime'))
-
-
-df_m1_plot_sdt %>%
-  tidyr::separate(term, c('params', 'Valence')) %>% 
-  dplyr::mutate(Valence = factor(Valence, levels = c('good', 'neutral', 'bad'))) %>%
-  dplyr::filter(params == 'dprime') %>%
-  dplyr::rename(Experiments = condition) %>%
-  dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
-                                                         "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp1a_WZU",  "Exp6a_THU","Overall"))) %>%
-  dplyr::mutate(Experiments = fct_rev(Experiments)) %>%
-  ggplot(aes(y = Experiments)) +
-  ggridges::geom_density_ridges(
-    aes(x = value, fill = paste(Experiments, Valence)), 
-    alpha = .7, color = "gray") + # , from = 1, to = 4
-  labs(
-    x = "d prime",
-    y = "Experiments",
-    title = "D prime across experiments",
-    subtitle = "Overall is the populational level",
-    caption = "Salient Moral Character"
-  ) +
-  #scale_y_discrete(expand = c(0, 0)) +
-  #scale_x_continuous(expand = c(0, 0)) +
-  scale_fill_cyclical(
-    breaks = c("Exp1a_THU good", "Exp1a_THU neutral", "Exp1a_THU bad"),
-    labels = c(`Exp1a_THU good` = "Good", `Exp1a_THU neutral` = "Neutral", `Exp1a_THU bad` = "Bad"),
-    values = c("#ff8080", "#8080ff", "#90EE90"), # "#ff0000", "#0000ff", "#008000", 
-    name = "Valence", guide = "legend"
-  ) #+
-  #coord_cartesian(clip = "off") +
-  #theme_ridges(grid = FALSE)
+        labs(x=expression('Posteior distribution of '~italic(d)~' prime')) + 
+        theme_apa()
 
 # plot the posterior of the difference between d prime
 df_m1_plot_sdt_diff %>%
   dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
+  scale_fill_manual(values = c('gray80', 'skyblue')) +
+  xlab(expression(paste("Valence effect on", italic("d"), "prime", sep = ' '))) + 
+  facet_wrap( ~ term_diff, # scales = "free_y",
+               nrow = 1,
                labeller = label_parsed)
-
-
 
 # plot the posterior of difference between c, supplementary figure
-df_m1_plot_sdt_diff  %>%
+df_m1_plot_sdt_diff %>%
   dplyr::filter(str_detect(term_diff, '_c')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
+  scale_fill_manual(values = c('gray80', 'skyblue')) +
+  xlab("Valence effect on criterion in SDT") + 
+  facet_wrap( ~ term_diff, # scales = "free_y",
+               nrow = 1,
                labeller = label_parsed)
 
-# 
-#mcmc_plot(std_val_m1, pars = 1:4, type = "dens")
-
 # posterior predictive check
-#pp_check(std_val_m1)
-#pp_std_val_m1 <- 
-#  brms::pp_check(std_val_m1, nsamples = 1e2) + 
-#  ggtitle("PPC std_val_m1") +
+#pp_check(sdt_val_m1)
+#pp_sdt_val_m1 <- 
+#  brms::pp_check(sdt_val_m1, nsamples = 1e2) + 
+#  ggtitle("PPC sdt_val_m1") +
 #  theme_bw (base_size = 10) + 
 #  theme(legend.position = "none") +
 #  xlim(-0.5, 1.5)
+```
 
+```{r first meta rt, echo=FALSE, results='hide', warning=FALSE}
 # have a look at a few participants' data
 set.seed(123)
 random_sub <- sample(unique(df_moral$Subject), 10)
 random_sub
 
-# plot the distribution of 10 randomaly selected paraticipants
+# plot the distribution of 10 randomly selected participants
 df_moral %>%
   dplyr::mutate(RT_sec = RT/1000) %>%  # log RT in seconds
   dplyr::filter(ACC == 1) %>%          # only correct trials
@@ -716,26 +674,11 @@ df_moral %>%
   dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
                 RT_log = log(RT_sec))%>%
   ggplot2::ggplot(., aes(x=RT_log)) + 
-    geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
-    facet_grid(~Subject) +  # One panel per id
-    coord_cartesian(xlim=c(-2, 1))
+  geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
+  facet_wrap(~Subject, nrow = 2) +  # One panel per id
+  coord_cartesian(xlim=c(-2, 1))
 
 # fit a three-level hierarchical model for RT, didn't specify the prior, shifted_lognormal, effective coding
-
-# Total execution time: 124845.8 seconds = 34.7 hours
-# RT_val_m1 <- df_moral %>%
-#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-#   dplyr::filter(ACC == 1) %>%         # only correct trials
-#   brms::brm(RT_sec ~ Valence*ismatch + 
-#               (Valence*ismatch | ExpID_new) +   
-#               (Valence*ismatch  | ExpID_new:Subject),
-#             family=lognormal(),
-#             data = .,
-#             control = list(adapt_delta = .95),
-#             cores = parallel::detectCores(),
-#             backend = 'cmdstanr',  # with cmdstanr
-#             file = here::here("glmmModels/RT_val_DummyCode_3_level"))
-
 RT_val_m1 <- df_moral %>%
   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
   dplyr::filter(ACC == 1) %>%         # only correct trials
@@ -749,14 +692,30 @@ RT_val_m1 <- df_moral %>%
             backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_val_EffectCode_3_level"))
 
-#plot(RT_val_m1, "b_")
+# plot(RT_val_m1, "b_")
 summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
-pp_check(RT_val_m1)
+# pp_check(RT_val_m1)
+
+# Will try dummy coding later, but the running time is long: Total execution time: 124845.8 seconds = 34.7 hours
+# RT_val_m1 <- df_moral %>%
+#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#   dplyr::filter(ACC == 1) %>%         # only correct trials
+#   brms::brm(RT_sec ~ Valence*ismatch +
+#               (Valence*ismatch | ExpID_new) +
+#               (Valence*ismatch  | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             control = list(adapt_delta = .95),
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_val_DummyCode_3_level"))
+# 
+# summary(RT_val_m1)
 
 #Population-Level Effects: 
 #                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 #Intercept                  -0.40      0.06    -0.52    -0.27 1.01      837     1301  # baseline: mismatch:neutral
-#ValenceBad                  0.01      0.00     0.00     0.02 1.00     1752     2540  # mismatch:bad - mismatch:neutral = 0.01
+#ValenceBad                  0. 01      0.00     0.00     0.02 1.00     1752     2540  # mismatch:bad - mismatch:neutral = 0.01
 #ValenceGood                -0.03      0.00    -0.04    -0.02 1.00     1237     2219  # mismatch:Good - mismatch:neutral = -0.03
 #ismatch_num                -0.07      0.01    -0.09    -0.06 1.00     1638     1957  # match:neutral - mismatch:neutral = -0.07
 #ValenceBad:ismatch_num      0.02      0.01     0.00     0.04 1.00     1597     2380  # match:bad - ValenceBad -ismatch_num = 0.02
@@ -769,6 +728,161 @@ pp_check(RT_val_m1)
 # Match: Bad       - Intercept  + ismatch_num + ValenceBad+ ValenceBad:ismatch_num = -0.4 + 0.01 + 0.02 =  -0.37 
 # Match: Good      - Intercept  + ismatch_num + ValenceGood+ ValenceGood:ismatch_num = -0.4 + (-0.03) + (-0.05) = -0.48
 
+# Get the variables in the model 1
+# RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
+
+df_m1_post_rt_exp <- RT_val_m1 %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+df_rt_m1_pop_mean <- RT_val_m1 %>%
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+df_rt_m1_pop <- RT_val_m1 %>% 
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+df_m1_post_rt_exp_update <- merge(df_rt_m1_pop, df_m1_post_rt_exp, 
+# rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
+                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m1_plot_rt <- df_rt_m1_pop %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., df_m1_post_rt_exp_update) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition)) %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(Neutral_NM = Intercept,               # calculate the differences between coditions
+                Bad_NM = Intercept  + ValenceBad,
+                Good_NM = Intercept  + ValenceGood ,
+                Neutral_M = Intercept  + ismatch_num,
+                Bad_M = Intercept  + ismatch_num + ValenceBad + `ValenceBad:ismatch_num`,
+                Good_M = Intercept  + ismatch_num + ValenceGood+ `ValenceGood:ismatch_num`) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               Neutral_NM, Bad_NM, Good_NM,
+               Neutral_M, Bad_M, Good_M) %>%
+  tidyr::pivot_longer(cols = Neutral_NM:Good_M, names_to = "term", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term = factor(term, levels = c('Good_NM', 'Neutral_NM', 'Bad_NM',
+                                               'Good_M',  'Neutral_M',  'Bad_M')),
+                value = exp(value),
+                value = value * 1000) 
+
+# plot the posterior of the d prime
+# use the overall mean values as the vlines
+vlines <- df_m1_plot_rt %>% 
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'M') %>%
+        dplyr::filter(condition == "Overall") %>%
+        dplyr::group_by(Valence) %>% 
+        dplyr::summarize(Mean = mean(value)) # %>%
+        # dplyr::arrange(Mean)
+
+# THIS is the one which the final plot will based on!!!
+p_rt1 <- df_m1_plot_rt %>%
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'M') %>%
+        dplyr::rename(Experiments = condition) %>%
+        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
+        #               Experiments = fct_rev(Experiments)) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        labs(x=expression('Posteior distribution of reaction times')) + 
+        theme_apa()
+
+
+df_m1_plot_rt_diff <- df_m1_plot_rt %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_NM = Good_NM - Bad_NM,               # calculate the differences between coditions
+                diff_GN_NM = Good_NM - Neutral_NM,
+                diff_BN_NM = Bad_NM - Neutral_NM,
+                diff_GB_M = Good_M - Bad_M, 
+                diff_GN_M = Good_M - Neutral_M,
+                diff_BN_M = Bad_M - Neutral_M,) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+# 
+# df_m1_rt_plot %>% 
+#   dplyr::group_by(condition, term_diff, .chain) %>%
+#   dplyr::tally()
+
+# df_m1_rt_mean <- df_m1_rt_plot %>%
+#   #tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#   #                        `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+#   #                        `b_ValenceGood:ismatch_num`) %>%
+#   group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+#   tidybayes::mean_hdci(value)  # get the high density continuous intervals
+
+# plot the posterior of mismatch
+df_m1_plot_rt_diff  %>%
+  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  xlab("Effect (differences) of valence on RT (Mismatch trials)")+
+  facet_wrap( ~ term_diff, 
+              # scales = "free_y", 
+              nrow = 1,
+              labeller = label_parsed)
+
+# plot the posterior of matching trials
+df_m1_plot_rt_diff %>%
+  dplyr::filter(str_detect(term_diff, '_M')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  xlab("Effect of valence on RT (Match trials)") +
+  facet_wrap( ~ term_diff,
+              # scales = "free_y", 
+              nrow = 1,
+              labeller = label_parsed)
+```
+
+  <!-- plot all graphs form the first part together -->
+  
+```{r plot-bayes-meta-1, fig.cap="Effect of moral valence on RT and d'", fig.height=9, fig.width=15, warning=FALSE}
+library(patchwork)
+# (p_rt1 | p_dprime1)
+p_rt1 + p_dprime1 + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+```
+
+See Figure \@ref(fig:plot-bayes-meta-1).
+
+```{r model comp for rt, eval = FALSE, echo=FALSE, results='hide' }
+#### model copmarison etc, will be in supplementary materials
+# 
 # log normal distribution, dummy coding
 RT_val_m2 <- df_moral %>%
   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
@@ -780,9 +894,9 @@ RT_val_m2 <- df_moral %>%
             data = .,
             control = list(adapt_delta = .98),
             cores = parallel::detectCores(),
+            backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
 summary(RT_val_m2)
-
 
 # log normal distribution, with truncated distribution, , dummy coding
 RT_val_m3_trunc <- df_moral %>%
@@ -813,106 +927,6 @@ bayes_factor(RT_val_m1,RT_val_m2)
 #RT_val_m1          0.0       0.0 
 #RT_val_m2         -5.6       3.3 
 #RT_val_m3_trunc -590.6      34.8 
-
-# Get the variables in the model 1
-RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
-
-df_m1_post_rt_exp <- RT_val_m1 %>% 
-  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
-  dplyr::rename(value = r_ExpID_new)
-
-rt_pop_mean <- RT_val_m1 %>%
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
-
-# extract the population level parameters
-rt_pop_post <- RT_val_m1 %>% 
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
-  dplyr::rename(term = .variable,
-                pop_mean = .value) %>%
-  #tidyr::separate(term, c(NA, 'term'), "_") 
-  dplyr::ungroup() %>%
-  dplyr::mutate(term = gsub("b_", "", term))
-
-# Add the population mean to the experimental level and only keep the value after.
-rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
-                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
-  dplyr::rename(value = mean_value)  # rename the value
-
-# Plot the difference between conditions 
-df_m1_rt_plot <- rt_pop_post %>%
-  dplyr::mutate(condition = 'Overall') %>%
-  dplyr::rename(value = pop_mean) %>%
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., rt_post_tmp) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
-                #term = mosaic::derivedFactor("Neutral_NM" = (term == "Intercept"),
-                #                             "diff_BN_NM" = (term == "ValenceBad"),
-                #                             "diff_GN_NM" = (term == "ValenceGood"),
-                #                             "Neutral_M" = (term == "ismatch_num"),
-                #                             "Bad_M_int" = (term == "ValenceBad:ismatch_num"),
-                #                             "Good_M_int" = (term == "ValenceGood:ismatch_num"),
-                #                             .method ="first", .default = NA),
-                #term = factor(term, levels = c("Bad_NM", "Neutral_NM", "Good_NM",
-                 #                              "Bad_M", "Neutral_M", "Good_M"))
-                ) %>%
-  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
-                diff_GN_NM = ValenceGood,
-                diff_BN_NM = ValenceBad,
-                diff_GN_M = ValenceGood + `ValenceGood:ismatch_num`,
-                diff_BN_M = ValenceBad + `ValenceBad:ismatch_num`,
-                diff_GB_M = diff_GN_M - diff_BN_M) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GB_NM,diff_GN_NM, diff_BN_NM,
-               diff_GB_M, diff_GN_M, diff_BN_M) %>%
-  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
-                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
-
-df_m1_rt_plot %>% 
-  dplyr::group_by(condition, term_diff, .chain) %>%
-  dplyr::tally()
-
-df_m1_rt_mean <- df_m1_rt_plot %>%
-  #tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-  #                        `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-  #                        `b_ValenceGood:ismatch_num`) %>%
-  group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
-  tidybayes::mean_hdci(value)  # get the high density continuous intervals
-
-
-# plot the posterior of mismatch
-df_m1_rt_plot  %>%
-  dplyr::filter(str_detect(term_diff, '_NM')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
-
-# plot the posterior of matching trials
-df_m1_rt_plot %>%
-  dplyr::filter(str_detect(term_diff, '_M')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  facet_wrap( ~ term_diff,
-               scales = "free_y", nrow = 1,
-               labeller = label_parsed)
 
 # Get the variables in the model 3
 RT_var_name_m3 <- tidybayes::get_variables(RT_val_m3_trunc)
@@ -1001,18 +1015,7 @@ df_m3_rt_plot %>%
   facet_wrap( ~ term_diff,
                scales = "free_y", nrow = 1,
                labeller = label_parsed)
-
 ```
-
-  <!-- plot all graphs form the first part together -->
-  
-```{r fig.env = "sidewaysfigure", fig.cap="Results for part 1.", fig.height=9, fig.width=15, warning=FALSE}
-library(patchwork)
-(p_1a_d_rt | p_1b_d_rt | p_1c_d_rt | p_2_d_rt | p_6a_d_rt) / 
-  (exp1a_rt_p | exp1a_sdt_p | exp1b_rt_p | exp1b_sdt_p | exp1c_rt_p | exp1c_sdt_p | exp2_rt_p | exp2_sdt_p | exp6a_rt_p | exp6a_sdt_p) / 
-  (p_1a_hddm | p_1b_hddm | p_1c_hddm | p_2_hddm | p_6a_hddm) 
-```
-
 
 # Part 2: interaction between valence and identity
 
@@ -1024,13 +1027,13 @@ In this part, we report three experiments that aimed at testing whether the mora
 
 In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance will eliminate the effect observed in previous experiment. 
 
-```{r child = "exp4a.rmd"}
+```{r child = "exp4a.rmd", eval=FALSE}
 ```
 
-```{r child = "exp4b.rmd"}
+```{r child = "exp4b.rmd", eval=FALSE}
 ```
 
-```{r remove repeated subj Data,echo=FALSE,results='hide'}
+```{r remove repeated subj Data, echo=FALSE, results='hide', eval=FALSE}
 ## exclude the repeating subjects
 df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
 df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210)) # exclude participants who participated exp1a or 1b
@@ -1059,7 +1062,7 @@ df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # excl
 ```
 
 # Results
-```{r first meta,echo=FALSE,results='hide'}
+```{r first meta,echo=FALSE, results='hide', eval=FALSE}
 # Combine the data -----
 df.meta_d_1 <- rbind(df1a.meta.d, df1b.meta.d, df1c.meta.d, df2.meta.d, df4b.meta.d , df5.meta.d, df6a.meta.d) 
 df.meta_rt_1 <- rbind(df1a.meta.rt, df1b.meta.rt, df1c.meta.rt, df2.meta.rt, df4b.meta.rt,df5.meta.rt, df6a.meta.rt)
@@ -1164,7 +1167,7 @@ df.res.meta_1 <- df.res.meta_1 %>%
                 EffectType = Effect) 
 ```
 
-```{r second meta,echo=FALSE,results='hide'}
+```{r second meta,echo=FALSE, results='hide', eval=FALSE}
 # Results part 2: with self-referential, included experiments: 3a, 3b, 6b, 7a, 7b
 
 # Combine the data  ----
@@ -1311,7 +1314,7 @@ df.res_meta_pdata <- rbind(df.res.meta_1, df.res.meta_2) %>%
 
 ## Effect of moral valence
 
-```{r plot-all-effect, fig.cap="Effect size (Cohen's *d*) of Valence.", warning=FALSE}
+```{r plot-all-effect, fig.cap="Effect size (Cohen's *d*) of Valence.", warning=FALSE, eval=FALSE}
 # fig.width=8, 
 df.res_meta_pdata %>%
   dplyr::filter(EffectType != 'Good_Bad') %>%
@@ -1329,21 +1332,19 @@ df.res_meta_pdata %>%
   facet_grid(  DVtype ~ Identity)
 ```
 
-In this part, we synthesized results from experiment 1a, 1b, 1c, 2, 5 and 6a. Data from 192 participants were included in these analyses. We found differences between positive and negative conditions on RT was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Bad']`]; on *d'* was Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Bad']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Good_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Good_Neut']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'RT' & df.res.meta_1$Effect =='Bad_Neut']`]; *d'*: Cohen's *d* = `r df.res.meta_1$Cohen_d[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']` $\pm$ `r df.res.meta_1$se[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']`, 95% CI [`r df.res.meta_1$CI_low[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']` `r df.res.meta_1$CI_upp[df.res.meta_1$DVtype == 'dprime' & df.res.meta_1$Effect =='Bad_Neut']`]. See Figure \@ref(fig:plot-all-effect) left panel.
+
 
 ## Interaction between valence and self-reference
 In this part, we combined the experiments that explicitly manipulated the self-reference and valence, which includes 3a, 3b, 6b, 7a, and 7b. For the positive versus negative contrast, data were from five experiments with 178 participants; for positive versus neutral and neutral versus negative contrasts, data were from three experiments ( 3a, 3b, and 6b) with 108 participants.
 
 In most of these experiments, the interaction between self-reference and valence was significant (see results of each experiment in supplementary materials). In the mini-meta-analysis, we analyzed the valence effect for self-referential condition and other-referential condition separately.
 
-For the self-referential condition, we found the same pattern as in the first part of results. That is we found significant differences between positive and neutral as well as positive and negative, but not neutral and negative. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_S']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_S']`]. The effect was also observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_S']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_S']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_S']`]. See Figure \@ref(fig:plot-all-effect) the middle panel.
 
-For the other-referential condition, we found that only the difference between positive and negative on RT was significant, all the other conditions were not. The effect size of RT between positive and negative is Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Bad_O']`]; on *d'* was Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Bad_O']`]. The effect was not observed between positive and neutral condition, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Good_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Good_Neut_O']`]. And the difference between neutral and bad conditions are not significant, RT: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'RT' & df.res.meta_2$Effect =='Bad_Neut_O']`]; *d'*: Cohen's *d* = `r df.res.meta_2$Cohen_d[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']` $\pm$ `r df.res.meta_2$se[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']`, 95% CI [`r df.res.meta_2$CI_low[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']` `r df.res.meta_2$CI_upp[df.res.meta_2$DVtype == 'dprime' & df.res.meta_2$Effect =='Bad_Neut_O']`]. See Figure \@ref(fig:plot-all-effect) right panel.
 
 ## Generalizibility of the valence effect
 In this part, we reported the results from experiment 4 in which either moral valence or self-reference were manipulated as task-irrelevant stimuli. 
 
-```{r analyzing exp4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r analyzing exp4a, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
 df.ES_4a <- data.frame(matrix(nrow=length(unique(df4a.meta.d$ExpID))*length(effectList_2)*2, ncol=0)) %>%
   dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df4a.meta.d$ExpID))*length(effectList_2)),
                 ExpID  = rep(rep(unique(df4a.meta.d$ExpID), each = length(effectList_2)), 2),
@@ -1442,7 +1443,7 @@ df.ES_4a <- df.ES_4a %>%
                 EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Bad_Neut")))
 ```
 
-```{r 'plot-exp4a-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4a.", warning=FALSE}
+```{r 'plot-exp4a-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4a.", warning=FALSE, eval=FALSE}
 df.ES_4a %>%
   dplyr::filter(EffectType != "Good_Bad") %>%
   ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
@@ -1460,9 +1461,8 @@ df.ES_4a %>%
   facet_grid(DVtype ~ Identity)
 ```
 
-For experiment 4a, when self-reference was the target and moral valence was task-irrelevant, we found that only under the implicit self-referential condition, i.e., when the moral words were presented as task irrelevant stimuli, there was the main effect of valence and interaction between valence and reference for both *d* prime and RT (See supplementary results for the detailed statistics). For *d* prime, we found good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`) had higher *d* prime than bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Bad_S']`); good self condition was also higher than neutral self (`r df.ES_4a$M2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'dprime' & df.ES_4a$Effect == 'Good_Neut_S']`) but there was not statistically significant, while the neutral-self condition was higher than bad self condition and not significant neither. For reaction times, good-self condition (`r df.ES_4a$M1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD1[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`) were faster relative to bad-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Bad_S']`), and over neutral-self condition (`r df.ES_4a$M2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']` $\pm$ `r df.ES_4a$SD2[df.ES_4a$DVtype == 'RT' & df.ES_4a$Effect == 'Good_Neut_S']`). The difference between neutral-self and bad-self conditions were not significant. However, for the other-referential condition, there was no significant differences between different valence conditions. See Figure \@ref(fig:plot-exp4a-effect).
 
-```{r analyzing exp4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r analyzing exp4b, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
 #### Approach 1: compared between self and other
 effectList_3 <- c('Self_Other_G','Self_Other_N', 'Self_Other_B')
 
@@ -1676,7 +1676,7 @@ df.ES_4b_2 <- df.ES_4b_2 %>%
                 EffectType = factor(EffectType, levels = c("Good_Bad", "Good_Neut", "Bad_Neut")))
 ```
 
-```{r 'plot-exp4b-effect-1', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
+```{r 'plot-exp4b-effect-1', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE, eval=FALSE}
 df.ES_4b %>%
   #dplyr::filter(Identity == "Self") %>%
   ggplot(., aes(x=EffectType, y=ES, color=Val, fill=Val)) + # , color=Val, fill=Val
@@ -1694,7 +1694,7 @@ df.ES_4b %>%
   facet_grid(DVtype ~ .)
 ```
 
-```{r 'plot-exp4b-effect-2', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
+```{r 'plot-exp4b-effect-2', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE, eval=FALSE}
 df.ES_4b_2 %>%
   dplyr::filter(Effect %in% effectList_2) %>%
   dplyr::filter(EffectType != "Good_Bad") %>%
@@ -1713,7 +1713,7 @@ df.ES_4b_2 %>%
   facet_grid(DVtype ~ Identity)
 ```
 
-```{r 'plot-exp4b-diff-diff', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE}
+```{r 'plot-exp4b-diff-diff', fig.cap="Effect size (Cohen's *d*) of Valence in Exp4b.", warning=FALSE, eval=FALSE}
 df.ES_4b_2 %>%
   #dplyr::filter(Effect %in% c('Good_Bad_SO', 'Good_Neut_SO', 'Bad_Neut_SO')) %>%
   dplyr::filter(Effect %in% c('Good_Neut_SO', 'Bad_Neut_SO')) %>%
@@ -1735,144 +1735,9 @@ df.ES_4b_2 %>%
 
 For experiment 4b, when valence was the target and the identity was task-irrelevant, we found a strong valence effect (see supplementary results and Figure \@ref(fig:plot-exp4b-effect-1), Figure \@ref(fig:plot-exp4b-effect-2)). 
 
-In this experiment, the advantage of good-self condition can only be disentangled by comparing the self-referential and other-referential conditions. Therefore, we calculated the differences between the valence effect under self-referential and other referential conditions and used the weighted variance as the variance of this differences. We found this modulation effect on RT. The valence effect of RT was stronger in self-referential than other-referential for the Good vs. Neutral condition (`r df.ES_4b_2$ES[df.ES_4b_2$DVtype == 'RT' & df.ES_4b_2$Effect == 'Good_Neut_SO']` $\pm$ `r df.ES_4b_2$ES.var[df.ES_4b_2$DVtype == 'RT' & df.ES_4b_2$Effect == 'Good_Neut_SO']`), and to a less extent the Good vs. Bad condition (`r df.ES_4b_2$ES[df.ES_4b_2$DVtype == 'RT' & df.ES_4b_2$Effect == 'Good_Bad_SO']` $\pm$ `r df.ES_4b_2$ES.var[df.ES_4b_2$DVtype == 'RT' & df.ES_4b_2$Effect == 'Good_Bad_SO']`). While the size of the other effect's CI included zero, suggestion those effects didn't differ from zero. See Figure \@ref(fig:plot-exp4b-diff-diff).
-
-## Specificity of valence effect
-
-```{r analyzing exp5, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-effectList_exp5 <- c('Good_Bad_Mrl','Good_Neut_Mrl','Bad_Neut_Mrl',
-                     'Good_Bad_BP','Good_Neut_BP','Bad_Neut_BP',
-                     'Good_Bad_BS','Good_Neut_BS','Bad_Neut_BS',
-                     'Good_Bad_Emo','Good_Neut_Emo','Bad_Neut_Emo')
-
-df.ES_5 <- data.frame(matrix(nrow=length(unique(df5.meta.d$ExpID))*length(effectList_exp5)*2, ncol=0)) %>%
-  dplyr::mutate(DVtype = rep(c('RT', 'dprime'), each = length(unique(df5.meta.d$ExpID))*length(effectList_exp5)),
-                ExpID  = rep(rep(unique(df5.meta.d$ExpID), each = length(effectList_exp5)), 2),
-                Effect = rep(effectList_exp5, length(unique(df5.meta.d$ExpID))*2),
-                M1 = NA, SD1 = NA, M2 = NA, SD2 = NA, N = NA, r = NA, ES = NA, ES.var = NA)
-
-for (DVName in c('RT','dprime')){
-  if (DVName == 'RT'){
-    metaData <- df5.meta.rt %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(Value = RT)
-  } else{
-    metaData <- df5.meta.d %>% dplyr::rename(Value = dprime)
-  }
-  
-  for (expName in unique(metaData$ExpID)){
-    for (effectName in effectList_exp5){
-      if (effectName == 'Good_Bad_Mrl'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
-        }
-      else if (effectName == 'Good_Neut_Mrl'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
-        }  
-      else if (effectName == 'Bad_Neut_Mrl'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Morality')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-      }
-      
-      else if (effectName == 'Good_Bad_BP'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
-        }
-      else if (effectName == 'Good_Neut_BP'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
-        }  
-      else if (effectName == 'Bad_Neut_BP'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Person')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-      }
-      
-      else if (effectName == 'Good_Bad_BS'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
-        }
-      else if (effectName == 'Good_Neut_BS'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
-        }  
-      else if (effectName == 'Bad_Neut_BS'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Scene')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-      }
-      
-      else if (effectName == 'Good_Bad_Emo'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Bad")  
-        }
-      else if (effectName == 'Good_Neut_Emo'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Good")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")  
-        }  
-      else if (effectName == 'Bad_Neut_Emo'){
-        tmpdata <- metaData %>% dplyr::filter(ExpID == expName & Domain == 'Emotion')
-        dataCond1 <- tmpdata %>% dplyr::filter(Valence == "Bad")
-        dataCond2 <- tmpdata %>% dplyr::filter(Valence == "Neutral")
-        }
-      
-      M1  <- mean(dataCond1$Value) -> df.ES_5$M1[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
-      SD1 <- sd(dataCond1$Value)   -> df.ES_5$SD1[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] 
-      M2  <- mean(dataCond2$Value) -> df.ES_5$M2[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
-      SD2 <- sd(dataCond2$Value)   -> df.ES_5$SD2[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
-      N   <- length(unique(dataCond2$Subject)) -> df.ES_5$N[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName]
-      r   <- cor(dataCond1$Value,dataCond2$Value) -> df.ES_5$r[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] 
-      tmp2 <- d.sgpp(m.1 = M1, m.2 = M2, sd.1 = SD1, sd.2 = SD2,n = N, r = r)
-      df.ES_5$ES[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] <- tmp2[1,1]
-      df.ES_5$ES.var[df.ES_5$DVtype == DVName & df.ES_5$ExpID == expName & df.ES_5$Effect == effectName] <- tmp2[1,2]
-    }
-  }
-}
-
-df.ES_5 <- df.ES_5 %>%
-  dplyr::mutate(Domain = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Neut_Mrl" | Effect == "Bad_Neut_Mrl",
-                                  "Mrl",
-                                ifelse(Effect == "Good_Bad_BP" | Effect == "Good_Neut_BP" | Effect == "Bad_Neut_BP",
-                                  "AP",
-                                  ifelse(Effect == "Good_Bad_BS" | Effect == "Good_Neut_BS" | Effect == "Bad_Neut_BS",
-                                  "AS", 'Emo'))),
-                Domain = factor(Domain, levels = c("Mrl", "AP", "AS", "Emo")),
-                EffectType = ifelse(Effect == "Good_Bad_Mrl" | Effect == "Good_Bad_BP"  | Effect == "Good_Bad_BS"  | Effect == "Good_Bad_Emo", "Pos_Neg",
-                                    ifelse(Effect == "Good_Neut_Mrl" | Effect == "Good_Neut_BP" | Effect == "Good_Neut_BS" | Effect == "Good_Neut_Emo", "Pos_Neut", "Neg_Neut")),
-                EffectType = factor(EffectType, levels = c("Pos_Neg", "Pos_Neut", "Neg_Neut")))
-```
-
-```{r 'plot-exp5-effect', fig.cap="Effect size (Cohen's *d*) of Valence in Exp5.", warning=FALSE}
-df.ES_5 %>%
-  dplyr::filter(EffectType != "Pos_Neg") %>%
-  ggplot(., aes(x=EffectType, y=ES, color=EffectType, fill=EffectType)) + 
-  geom_pointrange(aes(ymin=ES - 1.96*sqrt(ES.var), ymax = ES + 1.96*sqrt(ES.var)), 
-                  position = position_dodge(width = 0.4),
-                  shape=18, size=1) +
-  geom_hline(yintercept=0, size=1, color='black') +
-  # ggtitle('Valence effect across different domains') +
-  coord_cartesian(ylim=c(-1.5, 1.5))+
-  scale_color_brewer(palette = "Dark2")+
-  scale_fill_brewer(palette = "Dark2")+
-  ylab(expression(paste("Effect size: Cohen's ",italic("d"), sep = ' '))) +
-  xlab('Contrast between different valences') +
-  facet_grid(DVtype ~ Domain) +
-  apatheme_x
-```
-
-In this part, we analyzed the results from experiment 5, which included positive, neutral, and negative valence from four different domains: morality, emotion, aesthetics of human, and aesthetics of scene. We found interaction between valence and domain for both *d* prime and RT (match trials). A common pattern appeared in all four domains: each domain showed a binary results instead of gradient on both *d* prime and RT. For morality, aesthetics of human, and aesthetics of scene, there was a positivity effect where the positive conditions had advantages over both neutral (greater *d* prime and faster RT), while neutral and negative conditions didn't differ from each other. But for the emotional stimuli, there was a reversed negativity effect: positive and neutral conditions were not significantly different from each other but both had advantage over negative conditions. See supplementary materials for detailed statistics. Also note that the effect size in moral domain is smaller than the aesthetic domains (beauty of people and beauty of scene). See Figure \@ref(fig:plot-exp5-effect).
-
 ## Self-reported personal distance
 
-```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
 # prepare questionnaire data
 df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -2020,7 +1885,7 @@ df.scale.fs <- df.scale.fs %>%
 ```
 
 
-```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
+```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE, eval=FALSE}
 # Boxplot
 p_dist_1 <- df.perdist %>% 
   tidyr::pivot_longer(., cols = SelfGood:NeutBad,
@@ -2131,7 +1996,7 @@ The reliability of questionnaires can be found in [@Liu_2020_JOPD]. We calculate
 To make sure that what we found were not false positive, we used two method to ensure the robustness of our analysis. first, we split the data into two half: the data with self and without, then, we used the conditional random forest to find the robust correlation in the exploratory data (with self reference) that can be replicated in the confirmatory data (without the self reference). The robust correlation were then analyzed using SEM
 
 
-```{r correlation analysis, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r correlation analysis, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
 ### failed attempt:
 # We tried to first correlate the DDM parameters and the questionnaire separately for self-referential and other-referential, and then validation the correlation using data of experiment without self/other-referential. But the sample size for the correlation between questionnaires and behavioral results from experiment without identity are too small n = 16. Therefore, we give up this exploration-validation approach.
 
@@ -2277,7 +2142,7 @@ for (param1 in param1_names) {
 
 Instead of use the exploratory correlation analysis, we used a more principled way to explore the correlation between parameter of HDDM (*v*, *t*, and *a*) and scale scores and person distance. 
 
-```{r get plots of correlation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r get plots of correlation, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
 # Permutation
 set.seed(12345)
 permutation <- function(df) {
@@ -2361,7 +2226,7 @@ We didn't find the correlation between scale scores and the parameters of HDDM, 
 
 First, boundary separation (*a*) of moral good condition was correlated with both Self-Bad distance ($r = 0.198$, 95% CI [], $p = 0.0063$) and Neutral-Bad distance ($r = 0.1571$, 95% CI [], $p = 0.031$). At the same time, the non-decision time is negatively correlated with Self-Bad distance ($r = 0.169$, 95% CI [], $p = 0.0197$). See Figure \@ref(fig:plot-corr-1).
 
-```{r plot-corr-1, fig.cap="Correlation between moral identity and boundary separation of good condition; moral self-image and drift rate of good condition", fig.width=8, warning=FALSE}
+```{r plot-corr-1, fig.cap="Correlation between moral identity and boundary separation of good condition; moral self-image and drift rate of good condition", fig.width=8, warning=FALSE, eval=FALSE}
 library(patchwork)
 corr_plot_list[[3]] + corr_plot_list[[6]] + corr_plot_list[[5]]  + 
            boot_plot_list[[3]] + boot_plot_list[[6]] + boot_plot_list[[5]]+ plot_layout(ncol = 3)
@@ -2369,7 +2234,7 @@ corr_plot_list[[3]] + corr_plot_list[[6]] + corr_plot_list[[5]]  +
 
 Second, we found the boundary separation of neutral condition is positively correlated with the personal distance between self and good distance ($r = 0.189$, 95% CI [], $p = 0.036$), but negatively correlated with self-neutral distance($r = -0.183$, 95% CI [], $p = 0.042$). Also, the drift rate of the neutral condition is positively correlated with the Self-Bad distance ($r = 0.177$, 95% CI [], $p = 0.048$).a. See figure \@ref(fig:plot-corr-2)
 
-```{r plot-corr-2, fig.cap="Correlation between personal distance and boundary separation of neutral condition", fig.width=8, warning=FALSE}
+```{r plot-corr-2, fig.cap="Correlation between personal distance and boundary separation of neutral condition", fig.width=8, warning=FALSE, eval=FALSE}
 library(patchwork)
 corr_plot_list[[1]] + corr_plot_list[[2]]  + corr_plot_list[[4]] + 
            boot_plot_list[[1]] + boot_plot_list[[2]] + boot_plot_list[[4]] + plot_layout(ncol = 3)
