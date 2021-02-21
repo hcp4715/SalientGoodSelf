@@ -29,7 +29,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that when geometric shapes that associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
+ To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that shapes associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
   
  <!-- https://tinyurl.com/ybremelq -->
   
@@ -209,19 +209,19 @@ rm(list=ls()[! ls() %in% var_list])
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
 df1c.v_meta$ExpID <- 'Exp1c'
-df2.v_meta$ExpID <- 'Exp2'
+df2.v_meta$ExpID  <- 'Exp2'
 df3a.v_meta$ExpID <- 'Exp3a'
 df3b.v_meta$ExpID <- 'Exp3b'
 df4a.v_meta$ExpID <- 'Exp4a'
 df4b.v_meta$ExpID <- 'Exp4b'
-df5.v_meta$ExpID <- 'Exp5'
+df5.v_meta$ExpID  <- 'Exp5'
 df6a.v_meta$ExpID <- 'Exp6a'
 df6b.v_meta$ExpID <- 'Exp6b'
 df7a.v_meta$ExpID <- 'Exp7a'
 df7b.v_meta$ExpID <- 'Exp7b'
 ```
 
-```{r define_funs,echo=FALSE,results='hide'}
+```{r define_funs, echo=FALSE, results='hide'}
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
 # for 1a, 1b, 1c, 2, 6a
 fun_sdt_val <- function(exp_name) {
@@ -1019,9 +1019,263 @@ df_m3_rt_plot %>%
 
 # Part 2: interaction between valence and identity
 
-In this part, we report three experiments that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing.
+In this part, we report three experiments (3a, 3b, 4a, 4b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing. These analysis included 108 participants.
 
+```{r prepare data for second meta, echo=FALSE, results='hide', warning=FALSE}
+### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
+selected_columns <- c('ExpID', 'Site', 'Subject','Age', 'Sex', 'Matchness', 'Identity', 'Valence', 'RESP', 'ACC','RT')
+df_ms <- dplyr::bind_rows(df3a.v_meta[selected_columns],
+                          df3b.v_meta[selected_columns],
+                          df6b.v_meta[selected_columns]) %>%
+  dplyr::mutate(ExpID_new = paste(ExpID, Site, sep = "_")) %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')))
 
+df_ms_subj <- df_ms %>%
+  dplyr::group_by(ExpID_new, Site) %>%
+  dplyr::summarize(N = n_distinct(Subject),
+                   N_trial = length(Subject),
+                   Exp_conds = 6,
+                   trial_per_cond = round((length(Subject)/6)/N, 0))
+
+df_ms <- df_ms %>%
+  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
+                Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  dplyr::select(ExpID_new, Subject, Matchness, Identity,Valence, RESP, ACC, RT, ismatch, saymatch) %>%
+  dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
+
+# plot the nested structure of the data
+with(df_ms, table(Subject, ExpID_new)) %>%
+  image(
+    col = grey.colors(80, start = 1, end = 0), 
+    axes = TRUE, 
+    xlab = "Subject", 
+    ylab = "ExpID"
+  )
+```
+
+```{r second meta sdt, echo=FALSE, results='hide', warning=FALSE}
+# fit a three-level hierarchical model for SDT of moral self, didn't specify the prior; dummy coding
+# 
+# Note: initalization failed for a few times for full model. need to re-consider the model
+sdt_ms_m1 <- df_ms %>%
+        dplyr::mutate(Subject = as.factor(Subject),
+                      ExpID_new = as.factor(ExpID_new)) %>%
+        brms::brm(saymatch ~ 0 + Identity:Valence + ismatch:Identity:Valence + 
+                          (0 + Identity:Valence + ismatch:Identity:Valence | ExpID_new) + 
+                          (0 + Identity:Valence + ismatch:Identity:Valence | ExpID_new:Subject),
+                  family = bernoulli(link="probit"),
+                  data = .,
+                  chains = 6,
+                  iter = 4000,
+                  thin = 2,
+                  control = list(adapt_delta = .95),
+                  cores = parallel::detectCores(),
+                  backend = 'cmdstanr',  # with cmdstanr
+                  file = here::here("glmmModels/sdt_ms_DummyCode_3_level"))
+# m <- df %>%
+# dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+# dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
+#         saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
+#                             (Matchness == 'Mismatch' & ACC == 0), 1, 0),
+#         Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
+#         Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+# brms::brm(saymatch ~ 0 + Identity:Valence + ismatch:Identity:Valence + 
+#       (0 + Identity:Valence + ismatch:Identity:Valence | Subject),
+#     family = bernoulli(link="probit"),
+#     data = .,
+#     control = list(adapt_delta = .99),
+#     iter = 4000,
+#     thin = 2,
+#     cores = parallel::detectCores(),
+#     file = here::here(m_name))
+  
+summary(sdt_ms_m1)
+
+# # Get the variables in the model
+var_name_m1 <- tidybayes::get_variables(sdt_ms_m1)
+
+# # get the variable names start with 'b_', i.e., the population level parameters
+pop_param_names <- grep('^b_', var_name_m1, value = TRUE)
+
+#### test the code in tidybayes: https://github.com/mjskay/tidybayes/blob/master/R/spread_draws.R#L324
+all_variables_names <- c("b_intercept", "b_A1B1", "b_A2B1", "b_A2B2")
+variable_names <- 'b_*'
+
+# as in current tidyverse:
+variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
+variable_names_index = grepl(variable_regex, all_variables_names) # nothing is selected
+print(variable_names_index)
+
+# update for the regex
+variable_regex2 = paste0("^(", paste(variable_names, collapse = "|"), ")")
+variable_names_index2 = grepl(variable_regex2, all_variables_names)
+print(variable_names_index2)
+
+#### end of the test code, thes snapet of code was used for an issue on git: https://github.com/mjskay/tidybayes/issues/282
+
+# plot the population level parameter (d prime)
+sdt_ms_m1_p <- sdt_ms_m1 %>%
+  # get the traces of population level parameters
+  tidybayes::gather_draws(`b_IdentitySelf:ValenceNeutral`, `b_IdentityOther:ValenceNeutral`,
+                          `b_IdentitySelf:ValenceBad`    , `b_IdentityOther:ValenceBad`,
+                          `b_IdentitySelf:ValenceGood`   , `b_IdentityOther:ValenceGood`,
+                          `b_IdentitySelf:ValenceNeutral:ismatch`, `b_IdentityOther:ValenceNeutral:ismatch`,
+                          `b_IdentitySelf:ValenceBad:ismatch`, `b_IdentityOther:ValenceBad:ismatch`,
+                          `b_IdentitySelf:ValenceGood:ismatch`, `b_IdentityOther:ValenceGood:ismatch`) %>%
+  # create two columns for two independent factors.
+  dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
+                                           grepl("Bad", .variable) ~"Bad",
+                                           grepl("Good", .variable) ~"Good"),
+                Identity = dplyr::case_when(grepl("Self", .variable) ~ "Self",
+                                           grepl("Other", .variable) ~"Other"),
+                params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
+                                           !grepl("ismatch", .variable) ~"criterion"),
+                params = factor(params, levels = c('d prime', 'criterion')),
+                Identity = factor(Identity, levels = c("Self", "Other")),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+  # select only d prime
+  dplyr::filter(params == 'd prime') %>%
+  ggplot2::ggplot(aes(x = Valence, y = .value)) +
+  tidybayes::stat_halfeye(aes(fill = Identity, alpha = 0.7)) + # position=position_dodge(width = 0.1)
+  geom_slabinterval(ymin = 0, ymax = 4) +
+  stat_summary(aes(group = Identity, color = Identity), fun = mean, geom = "line") +
+  ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
+  # ylim(0, 4) +
+  # xlab("Valence") +
+  #facet_grid(cols = vars(Identity)) + # , scales = "free_y"
+  theme_classic() # + 
+  # theme(axis.title.x = element_blank())
+
+#### plot both overall parameters and experimental levels.
+
+df_m1_post_sdt_exp <- sdt_val_m1 %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+pop_mean <- sdt_val_m1 %>%
+  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+df_sdt_m1_pop <- sdt_val_m1 %>% 
+  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
+                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
+                          `b_ValenceGood:ismatch`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+df_m1_post_sdt_exp_update <- merge(df_sdt_m1_pop, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population level value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m1_plot_sdt <- df_sdt_m1_pop %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>%
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., df_m1_post_sdt_exp_update) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
+                term = dplyr::case_when((term == "ValenceBad") ~ "c_Bad",
+                                    (term == "ValenceNeutral") ~ "c_Neutral",
+                                    (term == "ValenceGood") ~ "c_Good",
+                                    (term == "ValenceBad:ismatch") ~ "dprime_Bad",
+                                    (term == "ValenceNeutral:ismatch") ~ "dprime_Neutral",
+                                    (term == "ValenceGood:ismatch") ~ "dprime_Good"),
+                term = factor(term, levels = c("c_Bad", "c_Neutral", "c_Good",
+                                               "dprime_Bad", "dprime_Neutral", "dprime_Good"))) 
+
+df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_c = c_Good - c_Bad,                           # calculate the differences between conditions
+                diff_GN_c = c_Good - c_Neutral,
+                diff_BN_c = c_Bad - c_Neutral,
+                diff_GB_dprm = dprime_Good - dprime_Bad,
+                diff_GN_dprm = dprime_Good - dprime_Neutral,
+                diff_BN_dprm = dprime_Bad - dprime_Neutral) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_c,diff_GN_c, diff_BN_c,
+               diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
+  tidyr::pivot_longer(cols = diff_GB_c:diff_BN_dprm, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_c','diff_GN_c', 'diff_BN_c',
+                                                         'diff_GB_dprm', 'diff_GN_dprm', 'diff_BN_dprm')))
+
+# plot the posterior of the d prime
+# use the overall mean values as the vlines
+vlines <- df_m1_plot_sdt %>% 
+        tidyr::separate(term, c('params', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(params == 'dprime') %>%
+        dplyr::filter(condition == "Overall") %>%
+        dplyr::group_by(Valence) %>% 
+        dplyr::summarize(Mean = mean(value)) # %>%
+        # dplyr::arrange(Mean)
+
+# THIS is the one which the final plot will based on!!!
+p_dprime1 <- df_m1_plot_sdt %>%
+        tidyr::separate(term, c('params', 'Valence')) %>%
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(params == 'dprime') %>%
+        dplyr::rename(Experiments = condition) %>%
+        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
+        #               Experiments = fct_rev(Experiments)) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        labs(x=expression('Posteior distribution of '~italic(d)~' prime')) + 
+        theme_apa()
+
+# plot the posterior of the difference between d prime
+df_m1_plot_sdt_diff %>%
+  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) +
+  xlab(expression(paste("Valence effect on", italic("d"), "prime", sep = ' '))) + 
+  facet_wrap( ~ term_diff, # scales = "free_y",
+               nrow = 1,
+               labeller = label_parsed)
+
+# plot the posterior of difference between c, supplementary figure
+df_m1_plot_sdt_diff %>%
+  dplyr::filter(str_detect(term_diff, '_c')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) +
+  xlab("Valence effect on criterion in SDT") + 
+  facet_wrap( ~ term_diff, # scales = "free_y",
+               nrow = 1,
+               labeller = label_parsed)
+
+# posterior predictive check
+#pp_check(sdt_val_m1)
+#pp_sdt_val_m1 <- 
+#  brms::pp_check(sdt_val_m1, nsamples = 1e2) + 
+#  ggtitle("PPC sdt_val_m1") +
+#  theme_bw (base_size = 10) + 
+#  theme(legend.position = "none") +
+#  xlim(-0.5, 1.5)
+```
 
 # Part 3: Implicit binding between valence and identity
 
