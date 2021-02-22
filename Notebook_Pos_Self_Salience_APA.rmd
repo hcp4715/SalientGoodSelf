@@ -625,30 +625,30 @@ p_dprime1 <- df_m1_plot_sdt %>%
         theme_apa()
 
 # plot the posterior of the difference between d prime
-df_m1_plot_sdt_diff %>%
+p_dprime1_diff <- df_m1_plot_sdt_diff %>%
   dplyr::filter(str_detect(term_diff, '_dprm')) %>%
   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) +
-  xlab(expression(paste("Valence effect on", italic("d"), "prime", sep = ' '))) + 
+  xlab(expression(paste("Effect of valence on ", italic("d"), "prime", sep = ' '))) + 
   facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
                labeller = label_parsed)
 
-# plot the posterior of difference between c, supplementary figure
-df_m1_plot_sdt_diff %>%
-  dplyr::filter(str_detect(term_diff, '_c')) %>%
-  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) +
-  xlab("Valence effect on criterion in SDT") + 
-  facet_wrap( ~ term_diff, # scales = "free_y",
-               nrow = 1,
-               labeller = label_parsed)
+# # plot the posterior of difference between c, supplementary figure
+# df_m1_plot_sdt_diff %>%
+#   dplyr::filter(str_detect(term_diff, '_c')) %>%
+#   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+#   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+#   tidybayes::stat_halfeye() +
+#   geom_vline(xintercept = 0, linetype = "dashed") +
+#   scale_fill_manual(values = c('gray80', 'skyblue')) +
+#   xlab("Valence effect on criterion in SDT") + 
+#   facet_wrap( ~ term_diff, # scales = "free_y",
+#                nrow = 1,
+#                labeller = label_parsed)
 
 # posterior predictive check
 #pp_check(sdt_val_m1)
@@ -666,17 +666,17 @@ set.seed(123)
 random_sub <- sample(unique(df_moral$Subject), 10)
 random_sub
 
-# plot the distribution of 10 randomly selected participants
-df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>%  # log RT in seconds
-  dplyr::filter(ACC == 1) %>%          # only correct trials
-  dplyr::filter(Subject %in% random_sub) %>%
-  dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
-                RT_log = log(RT_sec))%>%
-  ggplot2::ggplot(., aes(x=RT_log)) + 
-  geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
-  facet_wrap(~Subject, nrow = 2) +  # One panel per id
-  coord_cartesian(xlim=c(-2, 1))
+# # plot the distribution of 10 randomly selected participants
+# df_moral %>%
+#   dplyr::mutate(RT_sec = RT/1000) %>%  # log RT in seconds
+#   dplyr::filter(ACC == 1) %>%          # only correct trials
+#   dplyr::filter(Subject %in% random_sub) %>%
+#   dplyr::mutate(cond = paste(Matchness, Valence, sep = "_"),
+#                 RT_log = log(RT_sec))%>%
+#   ggplot2::ggplot(., aes(x=RT_log)) + 
+#   geom_histogram(aes(fill=cond), alpha=0.5, bins=60) + 
+#   facet_wrap(~Subject, nrow = 2) +  # One panel per id
+#   coord_cartesian(xlim=c(-2, 1))
 
 # fit a three-level hierarchical model for RT, didn't specify the prior, shifted_lognormal, effective coding
 RT_val_m1 <- df_moral %>%
@@ -856,7 +856,7 @@ df_m1_plot_rt_diff  %>%
               labeller = label_parsed)
 
 # plot the posterior of matching trials
-df_m1_plot_rt_diff %>%
+p_rt1_diff <- df_m1_plot_rt_diff %>%
   dplyr::filter(str_detect(term_diff, '_M')) %>%
   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
@@ -875,7 +875,8 @@ df_m1_plot_rt_diff %>%
 ```{r plot-bayes-meta-1, fig.cap="Effect of moral valence on RT and d'", fig.height=9, fig.width=15, warning=FALSE}
 library(patchwork)
 # (p_rt1 | p_dprime1)
-p_rt1 + p_dprime1 + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+p_rt1 + p_dprime1 +
+        p_rt1_diff + p_dprime1_diff + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 2, byrow = TRUE)
 ```
 
 See Figure \@ref(fig:plot-bayes-meta-1).
@@ -1060,7 +1061,7 @@ with(df_ms, table(Subject, ExpID_new)) %>%
 ```{r second meta sdt, echo=FALSE, results='hide', warning=FALSE}
 # fit a three-level hierarchical model for SDT of moral self, didn't specify the prior; dummy coding
 # 
-# Note: initalization failed for a few times for full model. need to re-consider the model
+# Note: initialization failed for a few times for full model. need to re-consider the model
 sdt_ms_m1 <- df_ms %>%
         dplyr::mutate(Subject = as.factor(Subject),
                       ExpID_new = as.factor(ExpID_new)) %>%
@@ -1072,7 +1073,7 @@ sdt_ms_m1 <- df_ms %>%
                   chains = 6,
                   iter = 4000,
                   thin = 2,
-                  control = list(adapt_delta = .95),
+                  control = list(adapt_delta = .90),
                   cores = parallel::detectCores(),
                   backend = 'cmdstanr',  # with cmdstanr
                   file = here::here("glmmModels/sdt_ms_DummyCode_3_level"))
@@ -1120,12 +1121,13 @@ print(variable_names_index2)
 # plot the population level parameter (d prime)
 sdt_ms_m1_p <- sdt_ms_m1 %>%
   # get the traces of population level parameters
-  tidybayes::gather_draws(`b_IdentitySelf:ValenceNeutral`, `b_IdentityOther:ValenceNeutral`,
-                          `b_IdentitySelf:ValenceBad`    , `b_IdentityOther:ValenceBad`,
-                          `b_IdentitySelf:ValenceGood`   , `b_IdentityOther:ValenceGood`,
-                          `b_IdentitySelf:ValenceNeutral:ismatch`, `b_IdentityOther:ValenceNeutral:ismatch`,
-                          `b_IdentitySelf:ValenceBad:ismatch`, `b_IdentityOther:ValenceBad:ismatch`,
-                          `b_IdentitySelf:ValenceGood:ismatch`, `b_IdentityOther:ValenceGood:ismatch`) %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+  # tidybayes::gather_draws(`b_IdentitySelf:ValenceNeutral`, `b_IdentityOther:ValenceNeutral`,
+  #                         `b_IdentitySelf:ValenceBad`    , `b_IdentityOther:ValenceBad`,
+  #                         `b_IdentitySelf:ValenceGood`   , `b_IdentityOther:ValenceGood`,
+  #                         `b_IdentitySelf:ValenceNeutral:ismatch`, `b_IdentityOther:ValenceNeutral:ismatch`,
+  #                         `b_IdentitySelf:ValenceBad:ismatch`, `b_IdentityOther:ValenceBad:ismatch`,
+  #                         `b_IdentitySelf:ValenceGood:ismatch`, `b_IdentityOther:ValenceGood:ismatch`) %>%
   # create two columns for two independent factors.
   dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
                                            grepl("Bad", .variable) ~"Bad",
@@ -1152,22 +1154,18 @@ sdt_ms_m1_p <- sdt_ms_m1 %>%
 
 #### plot both overall parameters and experimental levels.
 
-df_m1_post_sdt_exp <- sdt_val_m1 %>% 
+df_ms_sdt_m1_post_exp <- sdt_ms_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
-pop_mean <- sdt_val_m1 %>%
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
+df_ms_sdt_m1_pop_mean <- sdt_ms_m1 %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-df_sdt_m1_pop <- sdt_val_m1 %>% 
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
+df_ms_sdt_m1_pop <- sdt_ms_m1 %>% 
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
@@ -1175,31 +1173,34 @@ df_sdt_m1_pop <- sdt_val_m1 %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-df_m1_post_sdt_exp_update <- merge(df_sdt_m1_pop, df_m1_post_sdt_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+df_ms_sdt_m1_post_exp_update <- merge(df_ms_sdt_m1_pop, df_ms_sdt_m1_post_exp, by = c('term','.chain','.iteration', '.draw'), all = T) %>%
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population level value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_plot_sdt <- df_sdt_m1_pop %>%
+df_ms_sdt_m1_plot <- df_ms_sdt_m1_pop %>%
   dplyr::mutate(condition = 'Overall') %>%
   dplyr::rename(value = pop_mean) %>%
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., df_m1_post_sdt_exp_update) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+  dplyr::bind_rows(., df_ms_sdt_m1_post_exp_update) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp3a_THU", "Exp3b_WZU", "Exp6b_THU",
+                                                         "Overall")),
                 condition = forcats::fct_rev(condition), # reverse the order because the plot function auto reverse.
-                term = dplyr::case_when((term == "ValenceBad") ~ "c_Bad",
-                                    (term == "ValenceNeutral") ~ "c_Neutral",
-                                    (term == "ValenceGood") ~ "c_Good",
-                                    (term == "ValenceBad:ismatch") ~ "dprime_Bad",
-                                    (term == "ValenceNeutral:ismatch") ~ "dprime_Neutral",
-                                    (term == "ValenceGood:ismatch") ~ "dprime_Good"),
-                term = factor(term, levels = c("c_Bad", "c_Neutral", "c_Good",
-                                               "dprime_Bad", "dprime_Neutral", "dprime_Good"))) 
+                Valence = dplyr::case_when(grepl("Neutral", term) ~ "Neutral",
+                                           grepl("Bad", term) ~"Bad",
+                                           grepl("Good", term) ~"Good"),
+                Identity = dplyr::case_when(grepl("Self", term) ~ "Self",
+                                           grepl("Other", term) ~"Other"),
+                params = dplyr::case_when(grepl("ismatch", term) ~ "dprime",
+                                           !grepl("ismatch", term) ~"c"),
+                params = factor(params, levels = c('dprime', 'c')),
+                Identity = factor(Identity, levels = c("Self", "Other")),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
+                ) 
 
-df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
+df_ms_sdt_m1_plot_diff <- df_ms_sdt_m1_plot %>%
+  tidyr::unite(term, c('params', 'Valence')) %>%
   tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
   dplyr::mutate(diff_GB_c = c_Good - c_Bad,                           # calculate the differences between conditions
                 diff_GN_c = c_Good - c_Neutral,
@@ -1207,7 +1208,7 @@ df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
                 diff_GB_dprm = dprime_Good - dprime_Bad,
                 diff_GN_dprm = dprime_Good - dprime_Neutral,
                 diff_BN_dprm = dprime_Bad - dprime_Neutral) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`, Identity,
                diff_GB_c,diff_GN_c, diff_BN_c,
                diff_GB_dprm, diff_GN_dprm, diff_BN_dprm) %>%
   tidyr::pivot_longer(cols = diff_GB_c:diff_BN_dprm, names_to = "term_diff", values_to =  "value") %>%  # wide to long
@@ -1216,35 +1217,34 @@ df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
 
 # plot the posterior of the d prime
 # use the overall mean values as the vlines
-vlines <- df_m1_plot_sdt %>% 
-        tidyr::separate(term, c('params', 'Valence')) %>% 
+vlines <- df_ms_sdt_m1_plot %>% 
+        #tidyr::separate(term, c('params', 'Identity', 'Valence')) %>% 
         dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
         dplyr::filter(params == 'dprime') %>%
         dplyr::filter(condition == "Overall") %>%
-        dplyr::group_by(Valence) %>% 
+        dplyr::group_by(Identity, Valence) %>% 
         dplyr::summarize(Mean = mean(value)) # %>%
         # dplyr::arrange(Mean)
 
 # THIS is the one which the final plot will based on!!!
-p_dprime1 <- df_m1_plot_sdt %>%
-        tidyr::separate(term, c('params', 'Valence')) %>%
-        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+p_ms_dprime1 <- df_ms_sdt_m1_plot %>%
+        # tidyr::separate(term, c('params', 'Valence')) %>%
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
         dplyr::filter(params == 'dprime') %>%
         dplyr::rename(Experiments = condition) %>%
-        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
-        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
-        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
-        #               Experiments = fct_rev(Experiments)) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        facet_wrap(~Identity) + 
         geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
         labs(x=expression('Posteior distribution of '~italic(d)~' prime')) + 
         theme_apa()
 
 # plot the posterior of the difference between d prime
-df_m1_plot_sdt_diff %>%
+p_ms_dprime1_diff <- df_ms_sdt_m1_plot_diff %>%
   dplyr::filter(str_detect(term_diff, '_dprm')) %>%
   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
@@ -1266,15 +1266,201 @@ df_m1_plot_sdt_diff %>%
   facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
                labeller = label_parsed)
+```
 
-# posterior predictive check
-#pp_check(sdt_val_m1)
-#pp_sdt_val_m1 <- 
-#  brms::pp_check(sdt_val_m1, nsamples = 1e2) + 
-#  ggtitle("PPC sdt_val_m1") +
-#  theme_bw (base_size = 10) + 
-#  theme(legend.position = "none") +
-#  xlim(-0.5, 1.5)
+```{r second meta rt, echo=FALSE, results='hide', warning=FALSE}
+# fit a three-level hierarchical model for RT, didn't specify the prior, shifted_lognormal, effective coding
+RT_ms_m1 <- df_ms %>%
+  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+  dplyr::filter(ACC == 1) %>%         # only correct trials
+  brms::brm(RT_sec ~ ismatch*Identity*Valence + 
+              (ismatch*Identity*Valence | ExpID_new) +   
+              (ismatch*Identity*Valence | ExpID_new:Subject),
+            family=shifted_lognormal(),
+            data = .,
+            chains = 6,
+            control = list(adapt_delta = .90),
+            # iter = 4000,
+            # thin = 2,
+            cores = parallel::detectCores(),
+            backend = 'cmdstanr',  # with cmdstanr
+            file = here::here("glmmModels/RT_ms_DummyCode_3_level"))
+
+summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
+# pp_check(RT_val_m1)
+
+# Will try dummy coding later, but the running time is long: Total execution time: 124845.8 seconds = 34.7 hours
+# RT_val_m1 <- df_moral %>%
+#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#   dplyr::filter(ACC == 1) %>%         # only correct trials
+#   brms::brm(RT_sec ~ Valence*ismatch +
+#               (Valence*ismatch | ExpID_new) +
+#               (Valence*ismatch  | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             control = list(adapt_delta = .95),
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_val_DummyCode_3_level"))
+# 
+# summary(RT_val_m1)
+
+#Population-Level Effects: 
+#                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+#Intercept                  -0.40      0.06    -0.52    -0.27 1.01      837     1301  # baseline: mismatch:neutral
+#ValenceBad                  0. 01      0.00     0.00     0.02 1.00     1752     2540  # mismatch:bad - mismatch:neutral = 0.01
+#ValenceGood                -0.03      0.00    -0.04    -0.02 1.00     1237     2219  # mismatch:Good - mismatch:neutral = -0.03
+#ismatch_num                -0.07      0.01    -0.09    -0.06 1.00     1638     1957  # match:neutral - mismatch:neutral = -0.07
+#ValenceBad:ismatch_num      0.02      0.01     0.00     0.04 1.00     1597     2380  # match:bad - ValenceBad -ismatch_num = 0.02
+#ValenceGood:ismatch_num    -0.05      0.01    -0.07    -0.03 1.00     1424     1775  # match:good - ValenceGood- ismatch_num = -0.05
+
+# Mismatch:Neutral - Intercept = -0.4
+# Mismatch:Bad     - Intercept  + ValenceBad = -0.4 + 0.01 = -0.39
+# Mismatch:Good    - Intercept  + ValenceGood = -0.4 - 0.03 = -0.43
+# Match: Neutral   - Intercept  + ismatch_num = -0.4 - 0.07 = -0.47
+# Match: Bad       - Intercept  + ismatch_num + ValenceBad+ ValenceBad:ismatch_num = -0.4 + 0.01 + 0.02 =  -0.37 
+# Match: Good      - Intercept  + ismatch_num + ValenceGood+ ValenceGood:ismatch_num = -0.4 + (-0.03) + (-0.05) = -0.48
+
+# Get the variables in the model 1
+# RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
+
+df_m1_post_rt_exp <- RT_val_m1 %>% 
+  tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+  dplyr::rename(value = r_ExpID_new)
+
+df_rt_m1_pop_mean <- RT_val_m1 %>%
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+  tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+df_rt_m1_pop <- RT_val_m1 %>% 
+  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+                          `b_ValenceGood:ismatch_num`) %>%
+  dplyr::rename(term = .variable,
+                pop_mean = .value) %>%
+  #tidyr::separate(term, c(NA, 'term'), "_") 
+  dplyr::ungroup() %>%
+  dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+df_m1_post_rt_exp_update <- merge(df_rt_m1_pop, df_m1_post_rt_exp, 
+# rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
+                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+  dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+  dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m1_plot_rt <- df_rt_m1_pop %>%
+  dplyr::mutate(condition = 'Overall') %>%
+  dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
+  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+  dplyr::bind_rows(., df_m1_post_rt_exp_update) %>%
+  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                condition = forcats::fct_rev(condition)) %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(Neutral_NM = Intercept,               # calculate the differences between coditions
+                Bad_NM = Intercept  + ValenceBad,
+                Good_NM = Intercept  + ValenceGood ,
+                Neutral_M = Intercept  + ismatch_num,
+                Bad_M = Intercept  + ismatch_num + ValenceBad + `ValenceBad:ismatch_num`,
+                Good_M = Intercept  + ismatch_num + ValenceGood+ `ValenceGood:ismatch_num`) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               Neutral_NM, Bad_NM, Good_NM,
+               Neutral_M, Bad_M, Good_M) %>%
+  tidyr::pivot_longer(cols = Neutral_NM:Good_M, names_to = "term", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term = factor(term, levels = c('Good_NM', 'Neutral_NM', 'Bad_NM',
+                                               'Good_M',  'Neutral_M',  'Bad_M')),
+                value = exp(value),
+                value = value * 1000) 
+
+# plot the posterior of the d prime
+# use the overall mean values as the vlines
+vlines <- df_m1_plot_rt %>% 
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'M') %>%
+        dplyr::filter(condition == "Overall") %>%
+        dplyr::group_by(Valence) %>% 
+        dplyr::summarize(Mean = mean(value)) # %>%
+        # dplyr::arrange(Mean)
+
+# THIS is the one which the final plot will based on!!!
+p_rt1 <- df_m1_plot_rt %>%
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'M') %>%
+        dplyr::rename(Experiments = condition) %>%
+        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
+        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
+        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
+        #               Experiments = fct_rev(Experiments)) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        labs(x=expression('Posteior distribution of reaction times')) + 
+        theme_apa()
+
+
+df_m1_plot_rt_diff <- df_m1_plot_rt %>%
+  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+  dplyr::mutate(diff_GB_NM = Good_NM - Bad_NM,               # calculate the differences between coditions
+                diff_GN_NM = Good_NM - Neutral_NM,
+                diff_BN_NM = Bad_NM - Neutral_NM,
+                diff_GB_M = Good_M - Bad_M, 
+                diff_GN_M = Good_M - Neutral_M,
+                diff_BN_M = Bad_M - Neutral_M,) %>%
+  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+               diff_GB_M, diff_GN_M, diff_BN_M) %>%
+  tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+# 
+# df_m1_rt_plot %>% 
+#   dplyr::group_by(condition, term_diff, .chain) %>%
+#   dplyr::tally()
+
+# df_m1_rt_mean <- df_m1_rt_plot %>%
+#   #tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
+#   #                        `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
+#   #                        `b_ValenceGood:ismatch_num`) %>%
+#   group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
+#   tidybayes::mean_hdci(value)  # get the high density continuous intervals
+
+# plot the posterior of mismatch
+df_m1_plot_rt_diff  %>%
+  dplyr::filter(str_detect(term_diff, '_NM')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  xlab("Effect (differences) of valence on RT (Mismatch trials)")+
+  facet_wrap( ~ term_diff, 
+              # scales = "free_y", 
+              nrow = 1,
+              labeller = label_parsed)
+
+# plot the posterior of matching trials
+p_rt1_diff <- df_m1_plot_rt_diff %>%
+  dplyr::filter(str_detect(term_diff, '_M')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  xlab("Effect of valence on RT (Match trials)") +
+  facet_wrap( ~ term_diff,
+              # scales = "free_y", 
+              nrow = 1,
+              labeller = label_parsed)
 ```
 
 # Part 3: Implicit binding between valence and identity
