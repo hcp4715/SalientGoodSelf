@@ -1405,7 +1405,7 @@ df7a_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7a_2016.csv'),header = T
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
         dplyr::rename(Subject = SubjectID, 
                       Sex = Gender,
-                      Matchness = Match,
+                      Matchness = Match,s
                       Valence = Morality,
                       ACC = Accuracy, 
                       RESP = ResponseKey) %>%    #

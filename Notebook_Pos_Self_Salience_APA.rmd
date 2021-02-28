@@ -29,7 +29,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effect of moral character in person perception and moral self-enhancement had been extensively studied, whether the moral character related information can impact lower level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching, by using the social associative learning paradigm. Participants first learned the association between moral character and visual cues (shapes), then they performed a perceptual matching task. The results showed that shapes associated with good moral character were prioritized, as compared to neutral or moral bad moral characters. This patterns of results were robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneously presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that human are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
+ To navigate in a complex social world, our cognitive system are evolved to be sensitive to social information. Among all these social informaiton, morality related information is of special interest. On the one hand, paying attention to other's moral character profitable for ourselves. On the other hand, we need to maitain a moral self-view that fit the soical norm. Though behavioral effects of moral character and moral self-enhancement had been extensively studied in psychology of morality, social perception, and identity, whether the moral character related information can impact low-level perceptual process is unknown. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching. Participants first learned the association between moral character and visual cues (shapes), then performed a perceptual matching task. The results showed that shapes associated with positive moral character were prioritized, as compared to neutral or negative bad moral characters. This pattern was robust after changing the words for moral charachter or using diagnostic behavioral as an proxy of mroal character. Also, this patterns were robust when changing simultaneous presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization or social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good moral character effect was strong when for the self-referential conditions but weak or non-exist for other-referential condition. We further tested the good-self based social categorization by presenting the identity or moral character information as task-irrelevant stimuli, so that we can distinguish between the unique good-self hypothesis and a more general good-person based social categorization hypothesis. We found that ....., these results suggested that participants are more senstive to the moral valence of self when the valence were task-irrelevant, but less sensitive to the identity of the morally good when the identity were task-irrelvant. These results added new evidence for the social vision and suggested the advantage of moral good depends on the self-relevant in perceptual decision-making task, instead of perspective free.
   
  <!-- https://tinyurl.com/ybremelq -->
   
@@ -88,7 +88,7 @@ Our information processing system had been evolved in a way that top-down factor
 
 [Morality is the central of human social life]. People experience a substantial amount of moral events in everyday life [e.g., @hofmann_morality_2014]. When experiencing these events, it always involves judging "good" or "bad". By judging "right" or "wrong", people are implicitly judging the moral character of involved parties as "good" vs. "bad" [@uhlmann_person-centered_2015]. The central role of moral character also supported by the extensive studies from person perception and social evaluation, where morality is a basic dimension for social evaluation [@goodwin_moral_2014; @goodwin_moral_2015; @abele_navigating_2020; @willis_first_2006] and the most important aspect to evaluate the continuity of identity [@strohminger_true_2017]. 
 
-Given the importance of moral character, to successfully navigate in a social world, a person needs to both evaluate others' moral character and behave in a way that she/he is perceived as a moral person, or at least not a morally bad person. Maintaining a moral self-view is as important as making judgments about others' moral character [@ellemers_psychology_2019]. Indeed, previous studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@strohminger_true_2017; @klein_maybe_2016; @tappin_illusion_2017]. Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to expose an unethical behavior depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
+Given the importance of moral character, to successfully navigate in a social world, a person needs to both evaluate others' moral character and behave in a way that she/he is perceived as a moral person, or at least not a morally bad person. Maintaining a moral self-view is as important as making judgments about others' moral character [@ellemers_psychology_2019]. Indeed, previous studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@klein_maybe_2016; @tappin_illusion_2017]. Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to expose an unethical behavior depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
 
 To date, however, as @freeman_dynamic_2011 put it, studies in the perception of moral character didn't try to explain the perceptual process, rather, they are trying to explain the higher-order social cognitive processes that come after. Essentially, these studies are perception of moral character without perceptual process. Without knowledge of perceptual processes, we can not have a full picture of how moral character is processed in our cognition. As an increasing attention is paid to perceptual process underlying social cognition, it's clear that perceptual processes are strongly influenced by social factors, such as group-categorization, stereotype [see @bagnis_toward_2019; @xiao_perceiving_2016;@stolier_functional_2016]. Given the importance of moral character and that moral character related information has strong influence on learning and memory [@stanley_moral_2019; @carlson_motivated_2020], one might expect that moral character related information could also play a role in perceptual process.
 
@@ -98,7 +98,7 @@ To explore the perceptual process of moral character and the underlying mechanis
 
 [exp1a, b, c, and exp2]
 
-[using associative learning task to study the moral character's influence on perception] Though it is theoretically possible that moral character related information may be prioritized in perceptual process, no empirical studies had directly explored this possibility. One difficulty of studying the perceptual process of moral character is that moral character is an inferred trait instead of observable feature. Usually, one needs necessary more sensory input, e.g., behavior history, to infer moral character of a person. For example, @anderson_visual_2011 asked participant to first study the behavioral description of faces and then asked them to perform a perceptual detection task. They assumed that by learning the behavioral description of a person (represented by a face), participants can acquire the moral related information about faces, and the associations could then bias the perceptual processing of the faces (but see @stein_no_2017). One drawback of this approach is that participants may differ greatly when inferring the moral character of the person from behavioral descriptions, given that notion what is morality itself is varying across population [@henrich_weirdest_2010, @jones_which_2021] and those descriptions and faces may themselves are idiosyncratic, therefore, introduced additional variance to the targeted effect.
+[using associative learning task to study the moral character's influence on perception] Though it is theoretically possible that moral character related information may be prioritized in perceptual process, no empirical studies had directly explored this possibility. One difficulty of studying the perceptual process of moral character is that moral character is an inferred trait instead of observable feature. Usually, one needs more sensory input, e.g., behavior history, to infer moral character of a person. For example, @anderson_visual_2011 asked participant to first study the behavioral description of faces and then asked them to perform a perceptual detection task. They assumed that by learning the behavioral description of a person (represented by a face), participants can acquire the moral related information about faces, and the associations could then bias the perceptual processing of the faces (but see @stein_no_2017). One drawback of this approach is that participants may differ greatly when inferring the moral character of the person from behavioral descriptions, given that notion what is morality itself is varying across population [@henrich_weirdest_2010, @jones_which_2021] and those descriptions and faces may themselves are idiosyncratic, therefore, introduced additional variance to the targeted effect.
 
 An alternative is to use abstract semantic concepts. Abstract concepts of moral character are used to describe and represent moral characters. These abstract concepts may be part of a dynamic network in which sensory cue, concrete behaviors and other information can activate/inhibit each other (e.g., aggressiveness) [@freeman_dynamic_2011; @amodio_social_2019]. If a concept of moral character (e.g., good person) is activated, it should be able to influence on the perceptual process of the visual cues through the dynamic network, especially when the perceptual decision-making is about the concept-cue association. In this case, abstract concepts of moral character may serve as signal of moral reputation (for others) or moral self-concept. Indeed, previous studies used the moral words and found that moral related information can be perceived faster [@gantman_moral_2014, but see, @firestone_enhanced_2015]. If moral character is an important in person perception, then, just as those other information such as races and stereotype [see @xiao_perceiving_2016], moral character related concepts also change the perceptual processes.
 
@@ -108,13 +108,13 @@ Our first question is, whether the words used the in the associative paradigm is
 
 ## Morality as a social-categorization?
 
-[possible explanations: person-based self-categorization vs. stimuli-based valence] The robust pattern from the first four experiments revealed a novel pattern that needs an explanation. It's novel because it's contradict with the "negative is stronger than positive" hypothesis in social psychology [@baumeister_bad_2001]. There are two major alternatives. One possible explanation is the value-based attention, which suggested that valuable stimuli is prioritized in our low-level cognitive processes. Because positive moral character is potentially rewarding, e.g., potential cooperators, it is valuable to individuals and therefore being prioritized. Most empirical evidence for value-based attention are from experiments used monetary reward. However, the monetary reward might be different greatly from the morality in social setting. So far, only a few empirical studies supported the value-based attention in social evaluation. XXX found that trustworthy faces attracted attention more than untrustworthy faces, probably because trustworthy faces are more likely to be the collaborative partners subsequent tasks, which will bring reward. Applying this explanation to the current setting need a further assumption that  participants automatically view the moral character related information as self-relevant objects. Only based on the objectified stimuli that we evaluate their value (rewardign or threatengin) to us [@juechems_where_2019; @reicher_perception_2016]. 
+[possible explanations: person-based self-categorization vs. stimuli-based valence] The robust pattern from the first four experiments revealed a novel pattern that needs an explanation. It's novel because it's contradict with the "negative is stronger than positive" hypothesis in social psychology [@baumeister_bad_2001]. There are two major alternatives. One possible explanation is the value-based attention, which suggested that valuable stimuli is prioritized in our low-level cognitive processes. Because positive moral character is potentially rewarding, e.g., potential cooperators, it is valuable to individuals and therefore being prioritized. Most empirical evidence for value-based attention are from experiments used monetary reward. However, the monetary reward might be different greatly from the morality in social setting. So far, only a few empirical studies supported the value-based attention in social evaluation. XXX found that trustworthy faces attracted attention more than untrustworthy faces, probably because trustworthy faces are more likely to be the collaborative partners subsequent tasks, which will bring reward. Applying this explanation to the current setting need a further assumption that  participants automatically view the moral character related information as self-relevant objects. Only based on the objectified stimuli that we evaluate their value (rewarding or threatening) to us [@juechems_where_2019; @reicher_perception_2016]. 
 
-Another possibility is that we will perceive those moral character not as objects but as person, and automatic categorize whether they are ingroup or ougroup, that is, the social categorization process. This account assumed that moral character served as a way to categorize other. In the first four experiments' situation, the identity of the moral character is ambiguous, participants may automatically categorize morally good people as ingroup and therefore preferentially processed these information. 
+Another possibility is that we will perceive those moral character not as objects but as person, and automatic categorize whether they are in-group or out-group, instead of calculating their value to us. This account assumed that moral character served as a way to categorize other. In the first four experiments' situation, the identity of the moral character is ambiguous, participants may automatically categorize morally good people as in-group and therefore preferentially processed these information. 
 
-However, the above four experiments can not distinguish between these two possibilities, because the concept "good-peron" can both be rewarding and be categorized as ingroup member, and previous studies using associative learning paradigm revealed that both rewarding stimuli [e.g., @Sui_2012_JEPHPP] and in-group information [enock_overlap_2020] are prioritized.  
+However, the above four experiments could not distinguish between these two possibilities, because the concept "good-person" can both be rewarding and be categorized as in-group member, and previous studies using associative learning paradigm revealed that both rewarding stimuli [e.g., @Sui_2012_JEPHPP] and in-group information [enock_overlap_2020] are prioritized.  
 
-[Distinguish two explanations by make self salient, exp3a, 3b, 6b] Though these two frameworks can both account for the positivity effect found in first four experiments (i.e., prioritization of "good-person", but not "neutral person" and "bad person"), they have different prediction if the experiment design include both identity and moral valence where the valence (good, bad, and neutral) conditions can describe both self and other. In this case the identity become salient and participants are less likely to spontaneously identify a good-person other than self as the extension of self, but the value of good-person still exists. Actually, the rewarding value of good-other might be even stronger than good-self because the former indicate potential cooperation and material rewards, but the latter is more linked to personal belief. This means that the social categorization theory predicts participants prioritize good-self but not good-other, while reward-based attention theory predicts participants are both prioritized. Also, as in @Hu_2020_GoodSelf, people may also only identify with good-self instead of bad self. That is, people will show a unique pattern of self-identification: only good-self is identified as "self" while all the others categories were excluded.
+[Distinguish two explanations by make self salient, exp3a, 3b, 6b] Though both two frameworks can account for the positivity effect found in first four experiments (i.e., prioritization of "good-person", but not "neutral person" and "bad person"), they have different prediction if the experiment design include both identity and moral valence where the valence (good, bad, and neutral) conditions can describe both self and other. In this case the identity become salient and participants are less likely to spontaneously identify a good-other as the extension of self, but the value of good-person still exists. Actually, the rewarding value of good-other might be even stronger than good-self because the former indicate potential cooperation and material rewards, but the latter is more linked to personal belief. This means that the social categorization theory predicts participants prioritize good-self but not good-other, while reward-based attention theory predicts participants are both prioritized. Also, as in @Hu_2020_GoodSelf, people may also only identify with good-self instead of bad self. That is, people will show a unique pattern of self-identification: only good-self is identified as "self" while all the others categories were excluded.
 
 In exp 3a, 3b, and 6b, we found that (1) good-self is always faster than neutral-self and bad-self, but good-other only have weak to null advantage to neutral-other and bad-other. which mean the social categorization is self-centered. (2) good-self's advantage over good other only occur when self- and other- were in the same task. i.e. the relative advantage is competition based instead of absolute. These three experiments suggest that people more like to view the moral character stimuli as person and categorize good-self as an unique category against all others. A mini-meta-analysis showed that there was no effect of valence when the identity is other. This results showed that value-based attention is not likely explained the pattern we observed in first four experiments. Why good-self is prioritized is less clear. Besides the social-categorization explanation, it's also possible that good self is so unique that it is prioritized in all possible situation and therefore is not social categorization *per se*. 
 
@@ -645,7 +645,7 @@ p_dprime1_diff <- df_m1_plot_sdt_diff %>%
 #   tidybayes::stat_halfeye() +
 #   geom_vline(xintercept = 0, linetype = "dashed") +
 #   scale_fill_manual(values = c('gray80', 'skyblue')) +
-#   xlab("Valence effect on criterion in SDT") + 
+#   xlab("Valence effect on criterion in SDT") +
 #   facet_wrap( ~ term_diff, # scales = "free_y",
 #                nrow = 1,
 #                labeller = label_parsed)
@@ -842,18 +842,18 @@ df_m1_plot_rt_diff <- df_m1_plot_rt %>%
 #   tidybayes::mean_hdci(value)  # get the high density continuous intervals
 
 # plot the posterior of mismatch
-df_m1_plot_rt_diff  %>%
-  dplyr::filter(str_detect(term_diff, '_NM')) %>%
-  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
-  xlab("Effect (differences) of valence on RT (Mismatch trials)")+
-  facet_wrap( ~ term_diff, 
-              # scales = "free_y", 
-              nrow = 1,
-              labeller = label_parsed)
+# df_m1_plot_rt_diff  %>%
+#   dplyr::filter(str_detect(term_diff, '_NM')) %>%
+#   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+#   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#   tidybayes::stat_halfeye() +
+#   geom_vline(xintercept = 0, linetype = "dashed") +
+#   scale_fill_manual(values = c('gray80', 'skyblue')) + 
+#   xlab("Effect (differences) of valence on RT (Mismatch trials)")+
+#   facet_wrap( ~ term_diff, 
+#               # scales = "free_y", 
+#               nrow = 1,
+#               labeller = label_parsed)
 
 # plot the posterior of matching trials
 p_rt1_diff <- df_m1_plot_rt_diff %>%
@@ -1020,7 +1020,7 @@ df_m3_rt_plot %>%
 
 # Part 2: interaction between valence and identity
 
-In this part, we report three experiments (3a, 3b, 4a, 4b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing. These analysis included 108 participants.
+In this part, we report three experiments (3a, 3b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing. These analysis included 108 participants.
 
 ```{r prepare data for second meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
@@ -1100,34 +1100,12 @@ summary(sdt_ms_m1)
 var_name_m1 <- tidybayes::get_variables(sdt_ms_m1)
 
 # # get the variable names start with 'b_', i.e., the population level parameters
-pop_param_names <- grep('^b_', var_name_m1, value = TRUE)
-
-#### test the code in tidybayes: https://github.com/mjskay/tidybayes/blob/master/R/spread_draws.R#L324
-all_variables_names <- c("b_intercept", "b_A1B1", "b_A2B1", "b_A2B2")
-variable_names <- 'b_*'
-
-# as in current tidyverse:
-variable_regex = paste0("^(", paste(variable_names, collapse = "|"), ")$")
-variable_names_index = grepl(variable_regex, all_variables_names) # nothing is selected
-print(variable_names_index)
-
-# update for the regex
-variable_regex2 = paste0("^(", paste(variable_names, collapse = "|"), ")")
-variable_names_index2 = grepl(variable_regex2, all_variables_names)
-print(variable_names_index2)
-
-#### end of the test code, thes snapet of code was used for an issue on git: https://github.com/mjskay/tidybayes/issues/282
+pop_param_names <- grep('^b_.', var_name_m1, value = TRUE)
 
 # plot the population level parameter (d prime)
 sdt_ms_m1_p <- sdt_ms_m1 %>%
   # get the traces of population level parameters
   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
-  # tidybayes::gather_draws(`b_IdentitySelf:ValenceNeutral`, `b_IdentityOther:ValenceNeutral`,
-  #                         `b_IdentitySelf:ValenceBad`    , `b_IdentityOther:ValenceBad`,
-  #                         `b_IdentitySelf:ValenceGood`   , `b_IdentityOther:ValenceGood`,
-  #                         `b_IdentitySelf:ValenceNeutral:ismatch`, `b_IdentityOther:ValenceNeutral:ismatch`,
-  #                         `b_IdentitySelf:ValenceBad:ismatch`, `b_IdentityOther:ValenceBad:ismatch`,
-  #                         `b_IdentitySelf:ValenceGood:ismatch`, `b_IdentityOther:ValenceGood:ismatch`) %>%
   # create two columns for two independent factors.
   dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
                                            grepl("Bad", .variable) ~"Bad",
@@ -1255,17 +1233,20 @@ p_ms_dprime1_diff <- df_ms_sdt_m1_plot_diff %>%
                labeller = label_parsed)
 
 # plot the posterior of difference between c, supplementary figure
-df_m1_plot_sdt_diff %>%
+df_ms_sdt_m1_plot_diff %>%
   dplyr::filter(str_detect(term_diff, '_c')) %>%
   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+  tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) +
-  xlab("Valence effect on criterion in SDT") + 
+  xlab(expression(paste("Valence effect on", italic("d"), "prime", sep = ' ')))+ 
+  expand_limits(x = c(-3, 3)) + 
   facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
-               labeller = label_parsed)
+               labeller = label_parsed) 
 ```
 
 ```{r second meta rt, echo=FALSE, results='hide', warning=FALSE}
@@ -1286,60 +1267,52 @@ RT_ms_m1 <- df_ms %>%
             backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_ms_DummyCode_3_level"))
 
-summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
+summary(RT_ms_m1)  # ndt = 0 there fore, we used lognormal.
 # pp_check(RT_val_m1)
 
-# Will try dummy coding later, but the running time is long: Total execution time: 124845.8 seconds = 34.7 hours
-# RT_val_m1 <- df_moral %>%
-#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-#   dplyr::filter(ACC == 1) %>%         # only correct trials
-#   brms::brm(RT_sec ~ Valence*ismatch +
-#               (Valence*ismatch | ExpID_new) +
-#               (Valence*ismatch  | ExpID_new:Subject),
-#             family=lognormal(),
-#             data = .,
-#             control = list(adapt_delta = .95),
-#             cores = parallel::detectCores(),
-#             backend = 'cmdstanr',  # with cmdstanr
-#             file = here::here("glmmModels/RT_val_DummyCode_3_level"))
-# 
-# summary(RT_val_m1)
+# Population-Level Effects: 
+#                                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept                            -0.21      0.41    -0.97     0.80 1.02      118      307
+# ismatch                              -0.08      0.06    -0.21     0.04 1.06       92      252
+# IdentityOther                        -0.04      0.10    -0.29     0.13 1.07       84      134
+# ValenceBad                            0.00      0.02    -0.05     0.05 1.05       87       29
+# ValenceGood                          -0.04      0.17    -0.55     0.11 1.07       57       37
+# ismatch:IdentityOther                -0.09      0.39    -0.95     0.73 1.07       88       28
+# ismatch:ValenceBad                    0.01      0.08    -0.17     0.17 1.04      279      274
+# ismatch:ValenceGood                  -0.07      0.03    -0.13     0.01 1.06       71       96
+# IdentityOther:ValenceBad             -0.00      0.05    -0.09     0.13 1.10       48      140
+# IdentityOther:ValenceGood             0.01      0.29    -0.64     0.79 1.14       80       55
+# ismatch:IdentityOther:ValenceBad      0.03      0.06    -0.09     0.20 1.05      115       87
+# ismatch:IdentityOther:ValenceGood     0.07      0.23    -0.47     0.46 1.03      237      189
 
-#Population-Level Effects: 
-#                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-#Intercept                  -0.40      0.06    -0.52    -0.27 1.01      837     1301  # baseline: mismatch:neutral
-#ValenceBad                  0. 01      0.00     0.00     0.02 1.00     1752     2540  # mismatch:bad - mismatch:neutral = 0.01
-#ValenceGood                -0.03      0.00    -0.04    -0.02 1.00     1237     2219  # mismatch:Good - mismatch:neutral = -0.03
-#ismatch_num                -0.07      0.01    -0.09    -0.06 1.00     1638     1957  # match:neutral - mismatch:neutral = -0.07
-#ValenceBad:ismatch_num      0.02      0.01     0.00     0.04 1.00     1597     2380  # match:bad - ValenceBad -ismatch_num = 0.02
-#ValenceGood:ismatch_num    -0.05      0.01    -0.07    -0.03 1.00     1424     1775  # match:good - ValenceGood- ismatch_num = -0.05
-
-# Mismatch:Neutral - Intercept = -0.4
-# Mismatch:Bad     - Intercept  + ValenceBad = -0.4 + 0.01 = -0.39
-# Mismatch:Good    - Intercept  + ValenceGood = -0.4 - 0.03 = -0.43
-# Match: Neutral   - Intercept  + ismatch_num = -0.4 - 0.07 = -0.47
-# Match: Bad       - Intercept  + ismatch_num + ValenceBad+ ValenceBad:ismatch_num = -0.4 + 0.01 + 0.02 =  -0.37 
-# Match: Good      - Intercept  + ismatch_num + ValenceGood+ ValenceGood:ismatch_num = -0.4 + (-0.03) + (-0.05) = -0.48
+# Mismatch:Neutral:Self  - Intercept = -0.21
+# Mismatch:Bad:Self      - Intercept  + ValenceBad    = -0.21 + 0.00 = -0.21
+# Mismatch:Good:Self     - Intercept  + ValenceGood   = -0.21 - 0.04 = -0.25
+# Mismatch:Neutral:Other - Intercept  + IdentityOther = -0.21 - 0.04 = -0.25
+# Mismatch:Bad:Other     - Intercept  + ValenceBad  + IdentityOther:ValenceBad  = -0.21 + 0.00 + 0.00 = -0.21
+# Mismatch:Good:Other    - Intercept  + ValenceGood + IdentityOther:ValenceGood = -0.21 - 0.04 + 0.01 = -0.24
+# Match: Neutral:Self    - Intercept  + ismatch = -0.19 - 0.08 = -0.27
+# Match: Bad:Self        - Intercept  + ismatch + ismatch:ValenceBad    = -0.19 - 0.08 + 0.01 = -0.26 
+# Match: Good:Self       - Intercept  + ismatch + ismatch:ValenceGood   = -0.19 - 0.08 - 0.07 = -0.34
+# Match: Neutral:Other   - Intercept  + ismatch + ismatch:IdentityOther = -0.19 - 0.08 - 0.09 = -0.36
+# Match: Bad:Other       - Intercept  + ismatch + ismatch:IdentityOther + ismatch:IdentityOther:ValenceBad  = -0.19 - 0.08 - 0.09 + 0.03 = -0.33 
+# Match: Good:Other      - Intercept  + ismatch + ismatch:IdentityOther + ismatch:IdentityOther:ValenceGood = -0.19 - 0.08 - 0.09 + 0.07 = -0.29
 
 # Get the variables in the model 1
 # RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
 
-df_m1_post_rt_exp <- RT_val_m1 %>% 
+df_ms_m1_post_rt_exp <- RT_ms_m1 %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
-df_rt_m1_pop_mean <- RT_val_m1 %>%
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+df_ms_m1_rt_pop_mean <- RT_ms_m1 %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-df_rt_m1_pop <- RT_val_m1 %>% 
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+df_ms_m1_rt_pop <- RT_ms_m1 %>% 
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
@@ -1347,7 +1320,7 @@ df_rt_m1_pop <- RT_val_m1 %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
 # Add the population mean to the experimental level and only keep the value after.
-df_m1_post_rt_exp_update <- merge(df_rt_m1_pop, df_m1_post_rt_exp, 
+df_ms_m1_rt_exp_update <- merge(df_ms_m1_rt_pop, df_ms_m1_post_rt_exp, 
 # rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
                      by = c('term','.chain','.iteration', '.draw'), all = T) %>%
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
@@ -1355,56 +1328,65 @@ df_m1_post_rt_exp_update <- merge(df_rt_m1_pop, df_m1_post_rt_exp,
   dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
-df_m1_plot_rt <- df_rt_m1_pop %>%
-  dplyr::mutate(condition = 'Overall') %>%
-  dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
-  dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-  dplyr::bind_rows(., df_m1_post_rt_exp_update) %>%
-  dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition)) %>%
-  tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-  dplyr::mutate(Neutral_NM = Intercept,               # calculate the differences between coditions
-                Bad_NM = Intercept  + ValenceBad,
-                Good_NM = Intercept  + ValenceGood ,
-                Neutral_M = Intercept  + ismatch_num,
-                Bad_M = Intercept  + ismatch_num + ValenceBad + `ValenceBad:ismatch_num`,
-                Good_M = Intercept  + ismatch_num + ValenceGood+ `ValenceGood:ismatch_num`) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               Neutral_NM, Bad_NM, Good_NM,
-               Neutral_M, Bad_M, Good_M) %>%
-  tidyr::pivot_longer(cols = Neutral_NM:Good_M, names_to = "term", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term = factor(term, levels = c('Good_NM', 'Neutral_NM', 'Bad_NM',
-                                               'Good_M',  'Neutral_M',  'Bad_M')),
+df_ms_m1_plot_rt <- df_ms_m1_rt_pop %>%
+        dplyr::mutate(condition = 'Overall') %>%
+        dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
+        dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+        dplyr::bind_rows(., df_ms_m1_rt_exp_update) %>%
+        dplyr::mutate(condition = factor(condition, levels = c("Exp3a_THU", "Exp3b_WZU", "Exp6b_THU",
+                                                               "Overall")),
+  # dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+  #                                                        "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+  #                                                        "Exp5_THU",  "Exp6a_THU","Overall")),
+                      condition = forcats::fct_rev(condition)) %>%
+        tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+        dplyr::mutate(NM_Self_Neutral = Intercept,               # calculate the differences between conditions
+                      NM_Self_Bad = Intercept  + ValenceBad,
+                      NM_Self_Good = Intercept  + ValenceGood ,
+                      NM_Other_Neutral = Intercept  + IdentityOther,               # calculate the differences between conditions
+                      NM_Other_Bad = Intercept  + ValenceBad  + `IdentityOther:ValenceBad`,
+                      NM_Other_Good = Intercept  + ValenceGood + `IdentityOther:ValenceGood`,
+                      M_Self_Neutral = Intercept  + ismatch,
+                      M_Self_Bad = Intercept  + ismatch + `ismatch:ValenceBad`,
+                      M_Self_Good = Intercept  + ismatch + `ismatch:ValenceGood`,
+                      M_Other_Neutral = Intercept  + ismatch + `ismatch:IdentityOther`,
+                      M_Other_Bad = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:IdentityOther:ValenceBad`,
+                      M_Other_Good = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:IdentityOther:ValenceGood`) %>%
+        dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               contains('M_')) %>%
+  tidyr::pivot_longer(cols = NM_Self_Neutral:M_Other_Good, names_to = "term", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term = factor(term, levels = c('NM_Self_Neutral', 'NM_Self_Bad', 'NM_Self_Good',
+                                               'NM_Other_Neutral', 'NM_Other_Bad', 'NM_Other_Good',
+                                               'M_Self_Neutral', 'M_Self_Bad', 'M_Self_Good',
+                                               'M_Other_Neutral', 'M_Other_Bad', 'M_Other_Good')),
                 value = exp(value),
                 value = value * 1000) 
 
 # plot the posterior of the d prime
 # use the overall mean values as the vlines
-vlines <- df_m1_plot_rt %>% 
-        tidyr::separate(term, c('Valence', 'Match')) %>% 
-        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+vlines <- df_ms_m1_plot_rt %>% 
+        tidyr::separate(term, c('Match', 'Identity', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
         dplyr::filter(Match == 'M') %>%
         dplyr::filter(condition == "Overall") %>%
-        dplyr::group_by(Valence) %>% 
+        dplyr::group_by(Identity, Valence) %>% 
         dplyr::summarize(Mean = mean(value)) # %>%
         # dplyr::arrange(Mean)
 
 # THIS is the one which the final plot will based on!!!
-p_rt1 <- df_m1_plot_rt %>%
-        tidyr::separate(term, c('Valence', 'Match')) %>% 
-        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+p_ms_rt1 <- df_ms_m1_plot_rt %>%
+        tidyr::separate(term, c('Match', 'Identity', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
         dplyr::filter(Match == 'M') %>%
         dplyr::rename(Experiments = condition) %>%
-        # dplyr::mutate(Experiments = factor(Experiments, levels = c("Exp1b_WZU", "Exp5_THU", "Exp1a_THU", 
-        #                                                            "Exp1b_THU", "Exp1c_THU", "Exp2_THU" , 
-        #                                                            "Exp1a_WZU",  "Exp6a_THU","Overall")),
-        #               Experiments = fct_rev(Experiments)) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
         geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
         labs(x=expression('Posteior distribution of reaction times')) + 
+        facet_wrap(~Identity) + 
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
         theme_apa()
 
 
