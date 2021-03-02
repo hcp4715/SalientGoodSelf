@@ -200,11 +200,6 @@ df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))
 # No repeating subj
 df7b.v_meta <- df7b_m.v
 
-# remove all unnecessary variables
-var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
-              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
-              'apatheme','exp_table', 'curDir', 'figDir')
-rm(list=ls()[! ls() %in% var_list])
 
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
@@ -339,11 +334,17 @@ fun_plot_rt_val <- function(m_rt) {
                           names_to = 'cond',
                           values_to = 'logRT') %>%
       dplyr::mutate(RT = exp(logRT)*1000,
-                    Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
-                                                 cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
-                    Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
-                                               cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
-                                               cond == 'Good_MM' | cond == 'Good_M' ~ 'Good'))
+                    Matchness = dplyr::case_when(grepl("_MM$", cond) ~ "Mismatch",
+                                                 grepl("_M$", .variable) ~ "Match"),
+                    Valence = dplyr::case_when(grepl("Neut", cond) ~ "Neutral",
+                                               grepl("Bad", cond) ~ "Bad",
+                                               grepl("Good", cond) ~ "Good")
+                    # Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
+                    #                              cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
+                    # Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
+                    #                            cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
+                    #                            cond == 'Good_MM' | cond == 'Good_M' ~ 'Good')
+                    )
     p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
       dplyr::filter(Matchness == 'Match') %>%
       ggplot2::ggplot(aes(x = RT, y = Valence)) +
@@ -431,7 +432,16 @@ fun_rt_val_id <- function(exp_name) {
 ```
 
 # Part 1: Perceptual processing moral character related information
-In this part, we report results from five experiments that tested whether an associative learning task. These five experiments revealed a robust effect of moral character on perceptual matching task.
+In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situation. Therefore, we modeled them as independent samples.  These five experiments revealed a robust effect of moral character on perceptual matching task. 
+
+
+```{r remove non-meta data, echo=FALSE, results='hide', warning=FALSE}
+# remove all unnecessary variables
+var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
+              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
+              'apatheme','exp_table', 'curDir', 'figDir')
+rm(list=ls()[! ls() %in% var_list])
+```
 
 ```{r prepare data for first meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
@@ -460,14 +470,14 @@ df_moral <- df_moral %>%
   dplyr::select(ExpID_new, Subject, Valence, Matchness, RESP, ACC, RT, ismatch, saymatch) %>%
   dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
 
-# plot the nested structure of the data
-with(df_moral, table(Subject, ExpID_new)) %>%
-  image(
-    col = grey.colors(80, start = 1, end = 0), 
-    axes = TRUE, 
-    xlab = "Subject", 
-    ylab = "ExpID"
-  )
+# # plot the nested structure of the data
+# with(df_moral, table(Subject, ExpID_new)) %>%
+#   image(
+#     col = grey.colors(80, start = 1, end = 0), 
+#     axes = TRUE, 
+#     xlab = "Subject", 
+#     ylab = "ExpID"
+#   )
 
 ```
 
@@ -507,19 +517,18 @@ summary(sdt_val_m1)
 
 # plot the population level parameter (d prime)
 sdt_val_m1_p <- sdt_val_m1 %>%
-  # get the traces of population level parameters
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
-  # create two columns for two independent factors.
-  dplyr::mutate(Valence = dplyr::case_when((.variable == "b_ValenceBad") | (.variable == "b_ValenceBad:ismatch") ~ "Bad",
-                                (.variable == "b_ValenceNeutral") | (.variable == "b_ValenceNeutral:ismatch") ~ "Neutral",
-                                (.variable == "b_ValenceGood") | (.variable == "b_ValenceGood:ismatch")  ~ "Good"),
-                params = dplyr::case_when(
-                  (.variable == "b_ValenceBad") | (.variable == "b_ValenceNeutral") |  (.variable == "b_ValenceGood")  ~ "criterion",
-                  (.variable=="b_ValenceBad:ismatch")|(.variable=="b_ValenceNeutral:ismatch")|(.variable=="b_ValenceGood:ismatch")~"d prime"),
+        # get the traces of population level parameters
+        tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+        # create two columns for two independent factors.
+        dplyr::mutate(Valence = dplyr::case_when(
+                grepl("ValenceBad", .variable) ~ "Bad",
+                grepl("ValenceNeutral", .variable) ~ "Neutral",
+                grepl("ValenceGodd", .variable) ~ "Good"),
+                params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
+                                           !grepl("ismatch", .variable) ~"criterion"),
                 params = factor(params, levels = c('d prime', 'criterion')),
-                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
+          ) %>%
   # select only d prime
   dplyr::filter(params == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value)) +
@@ -540,17 +549,13 @@ df_m1_post_sdt_exp <- sdt_val_m1 %>%
   dplyr::rename(value = r_ExpID_new)
 
 pop_mean <- sdt_val_m1 %>%
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
 df_sdt_m1_pop <- sdt_val_m1 %>% 
-  tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood,
-                          `b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
@@ -599,7 +604,7 @@ df_m1_plot_sdt_diff <- df_m1_plot_sdt %>%
 
 # plot the posterior of the d prime
 # use the overall mean values as the vlines
-vlines <- df_m1_plot_sdt %>% 
+vlines_df_m1_sdt <- df_m1_plot_sdt %>% 
         tidyr::separate(term, c('params', 'Valence')) %>% 
         dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
         dplyr::filter(params == 'dprime') %>%
@@ -620,8 +625,10 @@ p_dprime1 <- df_m1_plot_sdt %>%
         #               Experiments = fct_rev(Experiments)) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
-        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        geom_vline(data = vlines_df_m1_sdt, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
         labs(x=expression('Posteior distribution of '~italic(d)~' prime')) + 
+        scale_colour_brewer(palette = "Dark2") +
+        scale_fill_brewer(palette = "Dark2") +
         theme_apa()
 
 # plot the posterior of the difference between d prime
@@ -662,9 +669,9 @@ p_dprime1_diff <- df_m1_plot_sdt_diff %>%
 
 ```{r first meta rt, echo=FALSE, results='hide', warning=FALSE}
 # have a look at a few participants' data
-set.seed(123)
-random_sub <- sample(unique(df_moral$Subject), 10)
-random_sub
+# set.seed(123)
+# random_sub <- sample(unique(df_moral$Subject), 10)
+# random_sub
 
 # # plot the distribution of 10 randomly selected participants
 # df_moral %>%
@@ -736,17 +743,13 @@ df_m1_post_rt_exp <- RT_val_m1 %>%
   dplyr::rename(value = r_ExpID_new)
 
 df_rt_m1_pop_mean <- RT_val_m1 %>%
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
 df_rt_m1_pop <- RT_val_m1 %>% 
-  tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch_num`, `b_ValenceBad:ismatch_num`, 
-                          `b_ValenceGood:ismatch_num`) %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
   #tidyr::separate(term, c(NA, 'term'), "_") 
@@ -812,6 +815,8 @@ p_rt1 <- df_m1_plot_rt %>%
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
         geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
         labs(x=expression('Posteior distribution of reaction times')) + 
+        scale_colour_brewer(palette = "Dark2") +
+        scale_fill_brewer(palette = "Dark2") +
         theme_apa()
 
 
@@ -874,12 +879,17 @@ p_rt1_diff <- df_m1_plot_rt_diff %>%
   
 ```{r plot-bayes-meta-1, fig.cap="Effect of moral valence on RT and d'", fig.height=9, fig.width=15, warning=FALSE}
 library(patchwork)
-# (p_rt1 | p_dprime1)
 p_rt1 + p_dprime1 +
         p_rt1_diff + p_dprime1_diff + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 2, byrow = TRUE)
+
+p <- p_rt1 + p_dprime1 + plot_annotation(tag_levels = 'A') + plot_layout(guides = "collect") 
+
+ggsave('part1_plot_posterior.png', p, width = 15, height = 7.5)
 ```
 
-See Figure \@ref(fig:plot-bayes-meta-1).
+For the *d* prime, we found robust effect of moral valence. Shapes associated with positive moral valence ("good person", "kind person" or a name associated with morally good behavioral history) has higher sensitivity (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ), but we did not find differences between shapes associated with negative moral label (mean = , 95% HDI = ) and neutral condition.
+
+For the reaction times, we also found robust effect of moral valence. Shapes associated with positive moral valence has faster responses (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ). We also found that the responses to shapes associated with negative moral valence (mean = , 95% HDI = ) were slower as compared to the neutral condition. See Figure \@ref(fig:plot-bayes-meta-1).
 
 ```{r model comp for rt, eval = FALSE, echo=FALSE, results='hide' }
 #### model copmarison etc, will be in supplementary materials
@@ -1020,7 +1030,7 @@ df_m3_rt_plot %>%
 
 # Part 2: interaction between valence and identity
 
-In this part, we report three experiments (3a, 3b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments can be modulated by the self-referential processing. These analysis included 108 participants.
+In this part, we report three experiments (3a, 3b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments is modulated by self-referential processes. These three experiments included  data from 108 participants.
 
 ```{r prepare data for second meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
@@ -1049,13 +1059,13 @@ df_ms <- df_ms %>%
   dplyr::mutate(ismatch_num = ifelse(Matchness == 'Match', 0.5, -0.5))
 
 # plot the nested structure of the data
-with(df_ms, table(Subject, ExpID_new)) %>%
-  image(
-    col = grey.colors(80, start = 1, end = 0), 
-    axes = TRUE, 
-    xlab = "Subject", 
-    ylab = "ExpID"
-  )
+# with(df_ms, table(Subject, ExpID_new)) %>%
+#   image(
+#     col = grey.colors(80, start = 1, end = 0), 
+#     axes = TRUE, 
+#     xlab = "Subject", 
+#     ylab = "ExpID"
+#   )
 ```
 
 ```{r second meta sdt, echo=FALSE, results='hide', warning=FALSE}
@@ -1396,7 +1406,7 @@ p_ms_rt1 <- df_ms_m1_plot_rt %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
         geom_vline(data = p_ms_rt1_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
-        labs(x=expression('Posteior distribution of reaction times')) + 
+        labs(x=expression('Posteior distribution of RTs')) + 
         facet_wrap(~Identity) + 
         theme_apa()
 
@@ -1426,7 +1436,7 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('gray80', 'skyblue')) + 
-        xlab("Effect of valence on RT (Match trials)") +
+        xlab("Valence effect on RTs (Match trials)") +
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
               nrow = 1,
@@ -1441,20 +1451,24 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('gray80', 'skyblue')) + 
-        xlab("Self referential effect on RT (Match trials)") +
+        xlab("Self-referential effect on RTs (Match trials)") +
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
               nrow = 1,
               labeller = label_parsed)
 ```
 
-```{r plot-bayes-meta-2, fig.cap="Effect of moral valence on RT and d'", fig.height=9, fig.width=15, warning=FALSE}
+
+```{r plot-bayes2, fig.cap="Interaction between moral valence and self-referential", fig.height=9, fig.width=15, warning=FALSE}
 library(patchwork)
 # (p_rt1 | p_dprime1)
 p_ms_rt1 + p_ms_dprime1 +
-        p_ms_dprime1_diff_val + p_ms_rt1_diff_val + 
-        p_ms_dprime1_diff_id + p_ms_rt1_diff_id + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE)
+        p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
+        p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE)
 ```
+
+See Figure \@ref(fig:plot-bayes2).
+
 # Part 3: Implicit binding between valence and identity
 
 In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance will eliminate the effect observed in previous experiment. 

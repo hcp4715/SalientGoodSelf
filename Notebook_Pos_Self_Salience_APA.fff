@@ -5,3 +5,10 @@
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf}
 \caption{\label{fig:plot-bayes-meta-1}Effect of moral valence on RT and d'}
 \end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf}
+\caption{\label{fig:plot-bayes2}Interaction between moral valence and self-referential}
+\end{figure*}
