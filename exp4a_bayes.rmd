@@ -1,0 +1,274 @@
+## Experiment 4a: Morality as task-irrelevant variable
+In part two (experiment 3a and 3b), participants learned the association between self and moral valence directly. In Experiment 4a, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf. @Sui_2012_JEPHPP). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
+
+### Method
+#### Participants
+`r df4a.T.basic$N` participants (`r df4a.T.basic$Nf` female, age = `r df4a.T.basic$Age_mean` $\pm$ `r df4a.T.basic$Age_sd`) participated the current study, `r df4a.T.basic$N_thu` of them were from Tsinghua University in 2015, `r df4a.T.basic$N_wzu` were from Wenzhou University participated in 2017. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. The data from `r nrow(df4a.excld.sub)` participants from Wenzhou site were excluded from analysis because their accuracy was close to chance (< 0.6). The results for the remaining `r df4a.v.basic$N` participants (`r df4a.v.basic$Nf` female, age = `r df4a.v.basic$Age_mean` $\pm$ `r df4a.v.basic$Age_sd`) were analyzed and reported.
+
+#### Design
+As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, neutral and bad associations); the third variable was the matching between shape and label (matching vs. non-match for the personal association). 
+However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embedding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
+
+#### Stimuli
+2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
+
+#### Procedure
+The procedure was similar to Experiment 1. There were 6 blocks of trial, each with 120 trials for 2017 data. Due to procedure error, the data collected in 2015 in Tsinghua community only have 60 trials for each block, i.e., 30 trials per condition. 
+
+As in study 3a, before each task, the instruction showed the meaning of each label to participants. The self-matching task and other-matching task were randomized between participants. Each participant finished 6 blocks, each have 120 trials.
+
+#### Data Analysis
+Same as experiment 3a.
+
+### Results
+
+#### Signal detection theory analysis of accuracy
+
+```{r 4a_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp_name <- '4a'
+exp4a_sdt_m1 <- fun_sdt_val_id(exp_name)
+
+#summary(exp4a_sdt_m1)    # check summary
+
+# check fixed and varying effect using bayestestR
+bayestestR::describe_posterior(
+  exp4a_sdt_m1,
+  effects = "all",
+  component = "all",
+  test = c("p_direction", "p_significance"),
+  centrality = "all"
+)
+#pp_check(exp4a_sdt_m1)   # posterior predictive check
+
+# d-prime
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceNeutral:ismatch")      # .82
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentitySelf:ValenceBad:ismatch")          # .75
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentitySelf:ValenceBad:ismatch")       # .44
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceNeutral:ismatch")    # .11
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood:ismatch > IdentityOther:ValenceBad:ismatch")        # .07
+hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral:ismatch > IdentityOther:ValenceBad:ismatch")     # .39
+
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood:ismatch > IdentityOther:ValenceGood:ismatch")        # 1
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral:ismatch > IdentityOther:ValenceNeutral:ismatch")  # 1
+hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad:ismatch > IdentityOther:ValenceBad:ismatch")          # 1
+
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceNeutral")  # .73
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentitySelf:ValenceBad")  # .9
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentitySelf:ValenceBad")  # .49
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceNeutral")  # .68
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceGood > IdentityOther:ValenceBad")  # .92
+# hypothesis(exp4a_sdt_m1, "IdentityOther:ValenceNeutral> IdentityOther:ValenceBad")  # .8
+# 
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceGood > IdentityOther:ValenceGood")  # .92
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceNeutral > IdentityOther:ValenceNeutral")  # .76
+# hypothesis(exp4a_sdt_m1, "IdentitySelf:ValenceBad > IdentityOther:ValenceBad")  # .96
+
+# extract the population level parameters
+# criteria
+
+df_exp4a_sdt_m1_plot <- exp4a_sdt_m1 %>%
+  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>% # get the traces of population level parameters
+  # create two columns for two independent factors.
+  dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
+                                           grepl("Bad", .variable) ~"Bad",
+                                           grepl("Good", .variable) ~"Good"),
+                Identity = dplyr::case_when(grepl("Self", .variable) ~ "Self",
+                                           grepl("Other", .variable) ~"Other"),
+                params = dplyr::case_when(grepl("ismatch", .variable) ~ "dprime",
+                                           !grepl("ismatch", .variable) ~"criterion"),
+                params = factor(params, levels = c('dprime', 'criterion')),
+                Identity = factor(Identity, levels = c("Self", "Other")),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) 
+
+exp4a_sdt_p <- df_exp4a_sdt_m1_plot %>%
+  dplyr::filter(params == 'dprime') %>%  # select only d prime
+  ggplot2::ggplot(aes(x = Valence, y = .value)) +
+  tidybayes::stat_halfeye(aes(fill = Identity), alpha = 0.7) + # position=position_dodge(width = 0.1)
+  geom_slabinterval(ymin = 0, ymax = 4) +
+  stat_summary(aes(group = Identity, color = Identity), fun = mean, geom = "line") +
+  ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  # facet_grid(~ params , scales = "free_y") +
+  theme_classic() 
+
+# exp4a_sdt_p <- exp4a_sdt_m1 %>%
+#   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
+#   tidybayes::gather_emmeans_draws() %>%
+#   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
+#                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
+#                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
+#                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+#   ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
+#   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
+#   #geom_line(alpha = .01) +
+#   scale_colour_brewer(palette = "Dark2") +
+#   scale_fill_brewer(palette = "Dark2") +
+#   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+#   stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line"
+#                #,position=position_dodge(width = 0.1)
+#                ) +
+#   #scale_fill_brewer() +
+#   facet_grid(~ ismatch) +
+#   theme_classic()
+
+df_exp4a_sdt_m1_plot_diff <- df_exp4a_sdt_m1_plot %>%
+        tidyr::unite(term, c('params', 'Identity', 'Valence')) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(term, `.chain`, `.iteration`, `.draw`, `.value`) %>%
+        tidyr::pivot_wider(names_from = c(term), values_from = .value) %>%   # long to wide
+        dplyr::mutate(
+                # diff_GN_c_S = c_Self_Good - c_Self_Neutral,
+                # diff_BN_c_S = c_Self_Bad - c_Self_Neutral,
+                # diff_GN_c_O = c_Other_Good - c_Other_Neutral,
+                # diff_BN_c_O = c_Other_Bad - c_Other_Neutral,
+                diff_GN_dprm_S = dprime_Self_Good - dprime_Self_Neutral,
+                diff_BN_dprm_S = dprime_Self_Bad - dprime_Self_Neutral,
+                diff_GB_dprm_S = dprime_Self_Good - dprime_Self_Bad,
+                diff_GN_dprm_O = dprime_Other_Good - dprime_Other_Neutral,
+                diff_BN_dprm_O = dprime_Other_Bad - dprime_Other_Neutral,
+                diff_GB_dprm_O = dprime_Other_Good - dprime_Other_Bad,
+                diff_SO_dprm_G = dprime_Self_Good - dprime_Other_Good,
+                diff_SO_dprm_N =  dprime_Self_Neutral - dprime_Other_Neutral,
+                diff_SO_dprm_B =  dprime_Self_Bad - dprime_Other_Bad
+                ) %>%
+  dplyr::select(`.chain`, `.iteration`, `.draw`,
+               diff_GN_dprm_S, diff_BN_dprm_S, diff_GB_dprm_S,
+               diff_GN_dprm_O, diff_BN_dprm_O, diff_GB_dprm_O, 
+               diff_SO_dprm_G, diff_SO_dprm_N, diff_SO_dprm_B) %>%
+  tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_SO_dprm_B, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_dprm_S', 'diff_GN_dprm_S', 'diff_BN_dprm_S', 
+                                                         'diff_GB_dprm_O', 'diff_GN_dprm_O', 'diff_BN_dprm_O', 
+                                                         'diff_SO_dprm_G', 'diff_SO_dprm_N', 'diff_SO_dprm_B')))
+p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
+        dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
+        # dplyr::filter(str_detect(term_diff, '_SO_')) %>%
+        #dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
+        dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
+        dplyr::rename(conditions = term_diff) %>%
+        ggplot2::ggplot(aes(x = value, y = conditions, fill = stat(x > 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        scale_fill_manual(values = c('gray80', 'skyblue')) +
+        xlab(expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' '))) # + 
+
+
+p_exp4a_dprime1_diff_id <- df_exp4a_sdt_m1_plot_diff %>%
+        dplyr::filter(str_detect(term_diff, '_SO_')) %>%
+        #dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
+        dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
+        dplyr::rename(conditions = term_diff) %>%
+        ggplot2::ggplot(aes(x = value, y = conditions, fill = stat(x > 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        scale_fill_manual(values = c('gray80', 'skyblue')) +
+        xlab(expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' '))) # + 
+        # facet_wrap( ~ term_diff, # scales = "free_y",
+        #        nrow = 1,
+        #        labeller = label_parsed)
+```
+We found that the *d* prime is greater when shapes were associated with good self condition than with neutral self or bad self, but shapes associated with bad self and neutral self didn't show differences. comparing the self vs other under three condition revealed that shapes associated with good self is greater than with good other, but with a weak evidence. In contrast, for both neutral and bad valence condition, shapes associated with other had greater *d* prime than with self.
+
+##### Reaction time
+
+```{r 4a_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+exp_name <- '4a'
+exp4a_rt_m1 <- fun_rt_val_id(exp_name)
+
+# summary(exp4a_rt_m1)  # n
+
+bayestestR::describe_posterior(
+  exp4a_rt_m1,
+  effects = "fixed",
+  component = "all",
+  test = c("p_direction", "p_significance"),
+  centrality = "all"
+)
+
+#pp_check(exp4a_rt_m1)
+rg <- emmeans::ref_grid(exp4a_rt_m1)
+em <- emmeans::emmeans(rg, 'ismatch')
+summary(em, point.est = median)
+emmeans::joint_tests(exp4a_rt_m1)
+
+exp4a_rt_p <- exp4a_rt_m1 %>%
+  emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
+  tidybayes::gather_emmeans_draws() %>%
+  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
+              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
+              Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  dplyr::rename(log_RT = .value) %>%
+  ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
+  #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
+  #geom_line(alpha = .01) +
+  tidybayes::stat_halfeye() +
+  ggplot2::stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
+  #scale_fill_brewer() +
+  facet_grid(~ ismatch) +
+  theme_classic()
+
+emm1 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
+emm1$contrasts %>% summary(infer = TRUE, point.est = mean)
+
+emm2 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Valence | Identity | ismatch)
+emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
+
+```
+
+```{r plot-exp4a-BGLM, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
+library(patchwork)
+exp4a_sdt_p + exp4a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+```
+
+In reaction times, we found that same trends in the match trials as in the RT: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp4a-BGLM) 
+
+### HDDM
+
+```{r plot-exp4a-HDDM, fig.cap="exp4a: Results of HDDM.",  fig.height=8, fig.width=9, warning=FALSE}
+df4a.hddm.group.trace <- readr::read_csv(here::here('HDDM','df4a_group_traces.csv')) # this will keep the '(' and ')' in the column name
+
+params_p <- df4a.hddm.group.trace %>%
+  dplyr::mutate(sample = 1:nrow(.)) %>%
+  dplyr::select(chain, sample, contains('Match') | contains('Mismatch')) %>%
+  tidyr::pivot_longer(.,`a(Other.Match.Bad)`:`t(Self.Mismatch.Neutral)`, names_to = 'conditions', values_to = 'value') %>%
+  tidyr::separate(., conditions, into = c('v1', 'matchness','valence'), sep= '[.]') %>%       # split into two part
+  tidyr::separate(., v1, into = c('param', 'identity'), sep = '[(]') %>%         # further split the first half into two part
+  dplyr::mutate(valence = stringr::str_sub(.$valence, start = 1, end = -2)) %>%   # remove the last two elements ') ' from the strings
+  dplyr::arrange(., param) %>%
+  tidyr::pivot_wider(., id_cols = c('chain', 'sample', 'matchness', 'identity', 'valence'), names_from = 'param', values_from = 'value')
+
+params_p %>% 
+  dplyr::mutate(valence = factor(valence, levels = c("Good", "Neutral", "Bad")),
+                matchness = ifelse(matchness == 'Mismatch', 'Nonmatch', matchness),
+                identity = factor(identity, levels = c('Self', 'Other'))) %>%
+  ggplot2::ggplot(., aes(x = v, y = a, group = identity, color = identity)) +
+  geom_point() + 
+  scale_colour_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(matchness ~ valence) +
+  #facet_grid(~ matchness) +
+  ylab(expression(paste("Boundary separation ",italic("a"), sep = ' '))) +
+  xlab(expression(paste("Drift rate ",italic("v"), sep = ' '))) +
+  theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          legend.text = element_text(size =16),
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 16, color = 'black'),
+          axis.title = element_text (size = 16),
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(3, "lines")
+    ) 
+```
+
+We fitted our data with HDDM, using the response-coding [also see @Hu_2020_GoodSelf]. We estimated separate drift rate ($v$), non-decision time ($T_{0}$), and boundary separation ($a$) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure \@ref(fig:plot-exp4a-HDDM))).

@@ -44,7 +44,7 @@ rm('pkgNeeded') # remove the variable 'pkgNeeded';
 if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
 library(papaja)
 
-set_cmdstan_path('/home/hcp4715/cmdstan')
+# set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # Save some time and stor APA format-related code in an object so you can easily
 # use it in multiple plots
