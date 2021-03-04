@@ -178,42 +178,70 @@ exp_name <- '4a'
 exp4a_rt_m1 <- fun_rt_val_id(exp_name)
 
 # summary(exp4a_rt_m1)  # n
-
-bayestestR::describe_posterior(
-  exp4a_rt_m1,
-  effects = "fixed",
-  component = "all",
-  test = c("p_direction", "p_significance"),
-  centrality = "all"
-)
+# 
+# bayestestR::describe_posterior(
+#   exp4a_rt_m1,
+#   effects = "fixed",
+#   component = "all",
+#   test = c("p_direction", "p_significance"),
+#   centrality = "all"
+# )
 
 #pp_check(exp4a_rt_m1)
-rg <- emmeans::ref_grid(exp4a_rt_m1)
-em <- emmeans::emmeans(rg, 'ismatch')
-summary(em, point.est = median)
-emmeans::joint_tests(exp4a_rt_m1)
+# rg <- emmeans::ref_grid(exp4a_rt_m1)
+# em <- emmeans::emmeans(rg, 'ismatch')
+# summary(em, point.est = median)
+# emmeans::joint_tests(exp4a_rt_m1)
 
-exp4a_rt_p <- exp4a_rt_m1 %>%
-  emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
-  tidybayes::gather_emmeans_draws() %>%
-  dplyr::mutate(ismatch = ifelse(ismatch == 0, 'nonmatch', 'match'),
-              Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
-              Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
-  dplyr::rename(log_RT = .value) %>%
-  ggplot2::ggplot(aes(x = Valence, y = log_RT, group = Identity, color = Identity)) +
-  #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
-  #geom_line(alpha = .01) +
-  tidybayes::stat_halfeye() +
-  ggplot2::stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
-  #scale_fill_brewer() +
-  facet_grid(~ ismatch) +
-  theme_classic()
+df_exp4a_m1_plot_rt <- exp4a_rt_m1 %>%
+        tidybayes::gather_draws(`b_.*`, regex = TRUE)  %>%
+        dplyr::mutate(.variable = gsub("b_", "", .variable)) %>%
+        tidyr::pivot_wider(names_from = c(.variable), values_from = .value) %>%
+        dplyr::mutate(NM_Self_Neutral = Intercept,               # calculate the differences between conditions
+                      NM_Self_Bad = Intercept  + ValenceBad,
+                      NM_Self_Good = Intercept  + ValenceGood ,
+                      NM_Other_Neutral = Intercept  + IdentityOther,               # calculate the differences between conditions
+                      NM_Other_Bad = Intercept  + ValenceBad  + `ValenceBad:IdentityOther`,
+                      NM_Other_Good = Intercept  + ValenceGood + `ValenceGood:IdentityOther`,
+                      M_Self_Neutral = Intercept  + ismatch,
+                      M_Self_Bad = Intercept  + ismatch + `ismatch:ValenceBad`,
+                      M_Self_Good = Intercept  + ismatch + `ismatch:ValenceGood`,
+                      M_Other_Neutral = Intercept  + ismatch + `ismatch:IdentityOther`,
+                      M_Other_Bad = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:ValenceBad:IdentityOther`,
+                      M_Other_Good = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:ValenceGood:IdentityOther`) %>%
+        dplyr::select(`.chain`, `.iteration`, `.draw`, contains('M_')) %>%
+        tidyr::pivot_longer(cols = NM_Self_Neutral:M_Other_Good, names_to = "term", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term = factor(term, levels = c('NM_Self_Neutral', 'NM_Self_Bad', 'NM_Self_Good',
+                                               'NM_Other_Neutral', 'NM_Other_Bad', 'NM_Other_Good',
+                                               'M_Self_Neutral', 'M_Self_Bad', 'M_Self_Good',
+                                               'M_Other_Neutral', 'M_Other_Bad', 'M_Other_Good')),
+                value = exp(value),
+                value = value * 1000) 
 
-emm1 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
-emm1$contrasts %>% summary(infer = TRUE, point.est = mean)
-
-emm2 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Valence | Identity | ismatch)
-emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
+p_exp4a_rt1 <- df_exp4a_m1_plot_rt %>%
+        tidyr::separate(term, c('Match', 'Identity', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
+        dplyr::filter(Match == 'M') %>%
+        # dplyr::rename(Experiments = condition) %>%
+        dplyr::filter((value >=200) & (value <=1200)) %>%
+        ggplot2::ggplot(aes(y = value, x = Identity, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        stat_summary(aes(group = Valence, color = Valence), fun = mean, geom = "line") +
+        # geom_vline(data = p_ms_rt1_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
+        labs(y=expression('Posteior of reaction times')) +
+        scale_colour_brewer(palette = "Dark2") +
+        scale_fill_brewer(palette = "Dark2") +
+        # facet_grid(~ params , scales = "free_y") +
+        theme_classic()
+        # facet_wrap(~Identity) + 
+        #theme_apa()
+# 
+# emm1 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
+# emm1$contrasts %>% summary(infer = TRUE, point.est = mean)
+# 
+# emm2 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Valence | Identity | ismatch)
+# emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
 
 ```
 
