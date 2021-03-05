@@ -108,7 +108,7 @@ Our first question is, whether the words used the in the associative paradigm is
 
 ## Morality as a social-categorization?
 
-[possible explanations: person-based self-categorization vs. stimuli-based valence] The robust pattern from the first four experiments revealed a novel pattern that needs an explanation. It's novel because it's contradict with the "negative is stronger than positive" hypothesis in social psychology [@baumeister_bad_2001]. There are two major alternatives. One possible explanation is the value-based attention, which suggested that valuable stimuli is prioritized in our low-level cognitive processes. Because positive moral character is potentially rewarding, e.g., potential cooperators, it is valuable to individuals and therefore being prioritized. Most empirical evidence for value-based attention are from experiments used monetary reward. However, the monetary reward might be different greatly from the morality in social setting. So far, only a few empirical studies supported the value-based attention in social evaluation. XXX found that trustworthy faces attracted attention more than untrustworthy faces, probably because trustworthy faces are more likely to be the collaborative partners subsequent tasks, which will bring reward. Applying this explanation to the current setting need a further assumption that  participants automatically view the moral character related information as self-relevant objects. Only based on the objectified stimuli that we evaluate their value (rewarding or threatening) to us [@juechems_where_2019; @reicher_perception_2016]. 
+[possible explanations: person-based self-categorization vs. stimuli-based valence] The robust pattern from the first four experiments revealed a novel pattern that needs an explanation. It's novel because it's contradict with the "negative is stronger than positive" hypothesis in social psychology [@baumeister_bad_2001]. There are two major alternatives. One possible explanation is the value-based attention, which suggested that valuable stimuli is prioritized in our low-level cognitive processes. Because positive moral character is potentially rewarding, e.g., potential cooperators, it is valuable to individuals and therefore being prioritized. Most empirical evidence for value-based attention are from experiments used monetary reward. However, the monetary reward might be different greatly from the morality in social setting. So far, only a few empirical studies supported the value-based attention in social evaluation. @eiserbeck_visual_2020 and @shore_social_2013 found that neutral faces, after associated with trustworthy behavioral description or trustworthy interaction history, attracted attention more than untrustworthy faces, probably because trustworthy faces are more likely to be the collaborative partners subsequent tasks, which will bring reward. Applying this explanation to the current setting need a further assumption that  participants automatically view the moral character related information as self-relevant objects. Only based on the objectified stimuli that we evaluate their value (rewarding or threatening) to us [@juechems_where_2019; @reicher_perception_2016]. 
 
 Another possibility is that we will perceive those moral character not as objects but as person, and automatic categorize whether they are in-group or out-group, instead of calculating their value to us. This account assumed that moral character served as a way to categorize other. In the first four experiments' situation, the identity of the moral character is ambiguous, participants may automatically categorize morally good people as in-group (as an extension of themselves) and therefore preferentially processed these information. 
 
@@ -633,16 +633,19 @@ p_dprime1 <- df_m1_plot_sdt %>%
 
 # plot the posterior of the difference between d prime
 p_dprime1_diff <- df_m1_plot_sdt_diff %>%
-  dplyr::filter(str_detect(term_diff, '_dprm')) %>%
-  dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
-  tidybayes::stat_halfeye() +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) +
-  xlab(expression(paste("Effect of valence on ", italic("d"), "prime", sep = ' '))) + 
-  facet_wrap( ~ term_diff, # scales = "free_y",
-               nrow = 1,
-               labeller = label_parsed)
+        dplyr::filter(str_detect(term_diff, '_dprm')) %>%
+        dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        xlab(expression(paste("Effect of valence on ", italic("d"), "prime", sep = ' '))) + 
+        facet_wrap( ~ term_diff, # scales = "free_y",
+                    nrow = 1,
+                    labeller = label_parsed)
 
 # # plot the posterior of difference between c, supplementary figure
 # df_m1_plot_sdt_diff %>%
@@ -867,7 +870,10 @@ p_rt1_diff <- df_m1_plot_rt_diff %>%
   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
   tidybayes::stat_halfeye() +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  scale_fill_manual(values = c('gray80', 'skyblue')) + 
+  # scale_fill_manual(values = c('gray80', 'skyblue')) +
+  scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
   xlab("Effect of valence on RT (Match trials)") +
   facet_wrap( ~ term_diff,
               # scales = "free_y", 
@@ -880,7 +886,7 @@ p_rt1_diff <- df_m1_plot_rt_diff %>%
 ```{r plot-bayes-meta-1, fig.cap="Effect of moral valence on RT and d'", fig.height=9, fig.width=15, warning=FALSE}
 library(patchwork)
 p_rt1 + p_dprime1 +
-        p_rt1_diff + p_dprime1_diff + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 2, byrow = TRUE)
+        p_rt1_diff + p_dprime1_diff + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 2, byrow = TRUE, guides = 'collect')
 
 # p <- p_rt1 + p_dprime1 + plot_annotation(tag_levels = 'A') + plot_layout(guides = "collect") 
 
@@ -1230,7 +1236,10 @@ p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
         xlab(expression(paste("Valence effect on ", italic("d"), " prime", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
@@ -1245,7 +1254,10 @@ p_ms_dprime1_diff_id <- df_ms_sdt_m1_plot_diff %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
         xlab(expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
@@ -1435,7 +1447,10 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) + 
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) + 
         xlab("Valence effect on RTs (Match trials)") +
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
@@ -1450,7 +1465,10 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) + 
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) + 
         xlab("Self-referential effect on RTs (Match trials)") +
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
@@ -1459,12 +1477,12 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
 ```
 
 
-```{r plot-bayes2, fig.cap="Interaction between moral valence and self-referential", fig.height=9, fig.width=15, warning=FALSE}
+```{r plot-bayes2, fig.cap="Interaction between moral valence and self-referential", fig.height=12, fig.width=15, warning=FALSE}
 library(patchwork)
 # (p_rt1 | p_dprime1)
 p_ms_rt1 + p_ms_dprime1 +
         p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
-        p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE)
+        p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
 ```
 
 See Figure \@ref(fig:plot-bayes2).
@@ -1608,8 +1626,12 @@ p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
         ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) +
-        xlab(expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' '))) + 
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
+        labs(x = expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' ')),
+             y = expression("Contrasts")) + 
         facet_wrap( ~ Identity, nrow = 1)
 
 p_exp4a_dprime1_diff_id <- df_exp4a_sdt_m1_plot_diff %>%
@@ -1625,8 +1647,12 @@ p_exp4a_dprime1_diff_id <- df_exp4a_sdt_m1_plot_diff %>%
         ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
-        xlab(expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' ')))
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) +
+        # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
+        labs(x = expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' ')),
+             y = expression("Contrasts (Self vs. Other)"))
 ```
 
 ```{r 4a_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -1686,7 +1712,7 @@ p_exp4a_rt1 <- df_exp4a_m1_plot_rt %>%
         stat_summary(aes(group = Valence, color = Valence), fun = mean, geom = "line") +
         # geom_vline(data = p_ms_rt1_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
         labs(x = expression("Self-Referential"), 
-             y=expression('Posteior of reaction times')) +
+             y = expression('Posteior of reaction times')) +
         scale_colour_brewer(palette = "Dark2") +
         scale_fill_brewer(palette = "Dark2") +
         # facet_grid(~ params , scales = "free_y") +
@@ -1700,47 +1726,93 @@ p_exp4a_rt1 <- df_exp4a_m1_plot_rt %>%
 # emm2 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Valence | Identity | ismatch)
 # emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
 
+df_exp4a_m1_plot_rt_diff <- df_exp4a_m1_plot_rt %>%
+        # tidyr::unite(term, c('params', 'Identity', 'Valence')) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(term, `.chain`, `.iteration`, `.draw`, `value`) %>%
+        tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+        dplyr::mutate(
+                diff_GN_S_RT_M = M_Self_Good - M_Self_Neutral,
+                diff_BN_S_RT_M = M_Self_Bad - M_Self_Neutral,
+                diff_GB_S_RT_M = M_Self_Good - M_Self_Bad,
+                diff_GN_O_RT_M = M_Other_Good - M_Other_Neutral,
+                diff_BN_O_RT_M = M_Other_Bad - M_Other_Neutral,
+                diff_GB_O_RT_M = M_Other_Good - M_Other_Bad,
+                diff_SO_G_RT_M = M_Self_Good - M_Other_Good,
+                diff_SO_N_RT_M = M_Self_Neutral - M_Other_Neutral,
+                diff_SO_B_RT_M = M_Self_Bad - M_Other_Bad
+                ) %>%
+  dplyr::select(`.chain`, `.iteration`, `.draw`,
+               diff_GN_S_RT_M:diff_SO_B_RT_M) %>%
+  tidyr::pivot_longer(cols = diff_GN_S_RT_M:diff_SO_B_RT_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GN_S_RT_M', 'diff_BN_S_RT_M', 'diff_GB_S_RT_M', 
+                                                         'diff_GN_O_RT_M', 'diff_BN_O_RT_M', 'diff_GB_O_RT_M', 
+                                                         'diff_SO_G_RT_M', 'diff_SO_N_RT_M', 'diff_SO_B_RT_M')))
+p_exp4a_rt_diff_val <- df_exp4a_m1_plot_rt_diff %>%
+        dplyr::filter(str_detect(term_diff, '_S_RT_M|_O_RT_M')) %>%
+        dplyr::mutate(Identity = dplyr::case_when(grepl("_S", term_diff) ~ "Self",
+                                                  grepl("_O", term_diff) ~"Other"),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
+        dplyr::mutate(term_diff = stringr::str_sub(.$term_diff, end = -8)) %>%
+        dplyr::mutate(term_diff = dplyr::case_when(grepl("_GB", term_diff) ~ "Good vs. Bad",
+                                                   grepl("_GN", term_diff) ~"Good vs. Neutral",
+                                                   grepl("_BN", term_diff) ~ "Bad vs. Neutral"),
+                      term_diff = factor(term_diff, levels = c("Good vs. Bad", "Good vs. Neutral", "Bad vs. Neutral"))) %>%
+        # dplyr::filter(str_detect(term_diff, '_SO_')) %>%
+        #dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
+        # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
+        dplyr::rename(conditions = term_diff) %>%
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x < 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
+        labs(x = expression("Self-referential effect on RTs "),
+             y = expression("Contrasts")) + 
+        facet_wrap( ~ Identity, nrow = 1)
+
+p_exp4a_rt_diff_id <- df_exp4a_m1_plot_rt_diff %>%
+        dplyr::filter(str_detect(term_diff, '_SO_')) %>%
+        dplyr::mutate(term_diff = dplyr::case_when(grepl("_B", term_diff) ~ "Bad",
+                                                   grepl("_N", term_diff) ~"Neutral",
+                                                   grepl("_G", term_diff) ~ "Good"),
+                      term_diff = factor(term_diff, levels = c("Good", "Neutral", "Bad"))) %>%
+        # dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
+        # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
+        dplyr::rename(conditions = term_diff) %>%
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x < 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
+        labs(x = expression("Self-referential effect on RTs "),
+             y = expression("Contrasts (Self vs. Other)"))
+
 ```
 
-```{r plot-exp4a-BGLM, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
+```{r plot-exp4a-BGLM, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=9, fig.width=12, warning=FALSE}
 library(patchwork)
-p_exp4a_rt1 + exp4a_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+p1 <- p_exp4a_rt1 + exp4a_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+p2 <- p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+p3 <- p_exp4a_rt_diff_id + p_exp4a_dprime1_diff_id + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+
+p1/ 
+        p2/ 
+        p3 +  plot_layout(nrow = 3) 
 ```
 
 For the task relevant part, we found self-related conditions were performed better than other-related conditions, on both *d* prime and reaction times.
 
-Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. See Figure \@ref(fig:plot-exp4a-BGLM).
+Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4a-BGLM).
 
 
 ```{r child = "exp4b.rmd", eval=FALSE}
-```
-
-```{r remove repeated subj Data, echo=FALSE, results='hide', eval=FALSE}
-## exclude the repeating subjects
-df1c.meta.d <- df1c.meta.d %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210))
-df1c.meta.rt <- df1c.meta.rt %>% dplyr::filter(!Subject %in% c(1206, 1207, 1208, 1210)) # exclude participants who participated exp1a or 1b
-
-df2.meta.d <- df2.meta.d %>% dplyr::filter(Subject > 2000)    # exclude participant from exp 1a
-df2.meta.rt <- df2.meta.rt %>% dplyr::filter(Subject > 2000)
-
-df3a.meta.d <- df3a.meta.d %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
-df3a.meta.rt <- df3a.meta.rt %>% dplyr::filter(!Subject %in% c(3013, 3012, 3043, 3046)) # exclude participants from ex1b, 1c, and 2
-
-df4b.meta.d <- df4b.meta.d %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   # exclude participants from ex1b, 1c, and 2
-df4b.meta.rt <- df4b.meta.rt %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201)) # exclude participants from ex1b, 1c, and 2
-
-df5.meta.d <- df5.meta.d %>% dplyr::filter(!Subject %in% c(5201))   # exclude participants from ex1b, 1c, and 2
-df5.meta.rt <- df5.meta.rt %>% dplyr::filter(!Subject %in% c(5201)) # exclude participants from ex1b, 1c, and 2
-
-df6a.meta.d <- df6a.meta.d %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   # exclude participants from ex1b, 1c, and 2
-df6a.meta.rt <- df6a.meta.rt %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131)) # exclude participants from ex1b, 1c, and 2
-
-df6b.meta.d <- df6b.meta.d %>% dplyr::filter(!Subject %in% c(6217))   # exclude participants from ex1b, 1c, and 2
-df6b.meta.rt <- df6b.meta.rt %>% dplyr::filter(!Subject %in% c(6217)) # exclude participants from ex1b, 1c, and 2
-
-df7a_m.meta.d <- df7a_m.meta.d %>% dplyr::filter(!Subject %in% c(7020))   # exclude participants from ex1b, 1c, and 2
-df7a_m.meta.rt <- df7a_m.meta.rt %>% dplyr::filter(!Subject %in% c(7020)) # exclude participants from ex1b, 1c, and 2
-
 ```
 
 # Results
