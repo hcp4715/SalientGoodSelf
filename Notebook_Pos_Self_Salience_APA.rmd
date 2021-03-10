@@ -82,13 +82,14 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 social vision --> moral vision --> two competing explanations (value-based vs. true-self-based) --> true-self is not perspective free but self-centered.
 
-Will not include experiment 5; stop exploring the correlations.
-
 Our information processing system had been evolved in a way that top-down factor can modulate the low-level processes. There are debates on whether perception can be penetrated by top-down factors.
 
-[Morality is the central of human social life]. People experience a substantial amount of moral events in everyday life [e.g., @hofmann_morality_2014]. When experiencing these events, it always involves judging "good" or "bad". By judging "right" or "wrong", people are implicitly judging the moral character of involved parties as "good" vs. "bad" [@uhlmann_person-centered_2015]. The central role of moral character also supported by the extensive studies from person perception and social evaluation, where morality is a basic dimension for social evaluation [@goodwin_moral_2014; @goodwin_moral_2015; @abele_navigating_2020; @willis_first_2006] and the most important aspect to evaluate the continuity of identity [@strohminger_true_2017]. 
+[Morality is the central of human social life]. People experience a substantial amount of moral events in everyday life [e.g., @hofmann_morality_2014]. When experiencing these events, it always involves judging "good" or "bad", "right" or "wrong". Interestingly, by judging "right" or "wrong", people are implicitly judging the moral character of involved parties as "good" vs. "bad" [@uhlmann_person-centered_2015]. Therefore, moral character is the central theme in moral life. The importance of moral character was also supported by the extensive studies from person perception and social evaluation, where morality is a basic dimension for social evaluation [@goodwin_moral_2014; @goodwin_moral_2015; @abele_navigating_2020; @willis_first_2006] and the most important aspect to evaluate the continuity of identity [@strohminger_true_2017]. 
 
-Given the importance of moral character, to successfully navigate in a social world, a person needs to both evaluate others' moral character and behave in a way that she/he is perceived as a moral person, or at least not a morally bad person. Maintaining a moral self-view is as important as making judgments about others' moral character [@ellemers_psychology_2019]. Indeed, previous studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@klein_maybe_2016; @tappin_illusion_2017]. Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to expose an unethical behavior depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
+Given the importance of moral character in social life, it would not be a surprise if individual prioritize moral character related information. Indeed, studies have shown that people can form a rapid judgment of others' moral character, "trustworthiness", by merely viewing faces of others. Beyond that, moral behaviors are deemed as the most diagnostic feature of a person (@ ; @). Recent theorists further integrated the moral judgment and moral self-view, proposed a person-centered account for moral psychology, which focused on the individuals in moral evaluation instead of acts [@uhlmann_person-centered_2015]. Under this framework, previous seemingly contradicting phenomenons can be explained. For example, whether people decide to expose an unethical behavior depends on how their relationship of the target [e.g., @waytz_whistleblowers_2013]. 
+
+The importance of moral character also means that individual has a strong motivation to maintain a moral self-view [@ellemers_psychology_2019]. Studies found that people maintain a positive moral self-view even after dishonest behavior [@monin_dynamic_2009] and that people evaluate themselves as morally superior to others [@klein_maybe_2016; @tappin_illusion_2017]. 
+
 
 To date, however, as @freeman_dynamic_2011 put it, studies in the perception of moral character didn't try to explain the perceptual process, rather, they are trying to explain the higher-order social cognitive processes that come after. Essentially, these studies are perception of moral character without perceptual process. Without knowledge of perceptual processes, we can not have a full picture of how moral character is processed in our cognition. As an increasing attention is paid to perceptual process underlying social cognition, it's clear that perceptual processes are strongly influenced by social factors, such as group-categorization, stereotype [see @bagnis_toward_2019; @xiao_perceiving_2016;@stolier_functional_2016]. Given the importance of moral character and that moral character related information has strong influence on learning and memory [@stanley_moral_2019; @carlson_motivated_2020], one might expect that moral character related information could also play a role in perceptual process.
 
@@ -1798,10 +1799,9 @@ p_exp4a_rt_diff_id <- df_exp4a_m1_plot_rt_diff %>%
 
 ```{r plot-exp4a-BGLM, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=9, fig.width=12, warning=FALSE}
 library(patchwork)
-p1 <- (p_exp4a_rt1 + exp4a_sdt_p) + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+p1 <- (p_exp4a_rt1 + exp4a_sdt_p) #+ plot_layout(nrow = 1, guides = "collect") 
 p2 <- (p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val) + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
 # p3 <- p_exp4a_rt_diff_id + p_exp4a_dprime1_diff_id + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
-
 #p1/ 
 #        p2  +  plot_layout(nrow = 2)  
         # p3 +  plot_layout(nrow = 3) 
@@ -1809,7 +1809,7 @@ p2 <- (p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val) + plot_layout(nrow = 1, b
 
 For the task relevant part, we found self-related conditions were performed better than other-related conditions, on both *d* prime and reaction times.
 
-Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4a-BGLM).
+Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4-all).
 
 ```{r 4b_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp_name <- '4b'
@@ -1851,8 +1851,8 @@ exp4b_sdt_p <- df_exp4b_sdt_m1_plot %>%
   stat_summary(aes(group = Identity, color = Identity), fun = mean, geom = "line") +
   labs(x = expression("Valence"), 
       y = expression(paste("Posteior of sensitivity ", italic("d'"), sep = ' '))) +
-  scale_colour_brewer(palette = "Dark2") +
-  scale_fill_brewer(palette = "Dark2") +
+  #scale_colour_brewer(palette = "Dark2") +
+  #scale_fill_brewer(palette = "Dark2") +
   theme_classic() 
 
 df_exp4b_sdt_m1_plot_diff <- df_exp4b_sdt_m1_plot %>%
@@ -1965,8 +1965,8 @@ p_exp4b_rt1 <- df_exp4b_m1_plot_rt %>%
         # geom_vline(data = p_ms_rt1_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
         labs(x = expression("Valence"), 
              y = expression('Posteior of reaction times')) +
-        scale_colour_brewer(palette = "Dark2") +
-        scale_fill_brewer(palette = "Dark2") +
+        #scale_colour_brewer(palette = "Dark2") +
+        #scale_fill_brewer(palette = "Dark2") +
         theme_classic()
 
 df_exp4b_m1_plot_rt_diff <- df_exp4b_m1_plot_rt %>%
@@ -2059,27 +2059,34 @@ p_exp4b_rt_diff_id <- df_exp4b_m1_plot_rt_diff %>%
 
 ```{r plot-exp4b-BGLM, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=9, fig.width=12, warning=FALSE}
 library(patchwork)
-p3 <- (p_exp4b_rt1 + exp4b_sdt_p ) + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
+p3 <- (p_exp4b_rt1 + exp4b_sdt_p ) + plot_layout(nrow = 1, guides = "collect") 
 # p2 <- p_exp4b_rt_diff_val + p_exp4b_dprime1_diff_val + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
 p4 <- (p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id) + plot_layout(nrow = 1, byrow = FALSE, guides = "collect") 
-
-
 ```
 
-```{r plot-exp4-all, fig.cap="exp4a: Results of Bayesian GLM analysis.",  fig.height=9, fig.width=12, warning=FALSE}
+```{r plot-exp4-all, fig.cap="exp4: Results of Bayesian GLM analysis.",  fig.height=9, fig.width=12, warning=FALSE}
 library(patchwork)
-(((p_exp4a_rt1 + exp4a_sdt_p + plot_layout(guides = "collect", nrow = 1)) + 
-                (p_exp4b_rt1 + exp4b_sdt_p + plot_layout(guides = "collect", nrow = 1)) + plot_layout(nrow = 1)) / 
-        ((p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + plot_layout(guides = "collect", nrow = 1)) 
-         + (p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_layout(guides = "collect", nrow = 1)) + plot_layout(nrow = 1))) + 
-        plot_layout(nrow =2, byrow = TRUE, guides = "keep") +  plot_annotation(tag_levels = 'A')  
+
+design <- "
+  1234
+  5678
+"
+p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id  + plot_layout(design = design, guides = "collect")
+
+# ((p1 +plot_layout(guides = "collect")) + p3 + plot_layout(guides = "collect")) + plot_layout(ncol = 3, widths = c(1, 1, 4), guides = 'keep')
+# 
+# (((p_exp4a_rt1 + exp4a_sdt_p + plot_layout(guides = "collect", nrow = 1)) + 
+#                 (p_exp4b_rt1 + exp4b_sdt_p + plot_layout(guides = "collect", nrow = 1)) + plot_layout(nrow = 1)) + 
+#         ((p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + plot_layout(guides = "collect", nrow = 1)) 
+#          + (p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_layout(guides = "collect", nrow = 1)) + plot_layout(nrow = 1))) + 
+#         plot_layout(design = design, guides = "keep") +  plot_annotation(tag_levels = 'A')  
 
 ```
 
 
 In this task, we found shapes associated with good person conditions were performed better than other-related conditions, on both *d* prime and reaction times.
 
-Most importantly, we found evidence, that task-irrelevant self-relevance also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside as task-irrelevant stimuli than with "other" inside (mean_diff = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" (mean_diff = 0.04, 95% CI [-.11, .18]) or "bad" person (mean_diff = -.05, 95% CI[-.18, .09]). The same trend appear for the RT data. For shapes associated with good person, an "self" inside will reduce the RTs as compared with when a "other" inside the shape (mean_diff = -55 ms, 95%CI[-75, -35], p < 0.0001), but this effect did not occure when the shapes were associated neutral (mean_dfiff = 10, 95% CI [1, 20]) or bad (mean_diff = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4b-BGLM).
+Most importantly, we found evidence, that task-irrelevant self-relevance also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside as task-irrelevant stimuli than with "other" inside (mean_diff = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" (mean_diff = 0.04, 95% CI [-.11, .18]) or "bad" person (mean_diff = -.05, 95% CI[-.18, .09]). The same trend appear for the RT data. For shapes associated with good person, an "self" inside will reduce the RTs as compared with when a "other" inside the shape (mean_diff = -55 ms, 95%CI[-75, -35], p < 0.0001), but this effect did not occure when the shapes were associated neutral (mean_dfiff = 10, 95% CI [1, 20]) or bad (mean_diff = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
 
 ## Self-reported personal distance
 

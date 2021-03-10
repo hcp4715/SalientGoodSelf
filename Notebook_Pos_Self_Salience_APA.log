@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  9 MAR 2021 08:39
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  10 MAR 2021 08:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1046,16 +1046,16 @@ Underfull \vbox (badness 6608) has occurred while \output is active []
 [23] [24]
 
 LaTeX Warning: Reference `fig:plot-person-dist' on page 25 undefined on input l
-ine 490.
+ine 484.
 
 
-LaTeX Warning: Reference `fig:plot-corr-1' on page 25 undefined on input line 5
-03.
+LaTeX Warning: Reference `fig:plot-corr-1' on page 25 undefined on input line 4
+97.
 
 [25]
 
-LaTeX Warning: Reference `fig:plot-corr-2' on page 26 undefined on input line 5
-05.
+LaTeX Warning: Reference `fig:plot-corr-2' on page 26 undefined on input line 4
+99.
 
 [26] [27] [28] [29] [30] [31] AED endfloat: Processing end Figures and Tables [
 32] (./Notebook_Pos_Self_Salience_APA.fff
@@ -1066,12 +1066,9 @@ File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf Graph
 ic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf>
-File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4a-BGLM-1.pdf G
-raphic file (type pdf)
-<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4a-BGLM-1.pdf>
-File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-BGLM-1.pdf G
-raphic file (type pdf)
-<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4b-BGLM-1.pdf>
+File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf Gra
+phic file (type pdf)
+<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf>
 )
 The property list \polyglossia@langsetup contains the pairs (without outer
 braces):
@@ -1110,7 +1107,7 @@ braces):
 [33
 
 
-] [34] [35] [36] (./Notebook_Pos_Self_Salience_APA.aux
+] [34] [35] (./Notebook_Pos_Self_Salience_APA.aux
 LaTeX Info: Redefining \rmfamily on input line 19.
 LaTeX Info: Redefining \sffamily on input line 19.
 LaTeX Info: Redefining \ttfamily on input line 19.
@@ -1123,12 +1120,12 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 20582 strings out of 479426
- 363754 string characters out of 5880680
- 847042 words of memory out of 5000000
- 39632 multiletter control sequences out of 15000+600000
+ 20575 strings out of 479426
+ 363315 string characters out of 5880680
+ 846968 words of memory out of 5000000
+ 39626 multiletter control sequences out of 15000+600000
  552012 words of font info for 66 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  94i,12n,118p,2389b,478s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (36 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (35 pages).
