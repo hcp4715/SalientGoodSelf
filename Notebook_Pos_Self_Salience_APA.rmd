@@ -80,11 +80,13 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
  <!--[sentences in bracket are key ideas] -->
 
+[quotes about moral character]
+
 social vision --> moral vision --> two competing explanations (value-based vs. true-self-based) --> true-self is not perspective free but self-centered.
 
-With limited cognitive resources, not all input information are processed equally. Visual stimuli, for example, are prioritized because for reasons: salient physical features, affective value or rewarding value [attention capture related papers]. To navigate in a social world, important social information shall also be prioritized. For example, self-relevant information. Beyond self-relevance, recent studies found that moral related information also prioritized (@brady_attentional_2020; @gantman_moral_2014). The center of morality is person (). Therefore it is not surprising that moral character information that associated with person having advantage in early information processing stage (@eiserbeck_visual_2020, @anderson_visual_2011). Studies used instantly acquired character related information to neutral faces and then tested these faces with various cognitive task, most studies found that neutral faces associated with negative social behavioral were prioritized as compared to neutral (and positive) (@anderson_visual_2011, @eiserbeck_visual_2020, but see @stein_no_2017), while other studies reported positive behavioral related faces were processed faster in attention (@shore_social_2013). 
+With limited cognitive resources, not all input information are processed equally. Visual stimuli, for example, are prioritized because for reasons: salient physical features, affective value or rewarding value [attention capture related papers]. Most human are navigating in a social world, thus, important social information is also be prioritized. For example, self-relevant and affective information. Beyond that, recent studies found that moral related information also prioritized (@brady_attentional_2020; @gantman_moral_2014). The center of morality is person (). It is not surprising that moral character information that associated with person having advantage in early information processing stage (@eiserbeck_visual_2020, @anderson_visual_2011). Studies used instantly acquired character related information to neutral faces and then tested these faces with various cognitive task, most studies found that neutral faces associated with negative social behavioral were prioritized as compared to neutral (and positive) (@anderson_visual_2011, @eiserbeck_visual_2020, but see @stein_no_2017), while other studies reported positive behavioral related faces were processed faster in attention (@shore_social_2013). 
 
-Yet it is unclear what is exact mechanism underlying effect of moral character on perceptual process. Understanding the mechanism may help us to reconcile the seemingly conflicting results. So far, researchers reported that effect of moral character can happen between moral and non-moral, or between negative and neutral, or between positive and neutral. For each results, there can be an explanation. For example, the valence effect of moral character can be explained as a valence effect that resemble to the results in emotional stimuli, the negativity effect can then be explained by threatening effect, last but not least, the positivity effect can be explained by value-based information process, i.e., we are avoiding potential free-riders and approaching to potential cooperators. This value-based explanation had been used to explain previous results (e.g., @shore_social_2013). 
+The conflicting results also imply different mechanisms underlying the moral character effect. The negativity effect was usually attributed to its affective value, which, in essence, is a threatening effect. In contrast, the positivity effect suggested a value-based information process, i.e., we are avoiding potential free-riders and approaching to potential cooperators. This value-based explanation had been used to explain previous results (e.g., @shore_social_2013). 
 
 To clarify the effect and find a potential mechanism, we need first to find a robust effect that can be replicated. In the moral perceptual it is especially important because some of the experiments were not successfully replicated (see @stein_no_2017). After finding an stable effect, we could then explore the potential mechanisms. 
 
@@ -103,27 +105,15 @@ This paradigm consistent with the dynamic interactive model of person perception
 
 We tested the moral associative learning task by a series of experiments and found a robust effect moral positive effect.
 
-### Threat, value, or social-categorization
+### Good person as profitable other or as an extension of the self
 
 After finding out a robust effect of moral positivity, the next question is how to reconcile our results with previous studies. As we mentioned, the results concerning the moral related perception studies already showed quite divergent results. While @gantman_moral_2014 found a valence effect of moral words without direction, @eiserbeck_visual_2020 reported a negative effect and @shore_social_2013 reported a positive effect. Note that @eiserbeck_visual_2020 only used negative and neutral stimuli, therefore it's difficult to tell whether there will be a positive effect if positive valence was also used. There are several possibilities for the positivity effect. 
 
-The threat account was not ..
+The value based account is an appealing explanation, there were strong evidence showing that positive stimuli are prioritized []. For example, [Anderson et al (2011)] found that stimuli associated with higher reward could be found more easily in a visual search task. The follow-up studies confirmed that value-based prioritization if a robust effect. A meta-analysis also found that positive stimuli are preferentially processed in perception []. In our experiments, the positive moral character label "good person" may represent a positive, vacuous value. The moral value of others was found to be profitable in previous survey [Abele et al].
 
-The value based account is appealing at first, there were strong evidence showing that positive stimuli are prioritized ...
+Another account that may explain this effect but paid less attention to is the social categorization theory. Social categorization theory stated that we perceiving others based on whether or not belong to "us"[], as an extension of the self. In other words, we may view positive moral character as extension of the self. Social categorization recently has been applied to moral psychology could be used to explain a variety of effect []. An independent research line had long found that social categorization impact our perceptual process [Xiao]. If moral judgment is a social categorization process [], and if social categorization impact our visual perception [], then we can infer positive moral character might be prioritized because we regard that as an natural extension of the self.
 
-A third account that might explain this effect but paid less attention is the social categorization. Only recently did reseachers begin to investigate the perceptual process of social categorization. The results revealed a strong influence of social category on perception. This view as consistent with recent disucssion about the person-based morality.
-
-
-In moral psychology, however, there was a different view on why we judge other as good or bad: we doing so because we want to know who is us and who is other []. In other words, character is a signal of social categorization, indicating whether we can treat someone as extension of the self. 
-
-Social associative learning task: "Even minimal behavioral information, such as a single sentence, is sufficient for robust positive or negative associations with a person face (Bliss-Moreau, Barrett, & Wright, 2008; Falvello, Vinson, Ferrari, & Todorov, 2015; Todorov & Olson, 2008). This demonstrates the readiness and ease with which such affective learning occurs – even in cases where the veracity of the information is unclear (Baum, Rabovsky, Rose, & Abdel Rahman, 2018)."
-
-We designed a series of experiments to test these two hypotheses. 
-
-
-
-[quotes about moral character]
-
+To test these two explanations, we designed the second series of experiments, where we have design in which the valence of the moral character and self-relevance were orthogonal. In these experiment, 
 
 People view a lot of news feed everyday, and the moral related information are more likely paid attention to and go viral on social media (@brady_attentional_2020). Most moral events are person-centered [@uhlmann_person-centered_2015], we are judging the moral character of individuals who involved in the moral event as "good" or "bad", and by condemning others or publicly showing our moral outrageous, we are signalling our own moral character, which is essential for us to living in the social world. 
 
