@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  23 MAR 2021 10:57
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  24 MAR 2021 09:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -645,26 +645,26 @@ LaTeX Info: Redefining \ttfamily on input line 19.
 )
 \openout1 = `Notebook_Pos_Self_Salience_APA.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 199.
-LaTeX Font Info:    ... okay on input line 199.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 198.
+LaTeX Font Info:    ... okay on input line 198.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -711,19 +711,19 @@ Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
 Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 199.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 199.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 199.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 199.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 199.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 199.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 198.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 199.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 198.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -752,7 +752,7 @@ pt=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 199.
+(Font)              scaled to size 12.0pt on input line 198.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -791,18 +791,18 @@ pt=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 199.
+(Font)              scaled to size 12.0pt on input line 198.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 199.
+(Font)              `operators' in the math version `normal' on input line 198.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 199.
+ line 198.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 199.
+(Font)              `operators' in the math version `bold' on input line 198.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 199.
+t line 198.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -889,15 +889,15 @@ t=math;language=dflt;"
 (fontspec)             \fontdimen 21\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 199.
+(Font)              `symbols' in the math version `normal' on input line 198.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 199.
+t line 198.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 199.
+(Font)              `symbols' in the math version `bold' on input line 198.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 199.
+t line 198.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -967,17 +967,17 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-99.
+98.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 199.
+t line 198.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 199
+(Font)              `largesymbols' in the math version `bold' on input line 198
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 199.
-Package hyperref Info: Link coloring OFF on input line 199.
+t line 198.
+Package hyperref Info: Link coloring OFF on input line 198.
 (/home/hcp4715/.TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 (/home/hcp4715/.TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
@@ -989,44 +989,44 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count327
 )
-LaTeX Info: Redefining \ref on input line 199.
-LaTeX Info: Redefining \pageref on input line 199.
-LaTeX Info: Redefining \nameref on input line 199.
+LaTeX Info: Redefining \ref on input line 198.
+LaTeX Info: Redefining \pageref on input line 198.
+LaTeX Info: Redefining \nameref on input line 198.
 (./Notebook_Pos_Self_Salience_APA.out) (./Notebook_Pos_Self_Salience_APA.out)
 \@outlinefile=\write5
 \openout5 = `Notebook_Pos_Self_Salience_APA.out'.
 
-LaTeX Info: Redefining \rmfamily on input line 199.
-LaTeX Info: Redefining \sffamily on input line 199.
-LaTeX Info: Redefining \ttfamily on input line 199.
+LaTeX Info: Redefining \rmfamily on input line 198.
+LaTeX Info: Redefining \sffamily on input line 198.
+LaTeX Info: Redefining \ttfamily on input line 198.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.4pt on input line 201.
+(Font)              scaled to size 8.4pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 201.
+(Font)              scaled to size 6.0pt on input line 200.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-01.
+00.
 (/home/hcp4715/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 12.0011pt on input line 201.
+(Font)              scaled to size 12.0011pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.40076pt on input line 201.
+(Font)              scaled to size 8.40076pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.00055pt on input line 201.
+(Font)              scaled to size 6.00055pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.99872pt on input line 201.
+(Font)              scaled to size 11.99872pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 8.3991pt on input line 201.
+(Font)              scaled to size 8.3991pt on input line 200.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.99936pt on input line 201.
+(Font)              scaled to size 5.99936pt on input line 200.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
-01.
+00.
 (/home/hcp4715/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-201.
+200.
 (/home/hcp4715/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [1
@@ -1034,37 +1034,31 @@ File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ] [2] [3]
 Underfull \vbox (badness 7649) has occurred while \output is active []
 
-[4] [5] [6] [7]
-Underfull \vbox (badness 3977) has occurred while \output is active []
-
-[8] [9] [10] [11] [12]
+[4] [5] [6] [7] [8] [9]
 Underfull \vbox (badness 7649) has occurred while \output is active []
 
-[13] [14] [15]
-Underfull \vbox (badness 2205) has occurred while \output is active []
+[10] [11] [12]
+Underfull \vbox (badness 7649) has occurred while \output is active []
 
-[16] [17] [18] [19] [20] [21]
+[13] [14] [15] [16] [17] [18] [19] [20]
 \openout4 = `Notebook_Pos_Self_Salience_APA.fff'.
 
-(Notebook_Pos_Self_Salience_APA.fff)
-Underfull \vbox (badness 6608) has occurred while \output is active []
+(Notebook_Pos_Self_Salience_APA.fff) [21] [22]
 
-[22] [23]
+LaTeX Warning: Reference `fig:plot-person-dist' on page 23 undefined on input l
+ine 455.
 
-LaTeX Warning: Reference `fig:plot-person-dist' on page 24 undefined on input l
-ine 460.
-
+[23]
 
 LaTeX Warning: Reference `fig:plot-corr-1' on page 24 undefined on input line 4
-73.
+68.
 
-[24]
 
-LaTeX Warning: Reference `fig:plot-corr-2' on page 25 undefined on input line 4
-75.
+LaTeX Warning: Reference `fig:plot-corr-2' on page 24 undefined on input line 4
+70.
 
-[25] [26] [27] [28] [29] [30] [31] AED endfloat: Processing end Figures and Tab
-les [32] (./Notebook_Pos_Self_Salience_APA.fff
+[24] [25] [26] [27] [28] [29] [30] AED endfloat: Processing end Figures and Tab
+les [31] (./Notebook_Pos_Self_Salience_APA.fff
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf
  Graphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf>
@@ -1110,10 +1104,10 @@ braces):
 >  {english/babelname}  =>  {american}
 >  {english/localnumeral}  =>  {polyglossia@C@localnumeral}
 >  {english/Localnumeral}  =>  {polyglossia@C@localnumeral}.
-[33
+[32
 
 
-] [34] [35] (./Notebook_Pos_Self_Salience_APA.aux
+] [33] [34] (./Notebook_Pos_Self_Salience_APA.aux
 LaTeX Info: Redefining \rmfamily on input line 19.
 LaTeX Info: Redefining \sffamily on input line 19.
 LaTeX Info: Redefining \ttfamily on input line 19.
@@ -1128,10 +1122,10 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  20572 strings out of 479426
  363227 string characters out of 5880680
- 847478 words of memory out of 5000000
+ 846537 words of memory out of 5000000
  39623 multiletter control sequences out of 15000+600000
  552012 words of font info for 66 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  94i,12n,118p,2269b,478s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (35 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (34 pages).
