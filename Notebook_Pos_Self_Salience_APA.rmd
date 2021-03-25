@@ -28,7 +28,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- Morality is central to social life, moral character is the center of morality. Researchers had long assumed moral character information is prioritized in perceptual process, yet the evidence is scarce. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching. Participants first learned the association between moral characters (labels) and visual cues (shapes), then performed a shape-label perceptual matching task. The results revealed that shapes associated with good character were prioritized, as compared to shapes associated with neutral or bad characters. This effect was robust after changing the words for label or using diagnostic behavioral as an proxy of mroal character. Also, this pattern was robust when changing simultaneous presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization versus social-categorization based prioritization. We manipulated the identity of different moral character explicitly and found that the good character effect was strong when it refers to the self but weak or non-exist when it refers to a stranger. In further experiments where identity or moral character information were presented as task-irrelevant stimuli, we found that participants cared about the character when identity information is salient and valance information is irrelevant, but when valence information is task-relevant but not identity information, participants cared more about the good character's identity than the neutral or bad character. Together, these results suggested that people are senstive to who is the good character, but less sensitive to who is the neutral or bad character. When the identity information is ambiguous, people may spontaneously referring the good character as self. These results added new evidence for the social vision and suggested the advantage of good character depends on the self-relevance.
+ Morality is central to social life, moral character is central to morality. Researchers assume that moral character information is prioritized in perceptual process, yet the evidence is scarce. In a series of experiments, we examined the effect of immediately acquired moral character information on perceptual matching. Participants first learned the association between moral characters (labels) and visual cues (shapes), then performed a shape-label perceptual matching task. The results revealed that shapes associated with good character were prioritized, as compared to shapes associated with neutral or bad characters. This effect was robust after changing the words for label or using diagnostic behavioral as an proxy of mroal character. Also, this pattern was robust when changing simultaneous presentation to sequential presentation. We then examined two approximate explanations for this effect: value-based prioritization versus social-categorization based prioritization. We manipulated the identity of moral character explicitly and found that good character effect was strong when it refers to the self but weak or non-exist when it refers to a stranger. In further experiments where both identity or moral character information were presented but only one of them served as task-relevant stimuli, we found that task-irrelevant good character facilitate response to self but slow down the response to stranger and that task-irrelevant self-referntial information facilitated response to good character but task-irrlevant stranger-referential information slowed down response to good character. Together, these results suggested that people are senstive to who is the good character, but less sensitive to who is the neutral or bad character. When the identity information is ambiguous, people may spontaneously referring the good character as self. These results added new evidence for the social vision and suggested the advantage of good character depends on the self-relevance.
   
  <!-- https://tinyurl.com/ybremelq -->
   
@@ -435,8 +435,7 @@ fun_rt_val_id <- function(exp_name) {
 ```
 
 # Part 1: Perceptual processing moral character related information
-In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situation. Therefore, we modeled them as independent samples.  These five experiments revealed a robust effect of moral character on perceptual matching task. 
-
+In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situations. Therefore, we modeled them as independent samples.  These five experiments revealed a robust effect of moral character on perceptual matching task. 
 
 ```{r remove non-meta data, eval = FALSE, echo=FALSE, results='hide', warning=FALSE}
 # remove all unnecessary variables
@@ -645,7 +644,7 @@ p_dprime1_diff <- df_m1_plot_sdt_diff %>%
         scale_fill_manual(values = c('skyblue', 'gray80'),
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
-        xlab(expression(paste("Effect of valence on ", italic("d"), "prime", sep = ' '))) + 
+        xlab(expression(paste("Effect of valence on ", italic("d"), " prime", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                     nrow = 1,
                     labeller = label_parsed)
@@ -896,9 +895,9 @@ p_rt1 + p_dprime1 +
 #  ggsave('part1_plot_posterior.png', p, width = 15, height = 7.5)
 ```
 
-For the *d* prime, we found robust effect of moral valence. Shapes associated with positive moral valence ("good person", "kind person" or a name associated with morally good behavioral history) has higher sensitivity (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ), but we did not find differences between shapes associated with negative moral label (mean = , 95% HDI = ) and neutral condition.
+For the *d* prime, we found robust effect of moral character. Shapes associated with good character ("good person", "kind person" or a name associated with morally good behavioral history) has higher sensitivity (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ), but we did not find differences between shapes associated with negative moral label (mean = , 95% HDI = ) and neutral condition.
 
-For the reaction times, we also found robust effect of moral valence. Shapes associated with positive moral valence has faster responses (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ). We also found that the responses to shapes associated with negative moral valence (mean = , 95% HDI = ) were slower as compared to the neutral condition. See Figure \@ref(fig:plot-bayes-meta-1).
+For the reaction times, we also found robust effect of moral character. Shapes associated with good character has faster responses (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ). We also found that the responses to shapes associated with negative moral valence (mean = , 95% HDI = ) were slower as compared to the neutral condition. See Figure \@ref(fig:plot-bayes-meta-1).
 
 ```{r model comp for rt, eval = FALSE, echo=FALSE, results='hide' }
 #### model copmarison etc, will be in supplementary materials
@@ -1479,7 +1478,6 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
               labeller = label_parsed)
 ```
 
-
 ```{r plot-bayes2, fig.cap="Interaction between moral valence and self-referential", fig.height=12, fig.width=15, warning=FALSE}
 library(patchwork)
 # (p_rt1 | p_dprime1)
@@ -1487,12 +1485,13 @@ p_ms_rt1 + p_ms_dprime1 +
         p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
         p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
 ```
+For the *d* prime, we found that moral character effect only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self (mean_{diff} = ; 95% HDI = []), *d* prime for good-self was also greater than good-other condition (mean_{diff} = ; 95% HDI = []). The differences between bad-self and neutral-self, good-other and neutral-other, bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). However, when comparing self- and other-referential on neutral and bad conditions, the *d* prime was greater for other-referential conditions than self-referential conditions.
 
-See Figure \@ref(fig:plot-bayes2).
+For the RTs part, we also found good-self prioritization effect, both compared with neutral-self () and good-other () conditions. Also, we found that both good character and bad character were responded slower than neutral character when it was other-referential. See Figure \@ref(fig:plot-bayes2).
 
 # Part 3: Implicit binding between valence and identity
 
-In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance will eliminate the effect observed in previous experiment. 
+In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment. 
 
 ```{r 4a_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp_name <- '4a'
@@ -1858,7 +1857,9 @@ p2 <- (p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val) + plot_layout(nrow = 1, b
 
 For the task relevant part, we found self-related conditions were performed better than other-related conditions, on both *d* prime and reaction times.
 
-Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4-all).
+Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4-all). 
+
+The same pattern was found for RTs. For self-referntial condition, when good character was presented as a task-irrelevant stimuli, the responds were facilitated. This effect was reversed for other-referential condition.
 
 ```{r 4b_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp_name <- '4b'
@@ -2137,7 +2138,7 @@ p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_
 
 In this task, we found shapes associated with good person conditions were performed better than other-related conditions, on both *d* prime and reaction times.
 
-Most importantly, we found evidence, that task-irrelevant self-relevance also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside as task-irrelevant stimuli than with "other" inside (mean_diff = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" (mean_diff = 0.04, 95% CI [-.11, .18]) or "bad" person (mean_diff = -.05, 95% CI[-.18, .09]). The same trend appear for the RT data. For shapes associated with good person, an "self" inside will reduce the RTs as compared with when a "other" inside the shape (mean_diff = -55 ms, 95%CI[-75, -35], p < 0.0001), but this effect did not occur when the shapes were associated neutral (mean_dfiff = 10, 95% CI [1, 20]) or bad (mean_diff = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
+Most importantly, we found evidence, that task-irrelevant self-relevance also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside as task-irrelevant stimuli than with "other" inside ($mean_{dfiff}$ = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" ($mean_{dfiff}$ = 0.04, 95% CI [-.11, .18]) or "bad" person ($mean_{dfiff}$ = -.05, 95% CI[-.18, .09]). The same trend appear for the RT data. For shapes associated with good person, an "self" inside will reduce the RTs as compared with when a "other" inside the shape ($mean_{dfiff}$ = -55 ms, 95%CI[-75, -35], p < 0.0001), but this effect did not occur when the shapes were associated neutral ($mean_{dfiff}$ = 10, 95% CI [1, 20]) or bad ($mean_{dfiff}$ = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
 
 ## Self-reported personal distance
 
@@ -2647,6 +2648,14 @@ corr_plot_list[[1]] + corr_plot_list[[2]]  + corr_plot_list[[4]] +
 We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential, however, the sample size is very low for some conditions.
 
 # Discussion
+In a series of experiments, we found that (1) good character are prioritized in perceptual matching task; (2) this effect was robust when moral characters are self-referential but not stranger-referential; (3) the self-good character combination, whether task-relevant or not, facilitate the process but other-good character combination didn't have this effect, if not reverse. The self-reported mental distance scale also showed that people rated self has longer distance to bad character.
+
+[direct evidence for moral character in perception]
+
+[Value-based attention?]
+
+[Good-self effect]
+
 
 # References
 ```{r create_r-references, echo=FALSE,results='hide'}
