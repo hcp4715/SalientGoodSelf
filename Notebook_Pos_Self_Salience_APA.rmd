@@ -434,7 +434,8 @@ fun_rt_val_id <- function(exp_name) {
 ```{r child = "general_method.rmd"}
 ```
 
-# Part 1: Perceptual processing moral character related information
+# Results
+## Perceptual processing moral character related information
 In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situations. Therefore, we modeled them as independent samples.  These five experiments revealed a robust effect of moral character on perceptual matching task. 
 
 ```{r remove non-meta data, eval = FALSE, echo=FALSE, results='hide', warning=FALSE}
@@ -497,7 +498,7 @@ sdt_val_m1 <- brms::brm(saymatch ~ 0 + Valence + Valence:ismatch +
                        backend = 'cmdstanr',  # with cmdstanr
                        file = here::here("glmmModels/sdt_val_DummyCode_3_level"))
 
-summary(sdt_val_m1)
+# summary(sdt_val_m1)
 # stancode(sdt_val_m1)
 
 # plot(hypothesis(sdt_val_m1, "ValenceBad:ismatch > ValenceNeutral:ismatch"))
@@ -518,30 +519,46 @@ summary(sdt_val_m1)
 #   theme(axis.title.x = element_blank())
 
 # plot the population level parameter (d prime)
-sdt_val_m1_p <- sdt_val_m1 %>%
-        # get the traces of population level parameters
-        tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
-        # create two columns for two independent factors.
-        dplyr::mutate(Valence = dplyr::case_when(
-                grepl("ValenceBad", .variable) ~ "Bad",
-                grepl("ValenceNeutral", .variable) ~ "Neutral",
-                grepl("ValenceGodd", .variable) ~ "Good"),
-                params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
-                                           !grepl("ismatch", .variable) ~"criterion"),
-                params = factor(params, levels = c('d prime', 'criterion')),
-                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
-          ) %>%
-  # select only d prime
-  dplyr::filter(params == 'd prime') %>%
-  ggplot2::ggplot(aes(x = Valence, y = .value)) +
-  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
-  stat_summary(aes(group = NA), fun = mean, geom = "line") +
-  ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
-  # xlab("Valence") +
-  #facet_grid(cols = vars(params), scales = "free_y") +
-  theme_classic() # + 
+# sdt_val_m1_p <- sdt_val_m1 %>%
+#         # get the traces of population level parameters
+#         tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+#         # create two columns for two independent factors.
+#         dplyr::mutate(Valence = dplyr::case_when(
+#                 grepl("ValenceBad", .variable) ~ "Bad",
+#                 grepl("ValenceNeutral", .variable) ~ "Neutral",
+#                 grepl("ValenceGood", .variable) ~ "Good"),
+#                 params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
+#                                            !grepl("ismatch", .variable) ~"criterion"),
+#                 params = factor(params, levels = c('d prime', 'criterion')),
+#                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))
+#           ) %>%
+#   # select only d prime
+#   dplyr::filter(params == 'd prime') %>%
+#   ggplot2::ggplot(aes(x = Valence, y = .value)) +
+#   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+#   stat_summary(aes(group = NA), fun = mean, geom = "line") +
+#   ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
+#   # xlab("Valence") +
+#   #facet_grid(cols = vars(params), scales = "free_y") +
+#   theme_classic() # + 
   # theme(axis.title.x = element_blank())
 
+df_m1_std_fixed_effect <- bayestestR::describe_posterior(
+  sdt_val_m1,
+  effects = "fixed",
+  component = "all",
+  ci = 0.95,
+  ci_method = 'hdi',
+  test = c("p_direction", "p_significance"),
+  centrality = "all") %>%
+        dplyr::mutate(Valence = dplyr::case_when(
+                grepl("ValenceBad", Parameter) ~ "Bad",
+                grepl("ValenceNeutral", Parameter) ~ "Neutral",
+                grepl("ValenceGood", Parameter) ~ "Good"),
+                params = dplyr::case_when(grepl("ismatch", Parameter) ~ "d prime",
+                                           !grepl("ismatch", Parameter) ~"criterion"),
+                params = factor(params, levels = c('d prime', 'criterion')),
+                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) 
 #### plot both overall parameters and experimental levels.
 # # Get the variables in the model
 # var_name_m1 <- tidybayes::get_variables(sdt_val_m1)
@@ -649,6 +666,7 @@ p_dprime1_diff <- df_m1_plot_sdt_diff %>%
                     nrow = 1,
                     labeller = label_parsed)
 
+
 # # plot the posterior of difference between c, supplementary figure
 # df_m1_plot_sdt_diff %>%
 #   dplyr::filter(str_detect(term_diff, '_c')) %>%
@@ -705,7 +723,8 @@ RT_val_m1 <- df_moral %>%
             file = here::here("glmmModels/RT_val_EffectCode_3_level"))
 
 # plot(RT_val_m1, "b_")
-summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
+
+# summary(RT_val_m1)  # ndt = 0 there fore, we used lognormal.
 # pp_check(RT_val_m1)
 
 # Will try dummy coding later, but the running time is long: Total execution time: 124845.8 seconds = 34.7 hours
@@ -806,6 +825,20 @@ vlines <- df_m1_plot_rt %>%
         dplyr::summarize(Mean = mean(value)) # %>%
         # dplyr::arrange(Mean)
 
+df_m1_rt_fixed_effect <- df_m1_plot_rt %>%
+        dplyr::filter(condition == "Overall") %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           names_from = term ) %>% 
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       centrality = "median") %>%
+        tidyr::separate(Parameter, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')))
+
 # THIS is the one which the final plot will based on!!!
 p_rt1 <- df_m1_plot_rt %>%
         tidyr::separate(term, c('Valence', 'Match')) %>% 
@@ -895,9 +928,11 @@ p_rt1 + p_dprime1 +
 #  ggsave('part1_plot_posterior.png', p, width = 15, height = 7.5)
 ```
 
-For the *d* prime, we found robust effect of moral character. Shapes associated with good character ("good person", "kind person" or a name associated with morally good behavioral history) has higher sensitivity (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ), but we did not find differences between shapes associated with negative moral label (mean = , 95% HDI = ) and neutral condition.
+For the *d* prime, we found robust effect of moral character. Shapes associated with good character ("good person", "kind person" or a name associated with morally good behavioral history) has higher sensitivity (median = `r df_m1_std_fixed_effect$Median[df_m1_std_fixed_effect$Valence == 'Good' & df_m1_std_fixed_effect$params == 'd prime']`, 95% HDI = [`r df_m1_std_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Good' & df_m1_std_fixed_effect$params == 'd prime']` `r df_m1_std_fixed_effect$CI_high[df_m1_std_fixed_effect$Valence == 'Good' & df_m1_std_fixed_effect$params == 'd prime']`]) than shapes associated with neutral character (median = `r df_m1_std_fixed_effect$Median[df_m1_std_fixed_effect$Valence == 'Neutral' & df_m1_std_fixed_effect$params == 'd prime']`, 95% HDI = [`r df_m1_std_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Neutral' & df_m1_std_fixed_effect$params == 'd prime']` `r df_m1_std_fixed_effect$CI_high[df_m1_std_fixed_effect$Valence == 'Neutral' & df_m1_std_fixed_effect$params == 'd prime']`]), but we did not find differences between shapes associated with bad character (median = `r df_m1_std_fixed_effect$Median[df_m1_std_fixed_effect$Valence == 'Bad' & df_m1_std_fixed_effect$params == 'd prime']`, 95% HDI = [`r df_m1_std_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Bad' & df_m1_std_fixed_effect$params == 'd prime']` `r df_m1_std_fixed_effect$CI_high[df_m1_std_fixed_effect$Valence == 'Bad' & df_m1_std_fixed_effect$params == 'd prime']`]) and neutral character
 
-For the reaction times, we also found robust effect of moral character. Shapes associated with good character has faster responses (mean = , 95% HDI = ) than shapes associated with neutral condition (mean = , 95% HDI = ). We also found that the responses to shapes associated with negative moral valence (mean = , 95% HDI = ) were slower as compared to the neutral condition. See Figure \@ref(fig:plot-bayes-meta-1).
+For the reaction times, we also found robust effect of moral character for both match trials (see figure \@ref(fig:plot-bayes-meta-1) C) and nonmatch trials (**see supplementary materials**). For match trials, shapes associated with good character has faster responses (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'M']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'M']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'M']`]) than shapes associated with neutral character (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'M']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'M']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'M']`]). We also found that the responses to shapes associated with bad character (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'M']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'M']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'M']`]) were slower as compared to the neutral character See Figure \@ref(fig:plot-bayes-meta-1).
+
+For the nonmatch trials, we also found the advantage of good character: Shapes associated with good character (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'NM']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'NM']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Good' & df_m1_rt_fixed_effect$Match == 'NM']`]) are faster than shapes associated with neutral (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'NM']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'NM']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Neutral' & df_m1_rt_fixed_effect$Match == 'NM']`]) or bad character (median = `r df_m1_rt_fixed_effect$Median[df_m1_rt_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'NM']`, 95% HDI = [`r df_m1_rt_fixed_effect$CI_low[df_m1_std_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'NM']` `r df_m1_rt_fixed_effect$CI_high[df_m1_rt_fixed_effect$Valence == 'Bad' & df_m1_rt_fixed_effect$Match == 'NM']`]), but the effect size was smaller (**see supplementary materials**).
 
 ```{r model comp for rt, eval = FALSE, echo=FALSE, results='hide' }
 #### model copmarison etc, will be in supplementary materials
@@ -1036,7 +1071,7 @@ df_m3_rt_plot %>%
                labeller = label_parsed)
 ```
 
-# Part 2: interaction between valence and identity
+## Self-referential process modulate prioritization of good character
 
 In this part, we report three experiments (3a, 3b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments is modulated by self-referential processes. These three experiments included  data from 108 participants.
 
@@ -1485,11 +1520,12 @@ p_ms_rt1 + p_ms_dprime1 +
         p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
         p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
 ```
+
 For the *d* prime, we found that moral character effect only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self (mean_{diff} = ; 95% HDI = []), *d* prime for good-self was also greater than good-other condition (mean_{diff} = ; 95% HDI = []). The differences between bad-self and neutral-self, good-other and neutral-other, bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). However, when comparing self- and other-referential on neutral and bad conditions, the *d* prime was greater for other-referential conditions than self-referential conditions.
 
 For the RTs part, we also found good-self prioritization effect, both compared with neutral-self () and good-other () conditions. Also, we found that both good character and bad character were responded slower than neutral character when it was other-referential. See Figure \@ref(fig:plot-bayes2).
 
-# Part 3: Implicit binding between valence and identity
+## Binding the good and self
 
 In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment. 
 

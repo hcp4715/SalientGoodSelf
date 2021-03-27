@@ -9,6 +9,13 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf}
+\caption{\label{fig:plot-bayes2}Interaction between moral valence and self-referential}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf}
 \caption{\label{fig:plot-exp4-all}exp4: Results of Bayesian GLM analysis.}
 \end{figure*}

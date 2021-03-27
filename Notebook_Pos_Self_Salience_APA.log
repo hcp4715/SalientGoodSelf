@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  25 MAR 2021 09:24
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.11.6)  27 MAR 2021 13:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1043,53 +1043,35 @@ Underfull \vbox (badness 7649) has occurred while \output is active []
 [13] [14] [15] [16] [17] [18] [19] [20]
 \openout4 = `Notebook_Pos_Self_Salience_APA.fff'.
 
-(Notebook_Pos_Self_Salience_APA.fff)
-File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf Graph
-ic file (type pdf)
-<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf>
+(Notebook_Pos_Self_Salience_APA.fff) [21] [22]
 
-LaTeX Warning: Reference `fig:plot-bayes2' on page 21 undefined on input line 4
-18.
+LaTeX Warning: Reference `fig:plot-person-dist' on page 23 undefined on input l
+ine 456.
 
 
-Overfull \hbox (28.9075pt too wide) in paragraph at lines 417--419
-[][] 
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[21]
-
-LaTeX Warning: Reference `fig:plot-bayes2' on page 22 undefined on input line 4
-20.
-
-
-Underfull \vbox (badness 1259) has occurred while \output is active []
-
-[22] [23]
-
-LaTeX Warning: Reference `fig:plot-person-dist' on page 24 undefined on input l
-ine 446.
-
+[23]
 
 LaTeX Warning: Reference `fig:plot-corr-1' on page 24 undefined on input line 4
-59.
+69.
 
-[24]
 
-LaTeX Warning: Reference `fig:plot-corr-2' on page 25 undefined on input line 4
-61.
+LaTeX Warning: Reference `fig:plot-corr-2' on page 24 undefined on input line 4
+71.
 
-[25]
-Underfull \vbox (badness 3199) has occurred while \output is active []
+[24] [25] [26] [27]
+Underfull \vbox (badness 1389) has occurred while \output is active []
 
-[26]
-Underfull \vbox (badness 3199) has occurred while \output is active []
-
-[27] [28] [29] [30] AED endfloat: Processing end Figures and Tables [31] (./Not
-ebook_Pos_Self_Salience_APA.fff
+[28] [29] [30] AED endfloat: Processing end Figures and Tables [31] (./Notebook
+_Pos_Self_Salience_APA.fff
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf
  Graphic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes-meta-1-1.pdf>
 
+File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf Graph
+ic file (type pdf)
+<use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-bayes2-1.pdf>
 File: Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf Gra
 phic file (type pdf)
 <use Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf>
@@ -1131,25 +1113,25 @@ braces):
 [32
 
 
-] [33] (./Notebook_Pos_Self_Salience_APA.aux
+] [33] [34] (./Notebook_Pos_Self_Salience_APA.aux
 LaTeX Info: Redefining \rmfamily on input line 19.
 LaTeX Info: Redefining \sffamily on input line 19.
 LaTeX Info: Redefining \ttfamily on input line 19.
 )
 Package rerunfilecheck Info: File `Notebook_Pos_Self_Salience_APA.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 52B9953AE450CD62C1C9330168D3A2E7;3226.
+(rerunfilecheck)             Checksum: 08F0842964CF0F553EFDA62666A6D4DF;3235.
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 20568 strings out of 479426
- 363118 string characters out of 5880680
- 847485 words of memory out of 5000000
- 39621 multiletter control sequences out of 15000+600000
+ 20569 strings out of 479426
+ 363112 string characters out of 5880680
+ 847586 words of memory out of 5000000
+ 39622 multiletter control sequences out of 15000+600000
  552004 words of font info for 65 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  94i,11n,118p,2269b,478s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Notebook_Pos_Self_Salience_APA.pdf (33 pages).
+Output written on Notebook_Pos_Self_Salience_APA.pdf (34 pages).
