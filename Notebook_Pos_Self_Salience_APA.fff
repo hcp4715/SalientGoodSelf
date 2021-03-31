@@ -19,3 +19,10 @@
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-exp4-all-1.pdf}
 \caption{\label{fig:plot-exp4-all}exp4: Results of Bayesian GLM analysis.}
 \end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-person-dist-1.pdf}
+\caption{\label{fig:plot-person-dist}Self-rated personal distance}
+\end{figure*}

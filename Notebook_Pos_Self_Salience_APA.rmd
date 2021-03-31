@@ -1626,7 +1626,7 @@ p_ms_rt1 + p_ms_dprime1 +
 
 For the *d* prime, we found that an interaction between moral character effect and self-referential, the self- and other-referential difference was greater than zero for good vs. neutral character differences ($median_{diff}$ = `r df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']`; 95% HDI = [`r df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']` `r df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']`]) but not for bad vs. neutral differences ($median_{diff}$ = `r df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']`; 95% HDI = [`r df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']` `r df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']`]). Further analyses revealed that the good vs. neutral character effect only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self ($median_{diff}$ = `r df_ms_dprm1_diff_val$Median[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']`; 95% HDI = [`r df_ms_dprm1_diff_val$CI_low[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']` `r df_ms_dprm1_diff_val$CI_high[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']`]), *d* prime for good-self was also greater than good-other condition ($median_{diff}$ = `r df_ms_dprm1_diff_id$Median[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']`; 95% HDI = [`r df_ms_dprm1_diff_val$CI_low[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']` `r df_ms_dprm1_diff_val$CI_high[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']`]). The differences between bad-self and neutral-self, good-other and neutral-other, bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). 
 
-For the RTs part, we also found the interaction between moral character and self-referential, the self- and other-referential differences was below zeor for the good vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`]) but not for the bad vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`]). Further analyses revealed a robust good-self prioritization effect as compared to neutral-self ($median_{diff}$ = `r df_ms_rt1_diff_val$Median[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`; 95% HDI = [`r df_ms_rt1_diff_val$CI_low[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']` `r df_ms_rt1_diff_val$CI_high[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`]) and good-other ($median_{diff}$ = `r df_ms_rt1_diff_id$Median[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`; 95% HDI = [`r df_ms_rt1_diff_id$CI_low[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']` `r df_ms_rt1_diff_id$CI_high[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`]) conditions. Also, we found that both good character and bad character were responded slower than neutral character when it was other-referential. See Figure \@ref(fig:plot-bayes2).
+For the RTs part, we also found the interaction between moral character and self-referential, the self- and other-referential differences was below zero for the good vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`]) but not for the bad vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`]). Further analyses revealed a robust good-self prioritization effect as compared to neutral-self ($median_{diff}$ = `r df_ms_rt1_diff_val$Median[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`; 95% HDI = [`r df_ms_rt1_diff_val$CI_low[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']` `r df_ms_rt1_diff_val$CI_high[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`]) and good-other ($median_{diff}$ = `r df_ms_rt1_diff_id$Median[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`; 95% HDI = [`r df_ms_rt1_diff_id$CI_low[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']` `r df_ms_rt1_diff_id$CI_high[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`]) conditions. Also, we found that both good character and bad character were responded slower than neutral character when it was other-referential. See Figure \@ref(fig:plot-bayes2).
 
 ## Binding the good and self
 
@@ -1700,6 +1700,23 @@ exp4a_sdt_p <- df_exp4a_sdt_m1_plot %>%
   scale_fill_brewer(palette = "Dark2") +
   # facet_grid(~ params , scales = "free_y") +
   theme_classic() 
+
+df_exp4a_sdt_hdi <- df_exp4a_sdt_m1_plot %>%
+        dplyr::ungroup() %>%
+        dplyr::filter(params == 'dprime') %>%
+        dplyr::select(-c('.variable', 'params')) %>%
+        # dplyr::mutate(term_diff = stringr::str_sub(.$term_diff, end = -8)) %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           values_from = '.value',
+                           names_from = c('Valence', 'Identity')) %>%
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       BF = 1,
+                                       centrality = "median")
 
 # exp4a_sdt_p <- exp4a_sdt_m1 %>%
 #   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
@@ -1777,6 +1794,24 @@ p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
              y = expression("Contrasts")) + 
         facet_wrap( ~ Identity, nrow = 1)
 
+df_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
+        dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
+        dplyr::mutate(Identity = dplyr::case_when(grepl("_S", term_diff) ~ "Self",
+                                           grepl("_O", term_diff) ~"Other"),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
+        dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        dplyr::mutate(term_diff = stringr::str_sub(.$term_diff, end = -8)) %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           names_from = c('term_diff', 'Identity')) %>%
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       BF = 1,
+                                       centrality = "median")
+
 p_exp4a_dprime1_diff_id <- df_exp4a_sdt_m1_plot_diff %>%
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
         dplyr::mutate(term_diff = dplyr::case_when(grepl("_B", term_diff) ~ "Bad",
@@ -1817,6 +1852,23 @@ p_exp4a_dprime1_diff_diff <- df_exp4a_sdt_m1_plot_diff %>%
         # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
         labs(x = expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' ')),
              y = expression("Difference (Self vs. Other) of difference (Valence)"))
+
+df_exp4a_dprime1_diff_diff <- df_exp4a_sdt_m1_plot_diff %>%  # difference between differences
+        dplyr::filter(str_detect(term_diff, '_diff_')) %>%
+        # dplyr::filter(!str_detect(term_diff, 'GB')) %>%
+        dplyr::mutate(term_diff = dplyr::case_when(grepl("_GB", term_diff) ~ "GB",
+                                                   grepl("_GN", term_diff) ~"GN",
+                                                   grepl("_BN", term_diff) ~ "BN"),
+                      term_diff = factor(term_diff, levels = c("GN", "GB", "BN"))) %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           names_from = term_diff) %>%
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       centrality = "median")
 ```
 
 ```{r 4a_BGLMM_rt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -1883,6 +1935,25 @@ p_exp4a_rt1 <- df_exp4a_m1_plot_rt %>%
         theme_classic()
         # facet_wrap(~Identity) + 
         #theme_apa()
+
+df_exp4a_rt1_hdi <- df_exp4a_m1_plot_rt %>%
+        tidyr::separate(term, c('Match', 'Identity', 'Valence')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+                      Identity = factor(Identity, levels = c("Self", "Other"))) %>%
+        dplyr::filter(Match == 'M') %>%
+        dplyr::select(-c('Match')) %>%
+        # dplyr::mutate(term_diff = stringr::str_sub(.$term_diff, end = -8)) %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           values_from = 'value',
+                           names_from = c('Valence', 'Identity')) %>%
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       BF = 1,
+                                       centrality = "median")
 # 
 # emm1 <- emmeans::emmeans(exp4a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
 # emm1$contrasts %>% summary(infer = TRUE, point.est = mean)
@@ -1994,11 +2065,11 @@ p2 <- (p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val) + plot_layout(nrow = 1, b
         # p3 +  plot_layout(nrow = 3) 
 ```
 
-For the task relevant part, we found self-related conditions were performed better than other-related conditions, on both *d* prime and reaction times.
+In experiment 4a, where self- and other-referential were task-relevant and moral character are task-irrelevant. We found self-related conditions were performed better than other-related conditions, on both *d* prime and reaction times. This pattern is consistent with previous studies (e.g., @Sui_2012_JEPHPP).
 
-Most importantly, we found evidence, albeit weak, that task-irrelevant moral valence also played an role. The *d* prime is greater when shapes were associated with good self condition than with neutral self (BF = 4.4) or bad self (3.1), but shapes associated with bad self and neutral self didn't show differences. In contrast the *d* prime was smaller when shapes were associated with good other than with neutral other or bad other. See Figure \@ref(fig:plot-exp4-all). 
+More importantly, we found evidence, albeit weak, that task-irrelevant moral character also played an role. For shapes associated with self, *d'* was greater when shapes had a good character inside the shape (median = 2.83, 95% HDI [2.63 3.01]) than shapes that have neutral character (median = 2.74, 95% HDI [2.58 2.95], BF = 4.4) or bad character (median = 2.76, 95% HDI [2.56 2.95], 3.1), but we did not found difference between shapes with bad character and neutral character inside for the self-referential shapes. For shapes associated with other, the results of *d'* revealed a reversed pattern to the self-referential condition: *d* prime was smaller when shapes had a good character inside (median = 1.87, 95% HDI [1.71 2.04]) than had neutral (median = 1.96, 95% HDI [1.80 2.14]) or bad character (median = 1.98, 95% HDI [1.79 2.17]) inside. See Figure \@ref(fig:plot-exp4-all). 
 
-The same pattern was found for RTs. For self-referntial condition, when good character was presented as a task-irrelevant stimuli, the responds were facilitated. This effect was reversed for other-referential condition.
+The same pattern was found for RTs. For self-referential condition, when good character was presented as a task-irrelevant stimuli, the responds (median = 641, 95% HDI [623 662]) were faster than when neutral character (median = 649, 95% HDI [631 668]) or bad character (median = 648, 95% HDI [628 667]) were inside. This effect was reversed for other-referential condition: shapes associated with other with good character inside (median = 733, 95% HDI [711 754]) were slower than with neutral character (median = 721, 95% HDI [702 741]) or bad character (median = 718, 95% HDI [696 740]) inside.
 
 ```{r 4b_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp_name <- '4b'
@@ -2275,13 +2346,15 @@ p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_
 ```
 
 
-In this task, we found shapes associated with good person conditions were performed better than other-related conditions, on both *d* prime and reaction times.
+In experiment 4b, moral character was the task-relevant factor, and we found that there were main effect of moral character: shapes associated with good character were performed better than other-related conditions, on both *d'* and reaction times.
 
-Most importantly, we found evidence, that task-irrelevant self-relevance also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside as task-irrelevant stimuli than with "other" inside ($mean_{dfiff}$ = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" ($mean_{dfiff}$ = 0.04, 95% CI [-.11, .18]) or "bad" person ($mean_{dfiff}$ = -.05, 95% CI[-.18, .09]). The same trend appear for the RT data. For shapes associated with good person, an "self" inside will reduce the RTs as compared with when a "other" inside the shape ($mean_{dfiff}$ = -55 ms, 95%CI[-75, -35], p < 0.0001), but this effect did not occur when the shapes were associated neutral ($mean_{dfiff}$ = 10, 95% CI [1, 20]) or bad ($mean_{dfiff}$ = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
+Most importantly, we found evidence that task-irrelevant self-referential process also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside than with "other" inside ($mean_{diff}$ = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" ($mean_{diff}$ = 0.04, 95% CI [-.11, .18]) or "bad" person ($mean_{diff}$ = -.05, 95% CI[-.18, .09]). 
+
+The same trend appeared for the RT data. For shapes associated with good person, with a "self" inside the shape reduced the reaction times as compared with when a "other" inside the shape ($mean_{diff}$ = -55 ms, 95%CI[-75, -35]), but this effect did not occur when the shapes were associated neutral ($mean_{diff}$ = 10, 95% CI [1, 20]) or bad ($mean_{diff}$ = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
 
 ## Self-reported personal distance
 
-```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE, eval=FALSE}
+```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 # prepare questionnaire data
 df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), header = TRUE, sep = ",",
                  stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
@@ -2373,63 +2446,13 @@ df.scales <- df.scales %>%
 
 df.scale.fs <- df.scales %>% dplyr::select(expID, subjID, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum)
 
-# export data try to model individual predictor using exp1b's data
-df1b.scale.fs <- df.scale.fs %>%
-  dplyr::filter(expID == 'Exp1b') %>%
-  dplyr::full_join(df1b.v, ., by =c ('Subject' = 'subjID' )) %>%
-  dplyr::filter(!is.na(RESP)) %>%                       # exclude trials without response or with wrong keys
-  dplyr::mutate(RT = RT/1000,
-                stim = ifelse(Matchness == "Match", 1, 0), 
-                response = ifelse((Matchness == "Match" & ACC ==1) | (Matchness == "Mismatch" & ACC ==0), 1, 0)) %>%
-  dplyr::select(Subject, Matchness, Valence, stim, response, RT, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum) %>%   # select columns
-  dplyr::rename(subj_idx = Subject, match = Matchness, val = Valence, rt = RT) %>%  # rename columns
-  dplyr::filter(!is.na(mrlIdInt_sum))
-
-write.csv(df1b.scale.fs, file = paste(curDir,'/HDDM/', 'df1bv.hddm_stim.reg.csv', sep = ''), row.names = F)
-
-FS.m.id1 <- 'mrlIdInt =~ morId_1 + morId_2 + morId_5_r + morId_8 + morId_10 + morId_11 + morId_12 + morId_13 + morId_14
-             
-             mrlIdExt =~ morId_3 + morId_4 + morId_6 + morId_7 + morId_9 + morId_15 + morId_16 '
-
-FS.m.id1.fit <- lavaan::cfa(FS.m.id1, data = df.scales, estimator = "MLR")
-
-idx <- lavInspect(FS.m.id1.fit, "case.idx")
-fscores <- lavPredict(FS.m.id1.fit)
-for (fs in colnames(fscores)) {
-  df.scale.fs[idx, fs] <- fscores[ , fs]
-}
-
-FS.m.id2 <- ' morSlfImg =~ morSlfImg_1 + morSlfImg_2 + morSlfImg_3 + morSlfImg_4 + morSlfImg_5 + morSlfImg_6 + morSlfImg_7 + 
-                          morSlfImg_8 + morSlfImg_9 '
-
-FS.m.id2.fit <- lavaan::cfa(FS.m.id2, data = df.scales, estimator = "MLR")
-
-idx <- lavInspect(FS.m.id2.fit, "case.idx")
-fscores <- lavPredict(FS.m.id2.fit)
-for (fs in colnames(fscores)) {
-  df.scale.fs[idx, fs] <- fscores[ , fs]
-}
-
-FS.m.id3 <- ' SlfEst =~ SES1 + SES2 + SES3_r + SES4 + SES5_r + SES6 + SES7 + SES8 + SES9_r + SES10_r '
-
-FS.m.id3.fit <- lavaan::cfa(FS.m.id3, data = df.scales, estimator = "MLR")
-
-# summary(FS.m.id3.fit, standardize = TRUE, fit.measures=TRUE)
-# semPlot::semPaths(FS.m.id3.fit, "std", edge.label.cex = 0.5, curvePivot = TRUE, intercepts = FALSE)
-
-idx <- lavInspect(FS.m.id3.fit, "case.idx")
-fscores <- lavPredict(FS.m.id3.fit)
-for (fs in colnames(fscores)) {
-  df.scale.fs[idx, fs] <- fscores[ , fs]
-}
-
 df.scale.fs <- df.scale.fs %>%
   dplyr::left_join(., df.perdist)
 
 ```
 
 
-```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE, eval=FALSE}
+```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
 # Boxplot
 p_dist_1 <- df.perdist %>% 
   tidyr::pivot_longer(., cols = SelfGood:NeutBad,
@@ -2489,7 +2512,7 @@ p_dist_2 <- ggcorrplot::ggcorrplot(dist.cor$r, hc.order = TRUE, type = "lower",
 
 # correlation bewteen self-reported measures
 dist.cor2 <- df.scale.fs %>%
-  dplyr::select(mrlIdInt:NeutBad) %>%
+  dplyr::select(-1, -2) %>%
   as.matrix() %>%
   Hmisc::rcorr(., type = 'spearman')
 
@@ -2787,7 +2810,7 @@ corr_plot_list[[1]] + corr_plot_list[[2]]  + corr_plot_list[[4]] +
 We also explored the correlation between behavioral data and questionnaire scores separately for experiments with and without self-referential, however, the sample size is very low for some conditions.
 
 # Discussion
-In a series of experiments, we found that (1) good character are prioritized in perceptual matching task; (2) this effect was robust when moral characters are self-referential but not stranger-referential; (3) the self-good character combination, whether task-relevant or not, facilitate the process but other-good character combination didn't have this effect, if not reverse. The self-reported mental distance scale also showed that people rated self has longer distance to bad character.
+In a series of experiments, we found that (1) good character are prioritized in perceptual matching task; (2) this effect was robust when moral characters are self-referential but not stranger-referential; (3) when the self-good character combined, whether task-relevant or not, participants responded faster and more accurately than when other-good character were combined. The other-good character combination might slow down the responses. The self-reported mental distance scale also showed that people rated self has longer distance to bad character.
 
 [direct evidence for moral character in perception]
 
