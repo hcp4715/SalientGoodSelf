@@ -26,3 +26,10 @@
 \includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-person-dist-1.pdf}
 \caption{\label{fig:plot-person-dist}Self-rated personal distance}
 \end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{Notebook_Pos_Self_Salience_APA_files/figure-latex/plot-person-dist-net-1.pdf}
+\caption{\label{fig:plot-person-dist-net}Self-rated personal distance (Network view)}
+\end{figure*}
