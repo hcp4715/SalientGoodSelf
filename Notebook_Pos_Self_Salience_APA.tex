@@ -3,16 +3,14 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  english,
   man]{apa6}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
-  \usepackage{amssymb}
 \else % if luatex or xetex
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
@@ -71,6 +69,38 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{english}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -86,9 +116,9 @@
 
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -126,7 +156,15 @@
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
 \makeatother
-\shorttitle{Priorization of the good character}
+
+\usepackage{xpatch}
+\makeatletter
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
 \keywords{Perceptual decision-making, Self positivity bias, moral character\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
@@ -140,41 +178,16 @@
 \usepackage{csquotes}
 \usepackage{rotating}
 \DeclareDelayedFloatFlavor{sidewaysfigure}{figure}
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
-\else
-  \usepackage[shorthands=off,main=english]{babel}
-\fi
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \title{Self-relevance modulates the priorization of the good character in perceptual matching}
 \author{Hu Chuan-Peng\textsuperscript{1, 2}, Kaiping Peng\textsuperscript{2}, \& Jie Sui\textsuperscript{3}}
 \date{}
 
+
+\shorttitle{Priorization of the good character}
 
 \authornote{
 
@@ -189,7 +202,7 @@ Correspondence concerning this article should be addressed to Hu Chuan-Peng, Sch
 
 \affiliation{\vspace{0.5cm}\textsuperscript{1} Nanjing Normal University, 210024 Nanjing, China\\\textsuperscript{2} Tsinghua University, 100084 Beijing, China\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
 
-\abstract{
+\abstract{%
 Moral character is central to social perception and moral psychology, yet how these information is process is unclear. Both negativity effect and positivity effect are possible. Here, we examined these two possibilities using social associataive learning task, where participants first associat social conceptions with neutral stimuli and then perform cognitive tasks (e.g., matching judgment). Across 9 experiments (N = 4XX, trials = XXX), we found a robust positivity effect: shapes associated with good character were prioritized, as compared to shapes associated with neutral or bad characters. Crucially, good character effect was robust when it referred to the self but weak or non-exist when it referred to a stranger. Moreover, even when identity or moral character information became task-irrelevant, participants were still sensitive to good character: the good-self combination facilitate the process while the good-other combination slowed down the process. Together, these results suggested that good character is prioritized in social associative learning task and this effect was due a spontaneous self-referential processing.
 }
 
@@ -205,22 +218,22 @@ Alternative title: The good person is me: Spontaneous self-referential may expla
 
 {[}quotes about moral character{]}
 
-{[}Morality is central to social life, moral character is the central of morality{]} \textbf{People experience a substantial amount of moral events in everyday life (e.g., Hofmann, Wisneski, Brandt, \& Skitka, 2014) and judging the moral character of people is indispensable part of these events}. Whether we are the agent, target, or a third party of a moral event, we always judge moral behaviors as ``right'' or ``wrong,'' and by doing so, we judge people as ``good'' or ``bad'' (Uhlmann, Pizarro, \& Diermeier, 2015). Moral character is so important in social life that it is a basic dimension in our social evaluation (Goodwin, 2015; Goodwin, Piazza, \& Rozin, 2014) and that a substantial part of people's conversation are gossiping others' moral character (or, reputation) (e.g., Dunbar, 2004). These moral character information may help us to evaluate our in-group members and distinguish out-group members (Ellemers, 2018). Crucially, moral character central for self-concept and identity too. A positive moral character is viewed as the core feature of identity (e.g., Strohminger, Knobe, \& Newman, 2017).
+{[}Morality is central to social life, moral character is the central of morality{]} \textbf{People experience a substantial amount of moral events in everyday life (e.g., Hofmann, Wisneski, Brandt, \& Skitka, 2014) and judging the moral character of people is indispensable part of these events}. Whether we are the agent, target, or a third party of a moral event, we always judge moral behaviors as ``right'' or ``wrong'', and by doing so, we judge people as ``good'' or ``bad'' (Uhlmann, Pizarro, \& Diermeier, 2015). Moral character is so important in social life that it is a basic dimension in our social evaluation (Goodwin, 2015; Goodwin, Piazza, \& Rozin, 2014) and that a substantial part of people's conversation are gossiping others' moral character (or, reputation) (e.g., Dunbar, 2004). These moral character information may help us to evaluate our in-group members and distinguish out-group members (Ellemers, 2018). Crucially, moral character central for self-concept and identity too. A positive moral character is viewed as the core feature of identity (e.g., Strohminger, Knobe, \& Newman, 2017).
 
 {[}Two possibilities about moral character{]}
 Given the importance of moral character and limited cognitive resources to process all the information in a social world, will people deferentially process the information related to moral character and prioritize information with certain moral character? One possibility is that `bad' character are prioritized. This possibility is consistent with early studies in impression formation which found that negative traits are weighted more in overall impression (N. H. Anderson, 1965; Fiske, 1980; Skowronski \& Carlston, 1987). This idea also seemed to consistent with the more general idea that ``bad is stronger than good'' (Baumeister, Bratslavsky, Finkenauer, \& Vohs, 2001; Pratto \& John, 1991). A few studies provided evidence for this possibility. For example, E. Anderson, Siegel, Bliss-Moreau, and Barrett (2011) asked participants to associate faces with different behaviors (e.g., negative and neutral behaviors from both social and nonsocial domains) and then perform a binocular rivalry task, where a face and a building were presented to each eye. Participants were required report the content of their visual awareness by pressing buttons. The results revealed that faces associated negative social behaviors dominated participants' visual awareness longer than faces associated with other types of behaviors (but see Stein, Grubb, Bertrand, Suh, \& Verosky, 2017). Similarly, Eiserbeck and Abdel Rahman (2020) combined associative learning with attention blink paradigm, where neutral faces were associated with sentences about neutral or negative trust behaviors. They also found that neutral faces associated with negative behavior were processed preferentially.
 
-It is also possible, however, that the negativity effect in impression formation may not be able to generalized to perceptual process, instead, positive moral characters are prioritized (see recent reviews, Pool, Brosch, Delplanque, \& Sander, 2016; Unkelbach, Alves, \& Koch, 2020). Unkelbach, Alves, and Koch (2020) pointed out that bad is not necessarily stronger than good in all aspects of information processing. Sometimes, good is stronger than bad. For example, when participants are asked to classify words as good or bad, positive trait words are classified faster than negative words (Bargh, Chaiken, Govender, \& Pratto, 1992). Similarly, in a lexical decision task, participants judge positive words faster than negative words (Unkelbach et al., 2010). Also, Anisfeld and Lambert (1966) found that positive words are easier to associate with nonsense word-like strings, and this advantage in associative potential also appeared in implicit association test (IAT) (Anselmi, Vianello, \& Robusto, 2011). Direct evidence for positivity effect of moral character also exist: Shore and Heerey (2013) found that faces with positive interaction in a trust game were prioritized in pre-attentive process.
+It is also possible, however, that the negativity effect in impression formation may not be able to generalized to perceptual process, instead, positive moral characters are prioritized (see recent reviews, Pool, Brosch, Delplanque, \& Sander, 2016; Unkelbach, Alves, \& Koch, 2020). Unkelbach et al. (2020) pointed out that bad is not necessarily stronger than good in all aspects of information processing. Sometimes, good is stronger than bad. For example, when participants are asked to classify words as good or bad, positive trait words are classified faster than negative words (Bargh, Chaiken, Govender, \& Pratto, 1992). Similarly, in a lexical decision task, participants judge positive words faster than negative words (Unkelbach et al., 2010). Also, Anisfeld and Lambert (1966) found that positive words are easier to associate with nonsense word-like strings, and this advantage in associative potential also appeared in implicit association test (IAT) (Anselmi, Vianello, \& Robusto, 2011). Direct evidence for positivity effect of moral character also exist: Shore and Heerey (2013) found that faces with positive interaction in a trust game were prioritized in pre-attentive process.
 
 Here, we attempted to distinguish these two possibilities by a social associative learning task in which physical features had minimal influences --- participants performed a perceptual matching task after associated different moral characters (good, neutral, and bad) with different geometric shapes. If there is a positivity effect, there should be an advantage for shapes associated with good character over shapes associated with neutral or bad shapes. If there is a negativity effect, the advantage should be occur on shapes associated with bad characters. The first four experiments and two additional follow-up experiments provided strong evidence for good character effect in the current paradigm.
 
-The positivity effect consistent with previous studies where positivity effect of social trait words were found (Anselmi, Vianello, \& Robusto, 2011; Bargh, Chaiken, Govender, \& Pratto, 1992; Unkelbach et al., 2010). However, the effect could not be explained by the similarity hypothesis (Unkelbach, Alves, \& Koch, 2020) because we only used three stimuli. There are two possibility explanations. The first one is the value-based attention account, which suggests that stimuli that are valuable to us are prioritized (B. A. Anderson, 2019). In our experiments, the good character label ``good person'' may represent an indirect but valuable stimuli because, in social life, a good other is usually more valuable than an bad other (Abele \& Wojciszke, 2007). Another possibility is derived from social categorization theory, which suggested that we automatically categorize others as in-group or out-group (Turner, Hogg, Oakes, Reicher, \& Wetherell, 1987). Moral character is an important criterion for social categorization (DeScioli, 2016; McHugh, McGann, Igou, \& Kinsella, 2019). However, the above four experiments could not distinguish between these two possibilities, because ``good person'' could both be rewarding and be categorized as in-group member. Given that both rewarding stimuli (e.g., Sui, He, \& Humphreys, 2012) and in-group information (Enock, Hewstone, Lockwood, \& Sui, 2020) are prioritized when using social associative learning paradigm, we further tested these two possibilities in new experiments.
+The positivity effect consistent with previous studies where positivity effect of social trait words were found (Anselmi et al., 2011; Bargh et al., 1992; Unkelbach et al., 2010). However, the effect could not be explained by the similarity hypothesis (Unkelbach et al., 2020) because we only used three stimuli. There are two possibility explanations. The first one is the value-based attention account, which suggests that stimuli that are valuable to us are prioritized (B. A. Anderson, 2019). In our experiments, the good character label ``good person'' may represent an indirect but valuable stimuli because, in social life, a good other is usually more valuable than an bad other (Abele \& Wojciszke, 2007). Another possibility is derived from social categorization theory, which suggested that we automatically categorize others as in-group or out-group (Turner, Hogg, Oakes, Reicher, \& Wetherell, 1987). Moral character is an important criterion for social categorization (DeScioli, 2016; McHugh, McGann, Igou, \& Kinsella, 2019). However, the above four experiments could not distinguish between these two possibilities, because ``good person'' could both be rewarding and be categorized as in-group member. Given that both rewarding stimuli (e.g., Sui, He, \& Humphreys, 2012) and in-group information (Enock, Hewstone, Lockwood, \& Sui, 2020) are prioritized when using social associative learning paradigm, we further tested these two possibilities in new experiments.
 
 To distinguish the value-based account and the social categorization explanations, we introduced the identity (self- vs.~other-referential) of moral character as an addition independent variable in exp 3a, 3b, and 6b. Now moral valence is orthogonal to the identity. In this case, the identity of moral character information become salient and participants are less likely to spontaneously categorize a good-other as an extension of self, but the value of good-person still exists. If the positivity effect was driven by social categorization theory, then participants prioritize good-self but not good-other. If the value-based attention theory is true, then, both good-self and good-other are prioritized, or maybe good-other are even more prioritized.
 
-Although the introduction of self- and other-referential processing provided evident that value-based account can not explain the good-character effect, it might introduce the good-self effect, i.e., the good-self is prioritized over all the other stimuli. This effect, if true, may suggest underlying mechanisms other than social-categorization. For example, the moral true self account. Moral true self view suggested that moral self if the true self (Strohminger, Knobe, \& Newman, 2017). Therefore, even good-self can be viewed as categorized to in-group, it can also be viewed as the core of the self and it is the anchor of all the other effects.
+Although the introduction of self- and other-referential processing provided evident that value-based account can not explain the good-character effect, it might introduce the good-self effect, i.e., the good-self is prioritized over all the other stimuli. This effect, if true, may suggest underlying mechanisms other than social-categorization. For example, the moral true self account. Moral true self view suggested that moral self if the true self (Strohminger et al., 2017). Therefore, even good-self can be viewed as categorized to in-group, it can also be viewed as the core of the self and it is the anchor of all the other effects.
 
-To test the moral true self view and the social-categorization account, we designed two complementary experiments. In experiment 4a, participants only learned the association between self and other, the words ``good-person,'' ``neutral person,'' and ``bad person'' were presented as task-irrelevant stimuli, while in experiment 4b, participants learned the associations between ``good-person,'' ``neutral-person,'' and ``bad-person,'' and the ``self'' and ``other'' were presented as task-irrelevant stimuli. These two experiments can be used to distinguish the moral-self view and social categorization" account. If moral-self view is true, then, in both experiments, good-self will show advantage over all other stimuli, and there will be no other effects. More specifically, in experiment 4a, where only the self-referential processing is task-relevant, there will be advantage for good as task-irrelevant condition than when bad or neutral character as task-irrelevant for the self conditions, while there is no other effects; in experiment 4b, in the good condition, there will be an advantage for self as task-irrelevant condition over other as task-irrelevant condition, and no other effects. If social categorization is true, then, the prioritization effect will depends on whether the stimuli can be categorized as the same group of good-self. More specifically, in experiment 4a, there will be good effect in self conditions, this prediction is the same as the moral self-view; it predicts a reverse good effect in other condition because good and other a conflict in terms of social-categorization, this prediction is different from the ``good-self'' anchor account; however, for experiment 4b, it predicts no identity effect in the good-person condition because both self and other are in the good group.
+To test the moral true self view and the social-categorization account, we designed two complementary experiments. In experiment 4a, participants only learned the association between self and other, the words ``good-person'', ``neutral person'', and ``bad person'' were presented as task-irrelevant stimuli, while in experiment 4b, participants learned the associations between ``good-person'', ``neutral-person'', and ``bad-person'', and the ``self'' and ``other'' were presented as task-irrelevant stimuli. These two experiments can be used to distinguish the moral-self view and social categorization'' account. If moral-self view is true, then, in both experiments, good-self will show advantage over all other stimuli, and there will be no other effects. More specifically, in experiment 4a, where only the self-referential processing is task-relevant, there will be advantage for good as task-irrelevant condition than when bad or neutral character as task-irrelevant for the self conditions, while there is no other effects; in experiment 4b, in the good condition, there will be an advantage for self as task-irrelevant condition over other as task-irrelevant condition, and no other effects. If social categorization is true, then, the prioritization effect will depends on whether the stimuli can be categorized as the same group of good-self. More specifically, in experiment 4a, there will be good effect in self conditions, this prediction is the same as the moral self-view; it predicts a reverse good effect in other condition because good and other a conflict in terms of social-categorization, this prediction is different from the ``good-self'' anchor account; however, for experiment 4b, it predicts no identity effect in the good-person condition because both self and other are in the good group.
 
 {[}Good self in self-reported data{]}
 As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person, moral identity, moral self-image, and self-esteem. All these data are available (see Liu et al., 2020). We explored the correlation between self-reported distance and these questionnaires as well as the questionnaires and behavioral data. However, given that the correlation between self-reported score and behavioral data has low correlation (Dang, King, \& Inzlicht, 2020), we didn't expect a high correlation between these self-reported measures and the behavioral data.
@@ -240,13 +253,13 @@ All participant received informed consent and compensated for their time. These 
 \hypertarget{design-and-procedure}{%
 \subsection{Design and Procedure}\label{design-and-procedure}}
 
-This series of experiments studied the perceptual process of moral character, using the social associative learning paradigm (or tagging paradigm)(Sui, He, \& Humphreys, 2012), in which participants first learned the associations between geometric shapes and labels of person with different moral character (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60\% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase.
+This series of experiments studied the perceptual process of moral character, using the social associative learning paradigm (or tagging paradigm)(Sui et al., 2012), in which participants first learned the associations between geometric shapes and labels of person with different moral character (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60\% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase.
 
 The experiment 1a, 1b, 1c, 2, 5, and 6a shared a 2 (matching: match vs.~nonmatch) by 3 (moral character: good vs.~neutral vs.~bad person) within-subject design. Experiment 1a was the first one of the whole series studies and found the prioritization of stimuli associated with good-person. To confirm that it is the moral character that caused the effect, we further conducted experiment 1b, 1c, and 2. More specifically, experiment 1b used different Chinese words as labels to test whether the effect only occurred with certain words. Experiment 1c manipulated the moral valence indirectly: participants first learned to associate different moral behaviors with different Chinese names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequentially presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 5 was designed to compare the effect size of moral character and other importance social evaluative dimensions (aesthetics and emotion). Different social evaluative dimensions were implemented in different blocks, the moral character blocks shared the design of experiment 1a. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
 
 For experiment 3a, 3b, and 6b, we included self-reference as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the design of experiment 1a into a 2 (matching: match vs.~nonmatch) by 2 (reference: self vs.~other) by 3 (moral character: good vs.~neutral vs.~bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezoids). The experiment 6b was an EEG experiment based on experiment 3a but presented the label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. We only focus on the first day's data here. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different types of block: in the self-referential blocks, they only responded to good-self, neutral-self, and bad-self, with half match trials and half nonmatch trials; in the other-reference blocks, they only responded to good-other, neutral-other, and bad-other.
 
-Experiment 4a and 4b were design to explore the mechanism underlying the prioritization of good-self. In 4a, we only used two labels (self vs.~other) and two shapes (circle, square). To manipulate the moral character, we added the moral-related words within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-reference and moral character in the task: participant learned three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words related to identity, ``self'' or ``other,'' were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task.
+Experiment 4a and 4b were design to explore the mechanism underlying the prioritization of good-self. In 4a, we only used two labels (self vs.~other) and two shapes (circle, square). To manipulate the moral character, we added the moral-related words within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-reference and moral character in the task: participant learned three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words related to identity, ``self'' or ``other'', were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task.
 
 E-prime 2.0 was used for presenting stimuli and collecting behavioral responses. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about \(3.7^\circ × 3.7^\circ\), the fixation cross is of \(0.8^\circ × 0.8^\circ\) visual angle at the center of the screen. The words were of \(3.6^\circ\) × \(1.6^\circ\) visual angle. The distance between the center of the shape or the word and the fixation cross was \(3.5^\circ\) of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 \textasciitilde{} 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants' chin were not fixed.
 
@@ -264,7 +277,7 @@ We used the \texttt{r} package \texttt{BRMs} (Bürkner, 2017), which used Stan (
 \hypertarget{accuracy}{%
 \subsubsection{Accuracy}\label{accuracy}}
 
-We followed practice of previous studies (Hu, Lan, Macrae, \& Sui, 2020; Sui, He, \& Humphreys, 2012) and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and the non-match trials are noise. As we mentioned above, we estimated the sensitivity and criterion of SDT by BHM (Rouder \& Lu, 2005). Because the BHM can model different level's data using a single unified model, we used a three-level HBM to model the moral character effect, which include five experiments: 1a, 1b, 1c, 2, 5, and 6a. Similarly, we modeled experiments with both self-referential and moral character with a three-level HBM model, which includes 3a, 3b, and 6b. For experiment 4a and 4b, we used two-level models for each separately. However, we could compare the posterior of parameters directly because we have full posterior distribution of parameters.
+We followed practice of previous studies (Hu, Lan, Macrae, \& Sui, 2020; Sui et al., 2012) and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and the non-match trials are noise. As we mentioned above, we estimated the sensitivity and criterion of SDT by BHM (Rouder \& Lu, 2005). Because the BHM can model different level's data using a single unified model, we used a three-level HBM to model the moral character effect, which include five experiments: 1a, 1b, 1c, 2, 5, and 6a. Similarly, we modeled experiments with both self-referential and moral character with a three-level HBM model, which includes 3a, 3b, and 6b. For experiment 4a and 4b, we used two-level models for each separately. However, we could compare the posterior of parameters directly because we have full posterior distribution of parameters.
 
 We used the Bernoulli distribution to model the accuracy data. For a single participant, we assume that the accuracy of \(i\)th trial is Bernoulli distributed (binomial with 1 trial), with probability \(p_{i}\) that \(y_{i} = 1\).
 
@@ -272,7 +285,7 @@ We used the Bernoulli distribution to model the accuracy data. For a single part
 and the probability of choosing ``match'' \(p_{i}\) at the \(i\)th trial is a function of the trial type:
 
 \[ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}\]
-therefore, the outcomes \(y_{i}\) are 0 if the participant responded ``nonmatch'' on the \(i\)th trial, 1 if they responded ``match.'' We then write the generalized linear model on the probits (z-scores; \(\Phi\), ``Phi'') of \(p\)s. \(\Phi\) is the cumulative normal density function and maps \(z\) scores to probabilities. In this way, the intercept of the model (\(\beta_0\)) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion \(c\). The slope of the model (\(\beta_1\)) is the increased probability of responding ``match'' when the trial type is ``match,'' in \(z\)-scores, which is another expression of \(d'\). Therefore, \(c\) = -\(z\)HR = \(-\beta_0\), and \(d' = \beta_1\).
+therefore, the outcomes \(y_{i}\) are 0 if the participant responded ``nonmatch'' on the \(i\)th trial, 1 if they responded ``match''. We then write the generalized linear model on the probits (z-scores; \(\Phi\), ``Phi'') of \(p\)s. \(\Phi\) is the cumulative normal density function and maps \(z\) scores to probabilities. In this way, the intercept of the model (\(\beta_0\)) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion \(c\). The slope of the model (\(\beta_1\)) is the increased probability of responding ``match'' when the trial type is ``match'', in \(z\)-scores, which is another expression of \(d'\). Therefore, \(c\) = -\(z\)HR = \(-\beta_0\), and \(d' = \beta_1\).
 
 In our experimental design, there are three conditions for both match and non-match trials, we can estimate the \(d'\) and \(c\) separately for each condition. In this case, the criterion \(c\) is modeled as the main effect of valence, and the \(d'\) can be modeled as the interaction between valence and match:
 
@@ -304,7 +317,7 @@ In the same vein, we can estimate the posterior of parameters across different e
 \[y_{ijk} \sim Bernoulli(p_{ijk})\]
 the generalized linear model is then
 \[ \Phi(p_{ijk}) =  0 + \beta_{0jk}Valence_{ijk} + \beta_{1j}IsMatch_{ijk} * Valence_{ijk}\]
-The outcomes \(y_{ijk}\) are 0 if participant \(j\) in experiment k responded ``nonmatch'' on trial \(i\), 1 if they responded ``match.''
+The outcomes \(y_{ijk}\) are 0 if participant \(j\) in experiment k responded ``nonmatch'' on trial \(i\), 1 if they responded ``match''.
 
 \[\begin{bmatrix}\beta_{0jk}\\
 \beta_{1jk}\\
@@ -385,7 +398,7 @@ In this part, we report results from five experiments that tested whether an ass
 \caption{\label{fig:plot-bayes-meta-1}Effect of moral valence on RT and d'}
 \end{figure}
 
-For the \emph{d} prime, we found robust effect of moral character. Shapes associated with good character (``good person,'' ``kind person'' or a name associated with morally good behavioral history) has higher sensitivity (median = 2.49, 95\% HDI = {[}2.19 2.75{]}) than shapes associated with neutral character (median = 2.18, 95\% HDI = {[}1.90 2.48{]}), \(median_{diff}\) = 0.31, 95\% HDI {[}0.02 0.63{]} , but we did not find differences between shapes associated with bad character (median = 2.23, 95\% HDI = {[}1.94 2.53{]}) and neutral character, \(median_{diff}\) = 0.05, 95\% HDI {[}-0.29 0.37{]}.
+For the \emph{d} prime, we found robust effect of moral character. Shapes associated with good character (``good person'', ``kind person'' or a name associated with morally good behavioral history) has higher sensitivity (median = 2.49, 95\% HDI = {[}2.19 2.75{]}) than shapes associated with neutral character (median = 2.18, 95\% HDI = {[}1.90 2.48{]}), \(median_{diff}\) = 0.31, 95\% HDI {[}0.02 0.63{]} , but we did not find differences between shapes associated with bad character (median = 2.23, 95\% HDI = {[}1.94 2.53{]}) and neutral character, \(median_{diff}\) = 0.05, 95\% HDI {[}-0.29 0.37{]}.
 
 For the reaction times, we also found robust effect of moral character for both match trials (see figure \ref{fig:plot-bayes-meta-1} C) and nonmatch trials (\textbf{see supplementary materials}). For match trials, shapes associated with good character has faster responses (median = 578.64 ms, 95\% HDI = {[}508.15 661.14{]}) than shapes associated with neutral character (median = 623.45 ms, 95\% HDI = {[}547.98 708.24{]}), \(median_{diff}\) = -44.05, 95\% HDI {[}-59.96 -30.43{]}. We also found that the responses to shapes associated with bad character (median = 640.41 ms, 95\% HDI = {[}559.94 719.63{]}) were slower as compared to the neutral character, \(median_{diff}\) = 17.04, 95\% HDI {[}4.02 29.92{]}. See Figure \ref{fig:plot-bayes-meta-1}.
 
@@ -413,7 +426,7 @@ For the RTs part, we also found the interaction between moral character and self
 
 In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment.
 
-In experiment 4a, where self- and other-referential were task-relevant and moral character are task-irrelevant. We found self-related conditions were performed better than other-related conditions, on both \emph{d} prime and reaction times. This pattern is consistent with previous studies (e.g., Sui, He, and Humphreys (2012)).
+In experiment 4a, where self- and other-referential were task-relevant and moral character are task-irrelevant. We found self-related conditions were performed better than other-related conditions, on both \emph{d} prime and reaction times. This pattern is consistent with previous studies (e.g., Sui et al. (2012)).
 
 More importantly, we found evidence, albeit weak, that task-irrelevant moral character also played an role. For shapes associated with self, \emph{d'} was greater when shapes had a good character inside the shape (median = 2.83, 95\% HDI {[}2.63 3.01{]}) than shapes that have neutral character (median = 2.74, 95\% HDI {[}2.58 2.95{]}, BF = 4.4) or bad character (median = 2.76, 95\% HDI {[}2.56 2.95{]}, 3.1), but we did not found difference between shapes with bad character and neutral character inside for the self-referential shapes. For shapes associated with other, the results of \emph{d'} revealed a reversed pattern to the self-referential condition: \emph{d} prime was smaller when shapes had a good character inside (median = 1.87, 95\% HDI {[}1.71 2.04{]}) than had neutral (median = 1.96, 95\% HDI {[}1.80 2.14{]}) or bad character (median = 1.98, 95\% HDI {[}1.79 2.17{]}) inside. See Figure \ref{fig:plot-exp4-all}.
 
@@ -461,7 +474,7 @@ We human inevitably view other people and ourselves in a moral lens. Yes how thi
 
 First, we examined the perceptual process of moral character to understand how moral information are processed. Prior research has demonstrated that bad moral behavior is stronger in impression formation {[}{]} and bad moral character are attended quicker than neutral moral character {[}{]}. The empirical studies on the moral character often focus on self-reported data rather than behavioral response. In this paper, we examined the perceptual processes of moral character. In doing so, we shifted the focus from consequences of information process of moral character to the information process itself, thus broaden the scope of the existing research.
 
-Second, perceptual processing is the upstream of our information that can help us understand priority of different information. We thus contributed to the research on moral character by demonstrating that information related to good character in general, and good moral self in specific, is prioritized. Specifically, we found that instantly learned moral character information can change the information process of neutral, non-social information. Presumably this prioritization occurs because good moral character and moral self is central to one's social life. Research has found that moral self is essential for one's identity and people has stronger self-enhancement effect in moral domain than in other social domain. This positivity effect is opposite to negativity effect in impression formation, suggesting that impression formation and perceptual-matching may involved different information process mechanisms. This positivity effect, though surprising at first, is well supported by previous studies. Positivity effect had been found in associative learning {[}{]}, lexical decision-making {[}{]}, and IAT {[}{]}. A common feature of these paradigms is that decision-making occurs at relative later stage of the information processing in perception, instead of early sensory processing stage. In the current paradigm, participants made a matching judgment, which was only possible after participants formed a perception of both the shape and the label and retrieve the association between them. ample evidence supported the idea that positive stimuli have advantage at the later stage of perception (Pool, Brosch, Delplanque, \& Sander, 2016). The task used in the current study may explain why the result are different from previous studies such as E. Anderson, Siegel, Bliss-Moreau, and Barrett (2011) and Eiserbeck and Abdel Rahman (2020), where the early processing stage were targeted by attention blink paradigm.
+Second, perceptual processing is the upstream of our information that can help us understand priority of different information. We thus contributed to the research on moral character by demonstrating that information related to good character in general, and good moral self in specific, is prioritized. Specifically, we found that instantly learned moral character information can change the information process of neutral, non-social information. Presumably this prioritization occurs because good moral character and moral self is central to one's social life. Research has found that moral self is essential for one's identity and people has stronger self-enhancement effect in moral domain than in other social domain. This positivity effect is opposite to negativity effect in impression formation, suggesting that impression formation and perceptual-matching may involved different information process mechanisms. This positivity effect, though surprising at first, is well supported by previous studies. Positivity effect had been found in associative learning {[}{]}, lexical decision-making {[}{]}, and IAT {[}{]}. A common feature of these paradigms is that decision-making occurs at relative later stage of the information processing in perception, instead of early sensory processing stage. In the current paradigm, participants made a matching judgment, which was only possible after participants formed a perception of both the shape and the label and retrieve the association between them. ample evidence supported the idea that positive stimuli have advantage at the later stage of perception (Pool et al., 2016). The task used in the current study may explain why the result are different from previous studies such as E. Anderson et al. (2011) and Eiserbeck and Abdel Rahman (2020), where the early processing stage were targeted by attention blink paradigm.
 
 The absence of negativiity effect may also caused by the fact that the bad character here is an abstract concept that may not bring concrete threatening to the participants, therefore it is not as strong as previous studies used emotional stimuli that has higher arousal. Besides, recent study found that when the moral violation is not life-threatening, the impression of bad character is volatile in the social context {[}{]}.
 
@@ -482,130 +495,125 @@ Fourth, we find that behavioral data and self-reported data doesn't congruent. W
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-abele_agency_2007}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-abele_agency_2007}{}}%
 Abele, A. E., \& Wojciszke, B. (2007). Agency and communion from the perspective of self versus others. \emph{Journal of Personality and Social Psychology}, \emph{93}(5), 751--763. \url{https://doi.org/10.1037/0022-3514.93.5.751}
 
-\leavevmode\hypertarget{ref-anderson_neurobiology_2019}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-anderson_neurobiology_2019}{}}%
 Anderson, B. A. (2019). Neurobiology of value-driven attention. \emph{Current Opinion in Psychology}, \emph{29}, 27--33. \url{https://doi.org/10.1016/j.copsyc.2018.11.004}
 
-\leavevmode\hypertarget{ref-anderson_visual_2011}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-anderson_visual_2011}{}}%
 Anderson, E., Siegel, E. H., Bliss-Moreau, E., \& Barrett, L. F. (2011). The visual impact of gossip. \emph{Science}, \emph{332}(6036), 1446--1448. \url{https://doi.org/10.1126/science.1201574}
 
-\leavevmode\hypertarget{ref-anderson_averaging_1965}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-anderson_averaging_1965}{}}%
 Anderson, N. H. (1965). Averaging versus adding as a stimulus-combination rule in impression formation. \emph{Journal of Experimental Psychology}, \emph{70}(4), 394--400. \url{https://doi.org/10.1037/h0022280}
 
-\leavevmode\hypertarget{ref-anisfeld_when_1966}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-anisfeld_when_1966}{}}%
 Anisfeld, M., \& Lambert, W. E. (1966). When are pleasant words learned faster than unpleasant words? \emph{Journal of Verbal Learning and Verbal Behavior}, \emph{5}(2), 132--141. \url{https://doi.org/10.1016/S0022-5371(66)80006-3}
 
-\leavevmode\hypertarget{ref-anselmi_positive_2011}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-anselmi_positive_2011}{}}%
 Anselmi, P., Vianello, M., \& Robusto, E. (2011). Positive associations primacy in the {IAT}. \emph{Experimental Psychology}. Retrieved from \url{https://econtent.hogrefe.com/doi/abs/10.1027/1618-3169/a000106}
 
-\leavevmode\hypertarget{ref-bargh_generality_1992}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-bargh_generality_1992}{}}%
 Bargh, J. A., Chaiken, S., Govender, R., \& Pratto, F. (1992). The generality of the automatic attitude activation effect. \emph{Journal of Personality and Social Psychology}, \emph{62}(6), 893--912. \url{https://doi.org/10.1037/0022-3514.62.6.893}
 
-\leavevmode\hypertarget{ref-baumeister_bad_2001}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-baumeister_bad_2001}{}}%
 Baumeister, R. F., Bratslavsky, E., Finkenauer, C., \& Vohs, K. D. (2001). Bad is stronger than good. \emph{Review of General Psychology}, \emph{5}(4), 323--370. \url{https://doi.org/10.1037/1089-2680.5.4.323}
 
-\leavevmode\hypertarget{ref-baumeister_bad_2001}{}%
-Baumeister, R. F., Bratslavsky, E., Finkenauer, C., \& Vohs, K. D. (2001). Bad is stronger than good. \emph{Review of General Psychology}, \emph{5}(4), 323--370. \url{https://doi.org/10.1037/1089-2680.5.4.323}
+\leavevmode\vadjust pre{\hypertarget{ref-Buxfcrkner_2017}{}}%
+Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan {[}Journal Article{]}. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Retrieved from \href{https://www.jstatsoft.org/v080/i01\%0Ahttp://dx.doi.org/10.18637/jss.v080.i01}{https://www.jstatsoft.org/v080/i01
+http://dx.doi.org/10.18637/jss.v080.i01}
 
-\leavevmode\hypertarget{ref-Buxfcrkner_2017}{}%
-Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan {[}Journal Article{]}. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Retrieved from \url{https://www.jstatsoft.org/v080/i01\%20http://dx.doi.org/10.18637/jss.v080.i01}
-
-\leavevmode\hypertarget{ref-Carpenter_2017_stan}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Carpenter_2017_stan}{}}%
 Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A probabilistic programming language {[}Journal Article{]}. \emph{Journal of Statistical Software}, \emph{76}(1). \url{https://doi.org/10.18637/jss.v076.i01}
 
-\leavevmode\hypertarget{ref-dang_why_2020}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dang_why_2020}{}}%
 Dang, J., King, K. M., \& Inzlicht, M. (2020). Why are self-report and behavioral measures weakly correlated? \emph{Trends in Cognitive Sciences}, \emph{24}(4), 267--269. \url{https://doi.org/10.1016/j.tics.2020.01.007}
 
-\leavevmode\hypertarget{ref-descioli_side_taking_2016}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-descioli_side_taking_2016}{}}%
 DeScioli, P. (2016). The side-taking hypothesis for moral judgment. \emph{Current Opinion in Psychology}, \emph{7}, 23--27. \url{https://doi.org/10.1016/j.copsyc.2015.07.002}
 
-\leavevmode\hypertarget{ref-dunbar_gossip_2004}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dunbar_gossip_2004}{}}%
 Dunbar, R. I. M. (2004). Gossip in evolutionary perspective. \emph{Review of General Psychology}, \emph{8}(2), 100--110. \url{https://doi.org/10.1037/1089-2680.8.2.100}
 
-\leavevmode\hypertarget{ref-eiserbeck_visual_2020}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-eiserbeck_visual_2020}{}}%
 Eiserbeck, A., \& Abdel Rahman, R. (2020). Visual consciousness of faces in the attentional blink: Knowledge-based effects of trustworthiness dominate over appearance-based impressions. \emph{Consciousness and Cognition}, \emph{83}, 102977. \url{https://doi.org/10.1016/j.concog.2020.102977}
 
-\leavevmode\hypertarget{ref-ellemers_morality_2018}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-ellemers_morality_2018}{}}%
 Ellemers, N. (2018). Morality and social identity. In M. van Zomeren \& J. F. Dovidio (Eds.), \emph{The oxford handbook of the human essence} (pp. 147--158). New York, {NY}, {US}: Oxford University Press.
 
-\leavevmode\hypertarget{ref-enock_overlap_2020}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-enock_overlap_2020}{}}%
 Enock, F. E., Hewstone, M. R. C., Lockwood, P. L., \& Sui, J. (2020). Overlap in processing advantages for minimal ingroups and the self. \emph{Scientific Reports}, \emph{10}(1), 18933. \url{https://doi.org/10.1038/s41598-020-76001-9}
 
-\leavevmode\hypertarget{ref-fiske_attention_1980}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-fiske_attention_1980}{}}%
 Fiske, S. T. (1980). Attention and weight in person perception: The impact of negative and extreme behavior. \emph{Journal of Personality and Social Psychology}, \emph{38}(6), 889--906. \url{https://doi.org/10.1037/0022-3514.38.6.889}
 
-\leavevmode\hypertarget{ref-fiske_attention_1980}{}%
-Fiske, S. T. (1980). Attention and weight in person perception: The impact of negative and extreme behavior. \emph{Journal of Personality and Social Psychology}, \emph{38}(6), 889--906. \url{https://doi.org/10.1037/0022-3514.38.6.889}
-
-\leavevmode\hypertarget{ref-freeman_chapter_2020}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-freeman_chapter_2020}{}}%
 Freeman, J. B., Stolier, R. M., \& Brooks, J. A. (2020). Chapter five - dynamic interactive theory as a domain-general account of social perception. In B. Gawronski (Ed.), \emph{Advances in experimental social psychology} (Vol. 61, pp. 237--287). Academic Press. \url{https://doi.org/10.1016/bs.aesp.2019.09.005}
 
-\leavevmode\hypertarget{ref-Goh_2016_mini}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Goh_2016_mini}{}}%
 Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own studies: Some arguments on why and a primer on how {[}Journal Article{]}. \emph{Social and Personality Psychology Compass}, \emph{10}(10), 535--549. \url{https://doi.org/10.1111/spc3.12267}
 
-\leavevmode\hypertarget{ref-goodwin_moral_2015}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-goodwin_moral_2015}{}}%
 Goodwin, G. P. (2015). Moral character in person perception. \emph{Current Directions in Psychological Science}, \emph{24}(1), 38--44. \url{https://doi.org/10.1177/0963721414550709}
 
-\leavevmode\hypertarget{ref-goodwin_moral_2014}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-goodwin_moral_2014}{}}%
 Goodwin, G. P., Piazza, J., \& Rozin, P. (2014). Moral character predominates in person perception and evaluation. \emph{Journal of Personality and Social Psychology}, \emph{106}(1), 148--168. \url{https://doi.org/10.1037/a0034726}
 
-\leavevmode\hypertarget{ref-hofmann_morality_2014}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-hofmann_morality_2014}{}}%
 Hofmann, W., Wisneski, D. C., Brandt, M. J., \& Skitka, L. J. (2014). Morality in everyday life. \emph{Science}, \emph{345}(6202), 1340--1343. \url{https://doi.org/10.1126/science.1251560}
 
-\leavevmode\hypertarget{ref-Hu_2020_GoodSelf}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Hu_2020_GoodSelf}{}}%
 Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? {[}Journal Article{]}. \emph{Collabra: Psychology}, \emph{6}(1), 20. \url{https://doi.org/10.1525/collabra.301}
 
-\leavevmode\hypertarget{ref-Liu_2020_JOPD}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Liu_2020_JOPD}{}}%
 Liu, Q., Wang, F., Yan, W., Peng, K., Sui, J., \& Hu, C.-P. (2020). Questionnaire data from the revision of a chinese version of free will and determinism plus scale {[}Journal Article{]}. \emph{Journal of Open Psychology Data}, \emph{8}(1), 1. \url{https://doi.org/10.5334/jopd.49/}
 
-\leavevmode\hypertarget{ref-mchugh_moral_2019}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-mchugh_moral_2019}{}}%
 McHugh, C., McGann, M., Igou, E. R., \& Kinsella, E. (2019). \emph{Moral judgment as categorization ({MJAC})}. {PsyArXiv}. \url{https://doi.org/10.31234/osf.io/72dzp}
 
-\leavevmode\hypertarget{ref-pool_attentional_2016}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-pool_attentional_2016}{}}%
 Pool, E., Brosch, T., Delplanque, S., \& Sander, D. (2016). Attentional bias for positive emotional stimuli: A meta-analytic investigation. \emph{Psychological Bulletin}, \emph{142}(1), 79--106. \url{https://doi.org/10.1037/bul0000026}
 
-\leavevmode\hypertarget{ref-pratto_automatic_1991}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-pratto_automatic_1991}{}}%
 Pratto, F., \& John, O. P. (1991). Automatic vigilance: The attention-grabbing power of negative social information. \emph{Journal of Personality and Social Psychology}, \emph{61}(3), 380--391. \url{https://doi.org/10.1037//0022-3514.61.3.380}
 
-\leavevmode\hypertarget{ref-Rouder_2005_BHM_SDT}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder_2005_BHM_SDT}{}}%
 Rouder, J. N., \& Lu, J. (2005). An introduction to bayesian hierarchical models with an application in the theory of signal detection {[}Journal Article{]}. \emph{Psychonomic Bulletin \& Review}, \emph{12}(4), 573--604. \url{https://doi.org/10.3758/bf03196750}
 
-\leavevmode\hypertarget{ref-Rousselet_2019}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Rousselet_2019}{}}%
 Rousselet, G. A., \& Wilcox, R. R. (2019). Reaction times and other skewed distributions: Problems with the mean and the median {[}Preprint{]}. \emph{Meta-Psychology}. \url{https://doi.org/10.1101/383935}
 
-\leavevmode\hypertarget{ref-shore_social_2013}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-shore_social_2013}{}}%
 Shore, D. M., \& Heerey, E. A. (2013). Do social utility judgments influence attentional processing? \emph{Cognition}, \emph{129}(1), 114--122. \url{https://doi.org/10.1016/j.cognition.2013.06.011}
 
-\leavevmode\hypertarget{ref-Simmons_2013_life}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Simmons_2013_life}{}}%
 Simmons, J. P., Nelson, L. D., \& Simonsohn, U. (2013). \emph{Life after p-hacking} {[}Conference Proceedings{]}. \url{https://doi.org/10.2139/ssrn.2205186}
 
-\leavevmode\hypertarget{ref-skowronski_social_1987}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-skowronski_social_1987}{}}%
 Skowronski, J. J., \& Carlston, D. E. (1987). Social judgment and social memory: The role of cue diagnosticity in negativity, positivity, and extremity biases. \emph{Journal of Personality and Social Psychology}, \emph{52}(4), 689--699. \url{https://doi.org/10.1037/0022-3514.52.4.689}
 
-\leavevmode\hypertarget{ref-stein_no_2017}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-stein_no_2017}{}}%
 Stein, T., Grubb, C., Bertrand, M., Suh, S. M., \& Verosky, S. C. (2017). No impact of affective person knowledge on visual awareness: Evidence from binocular rivalry and continuous flash suppression. \emph{Emotion}, \emph{17}(8), 1199--1207. \url{https://doi.org/10.1037/emo0000305}
 
-\leavevmode\hypertarget{ref-strohminger_true_2017}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-strohminger_true_2017}{}}%
 Strohminger, N., Knobe, J., \& Newman, G. (2017). The true self: A psychological concept distinct from the self: \emph{Perspectives on Psychological Science}. \url{https://doi.org/10.1177/1745691616689495}
 
-\leavevmode\hypertarget{ref-Sui_2012_JEPHPP}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Sui_2012_JEPHPP}{}}%
 Sui, J., He, X., \& Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching {[}Journal Article{]}. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{38}(5), 1105--1117. \url{https://doi.org/10.1037/a0029792}
 
-\leavevmode\hypertarget{ref-turner_rediscovering_1987}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-turner_rediscovering_1987}{}}%
 Turner, J. C., Hogg, M. A., Oakes, P. J., Reicher, S. D., \& Wetherell, M. S. (1987). \emph{Rediscovering the social group: A self-categorization theory}. Cambridge, {MA}, {US}: Basil Blackwell.
 
-\leavevmode\hypertarget{ref-uhlmann_person-centered_2015}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-uhlmann_person-centered_2015}{}}%
 Uhlmann, E. L., Pizarro, D. A., \& Diermeier, D. (2015). A person-centered approach to moral judgment: \emph{Perspectives on Psychological Science}. \url{https://doi.org/10.1177/1745691614556679}
 
-\leavevmode\hypertarget{ref-unkelbach_chapter_2020}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-unkelbach_chapter_2020}{}}%
 Unkelbach, C., Alves, H., \& Koch, A. (2020). Chapter three - negativity bias, positivity bias, and valence asymmetries: Explaining the differential processing of positive and negative information. In B. Gawronski (Ed.), \emph{Advances in experimental social psychology} (Vol. 62, pp. 115--187). Academic Press. \url{https://doi.org/10.1016/bs.aesp.2020.04.005}
 
-\leavevmode\hypertarget{ref-unkelbach_good_2010}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-unkelbach_good_2010}{}}%
 Unkelbach, C., Hippel, W. von, Forgas, J. P., Robinson, M. D., Shakarchi, R. J., \& Hawkins, C. (2010). Good things come easy: Subjective exposure frequency and the faster processing of positive information. \emph{Social Cognition}, \emph{28}(4), 538--555. \url{https://doi.org/10.1521/soco.2010.28.4.538}
 
-\leavevmode\hypertarget{ref-xiao_perceiving_2016}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-xiao_perceiving_2016}{}}%
 Xiao, Y. J., Coppin, G., \& Bavel, J. J. V. (2016). Perceiving the world through group-colored glasses: A perceptual model of intergroup relations. \emph{Psychological Inquiry}, \emph{27}(4), 255--274. \url{https://doi.org/10.1080/1047840X.2016.1199221}
 
 \end{CSLReferences}
