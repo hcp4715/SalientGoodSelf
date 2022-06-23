@@ -4,7 +4,6 @@ rm(list = ls())
 
 if(!"tidyverse" %in% rownames(installed.packages())) install.packages("tidyverse")
 if(!"here" %in% rownames(installed.packages())) install.packages("here")
-if(!"mosaic" %in% rownames(installed.packages())) install.packages("mosaic")
 library(tidyverse)
 library(here)
 
@@ -101,11 +100,18 @@ df1a.v.basic <- df1a.v %>%
 
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),      # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),   # code as correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),    # code as miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),   # code as false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(
+                sdt = dplyr::case_when(
+                        (ACC == 1 & Matchness == 'Match') ~ "hit",
+                        (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                        (ACC == 0 & Matchness == 'Match') ~ "miss",
+                        (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+                # sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),      # code as hit
+                #                                   "CR" = (ACC ==1  & Matchness == "Mismatch"),   # code as correct reject
+                #                                   "miss" = (ACC == 0 & Matchness == "Match"),    # code as miss
+                #                                   "FA" = (ACC == 0 & Matchness == "Mismatch"),   # code as false alarm
+                #                                   .method ="first",  .default = NA)
+                ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -229,11 +235,11 @@ df1b.v.basic     <- df1b.v %>%
 
 # calculate d prime
 df1b.v.dprime_l <- df1b.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+                      ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -348,11 +354,11 @@ df1c.v.basic     <- df1c.v %>%
 
 # calculate d prime
 df1c.v.dprime_l <- df1c.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -458,11 +464,11 @@ df2.v.basic     <- df2.v %>%
 
 # calculate d prime
 df2.v.dprime_l <- df2.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"),     # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),  # code as correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),   # code as miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),  # code as false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                      # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -576,11 +582,11 @@ df3a.v.basic     <- df3a.v %>%
 
 # calculate d prime
 df3a.v.dprime_l <- df3a.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -626,7 +632,6 @@ df3b <- read.csv(here::here('exp3b', 'rawdata_behav_exp3b_201704_export_2019.csv
                       RESP = Target.RESP,
                       Matchness = YesNoResp,
                       Valence = Morality) %>%
-        
         # in this experiment we need to get the value of valence and identity from shape
         dplyr::mutate(#Valence = ifelse(Shape == "Goodself" | Shape == "Goodother", "Good", 
                 #                 ifelse(Shape == "Neutralself" | Shape == "NeutralOther","Neutral", "Bad")),
@@ -692,11 +697,11 @@ df3b.v.basic     <- df3b.v %>%
 
 # calculate d prime
 df3b.v.dprime_l <- df3b.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -813,11 +818,11 @@ df4a.v.basic     <- df4a.v %>%
 
 # calculating the dprime 
 df4a.v.dprime_l <- df4a.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -935,11 +940,11 @@ df4b.v.basic     <- df4b.v %>%
 
 # calculating the dprime 
 df4b.v.dprime_l <- df4b.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -1064,11 +1069,11 @@ df5.v.basic     <- df5.v %>%
 
 # calculating the dprime 
 df5.v.dprime_l <- df5.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>%  
         dplyr::group_by(Site, taskType, Subject, Age, Sex, Valence,sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -1175,11 +1180,11 @@ df6a.v.basic     <- df6a.v %>%
 
 # calculating the dprime 
 df6a.v.dprime_l <- df6a.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -1359,11 +1364,11 @@ df6b_d2.v.basic     <- df6b_d2.v %>%
 
 # calculate d prime
 df6b_d1.v.dprime_l <- df6b_d1.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -1405,7 +1410,7 @@ df7a_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7a_2016.csv'),header = T
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
         dplyr::rename(Subject = SubjectID, 
                       Sex = Gender,
-                      Matchness = Match,
+                      Matchness = Match,s
                       Valence = Morality,
                       ACC = Accuracy, 
                       RESP = ResponseKey) %>%    #
@@ -1451,11 +1456,11 @@ df7a_m.v <- df7a_m %>%
 
 # calculate d prime
 df7a_m.v.dprime_l <- df7a_m.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
         dplyr::ungroup() %>%
@@ -1542,11 +1547,11 @@ df7b_m.v <- df7b_m %>%
 
 # calculate d prime
 df7b_m.v.dprime_l <- df7b_m.v %>%
-        dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                                  "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                                  "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                                  "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                                  .method ="first",  .default = NA)) %>% 
+        dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
+                                             (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
+                                             (ACC == 0 & Matchness == 'Match') ~ "miss",
+                                             (ACC == 0 & Matchness == 'Mismatch') ~ "FA")
+        ) %>% 
         dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
         dplyr::summarise(N = length(sdt)) %>%                                     # calculate the counts for each 
         dplyr::ungroup() %>%

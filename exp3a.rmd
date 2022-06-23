@@ -159,16 +159,18 @@ exp3a_sdt_p <- exp3a_sdt_m1 %>%
                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
+  dplyr::filter(ismatch == 'd prime') %>%
   ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
-  tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
+  tidybayes::stat_halfeye(aes(fill = Identity), alpha = 0.6) + # position=position_dodge(width = 0.1)
   stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line"
                #,position=position_dodge(width = 0.1)
                ) +
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(~ ismatch) +
+  #facet_grid(~ ismatch) +
+  labs(y=expression('Posteior distribution of '~italic(d)~' prime')) +  
   theme_classic()
 ```
 We found that the *d* prime is greater when shapes were associated with good self condition than with neutral self or bad self, but shapes associated with bad self and neutral self didn't show differences. Comparing the self vs other under three condition revealed that shapes associated with good self is greater than with good other, but with a weak evidence. In contrast, for both neutral and bad valence condition, shapes associated with other had greater *d* prime than with self.
@@ -203,14 +205,16 @@ exp3a_rt_p <- exp3a_rt_m1 %>%
               Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
   dplyr::rename(log_RT = .value) %>%
   dplyr::mutate(`Reaction times (ms)` = exp(log_RT)*1000) %>%
+  dplyr::filter(ismatch == 'match') %>%
   ggplot2::ggplot(aes(x = Valence, y = `Reaction times (ms)`, group = Identity, color = Identity)) +
   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
   #geom_line(alpha = .01) +
-  tidybayes::stat_halfeye() +
+  tidybayes::stat_halfeye(aes(fill = Identity), alpha = 0.6) +
   ggplot2::stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line") +
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(~ ismatch) +
+  labs(y=expression('Posteior distribution of RTs')) +  
+  # facet_grid(~ ismatch) +
   theme_classic()
 
 emm1 <- emmeans::emmeans(exp3a_rt_m1, specs = pairwise ~ Identity | Valence | ismatch)
@@ -224,6 +228,10 @@ emm2$contrasts %>% summary(infer = TRUE, point.est = mean)
 ```{r plot-exp3a-BGLM, fig.cap="Exp3a: Results of Bayesian GLM analysis.",  fig.height=4.5, fig.width=9, warning=FALSE}
 library(patchwork)
 exp3a_rt_p + exp3a_sdt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
+
+# below is for grant writing
+p <- exp3a_rt_p + exp3a_sdt_p + plot_annotation(tag_levels = 'A')   + plot_layout(guides = "collect") 
+ggsave('exp3a_plot_posterior.png', p, width = 9, height = 4.5)
 ```
 
 In reaction times, we found that same trends in the match trials as in the RT: while the shapes associated with good self was greater than with good other (log mean diff = -0.02858, 95%HPD[-0.070898, 0.0154]), the direction is reversed for neutral and negative condition. see Figure \@ref(fig:plot-exp3a-BGLM) 

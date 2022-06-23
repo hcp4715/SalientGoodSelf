@@ -2,39 +2,45 @@
 ## Design and Procedure
 This series of experiments studied the perceptual process of moral character, using the social associative learning paradigm (or tagging paradigm)[@Sui_2012_JEPHPP], in which participants first learned the associations between geometric shapes and labels of person with different moral character (e.g., in first three studies, the triangle, square, and circle and good person, neutral person, and bad person, respectively). The associations of the shapes and label were counterbalanced across participants. After remembered the associations, participants finished a practice phase to familiar with the task, in which they viewed one of the shapes upon the fixation while one of the labels below the fixation and judged whether the shape and the label matched the association they learned. When participants reached 60% or higher accuracy at the end of the practicing session, they started the experimental task which was the same as in the practice phase. 
 
-The experiment 1a, 1b, 1c, 2, and 6a shared a 2 (matching: match vs. nonmatch) by 3 (moral character: good person vs. neutral person vs. bad person) within-subject design. Experiment 1a was the first one of the whole series studies and found the prioritization of stimuli associated with good-person. To confirm that it is the moral character that caused the effect, we further conducted experiment 1b, 1c, and 2. More specifically, experiment 1b used different Chinese words as label to test whether the effect only occurred with certain familiar words. Experiment 1c manipulated the moral valence indirectly: participants first learned to associate different moral behaviors with different neutral names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequentially presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
+The experiment 1a, 1b, 1c, 2, 5, and 6a shared a 2 (matching: match vs. nonmatch) by 3 (moral character: good vs. neutral vs. bad person) within-subject design. Experiment 1a was the first one of the whole series studies and found the prioritization of stimuli associated with good-person. To confirm that it is the moral character that caused the effect, we further conducted experiment 1b, 1c, and 2. More specifically, experiment 1b used different Chinese words as labels to test whether the effect only occurred with certain words. Experiment 1c manipulated the moral valence indirectly: participants first learned to associate different moral behaviors with different Chinese names, after remembered the association, they then performed the perceptual matching task by associating names with different shapes. Experiment 2 further tested whether the way we presented the stimuli influence the effect of valence, by sequentially presenting labels and shapes. Note that part of participants of experiment 2 were from experiment 1a because we originally planned a cross task comparison. Experiment 5 was designed to compare the effect size of moral character and other importance social evaluative dimensions (aesthetics and emotion). Different social evaluative dimensions were implemented in different blocks, the moral character blocks shared the design of experiment 1a. Experiment 6a, which shared the same design as experiment 2, was an EEG experiment which aimed at exploring the neural correlates of the effect. But we will focus on the behavioral results of experiment 6a in the current manuscript.
 
-For experiment 3a, 3b, 4a, 4b, 6b, 7a, and 7b, we included self-reference as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the design of experiment 1a into a 2 (matchness: match vs. nonmatch) by 2 (reference: self vs. other) by 3 (moral valence: good vs. neutral vs. bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezoids). The experiment 6b was an EEG experiment extended from experiment 3a but presented the label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different types of block: in the self-referential blocks, they only responded to good-self, neutral-self, and bad-self, with half match trials and half non-match trials; in the other-reference blocks, they only responded to good-other, neutral-other, and bad-other. Experiment 7a and 7b were designed to test the cross task robustness of the effect we observed in the aforementioned experiments [see, @Hu_2020_GoodSelf]. The matching task in these two experiments shared the same design with experiment 3a, but only with two moral character, i.e., good vs. bad. We didn't include the neutral condition in experiment 7a and 7b because we found that the neutral and bad conditions constantly showed non-significant results in experiment 1 ~ 6.
+For experiment 3a, 3b, and 6b, we included self-reference as another within-subject variable in the experimental design. For example, the experiment 3a directly extend the design of experiment 1a into a 2 (matching: match vs. nonmatch) by 2 (reference: self vs. other) by 3 (moral character: good vs. neutral vs. bad) within-subject design. Thus in experiment 3a, there were six conditions (good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other) and six shapes (triangle, square, circle, diamond, pentagon, and trapezoids). The experiment 6b was an EEG experiment based on experiment 3a but presented the label and shape sequentially. Because of the relatively high working memory load (six label-shape pairs), experiment 6b were conducted in two days: the first day participants finished perceptual matching task as a practice, and the second day, they finished the task again while the EEG signals were recorded. We only focus on the first day's data here. Experiment 3b was designed to separate the self-referential trials and other-referential trials. That is, participants finished two different types of block: in the self-referential blocks, they only responded to good-self, neutral-self, and bad-self, with half match trials and half nonmatch trials; in the other-reference blocks, they only responded to good-other, neutral-other, and bad-other.
 
-Experiment 4a and 4b were design to explore the mechanism behind the prioritization of good-self. In 4a, we used only two labels (self vs. other) and two shapes (circle, square). To manipulate the moral valence, we added the moral-related words within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-reference and valence in the task: participant learnt three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words related to identity, "self" or "other", were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task. 
+Experiment 4a and 4b were design to explore the mechanism underlying the prioritization of good-self. In 4a, we only used two labels (self vs. other) and two shapes (circle, square). To manipulate the moral character, we added the moral-related words within the shape and instructed participants to ignore the words in the shape during the task. In 4b, we reversed the role of self-reference and moral character in the task: participant learned three labels (good-person, neutral-person, and bad-person) and three shapes (circle, square, and triangle), and the words related to identity, "self" or "other", were presented in the shapes. As in 4a, participants were told to ignore the words inside the shape during the task. 
 
-E-prime 2.0 was used for presenting stimuli and collecting behavioral responses, except that experiment 7a and 7b used Matlab Psychtoolbox [@Brainard_1997;@Pelli_1997]. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about $3.7^\circ × 3.7^\circ$, the fixation cross is of $0.8^\circ × 0.8^\circ$ visual angle at the center of the screen. The words were of $3.6^\circ$ × $1.6^\circ$ visual angle. The distance between the center of the shape or the word and the fixation cross was $3.5^\circ$ of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’ chin were not fixed.
+E-prime 2.0 was used for presenting stimuli and collecting behavioral responses. For participants recruited in Tsinghua University, they finished the experiment individually in a dim-lighted chamber, stimuli were presented on 22-inch CRT monitors and their head were fixed by a chin-rest brace. The distance between participants' eyes and the screen was about 60 cm. The visual angle of geometric shapes was about $3.7^\circ × 3.7^\circ$, the fixation cross is of $0.8^\circ × 0.8^\circ$ visual angle at the center of the screen. The words were of $3.6^\circ$ × $1.6^\circ$ visual angle. The distance between the center of the shape or the word and the fixation cross was $3.5^\circ$ of visual angle. For participants recruited in Wenzhou University, they finished the experiment in a group consisted of 3 ~ 12 participants in a dim-lighted testing room. Participants were required to finished the whole experiment independently. Also, they were instructed to start the experiment at the same time, so that the distraction between participants were minimized. The stimuli were presented on 19-inch CRT monitor. The visual angles are could not be exactly controlled because participants’ chin were not fixed.
 
 In most of these experiments, participant were also asked to fill a battery of questionnaire after they finish the behavioral tasks. All the questionnaire data are open [see, dataset 4 in @Liu_2020_JOPD]. See Table S1 for a summary information about all the experiments. 
 
 ## Data analysis
 
-### Analysis of individual study
-We used the `tidyverse` of r (see script `Load_save_data.r`) to exclude the practicing trials, invalid trials of each participants, and invalid participants, if there were any, in the raw data. Results of each experiment were then analyzed in two Bayesian approaches. 
+We used the `tidyverse` of r (see script `Load_save_data.r`) to preprocess the data. Results of each experiment were then analyzed using Bayesian hierarchical models.
 
-#### Bayesian hierarchical model
-We first tested the effect of experimental manipulation using Bayesian hierarchical model. More specifically, we used the Bayesian hierarchical model (or Bayesian generalized linear mixed model, GLMM), because it provided three advantages over the classic NHST approach (repeated measure ANOVA or t-tests): first, BHM use posterior distribution of parameter for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT], second, BHM can use distribution that fit the real distribution, which is the case for reaction time data [@Rousselet_2019], third, BHM provided an unified framework to analyze data from different levels and different sources, avoid the problem of two-stage modeling. We used the `r` package `BRMs` [@Bürkner_2017] to build the models, which used Stan [@Carpenter_2017_stan] to sample from the posterior. 
+We used the Bayesian hierarchical model (BHM, or Bayesian generalized linear mixed models, Bayesian multilevel models) to model the reaction time and accuracy data, because BHM provided three advantages over the classic NHST approach (repeated measure ANOVA or *t*-tests): first, BHM estimate the posterior distributions of parameters for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT]. Second, BHM, where generalized linear mixed models could be easily implemented, can use distributions that fit the distribution of real data instead of using normal distribution for all data. Using appropriate distributions for the data will avoid misleading results and provide better fitting of the data. For example, Reaction times are not normally distributed but right skewed, and the linear assumption in ANOVAs is not satisfied [@Rousselet_2019]. Third, BHM provided an unified framework to analyze data from different levels and different sources, avoid the information loss when we need to combine data from different levels. 
 
-##### Signal detection theory for accuracy
-We followed practice of previous [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, we assume the match trials are signal and the non-match trials are noise. To estimate the sensitivity and criterion of SDT, we adopted the Bayesian GLMM approach from [@Rouder_2005_BHM_SDT]. When modeling the accuracy data for one participant, we assume that the accuracy of each trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
+We used the `r` package `BRMs` [@Bürkner_2017], which used Stan [@Carpenter_2017_stan] for the BHM analyses. We estimated the over-all effect across experiments with similar experimental design, instead of using a two-step approach where we first estimate parameters, e.g., $d'$ for each participant, and then use a random effect model meta-analysis to synthesize the effect [@Goh_2016_mini].  
+
+### Accuracy
+We followed practice of previous studies [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and the non-match trials are noise. As we mentioned above, we estimated the sensitivity and criterion of SDT by BHM [@Rouder_2005_BHM_SDT]. Because the BHM can model different level's data using a single unified model, we used a three-level HBM to model the moral character effect, which include five experiments: 1a, 1b, 1c, 2, 5, and 6a. Similarly, we modeled experiments with both self-referential and moral character with a three-level HBM model, which includes 3a, 3b, and 6b. For experiment 4a and 4b, we used two-level models for each separately. However, we could compare the posterior of parameters directly because we have full posterior distribution of parameters.
+
+We used the Bernoulli distribution to model the accuracy data. For a single participant, we assume that the accuracy of $i$th trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
 
 $$ y_{i} \sim Bernoulli(p_{i})$$
-In the perceptual matching task, the probability $p_{i}$ can then be modeled as a function of the trial type:
+and the probability of choosing "match" $p_{i}$ at the $i$th trial is a function of the trial type:
 
-$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}  * Valence_{i} $$
-The outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for a participant is $p_{i}$. We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. Given this parameterization, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increase of saying 1 when predictor is 1, in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
+$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
+therefore, the outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on the $i$th trial, 1 if they responded "match". We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. In this way, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increased probability of responding "match" when the trial type is "match", in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
 
-In each experiment, we had multiple participants, to estimate the group-level parameters, we need to estimate parameters on individual level and the group level parameter simultaneously. In this case, as above, we first assume that the outcome of each trial is Bernoulli distributed, with probability $p_{ij}$ that $y_{ij} = 1$. 
+In our experimental design, there are three conditions for both match and non-match trials, we can estimate the $d'$ and $c$ separately for each condition. In this case, the criterion $c$ is modeled as the main effect of valence, and the $d'$ can be modeled as the interaction between valence and match:
+
+$$ \Phi(p_{i}) = 0 + \beta_{0}Valence_{i} + \beta_{1}IsMatch_{i}  * Valence_{i} $$
+
+In each experiment, we had multiple participants. We can estimate the group-level parameters by extending the above model into a two-level model, where we can estimate parameters on individual level (varying effect) and the group level parameter simultaneously (fixed effect). The probability that the $j$th subject responded "match" ($y_{ij} = 1$) at the $i$th trial $p_{ij}$. In the same vein, we have
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
-And the the generalized linear model was re-written to include two levels:
-$$ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij} * Valence_{ij}$$
-The outcomes $y_{ij}$ are 0 if participant $j$ responded "nonmatch" on trial $i$, 1 if they responded "match". The probability of the "match" response for trial $i$ for subject $j$ is $p_{ij}$. We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+The the generalized linear model can be re-written to include two levels:
+$$ \Phi(p_{ij}) = 0 + \beta_{0j}Valence_{ij} + \beta_{1j}IsMatch_{ij} * Valence_{ij}$$
+We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
 
 The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
 $$ \begin{bmatrix}\beta_{0j}\\
@@ -43,7 +49,7 @@ $$ \begin{bmatrix}\beta_{0j}\\
 \theta_{1}\\
 \end{bmatrix}, \sum) $$
 
-For experiments that had 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad), i.e., experiment 1a, 1b, 1c, 2, 5, and 6a, the formula for BGLM is as follow:
+For experiments that had 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad), i.e., experiment 1a, 1b, 1c, 2, 5, and 6a, the formula for accuracy in `BRMs` is as follow:
 
 `saymatch ~ 0 + Valence + Valence:ismatch + (0 + Valence + Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
@@ -51,36 +57,10 @@ For experiments that had two by two by three design, we used the follow formula 
 
 `saymatch ~ 0 + ID:Valence + ID:Valence:ismatch + (0 + ID:Valence + ID:Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
-##### Log normal for reaction times
-For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. The log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response. The reaction time is a linear function of trial type:
-
-$$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
-
-while the log of the reaction time is log-normal distributed:
-$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
-$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
-
-$$\mu_{j} \sim N(\mu, \sigma)$$
-
-$$\sigma_{j} \sim Cauchy()$$
-Formula used for modeling the data as follow:
-
-`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = shifted_lognormal()`
-
-or 
-
-`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = shifted_lognormal()`
-
-#### Hierarchical drift diffusion model (HDDM)
-To further explore the psychological mechanism under perceptual decision-making, we used a generative mode drift diffusion model (DDM) to model our RTs and accuracy data. As the hypothesis testing part, we also used hierarchical Bayesian model to fit the DDM. The package we used was the HDDM [@wiecki_hddm_2013], a python package for fitting hierarchical DDM. We used the prior implemented in HDDM, that is, weakly informative priors that constrains parameter estimates to be in the range of plausible values based on past literature [@matzke_psychological_2009]. As reported in @Hu_2020_GoodSelf, we used the stimulus code approach, match response were coded as 1 and nonmatch responses were coded as 0. To fully explore all parameters, we allow all four parameters of DDM free to vary. We then extracted the estimation of all the four parameters for each participants for the correlation analyses. However, because the starting point is only related to response (match vs. non-match) but not the valence of the stimuli, we didn't included it in correlation analysis.
-
-### Synthesized results
-Given that multiple experiments in the current study shared similar experimental designs, We also synthesized their results to get a more precise and robust estimation of the effect. 
-
-We used Bayesian hierarchical GLM model to synthesize the effect across different studies by extending two-level hierarchical model into a three-level model, which experiment as an additional level. For SDT, we can use a nested hierarchical model to model all the experiment with similar design:
+In the same vein, we can estimate the posterior of parameters across different experiments. We can use a nested hierarchical model to model all the experiment with similar design:
 $$y_{ijk} \sim Bernoulli(p_{ijk})$$
-where 
-$$ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}$$
+the generalized linear model is then
+$$ \Phi(p_{ijk}) =  0 + \beta_{0jk}Valence_{ijk} + \beta_{1j}IsMatch_{ijk} * Valence_{ijk}$$
 The outcomes $y_{ijk}$ are 0 if participant $j$ in experiment k responded "nonmatch" on trial $i$, 1 if they responded "match". 
 
 $$\begin{bmatrix}\beta_{0jk}\\
@@ -96,9 +76,29 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
 \mu_{1}\\
 \end{bmatrix}, \sum)$$
-in which $\mu_{0}$ and $\mu_{1}$ means the population level parameter.
+in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
 
-In similar way, we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
+##### Reaction times
+For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. Although the log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response, we found that the additional parameter didnt' improved the model fitting and therefore used the logNormal in our final analysis. 
+
+The reaction time of the $j$th subject on $i$th trial is a linear function of trial type: $$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
+
+while the log of the reaction time is log-normal distributed:
+$$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
+$y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
+
+$$\mu_{j} \sim N(\mu, \sigma)$$
+
+$$\sigma_{j} \sim Cauchy()$$
+Formula used for modeling the data as follow:
+
+`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = lognormal()`
+
+or 
+
+`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = lognormal()`
+
+we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
 
 $$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$ 
 
@@ -109,21 +109,13 @@ $$\sigma_{jk} \sim Cauchy()$$
 $$\mu_{k} \sim N(\mu, \sigma)$$
 $$\theta_{k} \sim Cauchy()$$
 
-Using the Bayesian hierarchical model, we can directly estimate the over-all effect of valence on $d'$ and RT across all experiments with similar experimental design, instead of using a two-step approach where we first estimate the $d'$ for each participant and then use a random effect model meta-analysis [@Goh_2016_mini]. 
+### Effect of moral character
+We estimated the effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported fixed effect of three-level BHM that included all experiments that tested the valence effect. 
 
-##### Effect of moral character
-We synthesized effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported the synthesized the effect across all experiments that tested the valence effect, using the mini meta-analysis approach [@Goh_2016_mini]. 
+### Interaction between moral character and self-referential process
+We also estimated the interaction between moral character and self-referential process, which included results from experiment 3a, 3b, and 6b. Using three-level models, we tested two possible explanations for the prioritization of good character: value-based or social categorization based prioritization. 
 
-#### Effect of moral self
-We further synthesized the effect of moral self, which included results from experiment 3a, 3b, and 6b. In these experiment, we directly tested two possible explanations: moral self as social categorization process and value-based attention. 
-
-#### Implicit interaction between valence and self-relevance
-In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the morally Good (4b).
-
-#### Behavior-Questionnaire correlation
-
-Finally, we explored correlation between results from behavioral results and self-reported measures. 
+### Implicit interaction between valence and self-relevance
+In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the good character (4b).
 
 For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all questionnaire data were reported in [@Liu_2020_JOPD].
-
-For the behavioral task part, we used three parameters from drift diffusion model: drift rate (*v*), boundary separation (*a*), and non decision-making time (*t*), because these parameters has relative clear psychological meaning. We used the mean of parameter posterior distribution as the estimate of each parameter for each participants in the correlation analysis. We used alpha = 0.05 and used bootstrap by `BootES` package [@kirby_bootes_2013] to estimate the correlation. 
