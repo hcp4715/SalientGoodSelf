@@ -22,3 +22,4 @@
 *.Rproj.user
 .Rproj.user
 *.ipynb_checkpoints/
+*.sync.ffs*
