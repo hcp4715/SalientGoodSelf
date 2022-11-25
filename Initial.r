@@ -21,22 +21,14 @@ pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats', 'ggridges',
                "corrplot", 'patchwork',
                "psych", "lavaan", "semPlot", 'devtools')
 
-# Use_hog <- TRUE  # whether use goundhog
-Use_hog <- FALSE  # Not use goundhog
-
-if (Use_hog) {
-        library(groundhog)  # use groundhog to ensure reproducibility
-        groundhog.day <- '2021-01-18'
-        groundhog.library(pkgNeeded, groundhog.day)
-}else{
-        pkgTest <- function(x){
-                if (!require(x, character.only = TRUE)){
-                        install.packages(x, dep = TRUE)
-                        if(!require(x, character.only = TRUE)) stop("Package not found")
-                }
+## Note, tried to use groundhog but found it did not work well for linux.
+pkgTest <- function(x){
+        if (!require(x, character.only = TRUE)){
+                install.packages(x, dep = TRUE)
+                if(!require(x, character.only = TRUE)) stop("Package not found")
         }
-        lapply(pkgNeeded,pkgTest)
 }
+lapply(pkgNeeded,pkgTest)
 
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
 
@@ -46,9 +38,9 @@ library(papaja)
 
 # set_cmdstan_path('/home/hcp4715/cmdstan')
 
-# Save some time and stor APA format-related code in an object so you can easily
+# Save some time and store APA format-related code in an object so you can easily
 # use it in multiple plots
-#windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
+# windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
 apatheme = theme_bw() +
         theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),

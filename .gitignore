@@ -1,3 +1,5 @@
+
+# all data files
 *.csv
 *.rds
 *.emrg2
@@ -15,11 +17,19 @@
 *.eps
 *.pdf
 *.tiff
+
+# R related 
 *.RData
 *.Rhistory
 *.Rproj.user/
 *.Rproj
 *.Rproj.user
 .Rproj.user
+
+# python (HDDM) related
 *.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+*/.vscode/
+
+# file sync related
 *.sync.ffs*

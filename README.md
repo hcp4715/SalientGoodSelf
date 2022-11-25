@@ -1,8 +1,10 @@
 # Notebook for perceptual salience of positive-self
 
-Purpose: this repository is an on-going notebook  that analyze the results from the series of experiments on perceptual salience of positive self. 
+Purpose: this repository is an on-going notebook that analyze the results from a series of experiments on perceptual salience of positive self. 
 
-The code was made public to increasing the transparency and reproducibility of my own research.
+Authors: Hu Chuan-Peng, Kaiping Peng, Jie Sui.
+
+The scripts were made public to increasing the transparency and reproducibility of this study.
 
 The cleaned data will be uploaded after I submitting this manuscript.
 
