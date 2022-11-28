@@ -15,8 +15,8 @@ options(digits=5)       # limit the number of reporting
 # rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 
 pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats', 'ggridges',
-               "afex", 'emmeans', 'lme4',
-               "metafor", "Hmisc",
+               "afex", 'emmeans', 'lme4', "ggplot2", # "PupillometryR",  
+               "metafor", "Hmisc", "papaja",
                "BayesFactor", 'brms', 'tidybayes', 'cmdstanr',
                "corrplot", 'patchwork',
                "psych", "lavaan", "semPlot", 'devtools')
@@ -31,10 +31,11 @@ pkgTest <- function(x){
 lapply(pkgNeeded,pkgTest)
 
 rm('pkgNeeded') # remove the variable 'pkgNeeded';
+source("geom_flat_violin.R")
 
 # Install the stable development verions from GitHub
-if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
-library(papaja)
+# if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
+# library(papaja)
 
 # set_cmdstan_path('/home/hcp4715/cmdstan')
 

@@ -3,12 +3,11 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  english,
   man]{apa6}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -34,15 +33,7 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Supplementary Materials for Perpecptual Salience of Positive Self},
-  pdflang={en-EN},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -68,6 +59,38 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{english}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -83,9 +106,9 @@
 
 % Create new environments so endfloat can handle them
 % \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
-\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+%   {\begin{landscape}\centering\begin{threeparttable}}
+%   {\end{threeparttable}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\centering\begin{ThreePartTable}}{\end{ThreePartTable}\end{landscape}}
 
 % Enables adjusting longtable caption width to table width
 % Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
@@ -98,26 +121,40 @@
 % \setlength{\parindent}{0.5in}
 % \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
 % \usepackage{etoolbox}
 \makeatletter
 \patchcmd{\HyOrg@maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
 \makeatother
-\shorttitle{Supplementary Materials}
-\author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{1}, \& Jie Sui\textsuperscript{1,3}}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} Tsinghua University, 100084 Beijing, China\\\textsuperscript{2} Leibniz Institute for Resilience Research, 55131 Mainz, Germany\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
-\authornote{Hu Chuan-Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China; Leibniz Intitute for Resilience Research, 55131 Mainz, Germany.
-Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
-Jie Sui, Department of Psychology, the University of Bath, Bath, UK.
 
-Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
-
-
-Correspondence concerning this article should be addressed to Hu Chuan-Peng, Langenbeckstr. 1, Neuroimaging Center, University Medical Center Mainz, 55131 Mainz, Germany. E-mail: hcp4715@gmail.com}
+\usepackage{xpatch}
+\makeatletter
+\xapptocmd\appendix
+  {\xapptocmd\section
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {}{\InnerPatchFailed}%
+  }
+{}{\PatchFailed}
 \keywords{\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
@@ -129,20 +166,84 @@ Correspondence concerning this article should be addressed to Hu Chuan-Peng, Lan
 
 \linenumbers
 \usepackage{csquotes}
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
-\else
-  \usepackage[shorthands=off,main=english]{babel}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Supplementary Materials for Perpecptual Salience of Positive Self},
+  pdfauthor={Hu Chuan-Peng1,2, Kaiping Peng2, \& Jie Sui2,3},
+  pdflang={en-EN},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Supplementary Materials for Perpecptual Salience of Positive Self}
-
+\author{Hu Chuan-Peng\textsuperscript{1,2}, Kaiping Peng\textsuperscript{2}, \& Jie Sui\textsuperscript{2,3}}
 \date{}
+
+
+\shorttitle{Supplementary Materials}
+
+\authornote{
+
+Hu Chuan-Peng, School of Psychology, Nanjing Normal University, 210024 Nanjing, China.
+Kaiping Peng, Department of Psychology, Tsinghua University, 100084 Beijing, China.
+Jie Sui, School of Psychology, University of Aberdeen, Aberdeen, Scotland.
+Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
+
+Authors contriubtion: HCP, JS, \& KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. KP \& JS supported this project.
+
+Correspondence concerning this article should be addressed to Hu Chuan-Peng, School of Psychology, Nanjing Normal University, Ninghai Road 122, Gulou District, 210024 Nanjing, China. E-mail: \href{mailto:hcp4715@hotmail.com}{\nolinkurl{hcp4715@hotmail.com}}
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} Nanjing Normal University, 210024 Nanjing, China\\\textsuperscript{2} Tsinghua University, 100084 Beijing, China\\\textsuperscript{3} University of Aberdeen, Aberdeen, Scotland}
 
 \begin{document}
 \maketitle
+
+\begin{table}[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:Table_s1_exp_info}Information about all experiments.}
+
+\begin{tabular}{lllllllll}
+\toprule
+ExpID & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Month} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{DV} & \multicolumn{1}{c}{Design} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Valence} & \multicolumn{1}{c}{Presenting}\\
+\midrule
+Exp\_1a\_1 & 2014 & 4 & 38 (35) & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1a\_2 & 2017 & 4 & 18 (16) & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1b\_1 & 2014 & 10 & 39 (27) & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1b\_2 & 2017 & 4 & 33 (25) & behav & 3 * 2 & explicit & words & Simultaneously\\
+Exp\_1c & 2014 & 10 & 23 (23) & behav & 3 * 2 & explicit & descriptions & Simultaneously\\
+Exp\_2 & 2014 & 5 & 35 (34) & behav & 3 * 2 & explicit & words & Sequentially\\
+Exp\_3a & 2014 & 11 & 38 (35) & behav & 3 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_3b & 2017 & 4 & 61 (56) & behav & 3 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_4a\_1 & 2015 & 6 & 32 (29) & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4a\_2 & 2017 & 4 & 32 (30) & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4b\_1 & 2015 & 10 & 34 (32) & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_4b\_2 & 2017 & 4 & 19 (13) & behav & 3 * 2 * 2 & implicit & words & Simultaneously\\
+Exp\_5 & 2016 & 1 & 43 (38) & behav & 3 * 2 * 4 & explicit & words & Simultaneously\\
+Exp\_6a & 2014 & 12 & 24 (24) & behav/EEG & 3 * 2 & explicit & words & Sequentially\\
+Exp\_6b & 2016 & 1 & 23 (22) & behav/EEG & 3 * 2 * 2 & explicit & words & Sequentially\\
+Exp\_7a & 2016 & 7 & 35 (29) & behav & 2 * 2 * 2 & explicit & words & Simultaneously\\
+Exp\_7b & 2018 & 5 & 46 (42) & behav & 2 * 2 * 2 & explicit & words & Simultaneously\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} DV = dependent variables; Valence = how valence was manipulated; Shape \& Label = how shapes \& labels were presented.}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table}
 
 \hypertarget{experiment-1a}{%
 \section{Experiment 1a}\label{experiment-1a}}
@@ -163,8 +264,8 @@ Three geometric shapes were used in this experiment: triangle, square, and circl
 \hypertarget{procedure}{%
 \subsubsection{Procedure}\label{procedure}}
 
-As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, \enquote{bad person is a circle; good person is a triangle; and a neutral person is represented by a square.} After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task.
-In the experimental task, participants judged whether shape--label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape--label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, \enquote{too slow} was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60\%.
+As we describe in general method part, this experiment had two phases. First, there was a learning stage. Participants were asked to learn the relationship between geometric shapes (triangle, square, and circle) and different person (bad person, a good person, or a neutral person). For example, a participant was told, ``bad person is a circle; good person is a triangle; and a neutral person is represented by a square.'' After participant remember the associations (usually in a few minutes), participants started a practicing phase of matching task which has the exact task as in the experimental task.
+In the experimental task, participants judged whether shape--label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape--label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, ``too slow'' was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60\%.
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
 \hypertarget{data-analysis}{%
@@ -194,14 +295,14 @@ In the GLM model, we assume that the outcome of each trial is Bernoulli distribu
 In the perceptual matching task, the probability \(p_{i}\) can then be modeled as a function of the trial type:
 
 \[ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}\]
-The outcomes \(y_{i}\) are 0 if the participant responded \enquote{nonmatch} on trial \(i\), 1 if they responded \enquote{match}. The probability of the \enquote{match} response for trial \(i\) for a participant is \(p_{i}\). We then write the generalized linear model on the probits (z-scores; \(\Phi\), \enquote{Phi}) of \(p\)s. \(\Phi\) is the cumulative normal density function and maps \(z\) scores to probabilities. Given this parameterization, the intercept of the model (\(\beta_0\)) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion \(c\). The slope of the model (\(\beta_1\)) is the increase of saying 1 when predictor is 1, in \(z\)-scores, which is another expression of \(d'\). Therefore, \(c\) = -\(z\)HR = \(-\beta_0\), and \(d' = \beta_1\).
+The outcomes \(y_{i}\) are 0 if the participant responded ``nonmatch'' on trial \(i\), 1 if they responded ``match''. The probability of the ``match'' response for trial \(i\) for a participant is \(p_{i}\). We then write the generalized linear model on the probits (z-scores; \(\Phi\), ``Phi'') of \(p\)s. \(\Phi\) is the cumulative normal density function and maps \(z\) scores to probabilities. Given this parameterization, the intercept of the model (\(\beta_0\)) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion \(c\). The slope of the model (\(\beta_1\)) is the increase of saying 1 when predictor is 1, in \(z\)-scores, which is another expression of \(d'\). Therefore, \(c\) = -\(z\)HR = \(-\beta_0\), and \(d' = \beta_1\).
 
 In each experiment, we had multiple participants, then we need also consider the variations between subjects, i.e., a hierarchical mode in which individual's parameter and the the population level parameter are estimated simultaneously. We assume that the outcome of each trial is Bernoulli distributed (binomial with 1 trial), with probability \(p_{ij}\) that \(y_{ij} = 1\).
 
 \[ y_{ij} \sim Bernoulli(p_{ij})\]
 Similarly, the generalized linear model was extended to two levels:
 \[ \Phi(p_{ij}) =  \beta_{0j} + \beta_{1j}IsMatch_{ij}\]
-The outcomes \(y_{ij}\) are 0 if participant \(j\) responded \enquote{nonmatch} on trial \(i\), 1 if they responded \enquote{match}. The probability of the \enquote{match} response for trial \(i\) for subject \(j\) is \(p_{ij}\). We again can write the generalized linear model on the probits (z-scores; \(\Phi\), \enquote{Phi}) of \(p\)s.
+The outcomes \(y_{ij}\) are 0 if participant \(j\) responded ``nonmatch'' on trial \(i\), 1 if they responded ``match''. The probability of the ``match'' response for trial \(i\) for subject \(j\) is \(p_{ij}\). We again can write the generalized linear model on the probits (z-scores; \(\Phi\), ``Phi'') of \(p\)s.
 
 The subjective-specific intercepts (\(\beta_{0} = -zFAR\)) and slopes (\(\beta_{1} = d'\)) are describe by multivariate normal with means and a covariance matrix for the parameters.
 \[ \begin{bmatrix}\beta_{0j}\\
@@ -214,7 +315,7 @@ In the same vein, when trying to estimate the parameter across different experim
 \[y_{ijk} \sim Bernoulli(p_{ijk})\]
 where
 \[ \Phi(p_{ijk}) =  \beta_{0jk} + \beta_{1jk}IsMatch_{ijk}\]
-The outcomes \(y_{ijk}\) are 0 if participant \(j\) in experiment k responded \enquote{nonmatch} on trial \(i\), 1 if they responded \enquote{match}.
+The outcomes \(y_{ijk}\) are 0 if participant \(j\) in experiment k responded ``nonmatch'' on trial \(i\), 1 if they responded ``match''.
 
 \[\begin{bmatrix}\beta_{0jk}\\
 \beta_{1jk}\\
@@ -268,8 +369,8 @@ To further explore the psychological mechanism under perceptual decision-making,
 
 \begin{figure}
 \centering
-\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/ex1a-dprime-rt-1.pdf}
-\caption{\label{fig:ex1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/exp1a-dprime-rt-1.pdf}
+\caption{\label{fig:exp1a-dprime-rt}RT and \emph{d} prime of Experiment 1a.}
 \end{figure}
 
 \hypertarget{classic-analytical-approach}{%
@@ -280,12 +381,12 @@ To further explore the psychological mechanism under perceptual decision-making,
 
 Figure \ref{fig:ex1a-dprime-rt} shows \emph{d} prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA.
 
-We found the effect of Valence (\(F(1.96, 97.84) = 6.19\), \(\mathit{MSE} = 0.27\), \(p = .003\), \(\hat{\eta}^2_G = .020\)). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater \emph{d} prime than shapes associated with Bad-person (1.75, SE = 0.14), \emph{t}(50) = 3.304, \emph{p} = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, \emph{t}(50) = 1.54, \emph{p} = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, \emph{t}(50) = 2.109, \emph{p} = .098.
+We found the effect of Valence (\(F(1.96, 97.84) = 6.19\), \(p = .003\), \(\hat{\eta}^2_G = .020\), 90\% CI \([.000, .074]\)). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater \emph{d} prime than shapes associated with Bad-person (1.75, SE = 0.14), \emph{t}(50) = 3.304, \emph{p} = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, \emph{t}(50) = 1.54, \emph{p} = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, \emph{t}(50) = 2.109, \emph{p} = .098.
 
 \hypertarget{reaction-times}{%
 \paragraph{Reaction times}\label{reaction-times}}
 
-We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (\(F(1, 50) = 232.39\), \(\mathit{MSE} = 948.92\), \(p < .001\), \(\hat{\eta}^2_G = .104\)), main effect of valence (\(F(1.87, 93.31) = 9.62\), \(\mathit{MSE} = 1,673.86\), \(p < .001\), \(\hat{\eta}^2_G = .016\)), and interaction between Matchness and Valence (\(F(1.73, 86.65) = 8.52\), \(\mathit{MSE} = 1,441.75\), \(p = .001\), \(\hat{\eta}^2_G = .011\)).
+We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (\(F(1, 50) = 232.39\), \(p < .001\), \(\hat{\eta}^2_G = .104\), 90\% CI \([.010, .251]\)), main effect of valence (\(F(1.87, 93.31) = 9.62\), \(p < .001\), \(\hat{\eta}^2_G = .016\), 90\% CI \([.000, .064]\)), and interaction between Matchness and Valence (\(F(1.73, 86.65) = 8.52\), \(p = .001\), \(\hat{\eta}^2_G = .011\), 90\% CI \([.000, .053]\)).
 
 We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence . We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), \emph{t}(50) = -2.265, \emph{p} = 0.0702) and Bad Person (728 ms, SE = 11.7), \emph{t}(50) = -4.41, \emph{p} = 0.0002), and the Neutral condition was faster than the Bad condition, \emph{t}(50) = -2.495, \emph{p} = 0.0415). For non-matched trials, there was no significant effect of Valence ().
 
@@ -313,6 +414,12 @@ We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as
 \hypertarget{hddm}{%
 \subsubsection{HDDM}\label{hddm}}
 
+\begin{figure}
+\centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-exp1a-HDDM-1.pdf}
+\caption{\label{fig:plot-exp1a-HDDM}Exp1a: Results of HDDM.}
+\end{figure}
+
 We fitted our data with HDDM, using the response-coding (See also, Hu et al., 2020). We estimated separate drift rate (\(v\)), non-decision time (\(T_{0}\)), and boundary separation (\(a\)) for each condition. We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
 \includegraphics[width=5.20833in,height=\textheight]{HDDM/exp1a_hddm_vta_pairplot.pdf}
 
@@ -332,7 +439,7 @@ In this study, we aimed at excluding the potential confounding factor of the fam
 \hypertarget{stimuli-and-tasks-1}{%
 \subsubsection{Stimuli and Tasks}\label{stimuli-and-tasks-1}}
 
-Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (\enquote{恶人}, ERen), a morally good person (\enquote{善人}, ShanRen) or a morally neutral person (\enquote{常人}, ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
+Three geometric shapes (triangle, square, and circle, with 3.7º × 3.7º of visual angle) were presented above a white fixation cross subtending 0.8º × 0.8º of visual angle at the center of the screen. The three shapes were randomly assigned to three labels with different moral valence: a morally bad person (``恶人'', ERen), a morally good person (``善人'', ShanRen) or a morally neutral person (``常人'', ChangRen). The order of the associations between shapes and labels was counterbalanced across participants.
 Three labels used in this experiment is selected based on the rating results from an independent survey, in which participants rated the familiarity, frequency, and concreteness of eight different words online. Of the eight words, three of them are morally positive (HaoRen, ShanRen, Junzi), two of them are morally neutral (ChangRen, FanRen), and three of them are morally negative (HuaiRen, ERen, LiuMang). An independent sample consist of 35 participants (22 females, age 20.6 ± 3.11) were recruited to rate these words. Based on the ratings (see supplementary materials Figure S1), we selected ShanRen, ChangRen, and ERen to represent morally positive, neutral, and negative person.
 \includegraphics[width=5.20833in,height=\textheight]{exp1b/Familiarity_ratings/df1b_fami_rating.pdf}
 
@@ -363,12 +470,12 @@ Figure \ref{fig:ex1b-dprime-rt} shows \emph{d} prime and reaction times of exper
 \hypertarget{d-prime-2}{%
 \paragraph{d prime}\label{d-prime-2}}
 
-Repeated measures ANOVA revealed main effect of valence, \(F(1.83, 93.20) = 14.98\), \(\mathit{MSE} = 0.18\), \(p < .001\), \(\hat{\eta}^2_G = .053\). Paired t test showed that the Good-Person condition (1.87 \(\pm\) 0.102) was with greater \emph{d} prime than Neutral condition (1.44 \(\pm\) 0.101, \emph{t}(51) = 5.945, \emph{p} \textless{} 0.001). We also found that the Bad-Person condition (1.67 \(\pm\) 0.11) has also greater \emph{d} prime than neutral condition , \emph{t}(51) = 3.132, \emph{p} = 0.008). There Good-person condition was also slightly greater than the bad condition, \emph{t}(51) = 2.265, \emph{p} = 0.0701.
+Repeated measures ANOVA revealed main effect of valence, \(F(1.83, 93.20) = 14.98\), \(p < .001\), \(\hat{\eta}^2_G = .053\), 90\% CI \([.000, .129]\). Paired t test showed that the Good-Person condition (1.87 \(\pm\) 0.102) was with greater \emph{d} prime than Neutral condition (1.44 \(\pm\) 0.101, \emph{t}(51) = 5.945, \emph{p} \textless{} 0.001). We also found that the Bad-Person condition (1.67 \(\pm\) 0.11) has also greater \emph{d} prime than neutral condition , \emph{t}(51) = 3.132, \emph{p} = 0.008). There Good-person condition was also slightly greater than the bad condition, \emph{t}(51) = 2.265, \emph{p} = 0.0701.
 
 \hypertarget{reaction-time}{%
 \paragraph{Reaction time}\label{reaction-time}}
 
-We found interaction between Matchness and Valence (\(F(1.95, 99.31) = 19.71\), \(\mathit{MSE} = 960.92\), \(p < .001\), \(\hat{\eta}^2_G = .031\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence \(F(1.94, 99.10) = 33.97\), \(\mathit{MSE} = 1,343.19\), \(p < .001\), \(\hat{\eta}^2_G = .115\). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (684 \(\pm\) 8.77) were responded faster than Neutral-Person (740 \(\pm\) 9.84), (\emph{t}(51) = -8.167, \emph{p} \textless{} 0.001) and Bad Person (728 \(\pm\) 9.15), \emph{t}(51) = -5.724, \emph{p} \textless{} 0.0001). While there was no significant differences between Neutral and Bad-Person condition (\emph{t}(51) = 1.686, \emph{p} = 0.221). For non-matched trials, there was no significant effect of Valence (\(F(1.90, 97.13) = 1.80\), \(\mathit{MSE} = 430.15\), \(p = .173\), \(\hat{\eta}^2_G = .003\)).
+We found interaction between Matchness and Valence (\(F(1.95, 99.31) = 19.71\), \(p < .001\), \(\hat{\eta}^2_G = .031\), 90\% CI \([.000, .094]\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence \(F(1.94, 99.10) = 33.97\), \(p < .001\), \(\hat{\eta}^2_G = .115\), 90\% CI \([.029, .211]\). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (684 \(\pm\) 8.77) were responded faster than Neutral-Person (740 \(\pm\) 9.84), (\emph{t}(51) = -8.167, \emph{p} \textless{} 0.001) and Bad Person (728 \(\pm\) 9.15), \emph{t}(51) = -5.724, \emph{p} \textless{} 0.0001). While there was no significant differences between Neutral and Bad-Person condition (\emph{t}(51) = 1.686, \emph{p} = 0.221). For non-matched trials, there was no significant effect of Valence (\(F(1.90, 97.13) = 1.80\), \(p = .173\), \(\hat{\eta}^2_G = .003\), 90\% CI \([.000, .022]\)).
 
 \hypertarget{bglm}{%
 \subsubsection{BGLM}\label{bglm}}
@@ -395,6 +502,12 @@ We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as
 \paragraph{HDDM}\label{hddm-1}}
 
 We found that the shapes tagged with good person has higher drift rate and higher boundary separation than shapes tagged with both neutral and bad person. Also, the shapes tagged with neutral person has a higher drift rate than shapes tagged with bad person, but not for the boundary separation. Finally, we found that shapes tagged with bad person had longer non-decision time (see figure ).
+
+\begin{figure}
+\centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-exp1b-HDDM-1.pdf}
+\caption{\label{fig:plot-exp1b-HDDM}Exp1b: Results of HDDM.}
+\end{figure}
 
 ** insert figure of HDDM **
 
@@ -443,7 +556,7 @@ Data was analyzed as in experiment 1a.
 \caption{\label{fig:ex1c-dprime-rt}RT and \emph{d} prime of Experiment 1c.}
 \end{figure}
 
-Figure \ref{fig:ex1c-dprime-rt} shows \emph{d} prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on \emph{d} prime, \(F(1.93, 42.56) = 0.23\), \(\mathit{MSE} = 0.41\), \(p = .791\), \(\hat{\eta}^2_G = .005\). Neither the effect of valence on RT (\(F(1.63, 35.81) = 0.22\), \(\mathit{MSE} = 2,212.71\), \(p = .761\), \(\hat{\eta}^2_G = .001\)) or interaction between valence and matchness on RT (\(F(1.79, 39.43) = 1.20\), \(\mathit{MSE} = 1,973.91\), \(p = .308\), \(\hat{\eta}^2_G = .005\)).
+Figure \ref{fig:ex1c-dprime-rt} shows \emph{d} prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on \emph{d} prime, \(F(1.93, 42.56) = 0.23\), \(p = .791\), \(\hat{\eta}^2_G = .005\), 90\% CI \([.000, .030]\). Neither the effect of valence on RT (\(F(1.63, 35.81) = 0.22\), \(p = .761\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\)) or interaction between valence and matchness on RT (\(F(1.79, 39.43) = 1.20\), \(p = .308\), \(\hat{\eta}^2_G = .005\), 90\% CI \([.000, .036]\)).
 
 \hypertarget{signal-detection-theory-analysis-of-accuracy-1}{%
 \paragraph{Signal detection theory analysis of accuracy}\label{signal-detection-theory-analysis-of-accuracy-1}}
@@ -456,8 +569,6 @@ Interesting, we also found the criteria for three conditions also differ, the sh
 \paragraph{Reaction time}\label{reaction-time-2}}
 
 We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials (\(P_{PosteriorComparison} = 1\)). We focused on matched trials only, and compared different conditions: Good () is faster than the neutral (), \(P_{PosteriorComparison} = .99\), it was also faster than the Bad condition (), \(P_{PosteriorComparison} = 1\). And the neutral condition is faster than the bad condition, \(P_{PosteriorComparison} = 99\). However, the mismatched trials are largely overlapped.
-
-\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/1c_BGLMM_rt-1.pdf}
 
 \begin{figure}
 \centering
@@ -473,7 +584,7 @@ We fitted our data with HDDM, using the response-coding {[}also see Hu\_2020\_Go
 \hypertarget{discussion-1}{%
 \subsection{Discussion}\label{discussion-1}}
 
-Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-significant results. (move this experiment to supplementary?)
+Experiment 1c was conducted in a old way, i.e., we peeked the data when we collected around 20 participants, and decided to stop because the non-significant results. Although the results were not significant, the pattern was consistent with previous two studies.
 
 \hypertarget{experiment-2-sequential-presenting}{%
 \section{Experiment 2: Sequential presenting}\label{experiment-2-sequential-presenting}}
@@ -513,14 +624,14 @@ Figure \ref{fig:ex2-dprime-rt} shows \emph{d} prime and reaction times of experi
 \hypertarget{d-prime.}{%
 \subsubsection{\texorpdfstring{\emph{d} prime.}{d prime.}}\label{d-prime.}}
 
-There was evidence for the main effect of valence, \(F(1.83, 60.36) = 14.41\), \(\mathit{MSE} = 0.23\), \(p < .001\), \(\hat{\eta}^2_G = .066\). Paired t test showed that the Good-Person condition (2.79 \(\pm\) 0.17) was with greater \emph{d} prime than Netural condition (2.21 \(\pm\) 0.16, \emph{t}(33) = 4.723, \emph{p} = 0.001) and Bad-person condition (2.41 \(\pm\) 0.14), \emph{t}(33) = 4.067, \emph{p} = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, \emph{t}(33) = -1,802, \emph{p} = 0.185.
+There was evidence for the main effect of valence, \(F(1.83, 60.36) = 14.41\), \(p < .001\), \(\hat{\eta}^2_G = .066\), 90\% CI \([.000, .138]\). Paired t test showed that the Good-Person condition (2.79 \(\pm\) 0.17) was with greater \emph{d} prime than Netural condition (2.21 \(\pm\) 0.16, \emph{t}(33) = 4.723, \emph{p} = 0.001) and Bad-person condition (2.41 \(\pm\) 0.14), \emph{t}(33) = 4.067, \emph{p} = 0.008). There was no-significant difference between Neutral-person and Bad-person conidition, \emph{t}(33) = -1,802, \emph{p} = 0.185.
 
 \hypertarget{reaction-time-3}{%
 \subsubsection{Reaction time}\label{reaction-time-3}}
 
 The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data.
 
-We found interaction between Matchness and Valence (\(F(1.99, 65.70) = 9.53\), \(\mathit{MSE} = 605.36\), \(p < .001\), \(\hat{\eta}^2_G = .017\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence \(F(1.99, 65.76) = 10.57\), \(\mathit{MSE} = 1,192.65\), \(p < .001\), \(\hat{\eta}^2_G = .067\). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (548 \(\pm\) 9.4) were responded faster than Neutral-Person (582 \(\pm\) 10.9), (\emph{t}(33) = -3.95, \emph{p} = 0.0011) and Bad Person (582 \(\pm\) 10.2), \emph{t}(33) = -3.9, \emph{p} = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (\emph{t}(33) = -0.01, \emph{p} = 0.999). For non-matched trials, there was no significant effect of Valence (\(F(1.99, 65.83) = 0.17\), \(\mathit{MSE} = 489.80\), \(p = .843\), \(\hat{\eta}^2_G = .001\)).
+We found interaction between Matchness and Valence (\(F(1.99, 65.70) = 9.53\), \(p < .001\), \(\hat{\eta}^2_G = .017\), 90\% CI \([.000, .080]\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence \(F(1.99, 65.76) = 10.57\), \(p < .001\), \(\hat{\eta}^2_G = .067\), 90\% CI \([.000, .169]\). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (548 \(\pm\) 9.4) were responded faster than Neutral-Person (582 \(\pm\) 10.9), (\emph{t}(33) = -3.95, \emph{p} = 0.0011) and Bad Person (582 \(\pm\) 10.2), \emph{t}(33) = -3.9, \emph{p} = 0.0013). While there was no significant differences between Neutral and Bad-Person condition (\emph{t}(33) = -0.01, \emph{p} = 0.999). For non-matched trials, there was no significant effect of Valence (\(F(1.99, 65.83) = 0.17\), \(p = .843\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\)).
 
 \hypertarget{discussion-2}{%
 \subsection{Discussion}\label{discussion-2}}
@@ -554,7 +665,7 @@ The stimuli used in study 3a share the same parameters with experiment 1 \& 2. 6
 \hypertarget{procedure-4}{%
 \subsubsection{Procedure}\label{procedure-4}}
 
-After being fully explained and signed the informed consent, participants were instructed to chose a name that can represent a stranger with same gender as the participant themselves, from a common Chinese name pool. Before experiment, the experimenter explained the meaning of each label to participants. For example, the \enquote{good self} mean the morally good side of themselves, them could imagine the moment when they do something's morally applauded, \enquote{bad self} means the morally bad side of themselves, they could also imagine the moment when they doing something morally wrong, and \enquote{neutral self} means the aspect of self that doesn't related to morality, they could imagine the moment when they doing something irrelevant to morality. In the same sense, the \enquote{good other}, \enquote{bad other}, and \enquote{neutral other} means the three different aspects of the stranger, whose name was chosen before the experiment. Then, the experiment proceeded as study 1a. Each participant finished 6 blocks, each have 120 trials. The sequence of trials was pseudo-randomized so that there are 10 matched trials for each condition and 10 non-matched trials for each condition (good self, neutral sef, bad self, good other, neutral other, bad other) for each block.
+After being fully explained and signed the informed consent, participants were instructed to chose a name that can represent a stranger with same gender as the participant themselves, from a common Chinese name pool. Before experiment, the experimenter explained the meaning of each label to participants. For example, the ``good self'' mean the morally good side of themselves, them could imagine the moment when they do something's morally applauded, ``bad self'' means the morally bad side of themselves, they could also imagine the moment when they doing something morally wrong, and ``neutral self'' means the aspect of self that doesn't related to morality, they could imagine the moment when they doing something irrelevant to morality. In the same sense, the ``good other'', ``bad other'', and ``neutral other'' means the three different aspects of the stranger, whose name was chosen before the experiment. Then, the experiment proceeded as study 1a. Each participant finished 6 blocks, each have 120 trials. The sequence of trials was pseudo-randomized so that there are 10 matched trials for each condition and 10 non-matched trials for each condition (good self, neutral sef, bad self, good other, neutral other, bad other) for each block.
 
 \hypertarget{data-analysis-3}{%
 \subsubsection{Data Analysis}\label{data-analysis-3}}
@@ -575,18 +686,18 @@ Figure \ref{fig:ex3a-dprime-rt} shows \emph{d} prime and reaction times of exper
 \hypertarget{d-prime-3}{%
 \subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-3}}
 
-There was evidence for the main effect of valence, \(F(1.89, 64.37) = 11.09\), \(\mathit{MSE} = 0.23\), \(p < .001\), \(\hat{\eta}^2_G = .039\), and main effect of self-relevance, \(F(1, 34) = 3.22\), \(\mathit{MSE} = 0.54\), \(p = .082\), \(\hat{\eta}^2_G = .015\), as well as the interaction, \(F(1.79, 60.79) = 3.39\), \(\mathit{MSE} = 0.43\), \(p = .045\), \(\hat{\eta}^2_G = .022\).
+There was evidence for the main effect of valence, \(F(1.89, 64.37) = 11.09\), \(p < .001\), \(\hat{\eta}^2_G = .039\), 90\% CI \([.000, .123]\), and main effect of self-relevance, \(F(1, 34) = 3.22\), \(p = .082\), \(\hat{\eta}^2_G = .015\), 90\% CI \([.000, .139]\), as well as the interaction, \(F(1.79, 60.79) = 3.39\), \(p = .045\), \(\hat{\eta}^2_G = .022\), 90\% CI \([.000, .089]\).
 
-We then conducted separated ANOVA for self-referential and other-referential trials. The valence effect was shown for the self-referential conditions, \(F(1.65, 56.25) = 13.98\), \(\mathit{MSE} = 0.31\), \(p < .001\), \(\hat{\eta}^2_G = .119\). Post-hoc test revealed that the Good-Self condition (1.97 \(\pm\) 0.14) was with greater \emph{d} prime than Netural condition (1.41 \(\pm\) 0.12, \emph{t}(34) = 4.505, \emph{p} = 0.0002), and Bad-self condition (1.43 \(\pm\) 0.102), \emph{t}(34) = 3.856, \emph{p} = 0.0014. There was difference between neutral and bad conidition, \emph{t}(34) = -0.238, \emph{p} = 0.9694. However, no effect of valence was found for the other-referential condition \(F(1.98, 67.36) = 0.38\), \(\mathit{MSE} = 0.35\), \(p = .681\), \(\hat{\eta}^2_G = .004\).
+We then conducted separated ANOVA for self-referential and other-referential trials. The valence effect was shown for the self-referential conditions, \(F(1.65, 56.25) = 13.98\), \(p < .001\), \(\hat{\eta}^2_G = .119\), 90\% CI \([.015, .236]\). Post-hoc test revealed that the Good-Self condition (1.97 \(\pm\) 0.14) was with greater \emph{d} prime than Netural condition (1.41 \(\pm\) 0.12, \emph{t}(34) = 4.505, \emph{p} = 0.0002), and Bad-self condition (1.43 \(\pm\) 0.102), \emph{t}(34) = 3.856, \emph{p} = 0.0014. There was difference between neutral and bad conidition, \emph{t}(34) = -0.238, \emph{p} = 0.9694. However, no effect of valence was found for the other-referential condition \(F(1.98, 67.36) = 0.38\), \(p = .681\), \(\hat{\eta}^2_G = .004\), 90\% CI \([.000, .009]\).
 
 \hypertarget{reaction-time-4}{%
 \subsubsection{Reaction time}\label{reaction-time-4}}
 
-We found intercation between Matchness and Valence (\(F(1.98, 67.44) = 26.29\), \(\mathit{MSE} = 730.09\), \(p < .001\), \(\hat{\eta}^2_G = .025\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+We found intercation between Matchness and Valence (\(F(1.98, 67.44) = 26.29\), \(p < .001\), \(\hat{\eta}^2_G = .025\), 90\% CI \([.000, .097]\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
-For the matched trials, we found that the interaction between identity and valence, \(F(1.72, 58.61) = 3.89\), \(\mathit{MSE} = 2,750.19\), \(p = .032\), \(\hat{\eta}^2_G = .019\), as well as the main effect of valence \(F(1.98, 67.34) = 35.76\), \(\mathit{MSE} = 1,127.25\), \(p < .001\), \(\hat{\eta}^2_G = .079\), but not the effect of identity \(F(1, 34) = 0.20\), \(\mathit{MSE} = 3,507.14\), \(p = .660\), \(\hat{\eta}^2_G = .001\). As for the \emph{d} prime, we separated analyzed the self-referential and other-referential trials. For the Self-referential trials, we found the main effect of valence, \(F(1.80, 61.09) = 30.39\), \(\mathit{MSE} = 1,584.53\), \(p < .001\), \(\hat{\eta}^2_G = .159\); for the other-referential trials, the effect of valence is weaker, \(F(1.86, 63.08) = 2.85\), \(\mathit{MSE} = 2,224.30\), \(p = .069\), \(\hat{\eta}^2_G = .024\). We then focused on the self conditions: the good-self condition (713 \(\pm\) 12) is faster than neutral- (776 \(\pm\) 11.8), \emph{t}(34) = -7.396, \emph{p} \textless{} .0001 , and bad-self (772 \(\pm\) 10.1) conditions, \emph{t}(34) = -5.66, \emph{p} \textless{} .0001. But there is not difference between neutral- and bad-self conditions, \emph{t}(34) = 0.481, \emph{p} = 0.881.
+For the matched trials, we found that the interaction between identity and valence, \(F(1.72, 58.61) = 3.89\), \(p = .032\), \(\hat{\eta}^2_G = .019\), 90\% CI \([.000, .084]\), as well as the main effect of valence \(F(1.98, 67.34) = 35.76\), \(p < .001\), \(\hat{\eta}^2_G = .079\), 90\% CI \([.000, .185]\), but not the effect of identity \(F(1, 34) = 0.20\), \(p = .660\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .052]\). As for the \emph{d} prime, we separated analyzed the self-referential and other-referential trials. For the Self-referential trials, we found the main effect of valence, \(F(1.80, 61.09) = 30.39\), \(p < .001\), \(\hat{\eta}^2_G = .159\), 90\% CI \([.038, .282]\); for the other-referential trials, the effect of valence is weaker, \(F(1.86, 63.08) = 2.85\), \(p = .069\), \(\hat{\eta}^2_G = .024\), 90\% CI \([.000, .095]\). We then focused on the self conditions: the good-self condition (713 \(\pm\) 12) is faster than neutral- (776 \(\pm\) 11.8), \emph{t}(34) = -7.396, \emph{p} \textless{} .0001 , and bad-self (772 \(\pm\) 10.1) conditions, \emph{t}(34) = -5.66, \emph{p} \textless{} .0001. But there is not difference between neutral- and bad-self conditions, \emph{t}(34) = 0.481, \emph{p} = 0.881.
 
-For the mismatched trials, we didn't found any strong effect: identity, \(F(1, 34) = 3.43\), \(\mathit{MSE} = 660.02\), \(p = .073\), \(\hat{\eta}^2_G = .004\), valence \(F(1.89, 64.33) = 0.40\), \(\mathit{MSE} = 444.10\), \(p = .661\), \(\hat{\eta}^2_G = .001\), or interaction between the two \(F(1.94, 66.02) = 2.42\), \(\mathit{MSE} = 817.35\), \(p = .099\), \(\hat{\eta}^2_G = .007\).
+For the mismatched trials, we didn't found any strong effect: identity, \(F(1, 34) = 3.43\), \(p = .073\), \(\hat{\eta}^2_G = .004\), 90\% CI \([.000, .098]\), valence \(F(1.89, 64.33) = 0.40\), \(p = .661\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\), or interaction between the two \(F(1.94, 66.02) = 2.42\), \(p = .099\), \(\hat{\eta}^2_G = .007\), 90\% CI \([.000, .046]\).
 
 \hypertarget{experiment-3b}{%
 \section{Experiment 3b}\label{experiment-3b}}
@@ -605,7 +716,7 @@ Study 3b were finished in 2017, at that time we have calculated that the effect 
 \subsubsection{Design}\label{design-1}}
 
 Study 3b has the same experimental design as 3a, with a 2× 3× 2 within-subject design. The first variable was self-relevance, include two levels: self-relevant vs.~stranger-relevant; the second variable was moral valence, include good, neutral and bad; the third variable was the matching between shape and label: match vs.~mismatch.
-Stimuli. The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to \enquote{good self}, \enquote{neutral self}, \enquote{bad self}, \enquote{good him/her}, bad him/her'', \enquote{neutral him/her}, the stranger's label is consistent with participants' gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data did not collect for this experiment.
+Stimuli. The stimuli used in study 3b share the same parameters with experiment 3a. 6 shapes were included (triangle, square, circle, trapezoid, diamond, regular pentagon), as well as 6 labels, but the labels changed to ``good self'', ``neutral self'', ``bad self'', ``good him/her'', bad him/her'', ``neutral him/her'', the stranger's label is consistent with participants' gender. Same as study 3a, we asked participant to chosen an unfamiliar name of their own gender to be the stranger before showing them the relationship. Note, because of implementing error, the personal distance data did not collect for this experiment.
 
 \hypertarget{procedure-5}{%
 \subsubsection{Procedure}\label{procedure-5}}
@@ -633,22 +744,22 @@ Figure \ref{fig:ex3b-dprime-rt} shows \emph{d} prime and reaction times of exper
 \hypertarget{d-prime-4}{%
 \subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-4}}
 
-There was evidence for the main effect of valence, \(F(1.92, 105.43) = 1.90\), \(\mathit{MSE} = 0.33\), \(p = .157\), \(\hat{\eta}^2_G = .005\), and main effect of self-relevance, \(F(1, 55) = 4.65\), \(\mathit{MSE} = 0.89\), \(p = .035\), \(\hat{\eta}^2_G = .017\), as well as the interaction, \(F(1.90, 104.36) = 5.58\), \(\mathit{MSE} = 0.26\), \(p = .006\), \(\hat{\eta}^2_G = .011\). Therefore we conducted repeated measure ANOVA for self and other conditions separately. We found the valence effect for self-referential condition (\(F(1.75, 96.42) = 6.73\), \(\mathit{MSE} = 0.30\), \(p = .003\), \(\hat{\eta}^2_G = .037\)) and other-referential condition (\(F(1.93, 105.97) = 0.61\), \(\mathit{MSE} = 0.31\), \(p = .539\), \(\hat{\eta}^2_G = .002\)). Post-hoc comparison for the self-referential conditions revealed that \emph{d}' was larger for good self (2.23 \(\pm\) 0.1087) than for bad self (1.66 \(\pm\) 0.098), \emph{t}(55) = 6.11, \emph{p} \textless{} 0.0001, Cohen's \emph{d} = 0.817, 95\% CI {[}0.511 1.117{]} , BF10 = 8.43, and neutral self (1.91 \(\pm\) 0.088), \emph{t}(55) = 3.03, \emph{p} = 0.0104, Cohen's \emph{d} = 0.404, 95\%CI {[}0.13 0.675{]} , BF10 = 1.33e+5. There was also higher d' for neutral-self condition than bad-self conditions, \emph{t}(55) = 3.02, \emph{p} = 0.0106, Cohen's \emph{d} = 0.403, 95\% CI {[}0.129 0.674{]}, BF10 = 8.22. For other-referential conditions, good-other (2.03 \(\pm\) 0.12) was smaller than neutral-other (2.28 \(\pm\) 0.133), \emph{t}(55) = -2.262, \emph{p} = 0.0699, but not the bad-other condition (2.19 \(\pm\) 0.122), \emph{t}(55) = -1.559, \emph{p} = 0.272. Neither evidence for the neutral and bad-other condition \emph{t}(55) = 1.11, \emph{p} = 0.51.
+There was evidence for the main effect of valence, \(F(1.92, 105.43) = 1.90\), \(p = .157\), \(\hat{\eta}^2_G = .005\), 90\% CI \([.000, .031]\), and main effect of self-relevance, \(F(1, 55) = 4.65\), \(p = .035\), \(\hat{\eta}^2_G = .017\), 90\% CI \([.000, .110]\), as well as the interaction, \(F(1.90, 104.36) = 5.58\), \(p = .006\), \(\hat{\eta}^2_G = .011\), 90\% CI \([.000, .051]\). Therefore we conducted repeated measure ANOVA for self and other conditions separately. We found the valence effect for self-referential condition (\(F(1.75, 96.42) = 6.73\), \(p = .003\), \(\hat{\eta}^2_G = .037\), 90\% CI \([.000, .102]\)) and other-referential condition (\(F(1.93, 105.97) = 0.61\), \(p = .539\), \(\hat{\eta}^2_G = .002\), 90\% CI \([.000, .017]\)). Post-hoc comparison for the self-referential conditions revealed that \emph{d}' was larger for good self (2.23 \(\pm\) 0.1087) than for bad self (1.66 \(\pm\) 0.098), \emph{t}(55) = 6.11, \emph{p} \textless{} 0.0001, Cohen's \emph{d} = 0.817, 95\% CI {[}0.511 1.117{]} , BF10 = 8.43, and neutral self (1.91 \(\pm\) 0.088), \emph{t}(55) = 3.03, \emph{p} = 0.0104, Cohen's \emph{d} = 0.404, 95\%CI {[}0.13 0.675{]} , BF10 = 1.33e+5. There was also higher d' for neutral-self condition than bad-self conditions, \emph{t}(55) = 3.02, \emph{p} = 0.0106, Cohen's \emph{d} = 0.403, 95\% CI {[}0.129 0.674{]}, BF10 = 8.22. For other-referential conditions, good-other (2.03 \(\pm\) 0.12) was smaller than neutral-other (2.28 \(\pm\) 0.133), \emph{t}(55) = -2.262, \emph{p} = 0.0699, but not the bad-other condition (2.19 \(\pm\) 0.122), \emph{t}(55) = -1.559, \emph{p} = 0.272. Neither evidence for the neutral and bad-other condition \emph{t}(55) = 1.11, \emph{p} = 0.51.
 
 We also tested the effect of personal association by comparing \emph{d'} values for difference moral valence level. The results showed that the bad-self association condition was responded worse than the bad-other association condition, \emph{t}(55) = -4.1, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -0.548, 95\% CI {[}-0.827 -0.265{]}, BF10 = 167. The neutral-self was also worse than the neutral-other, \emph{t}(55) = -3.15, \emph{p} = 0.0026 , Cohen's \emph{d} = -0.422, 95\% CI {[}-0.693 -0.146{]}, BF10 = 11.7. While the good-self association condition and good-stranger conditions are not differ from each other, \emph{t}(55) = 1.394, \emph{p} = 0.169, Cohen's \emph{d} = 0.186, 95\% CI{[}-0.079 0.449{]}, BF10 = 0.364.
 
 \hypertarget{reaction-time-5}{%
 \subsubsection{Reaction time}\label{reaction-time-5}}
 
-The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data. We found three-way interaction between matchness, and valence (\(F(1.86, 102.47) = 15.44\), \(\mathit{MSE} = 3,112.78\), \(p < .001\), \(\hat{\eta}^2_G = .006\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
+The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data. We found three-way interaction between matchness, and valence (\(F(1.86, 102.47) = 15.44\), \(p < .001\), \(\hat{\eta}^2_G = .006\), 90\% CI \([.000, .037]\)) and then analyzed the matched trials and mismatched trials separately, as in previous experiments.
 
-For the matched trials, we found that interaction between of valence and identity, \(F(1.67, 92.11) = 6.14\), \(\mathit{MSE} = 6,472.48\), \(p = .005\), \(\hat{\eta}^2_G = .009\), BF10 = 1.17. Then, the matched trials were analyzed for the self-relevance and other-relevance pairs separately. The results showed a significant effect of moral valence for the self condition, \(F(1.66, 91.38) = 23.98\), \(\mathit{MSE} = 6,965.61\), \(p < .001\), \(\hat{\eta}^2_G = .100\), BF10 = 4.54e+6. Paired \emph{t}-tests showed that responses to the good-self association (817 ± 119) were faster than to bad-self associations (915 ± 132), \emph{t}(55) = -8.78, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -1.173, 95\% CI {[}-1.511 -0.828{]}, BF10 = 1.84e+9, and to neutral-self association (880 ± 116), \emph{t}(55) = 3.748, \emph{p} \textless{} 0.0001, Cohen's \emph{d} = -0.501, 95\% CI {[}-0.777 -0.221{]}, BF10 = 58.7. The neutral-self was faster than the bad-self associations, \emph{t}(55) = -2.41, \emph{p} = 0.019 , Cohen's \emph{d} = -0.321, 95\% CI {[}-0.589 -0.051{]}, BF10 = 2.03.
+For the matched trials, we found that interaction between of valence and identity, \(F(1.67, 92.11) = 6.14\), \(p = .005\), \(\hat{\eta}^2_G = .009\), 90\% CI \([.000, .047]\), BF10 = 1.17. Then, the matched trials were analyzed for the self-relevance and other-relevance pairs separately. The results showed a significant effect of moral valence for the self condition, \(F(1.66, 91.38) = 23.98\), \(p < .001\), \(\hat{\eta}^2_G = .100\), 90\% CI \([.022, .189]\), BF10 = 4.54e+6. Paired \emph{t}-tests showed that responses to the good-self association (817 ± 119) were faster than to bad-self associations (915 ± 132), \emph{t}(55) = -8.78, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -1.173, 95\% CI {[}-1.511 -0.828{]}, BF10 = 1.84e+9, and to neutral-self association (880 ± 116), \emph{t}(55) = 3.748, \emph{p} \textless{} 0.0001, Cohen's \emph{d} = -0.501, 95\% CI {[}-0.777 -0.221{]}, BF10 = 58.7. The neutral-self was faster than the bad-self associations, \emph{t}(55) = -2.41, \emph{p} = 0.019 , Cohen's \emph{d} = -0.321, 95\% CI {[}-0.589 -0.051{]}, BF10 = 2.03.
 
-The effect of moral valence was also significant for the other-relevance conditions, \(F(1.89, 103.94) = 5.96\), \(\mathit{MSE} = 5,589.90\), \(p = .004\), \(\hat{\eta}^2_G = .014\), BF10 = 8.55. the good-other condition (734 ± 158) didn't differ from neutral-other condition (735 ±160), t(55) = -0.07, p = 0.946, Cohen's \emph{d} = -0.009, 95\% CI {[}-0.271 -0.293{]}, BF10 = 0.15, but faster than the bad other condition (776 ± 173), \emph{t}(55) = -3.14, \emph{p} = 0.0027, Cohen's \emph{d} = -0.419, 95\% CI {[}-0.691 -0.144{]}, BF10 = 11.3. The neutral-other condition also faster than the bad-other condition, \emph{t}(55) = -3.232, \emph{p} = 0.0021, Cohen's \emph{d} = -0.432, 95\% CI {[}-0.704 -0.156{]}, BF10 = 14.3.
+The effect of moral valence was also significant for the other-relevance conditions, \(F(1.89, 103.94) = 5.96\), \(p = .004\), \(\hat{\eta}^2_G = .014\), 90\% CI \([.000, .058]\), BF10 = 8.55. the good-other condition (734 ± 158) didn't differ from neutral-other condition (735 ±160), t(55) = -0.07, p = 0.946, Cohen's \emph{d} = -0.009, 95\% CI {[}-0.271 -0.293{]}, BF10 = 0.15, but faster than the bad other condition (776 ± 173), \emph{t}(55) = -3.14, \emph{p} = 0.0027, Cohen's \emph{d} = -0.419, 95\% CI {[}-0.691 -0.144{]}, BF10 = 11.3. The neutral-other condition also faster than the bad-other condition, \emph{t}(55) = -3.232, \emph{p} = 0.0021, Cohen's \emph{d} = -0.432, 95\% CI {[}-0.704 -0.156{]}, BF10 = 14.3.
 
 We also analyzed the effect of self-relevance on the different moral valence levels. The results showed that for all three different valence levels, there the self condition was responded slower than other condition: good-self vs.~good-stranger, \emph{t}(55) = 4.29, \emph{p} \textless{} 0.001, Cohen's \emph{d} = 0.573, 95\% CI {[}0.288 0.854{]}, BF10 = 297.2; neutral-self vs.~neutral -stranger, \emph{t}(55) = 7.17, \emph{p} \textless{} 0.001, Cohen's \emph{d} = 0.958, 95\% CI {[}0.638 1.272{]}), BF10 = 5.77e+6; bad-self vs.~bad-other, \emph{t}(55) = 6.03, \emph{p} \textless{} 0.001, Cohen's \emph{d} = 0.806, 95\% CI {[}0.5 1.11{]}, BF10 = 100208.03.
 
-For the mismacthed trials, we also found interaction between of valence and identity, \(F(1.93, 106.25) = 35.51\), \(\mathit{MSE} = 1,939.88\), \(p < .001\), \(\hat{\eta}^2_G = .019\). Further analysis showed that there was effect of valence for other-referential trials (\(F(1.95, 107.38) = 36.43\), \(\mathit{MSE} = 3,487.65\), \(p < .001\), \(\hat{\eta}^2_G = .051\)) but not for the self-referential trials (\(F(1.98, 108.81) = 0.27\), \(\mathit{MSE} = 1,295.05\), \(p = .760\), \(\hat{\eta}^2_G = .000\)). Post-hoc comparison revealed that bad-other trials (857 \(\pm\) 20.9) were responded faster than good (967 \(\pm\) 25.1), \emph{t} = -9.625, \emph{p} \textless{} 0.0001, and neutral (876 \(\pm\) 21.4) trials, \emph{t} = -2.263, \emph{p} = 0.697, good-other conditions were also slower than neutral-other, \emph{t} = -8.016, \emph{p} \textless{} 0.0001
+For the mismacthed trials, we also found interaction between of valence and identity, \(F(1.93, 106.25) = 35.51\), \(p < .001\), \(\hat{\eta}^2_G = .019\), 90\% CI \([.000, .069]\). Further analysis showed that there was effect of valence for other-referential trials (\(F(1.95, 107.38) = 36.43\), \(p < .001\), \(\hat{\eta}^2_G = .051\), 90\% CI \([.000, .123]\)) but not for the self-referential trials (\(F(1.98, 108.81) = 0.27\), \(p = .760\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)). Post-hoc comparison revealed that bad-other trials (857 \(\pm\) 20.9) were responded faster than good (967 \(\pm\) 25.1), \emph{t} = -9.625, \emph{p} \textless{} 0.0001, and neutral (876 \(\pm\) 21.4) trials, \emph{t} = -2.263, \emph{p} = 0.697, good-other conditions were also slower than neutral-other, \emph{t} = -8.016, \emph{p} \textless{} 0.0001
 
 \hypertarget{discussion-3}{%
 \subsection{Discussion}\label{discussion-3}}
@@ -660,7 +771,7 @@ In experiment 3b, we separated the self-referential and other-referential tasks 
 
 In study 1-3 participants made explicit judgments about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf.~Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
 
-In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgments to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 \textasciitilde{} 3, we made put the labels of \enquote{self/other} in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the intrinsic binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
+In study 4b, we changed the role of valence and identity in task. In this experiment, participants learn the association between moral valence and the made perceptual match judgments to associations between different moral valence and shapes as in study 1-3. Different from experiment 1 \textasciitilde{} 3, we made put the labels of ``self/other'' in the shapes so that identity served as an task irrelevant variable. As in experiment 4a, we also hypothesized that the intrinsic binding between morally good and self will enhance the performance of good self condition, even identity is irrelevant to the task.
 
 \hypertarget{methods-1}{%
 \subsection{Methods}\label{methods-1}}
@@ -674,12 +785,12 @@ In study 4b, we changed the role of valence and identity in task. In this experi
 \subsubsection{Experimental design}\label{experimental-design}}
 
 As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variable was self-relevance (self and stranger associations); the second variable was moral valence (good, neutral and bad associations); the third variable was the matching between shape and label (matching vs.~non-match for the personal association).
-However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of \enquote{good person} inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of \enquote{bad person} inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
+However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of ``good person'' inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of ``bad person'' inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
 
 \hypertarget{stimuli-1}{%
 \subsubsection{Stimuli}\label{stimuli-1}}
 
-2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below. However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: \enquote{good person}, \enquote{bad person} and \enquote{neutral person}. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes' configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
+2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below. However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: ``good person'', ``bad person'' and ``neutral person''. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes' configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
 
 \hypertarget{procedure-6}{%
 \subsubsection{Procedure}\label{procedure-6}}
@@ -705,16 +816,16 @@ Figure \ref{fig:ex4a-dprime-rt} shows \emph{d} prime and reaction times of exper
 \hypertarget{d-prime.-1}{%
 \subsubsection{\texorpdfstring{\emph{d} prime.}{d prime.}}\label{d-prime.-1}}
 
-We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measures ANOVA. The effect of identity (\(F(1, 58) = 121.04\), \(\mathit{MSE} = 0.48\), \(p < .001\), \(\hat{\eta}^2_G = .189\)), also the interaction between identity and valence, (\(F(1.99, 115.20) = 4.12\), \(\mathit{MSE} = 0.14\), \(p = .019\), \(\hat{\eta}^2_G = .004\)). But not the effect of valence was not found, \(F(1.93, 111.66) = 0.53\), \(\mathit{MSE} = 0.12\), \(p = .581\), \(\hat{\eta}^2_G = .000\). We further examined the effect of valence for both self and other. For the self-referential trials, there was a weak effect of valence \(F(1.95, 112.92) = 3.01\), \(\mathit{MSE} = 0.15\), \(p = .055\), \(\hat{\eta}^2_G = .008\). Post-hoc analysis showed that good self condition (2.55 \(\pm\) 0.111) is slightly higher than bad self condition (2.38 \(\pm\) 0.105) , \emph{t}(58) = 2.339, \emph{p} = .0583. But there was no differences between good-self and neutral self (2.45 \(\pm\) 0.101), \emph{t}(58) = 1.575, \emph{p} = .264, neither between neutral-self and bad-self, \emph{t}(58) = 0.966, \emph{p} = .601. As for the other-referential conditions, the result didn't show effect of valence \(F(1.98, 114.61) = 1.75\), \(\mathit{MSE} = 0.10\), \(p = .179\), \(\hat{\eta}^2_G = .003\).
+We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measures ANOVA. The effect of identity (\(F(1, 58) = 121.04\), \(p < .001\), \(\hat{\eta}^2_G = .189\), 90\% CI \([.060, .334]\)), also the interaction between identity and valence, (\(F(1.99, 115.20) = 4.12\), \(p = .019\), \(\hat{\eta}^2_G = .004\), 90\% CI \([.000, .029]\)). But not the effect of valence was not found, \(F(1.93, 111.66) = 0.53\), \(p = .581\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\). We further examined the effect of valence for both self and other. For the self-referential trials, there was a weak effect of valence \(F(1.95, 112.92) = 3.01\), \(p = .055\), \(\hat{\eta}^2_G = .008\), 90\% CI \([.000, .041]\). Post-hoc analysis showed that good self condition (2.55 \(\pm\) 0.111) is slightly higher than bad self condition (2.38 \(\pm\) 0.105) , \emph{t}(58) = 2.339, \emph{p} = .0583. But there was no differences between good-self and neutral self (2.45 \(\pm\) 0.101), \emph{t}(58) = 1.575, \emph{p} = .264, neither between neutral-self and bad-self, \emph{t}(58) = 0.966, \emph{p} = .601. As for the other-referential conditions, the result didn't show effect of valence \(F(1.98, 114.61) = 1.75\), \(p = .179\), \(\hat{\eta}^2_G = .003\), 90\% CI \([.000, .019]\).
 
 \hypertarget{reaction-times-2}{%
 \subsubsection{Reaction times}\label{reaction-times-2}}
 
-We conducted 2 (Matchness: match v. mismatch) by 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (\(F(1, 58) = 79.85\), \(\mathit{MSE} = 4,817.48\), \(p < .001\), \(\hat{\eta}^2_G = .123\)) and interaction between Matchness and Identity(\(F(1, 58) = 81.15\), \(\mathit{MSE} = 3,226.69\), \(p < .001\), \(\hat{\eta}^2_G = .087\))
+We conducted 2 (Matchness: match v. mismatch) by 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. There was a main effect of Matchness (\(F(1, 58) = 79.85\), \(p < .001\), \(\hat{\eta}^2_G = .123\), 90\% CI \([.022, .262]\)) and interaction between Matchness and Identity(\(F(1, 58) = 81.15\), \(p < .001\), \(\hat{\eta}^2_G = .087\), 90\% CI \([.007, .218]\))
 
-We carried out two separate ANOVA for both matched and mismatched trials. The results showed that for matched trials, there was an interaction between valence and identity, \(F(1.90, 110.18) = 4.41\), \(\mathit{MSE} = 465.91\), \(p = .016\), \(\hat{\eta}^2_G = .003\). However, there is no main effect of valence (\(F(1.98, 114.82) = 0.94\), \(\mathit{MSE} = 606.30\), \(p = .392\), \(\hat{\eta}^2_G = .001\)). We further broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, \(F(1.97, 114.32) = 6.29\), \(\mathit{MSE} = 367.25\), \(p = .003\), \(\hat{\eta}^2_G = .006\), BF10 = 11.16. Paired \emph{t}-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), \emph{t}(58) = -3.47, \emph{p} = 0.0028, Cohen's \emph{d} = -0.451 CI {[}-0.718 -0.182{]}, \(BF_{10}\) = 27.0, and over neutral-self condition (664 ± 64), \emph{t}(58) = -2.78, \emph{p} = 0.013, Cohen's \emph{d} = -0.362, 95\% CI {[}-0.624 -0.097{]}, \(BF_{10}\) = 4.63. The neutral-self and bad-self conditions did not differ, \emph{t}(58) = -0.44, \emph{p} = 0.89, Cohen's \emph{d} = 0.0499, CI {[}-0.305 0.206{]}, \(BF_{10}\) = 0.153. For the stranger condition, the results showed that there was no difference among these conditions, \(F(1.95, 112.89) = 0.35\), \(\mathit{MSE} = 699.50\), \(p = .699\), \(\hat{\eta}^2_G = .001\), \(BF_{10}\) = 0.077.
+We carried out two separate ANOVA for both matched and mismatched trials. The results showed that for matched trials, there was an interaction between valence and identity, \(F(1.90, 110.18) = 4.41\), \(p = .016\), \(\hat{\eta}^2_G = .003\), 90\% CI \([.000, .006]\). However, there is no main effect of valence (\(F(1.98, 114.82) = 0.94\), \(p = .392\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\)). We further broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, \(F(1.97, 114.32) = 6.29\), \(p = .003\), \(\hat{\eta}^2_G = .006\), 90\% CI \([.000, .035]\), BF10 = 11.16. Paired \emph{t}-tests showed that good-self condition (654 ± 67) were faster relative to bad-self condition (665 ± 64.6), \emph{t}(58) = -3.47, \emph{p} = 0.0028, Cohen's \emph{d} = -0.451 CI {[}-0.718 -0.182{]}, \(BF_{10}\) = 27.0, and over neutral-self condition (664 ± 64), \emph{t}(58) = -2.78, \emph{p} = 0.013, Cohen's \emph{d} = -0.362, 95\% CI {[}-0.624 -0.097{]}, \(BF_{10}\) = 4.63. The neutral-self and bad-self conditions did not differ, \emph{t}(58) = -0.44, \emph{p} = 0.89, Cohen's \emph{d} = 0.0499, CI {[}-0.305 0.206{]}, \(BF_{10}\) = 0.153. For the stranger condition, the results showed that there was no difference among these conditions, \(F(1.95, 112.89) = 0.35\), \(p = .699\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\), \(BF_{10}\) = 0.077.
 
-For non-matched trials, there was no significant effect. Morality (\(F(1, 58) = 0.16\), \(\mathit{MSE} = 1,547.37\), \(p = .692\), \(\hat{\eta}^2_G = .000\)), Identity(\(F(1.96, 113.52) = 0.68\), \(\mathit{MSE} = 390.26\), \(p = .508\), \(\hat{\eta}^2_G = .000\)), interaction (\(F(1.90, 110.27) = 0.04\), \(\mathit{MSE} = 585.80\), \(p = .953\), \(\hat{\eta}^2_G = .000\)).
+For non-matched trials, there was no significant effect. Morality (\(F(1, 58) = 0.16\), \(p = .692\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)), Identity(\(F(1.96, 113.52) = 0.68\), \(p = .508\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)), interaction (\(F(1.90, 110.27) = 0.04\), \(p = .953\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)).
 
 \hypertarget{experiment-4b}{%
 \section{Experiment 4b}\label{experiment-4b}}
@@ -730,12 +841,12 @@ For non-matched trials, there was no significant effect. Morality (\(F(1, 58) = 
 \hypertarget{experimental-design-1}{%
 \subsubsection{Experimental design}\label{experimental-design-1}}
 
-The experimental design of this experiment is same as experiment 4a: a 3× 2 × 2 within-subject design with moral valence (good, neutral and bad associations), self-relatedness (self vs.~other), and matchness between shape and label (match vs.~mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word \enquote{self} or \enquote{other} were presented in the shapes (see below).
+The experimental design of this experiment is same as experiment 4a: a 3× 2 × 2 within-subject design with moral valence (good, neutral and bad associations), self-relatedness (self vs.~other), and matchness between shape and label (match vs.~mismatch for the personal association) as within-subject variables. However, in the current task, the participants learned the associations between three shapes and three labels with different moral valence: good-person, neutral-person, and bad-person. While the word ``self'' or ``other'' were presented in the shapes (see below).
 
 \hypertarget{stimuli-2}{%
 \subsubsection{Stimuli}\label{stimuli-2}}
 
-In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments. Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels \enquote{self} and \enquote{other}. Before the experiment, we informed participants only response to the relationship between shapes'shapes configure and the labels below the fixation, ignoring the words within each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
+In this task, 3 shapes were included (circle, square, and trapezoid) and were presented above a central fixation cross, as in previous experiments. Similar to experiment 4a, the shapes were not empty but with a two-Chinese-character word in the middle corresponding to the labels ``self'' and ``other''. Before the experiment, we informed participants only response to the relationship between shapes'shapes configure and the labels below the fixation, ignoring the words within each shape. Besides the behavioral experiments, participants also finished questionnaires as Experiments 1-3.
 
 \hypertarget{procedure-7}{%
 \subsubsection{Procedure}\label{procedure-7}}
@@ -761,26 +872,26 @@ Figure \ref{fig:ex4b-dprime-rt} shows \emph{d} prime and reaction times of exper
 \hypertarget{d-prime-5}{%
 \subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-5}}
 
-We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (\(F(1.59, 69.94) = 2.34\), \(\mathit{MSE} = 0.48\), \(p = .115\), \(\hat{\eta}^2_G = .010\)), or identity, \(F(1, 44) = 0.00\), \(\mathit{MSE} = 0.08\), \(p = .994\), \(\hat{\eta}^2_G = .000\), or their interactions, \(F(1.96, 86.41) = 0.53\), \(\mathit{MSE} = 0.10\), \(p = .585\), \(\hat{\eta}^2_G = .001\).
+We conducted 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of valence (\(F(1.59, 69.94) = 2.34\), \(p = .115\), \(\hat{\eta}^2_G = .010\), 90\% CI \([.000, .054]\)), or identity, \(F(1, 44) = 0.00\), \(p = .994\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\), or their interactions, \(F(1.96, 86.41) = 0.53\), \(p = .585\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\).
 
 \hypertarget{reaction-times-3}{%
 \subsubsection{Reaction times}\label{reaction-times-3}}
 
 We conducted 2 (Matchness: match v. mismatch) by 2 (Identity: self v. other) by 3 (morality: good, neutral, bad) repeated measure ANOVA:
 
-There was a main effect of Matchness (\(F(1, 44) = 210.69\), \(\mathit{MSE} = 1,969.60\), \(p < .001\), \(\hat{\eta}^2_G = .180\)), main effect of valence (\(F(1.95, 85.74) = 5.35\), \(\mathit{MSE} = 2,247.66\), \(p = .007\), \(\hat{\eta}^2_G = .012\)), interaction between Matchness and Valence(\(F(1.87, 82.50) = 18.58\), \(\mathit{MSE} = 1,291.12\), \(p < .001\), \(\hat{\eta}^2_G = .023\)), and three way interaction (\(F(1.95, 85.99) = 3.70\), \(\mathit{MSE} = 285.25\), \(p = .030\), \(\hat{\eta}^2_G = .001\)).
+There was a main effect of Matchness (\(F(1, 44) = 210.69\), \(p < .001\), \(\hat{\eta}^2_G = .180\), 90\% CI \([.040, .346]\)), main effect of valence (\(F(1.95, 85.74) = 5.35\), \(p = .007\), \(\hat{\eta}^2_G = .012\), 90\% CI \([.000, .059]\)), interaction between Matchness and Valence(\(F(1.87, 82.50) = 18.58\), \(p < .001\), \(\hat{\eta}^2_G = .023\), 90\% CI \([.000, .084]\)), and three way interaction (\(F(1.95, 85.99) = 3.70\), \(p = .030\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .000]\)).
 
-We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, \(F(1.74, 76.48) = 13.69\), \(\mathit{MSE} = 1,732.08\), \(p < .001\), \(\hat{\eta}^2_G = .079\), BF10 = 11.16. Paired \emph{t} tests showed that good-self association (680 ± 9.79) were faster than bad-self associations (721 ± 8.97), \emph{t}(44) = -4.22, \emph{p} \textless{} .001, Cohen's \emph{d} = -0.629 CI {[}-0.947 -0.306{]}, \(BF_{10}\) = 200, and neutral-self association (713 \(\pm\) 8.19), \emph{t}(44) = -4.67, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -0.696, 95\% CI {[}-1.019 -0.367{]}, \(BF_{10}\) = 745.3. The neutral-self and bad-self associations did not differ, \emph{t}(44) = -1.04, \emph{p} = .31, Cohen's \emph{d} = -0.155, 95\%CI {[}-0.448 0.14{]}, \(BF_{10}\) = 0.267. RTs in good-self condition were facilitated but without performance being impaired for bad-self associations (relative to the normal neutral self)(see Figure 5).
-For other-association condition, the main effect of moral valence was also significant, \(F(1.87, 82.44) = 7.09\), \(\mathit{MSE} = 1,527.43\), \(p = .002\), \(\hat{\eta}^2_G = .043\), BF10 = 21. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen's d = -0.4999, 95\%CI {[}-0.8075 -0.1872{]}, \(BF_{10}\) = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen's d = -0.3294, 95\%CI {[}-6278 -0.0275{]}, \(BF_{10}\) = 1.454. While there is is no strong evidence about the differences between bad-other vs.~neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen's d = -0.2723, 95\%CI {[}-0.5685 0.0268{]}, \(BF_{10}\) = 0.743.
+We futher broke down the interaction by analyzing the data for self and other pairs separately. There was a significant effect of moral valence for self-stimuli, \(F(1.74, 76.48) = 13.69\), \(p < .001\), \(\hat{\eta}^2_G = .079\), 90\% CI \([.005, .172]\), BF10 = 11.16. Paired \emph{t} tests showed that good-self association (680 ± 9.79) were faster than bad-self associations (721 ± 8.97), \emph{t}(44) = -4.22, \emph{p} \textless{} .001, Cohen's \emph{d} = -0.629 CI {[}-0.947 -0.306{]}, \(BF_{10}\) = 200, and neutral-self association (713 \(\pm\) 8.19), \emph{t}(44) = -4.67, \emph{p} \textless{} 0.001, Cohen's \emph{d} = -0.696, 95\% CI {[}-1.019 -0.367{]}, \(BF_{10}\) = 745.3. The neutral-self and bad-self associations did not differ, \emph{t}(44) = -1.04, \emph{p} = .31, Cohen's \emph{d} = -0.155, 95\%CI {[}-0.448 0.14{]}, \(BF_{10}\) = 0.267. RTs in good-self condition were facilitated but without performance being impaired for bad-self associations (relative to the normal neutral self)(see Figure 5).
+For other-association condition, the main effect of moral valence was also significant, \(F(1.87, 82.44) = 7.09\), \(p = .002\), \(\hat{\eta}^2_G = .043\), 90\% CI \([.000, .120]\), BF10 = 21. The RT for good-other association condition (688 ± 66.9) is faster than the bad-other association condition (718 ± 49.7), t(44) = -3.353, p = 0.0017, Cohen's d = -0.4999, 95\%CI {[}-0.8075 -0.1872{]}, \(BF_{10}\) = 18.84. The RT for good-other condition is slightly faster than neutral-other condition (704 ± 57.1), but the evidence is not strong, t (44) = -2.21, p = 0.0324, Cohen's d = -0.3294, 95\%CI {[}-6278 -0.0275{]}, \(BF_{10}\) = 1.454. While there is is no strong evidence about the differences between bad-other vs.~neutral-other conditions, t(44) = -1.8267, p = 0.0745, Cohen's d = -0.2723, 95\%CI {[}-0.5685 0.0268{]}, \(BF_{10}\) = 0.743.
 
 We also compared the reaction times for self- and other- association in different valence condition. we found that Good-self condition is faster than good-other condition, \emph{t}(44) = -2.165, \emph{p} = 0.0358; neutral self is slower than neutral-other condition, \emph{t}(44) = 3.064, \emph{p} = 0.0037. Bad-self and bad-other did not show difference, \emph{t}(44) = 0.623, \emph{p} = 0.5363.
 
-For non-matched trials, there was no significant effect. Identity (\(F(1, 44) = 1.96\), \(\mathit{MSE} = 319.47\), \(p = .169\), \(\hat{\eta}^2_G = .001\)), interaction (\(F(1.88, 82.57) = 0.31\), \(\mathit{MSE} = 316.96\), \(p = .718\), \(\hat{\eta}^2_G = .000\)). But here are effect of Valence (\(F(1.69, 74.54) = 6.59\), \(\mathit{MSE} = 886.19\), \(p = .004\), \(\hat{\eta}^2_G = .010\))
+For non-matched trials, there was no significant effect. Identity (\(F(1, 44) = 1.96\), \(p = .169\), \(\hat{\eta}^2_G = .001\), 90\% CI \([.000, .043]\)), interaction (\(F(1.88, 82.57) = 0.31\), \(p = .718\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)). But here are effect of Valence (\(F(1.69, 74.54) = 6.59\), \(p = .004\), \(\hat{\eta}^2_G = .010\), 90\% CI \([.000, .053]\))
 
 \hypertarget{discussion-4}{%
 \subsection{Discussion}\label{discussion-4}}
 
-In experiment 4, we manipulated the task so that the moral valence (experiment 4a) or the self-relatedness (experiment 4b) become irrelevant to the task. We found robust effects of the tasks: when the self-relatedness is task related, the results showed a strong effect of self-relatedness; in contrast, when moral valence become task related the main effect of moral valence was strong. However, the task irrelevant stimuli in the shape also had influence on the performance. The good self conditions (the shape associated the self and with a \enquote{good person} within the shape) performed better than bad self conditions even when the self was the only task relevant stimuli. Also, good-self showed advantage over good-other when valence is the only task relevant variable while identity was not. Together, these results suggest that moral valence and self-referential can still couple together and facilitated the perceptual decision making even one feature of them is implicit.
+In experiment 4, we manipulated the task so that the moral valence (experiment 4a) or the self-relatedness (experiment 4b) become irrelevant to the task. We found robust effects of the tasks: when the self-relatedness is task related, the results showed a strong effect of self-relatedness; in contrast, when moral valence become task related the main effect of moral valence was strong. However, the task irrelevant stimuli in the shape also had influence on the performance. The good self conditions (the shape associated the self and with a ``good person'' within the shape) performed better than bad self conditions even when the self was the only task relevant stimuli. Also, good-self showed advantage over good-other when valence is the only task relevant variable while identity was not. Together, these results suggest that moral valence and self-referential can still couple together and facilitated the perceptual decision making even one feature of them is implicit.
 
 \hypertarget{experiment-5-generalization-of-positive-effect}{%
 \section{Experiment 5: Generalization of positive effect}\label{experiment-5-generalization-of-positive-effect}}
@@ -824,22 +935,22 @@ Figure \ref{fig:ex5-dprime-rt} shows \emph{d} prime and reaction times of experi
 \hypertarget{d-prime-6}{%
 \subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-6}}
 
-We conducted 4 (task type: morality, emotion, person, scene) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (\(F(2.95, 108.97) = 1.18\), \(\mathit{MSE} = 0.76\), \(p = .321\), \(\hat{\eta}^2_G = .006\)), but revealed effect of valence, \(F(1.85, 68.49) = 29.70\), \(\mathit{MSE} = 0.29\), \(p < .001\), \(\hat{\eta}^2_G = .034\), and their interactions, \(F(4.68, 173.09) = 5.85\), \(\mathit{MSE} = 0.31\), \(p < .001\), \(\hat{\eta}^2_G = .019\).
+We conducted 4 (task type: morality, emotion, person, scene) by 3 (morality: good, neutral, bad) repeated measure ANOVA. The results revealed no effect of task type (\(F(2.95, 108.97) = 1.18\), \(p = .321\), \(\hat{\eta}^2_G = .006\), 90\% CI \([.000, .017]\)), but revealed effect of valence, \(F(1.85, 68.49) = 29.70\), \(p < .001\), \(\hat{\eta}^2_G = .034\), 90\% CI \([.000, .112]\), and their interactions, \(F(4.68, 173.09) = 5.85\), \(p < .001\), \(\hat{\eta}^2_G = .019\), 90\% CI \([.000, .029]\).
 
-We then conducted ANOVA separately for four different tasks. For the morality task, the valence effect \(F(1.96, 72.66) = 2.22\), \(\mathit{MSE} = 0.21\), \(p = .116\), \(\hat{\eta}^2_G = .008\).
+We then conducted ANOVA separately for four different tasks. For the morality task, the valence effect \(F(1.96, 72.66) = 2.22\), \(p = .116\), \(\hat{\eta}^2_G = .008\), 90\% CI \([.000, .047]\).
 
-For emotion conditions, we found that main effect of valence \(F(1.69, 62.65) = 5.28\), \(\mathit{MSE} = 0.30\), \(p = .011\), \(\hat{\eta}^2_G = .030\). Post-hoc comparison showed that good (2.13, SE = 0.161) was not different from neutral condition (2.10, SE = 0.125), \emph{t}(37) = 0.163, \emph{p} = 0.9854, but both are higher than than bad condition (1.79, SE = 0.148) (neutral \textgreater{} bad, \emph{t}(37) = 3.588, \emph{p} = 0.0027; good \textgreater{} bad, \emph{t}(37) = 2.62, \emph{p} = 0.0332).
+For emotion conditions, we found that main effect of valence \(F(1.69, 62.65) = 5.28\), \(p = .011\), \(\hat{\eta}^2_G = .030\), 90\% CI \([.000, .103]\). Post-hoc comparison showed that good (2.13, SE = 0.161) was not different from neutral condition (2.10, SE = 0.125), \emph{t}(37) = 0.163, \emph{p} = 0.9854, but both are higher than than bad condition (1.79, SE = 0.148) (neutral \textgreater{} bad, \emph{t}(37) = 3.588, \emph{p} = 0.0027; good \textgreater{} bad, \emph{t}(37) = 2.62, \emph{p} = 0.0332).
 
-For the person appearance, the main effect of valence is significant, \(F(1.73, 64.02) = 27.22\), \(\mathit{MSE} = 0.26\), \(p < .001\), \(\hat{\eta}^2_G = .088\). Post-hoc analysis found that good condition (2.4, SE = 0.167) was higher than both neutral (1.71, SE = 0.175, \emph{t}(37) = 5.482, \emph{p} \textless{} .0001) and bad (1.70, SE = 0.182, \emph{t}(37) = 6.365, \emph{p} \textless{} .0001), but neutral and bad condition are not different (\emph{t}(37) = 0.197, \emph{p} =0.9788).
+For the person appearance, the main effect of valence is significant, \(F(1.73, 64.02) = 27.22\), \(p < .001\), \(\hat{\eta}^2_G = .088\), 90\% CI \([.004, .192]\). Post-hoc analysis found that good condition (2.4, SE = 0.167) was higher than both neutral (1.71, SE = 0.175, \emph{t}(37) = 5.482, \emph{p} \textless{} .0001) and bad (1.70, SE = 0.182, \emph{t}(37) = 6.365, \emph{p} \textless{} .0001), but neutral and bad condition are not different (\emph{t}(37) = 0.197, \emph{p} =0.9788).
 
-For scene appearance, the main effect of valence was significant \(F(1.79, 66.40) = 14.02\), \(\mathit{MSE} = 0.34\), \(p < .001\), \(\hat{\eta}^2_G = .072\). Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, SE = 0.156) is higher than both neutral (1.57, SE = 0.178, \emph{t}(37) =4.683, \emph{p} = 0.0001) and bad (1.77, SE = 0.148, \emph{t}(37) = 3.414, \emph{p} = 0.0044), but neutral and bad conditions are not different (\emph{t}(37) = -1.893, \emph{p} = 0.1549)
+For scene appearance, the main effect of valence was significant \(F(1.79, 66.40) = 14.02\), \(p < .001\), \(\hat{\eta}^2_G = .072\), 90\% CI \([.000, .171]\). Post-hoc analysis revealed the same pattern as in person task: good condition (2.23, SE = 0.156) is higher than both neutral (1.57, SE = 0.178, \emph{t}(37) =4.683, \emph{p} = 0.0001) and bad (1.77, SE = 0.148, \emph{t}(37) = 3.414, \emph{p} = 0.0044), but neutral and bad conditions are not different (\emph{t}(37) = -1.893, \emph{p} = 0.1549)
 
 \hypertarget{reaction-times-4}{%
 \subsubsection{Reaction times}\label{reaction-times-4}}
 
 As in previous experiment, we focused our analysis on the matched trials. We conducted 4 (task type: morality, emotion, beauty of person, beauty of scene) by 3 (Valence: good, neutral, bad) repeated measure ANOVA for matched trials only.
 
-We din't found the main effect of task type (\(F(2.06, 76.12) = 0.56\), \(\mathit{MSE} = 7,041.60\), \(p = .577\), \(\hat{\eta}^2_G = .004\)), but the main effect of valence (\(F(1.82, 67.23) = 53.98\), \(\mathit{MSE} = 1,911.31\), \(p < .001\), \(\hat{\eta}^2_G = .076\)), and intercation between Matchness and Valence (\(F(3.58, 132.31) = 3.12\), \(\mathit{MSE} = 2,663.50\), \(p = .021\), \(\hat{\eta}^2_G = .013\)). We then analyze the effect of valence for each task type. We found that for all four task, the valence effect was significant: morality (\(F(1.89, 69.98) = 8.66\), \(\mathit{MSE} = 1,875.36\), \(p = .001\), \(\hat{\eta}^2_G = .036\)), emotion (\(F(1.48, 54.68) = 9.74\), \(\mathit{MSE} = 2,664.24\), \(p = .001\), \(\hat{\eta}^2_G = .072\)), person (\(F(1.78, 65.78) = 39.39\), \(\mathit{MSE} = 1,310.51\), \(p < .001\), \(\hat{\eta}^2_G = .162\)), scene (\(F(1.75, 64.69) = 17.71\), \(\mathit{MSE} = 1,820.73\), \(p < .001\), \(\hat{\eta}^2_G = .102\)). Post-hoc analyses revealed that for emotion task, the good condition is reacted faster than bad condition (\emph{t}(37) = 3.475, \emph{p} = 0.0037) but not neutral conditions are not different ((\emph{t}(37) = -0.77, \emph{p} = 0.7236)). The bad condiiton is longer than the neutral (\emph{t}(37) = 5.09, \emph{p} \textless{} 0.0001). The pattern is different for morality, person, and scence tasks, which showed that good is faster than both neutral ((\emph{ts}(37) = {[}-7.289 -2.4{]}, \emph{ps} \textless{} 0.0548)) and bad (\emph{ts}(37) = {[}-7.232 -3.817{]}, \emph{ps} \textless{} 0.0014).
+We din't found the main effect of task type (\(F(2.06, 76.12) = 0.56\), \(p = .577\), \(\hat{\eta}^2_G = .004\), 90\% CI \([.000, .003]\)), but the main effect of valence (\(F(1.82, 67.23) = 53.98\), \(p < .001\), \(\hat{\eta}^2_G = .076\), 90\% CI \([.000, .176]\)), and intercation between Matchness and Valence (\(F(3.58, 132.31) = 3.12\), \(p = .021\), \(\hat{\eta}^2_G = .013\), 90\% CI \([.000, .017]\)). We then analyze the effect of valence for each task type. We found that for all four task, the valence effect was significant: morality (\(F(1.89, 69.98) = 8.66\), \(p = .001\), \(\hat{\eta}^2_G = .036\), 90\% CI \([.000, .115]\)), emotion (\(F(1.48, 54.68) = 9.74\), \(p = .001\), \(\hat{\eta}^2_G = .072\), 90\% CI \([.000, .170]\)), person (\(F(1.78, 65.78) = 39.39\), \(p < .001\), \(\hat{\eta}^2_G = .162\), 90\% CI \([.044, .281]\)), scene (\(F(1.75, 64.69) = 17.71\), \(p < .001\), \(\hat{\eta}^2_G = .102\), 90\% CI \([.010, .211]\)). Post-hoc analyses revealed that for emotion task, the good condition is reacted faster than bad condition (\emph{t}(37) = 3.475, \emph{p} = 0.0037) but not neutral conditions are not different ((\emph{t}(37) = -0.77, \emph{p} = 0.7236)). The bad condiiton is longer than the neutral (\emph{t}(37) = 5.09, \emph{p} \textless{} 0.0001). The pattern is different for morality, person, and scence tasks, which showed that good is faster than both neutral ((\emph{ts}(37) = {[}-7.289 -2.4{]}, \emph{ps} \textless{} 0.0548)) and bad (\emph{ts}(37) = {[}-7.232 -3.817{]}, \emph{ps} \textless{} 0.0014).
 
 \hypertarget{discussion-5}{%
 \subsection{Discussion}\label{discussion-5}}
@@ -867,7 +978,7 @@ The experimental design of this experiment is same as experiment 2: a 3 × 2 wit
 \hypertarget{stimuli-4}{%
 \subsubsection{Stimuli}\label{stimuli-4}}
 
-Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (\enquote{坏人, HuaiRen}), good person (\enquote{好人, HaoRen}) or ordinary person (\enquote{常人, ChangRen}) was counterbalanced across participants. The words bad person, good person or ordinary person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
+Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (``坏人, HuaiRen''), good person (``好人, HaoRen'') or ordinary person (``常人, ChangRen'') was counterbalanced across participants. The words bad person, good person or ordinary person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
 We used backward masking to avoid over-processing of the moral words, in which a scrambled picture were presented for 900 ms after the label. Also, to avoid the ceiling effect on accuracy, shapes were presented on a noisy background based on our pilot studies. The noisy images were made by scrambling a picture of 3/4gray and ¼ white at resolution of 2 × 2 pixel.
 
 \hypertarget{procedure-9}{%
@@ -893,14 +1004,14 @@ Only the behavioral results were reported here. Figure \ref{fig:ex6a-dprime-rt} 
 \hypertarget{d-prime-7}{%
 \subsubsection{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-7}}
 
-We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (\(F(1.74, 40.05) = 3.76\), \(\mathit{MSE} = 0.10\), \(p = .037\), \(\hat{\eta}^2_G = .021\)). Post-hoc analysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),\emph{t} = 2.916, \emph{df} = 24, \emph{p} = 0.02, p-value adjusted by Tukey method, but the \emph{d} prime between Good and bad (mean = 3.03, SE = 0.142) (\emph{t} = 1.512, \emph{df} = 24, \emph{p} = 0.3034, p-value adjusted by Tukey method), bad and neutral (\emph{t} = 1.599, \emph{df} = 24, \emph{p} = 0.2655, p-value adjusted by Tukey method) were not significant.
+We conducted repeated measures ANOVA, with moral valence as independent variable. The results revealed the main effect of valence (\(F(1.74, 40.05) = 3.76\), \(p = .037\), \(\hat{\eta}^2_G = .021\), 90\% CI \([.000, .102]\)). Post-hoc analysis revealed that shapes link with Good person (mean = 3.13, SE = 0.109) is greater than Neutral condition (mean = 2.88, SE = 0.14),\emph{t} = 2.916, \emph{df} = 24, \emph{p} = 0.02, p-value adjusted by Tukey method, but the \emph{d} prime between Good and bad (mean = 3.03, SE = 0.142) (\emph{t} = 1.512, \emph{df} = 24, \emph{p} = 0.3034, p-value adjusted by Tukey method), bad and neutral (\emph{t} = 1.599, \emph{df} = 24, \emph{p} = 0.2655, p-value adjusted by Tukey method) were not significant.
 
 \hypertarget{analaysis-of-reaction-time.}{%
 \subsubsection{Analaysis of reaction time.}\label{analaysis-of-reaction-time.}}
 
 The results of reaction times of matchness trials showed similar pattern as the \emph{d} prime data.
 
-We found intercation between Matchness and Valence (\(F(1.97, 45.20) = 20.45\), \(\mathit{MSE} = 450.47\), \(p < .001\), \(\hat{\eta}^2_G = .021\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 2. For matched trials, we found the effect of valence \(F(1.97, 45.25) = 32.37\), \(\mathit{MSE} = 522.42\), \(p < .001\), \(\hat{\eta}^2_G = .078\). For non-matched trials, there was no significant effect of Valence (\(F(1.77, 40.67) = 0.35\), \(\mathit{MSE} = 242.15\), \(p = .679\), \(\hat{\eta}^2_G = .000\)). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (mean = 550, SE = 13.8) were responded faster than Neutral-Person (501, SE = 14.7), (\emph{t}(24) = -5.171, \emph{p} = 0.0001) and Bad Person (523, SE = 16.3), \emph{t}(24) = -8.137, \emph{p} \textless{} 0.0001)., and Neutral is faster than Bad-Person condition (\emph{t}(32) = -3.282, \emph{p} = 0.0085).
+We found intercation between Matchness and Valence (\(F(1.97, 45.20) = 20.45\), \(p < .001\), \(\hat{\eta}^2_G = .021\), 90\% CI \([.000, .102]\)) and then analyzed the matched trials and mismatched trials separately, as in experiment 2. For matched trials, we found the effect of valence \(F(1.97, 45.25) = 32.37\), \(p < .001\), \(\hat{\eta}^2_G = .078\), 90\% CI \([.000, .206]\). For non-matched trials, there was no significant effect of Valence (\(F(1.77, 40.67) = 0.35\), \(p = .679\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\)). Post-hoc \emph{t}-tests revealed that shapes associated with Good Person (mean = 550, SE = 13.8) were responded faster than Neutral-Person (501, SE = 14.7), (\emph{t}(24) = -5.171, \emph{p} = 0.0001) and Bad Person (523, SE = 16.3), \emph{t}(24) = -8.137, \emph{p} \textless{} 0.0001)., and Neutral is faster than Bad-Person condition (\emph{t}(32) = -3.282, \emph{p} = 0.0085).
 
 \hypertarget{experiment-6b-eeg-study-2}{%
 \section{Experiment 6b: EEG study 2}\label{experiment-6b-eeg-study-2}}
@@ -913,7 +1024,7 @@ Experiment 6b was conducted to study the neural correlates of the prioritization
 \hypertarget{participants-10}{%
 \subsubsection{Participants}\label{participants-10}}
 
-23 college students (8 female, age = 22.86 \(\pm\) 2.47) participated the current study, all of them were recruited from Tsinghua Universtiy in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, 1 participant was excluded from the current analysis because of lower than 60\% overall accuracy, remaining 22 participants (8 female, age = 22.76 \(\pm\) 2.49). For day 2's data, one participant dropped out, leaving 22 participants (9 female, age = 23.05 \(\pm\) 2.46), all of them has overall accuracy higher than 60\%.
+23 college students (8 female, age = 22.86 \(\pm\) 2.47) participated the current study, all of them were recruited from Tsinghua University in 2016. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. For day 1's data, 1 participant was excluded from the current analysis because of lower than 60\% overall accuracy, remaining 22 participants (8 female, age = 22.76 \(\pm\) 2.49). For day 2's data, one participant dropped out, leaving 22 participants (9 female, age = 23.05 \(\pm\) 2.46), all of them has overall accuracy higher than 60\%.
 
 \hypertarget{experimental-design-4}{%
 \subsubsection{Experimental design}\label{experimental-design-4}}
@@ -955,12 +1066,12 @@ Figure \ref{fig:ex6b-d1-dprime-rt} shows \emph{d} prime and reaction times from 
 \hypertarget{d-prime-8}{%
 \paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-8}}
 
-There was evidence for the interaction between identity and valence, \(F(1.28, 26.90) = 12.88\), \(\mathit{MSE} = 0.21\), \(p = .001\), \(\hat{\eta}^2_G = .041\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(1.73, 36.42) = 29.31\), \(\mathit{MSE} = 0.14\), \(p < .001\), \(\hat{\eta}^2_G = .147\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), \emph{t}(21) = 5.984, \emph{p} \textless{} 0.001, and bad-self condition (2.07, SE = 0.154), \emph{t}(21) = 6.555, \emph{p} \textless{} 0.001. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -1.059, \emph{p} = 0.549. For other trials, there was no significant effect of valence, \(F(1.75, 36.72) = 0.00\), \(\mathit{MSE} = 0.18\), \(p = .999\), \(\hat{\eta}^2_G = .000\).
+There was evidence for the interaction between identity and valence, \(F(1.28, 26.90) = 12.88\), \(p = .001\), \(\hat{\eta}^2_G = .041\), 90\% CI \([.000, .150]\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(1.73, 36.42) = 29.31\), \(p < .001\), \(\hat{\eta}^2_G = .147\), 90\% CI \([.006, .301]\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.199) is better than both neutral-self (1.98, SE = 0.151), \emph{t}(21) = 5.984, \emph{p} \textless{} 0.001, and bad-self condition (2.07, SE = 0.154), \emph{t}(21) = 6.555, \emph{p} \textless{} 0.001. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -1.059, \emph{p} = 0.549. For other trials, there was no significant effect of valence, \(F(1.75, 36.72) = 0.00\), \(p = .999\), \(\hat{\eta}^2_G = .000\), 90\% CI \([.000, .000]\).
 
 \hypertarget{rt}{%
 \paragraph{RT}\label{rt}}
 
-For the matched trials, there was interaction between identity and valence, \(F(1.72, 36.16) = 4.55\), \(\mathit{MSE} = 1,560.90\), \(p = .022\), \(\hat{\eta}^2_G = .015\). We split the self-relevant and other relevant trials separately. For the self condition, the valence effect is significant, \(F(1.92, 40.38) = 14.48\), \(\mathit{MSE} = 1,647.20\), \(p < .001\), \(\hat{\eta}^2_G = .112\). The Self-good (484, SE = 13.2) is faster than self-neutral (543, SE = 16.7) , \emph{t} = -4.521, \emph{p} = 0.0005, \emph{df} = 21 and self-bad condition (535, SE = 18.4), \emph{t} = -4.489, \emph{p} = 0.0006, \emph{df} = 21. but not significant different between neutral and bad condition, \emph{t} = 0.689, \emph{p} = 0.772, \emph{df} = 21. For other condition, there was no effect of valence, \(F(1.79, 37.50) = 1.04\), \(\mathit{MSE} = 1,842.07\), \(p = .356\), \(\hat{\eta}^2_G = .008\).
+For the matched trials, there was interaction between identity and valence, \(F(1.72, 36.16) = 4.55\), \(p = .022\), \(\hat{\eta}^2_G = .015\), 90\% CI \([.000, .033]\). We split the self-relevant and other relevant trials separately. For the self condition, the valence effect is significant, \(F(1.92, 40.38) = 14.48\), \(p < .001\), \(\hat{\eta}^2_G = .112\), 90\% CI \([.000, .257]\). The Self-good (484, SE = 13.2) is faster than self-neutral (543, SE = 16.7) , \emph{t} = -4.521, \emph{p} = 0.0005, \emph{df} = 21 and self-bad condition (535, SE = 18.4), \emph{t} = -4.489, \emph{p} = 0.0006, \emph{df} = 21. but not significant different between neutral and bad condition, \emph{t} = 0.689, \emph{p} = 0.772, \emph{df} = 21. For other condition, there was no effect of valence, \(F(1.79, 37.50) = 1.04\), \(p = .356\), \(\hat{\eta}^2_G = .008\), 90\% CI \([.000, .053]\).
 
 \begin{figure}
 \centering
@@ -976,12 +1087,35 @@ Figure \ref{fig:ex6b-d2-dprime-rt} shows \emph{d} prime and reaction times from 
 \hypertarget{d-prime-9}{%
 \paragraph{\texorpdfstring{\emph{d} prime}{d prime}}\label{d-prime-9}}
 
-There was evidence for the interaction between identity and valence, \(F(1.65, 34.62) = 3.86\), \(\mathit{MSE} = 0.10\), \(p = .038\), \(\hat{\eta}^2_G = .005\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(1.79, 37.62) = 7.35\), \(\mathit{MSE} = 0.09\), \(p = .003\), \(\hat{\eta}^2_G = .021\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), \emph{t}(21) = 2.98, \emph{p} = 0.0189, and bad-self condition (2.43, SE = 0.199), \emph{t}(21) = 3.93, \emph{p} = 0.0021. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -0.097, \emph{p} = 0.995. For other trials, there was no significant effect of valence, \(F(1.73, 36.28) = 1.46\), \(\mathit{MSE} = 0.11\), \(p = .246\), \(\hat{\eta}^2_G = .004\).
+There was evidence for the interaction between identity and valence, \(F(1.65, 34.62) = 3.86\), \(p = .038\), \(\hat{\eta}^2_G = .005\), 90\% CI \([.000, .037]\). We further split the self- and other-relevant trials. For the self trials, there was significant effect of valence, \(F(1.79, 37.62) = 7.35\), \(p = .003\), \(\hat{\eta}^2_G = .021\), 90\% CI \([.000, .106]\). Post-hoc comparison showed that the good-self condition (2.71, SE = 0.214) is better than both neutral-self (2.43, SE = 0.175), \emph{t}(21) = 2.98, \emph{p} = 0.0189, and bad-self condition (2.43, SE = 0.199), \emph{t}(21) = 3.93, \emph{p} = 0.0021. But there was no significant difference between bad-self and neutral-self, \emph{t}(21) = -0.097, \emph{p} = 0.995. For other trials, there was no significant effect of valence, \(F(1.73, 36.28) = 1.46\), \(p = .246\), \(\hat{\eta}^2_G = .004\), 90\% CI \([.000, .026]\).
 
 \hypertarget{rt-1}{%
 \paragraph{RT}\label{rt-1}}
 
-For the matched trials, the interaction between identity and valence, \(F(1.62, 34.10) = 3.04\), \(\mathit{MSE} = 978.35\), \(p = .071\), \(\hat{\eta}^2_G = .005\). As in previous studies, we split the self- and other-relevant trials. For the self condition, the valence effect is significant, \(F(1.46, 30.76) = 6.57\), \(\mathit{MSE} = 1,007.62\), \(p = .008\), \(\hat{\eta}^2_G = .023\). The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , \emph{t} = -2.289, \emph{p} = 0.0795, \emph{df} = 21 and self-bad condition (508, SE = 17.9), \emph{t} = -4.342, \emph{p} = 0.0008, \emph{df} = 21. but not significant different between neutral and bad condition, \emph{t} = -0.503, \emph{p} = 0.871, \emph{df} = 21. For other condition, there was no effect of valence, \(F(1.91, 40.04) = 1.75\), \(\mathit{MSE} = 1,070.90\), \(p = .188\), \(\hat{\eta}^2_G = .007\).
+For the matched trials, the interaction between identity and valence, \(F(1.62, 34.10) = 3.04\), \(p = .071\), \(\hat{\eta}^2_G = .005\), 90\% CI \([.000, .036]\). As in previous studies, we split the self- and other-relevant trials. For the self condition, the valence effect is significant, \(F(1.46, 30.76) = 6.57\), \(p = .008\), \(\hat{\eta}^2_G = .023\), 90\% CI \([.000, .110]\). The Self-good (480, SE = 16.9) is faster than self-neutral (504, SE = 17.3) , \emph{t} = -2.289, \emph{p} = 0.0795, \emph{df} = 21 and self-bad condition (508, SE = 17.9), \emph{t} = -4.342, \emph{p} = 0.0008, \emph{df} = 21. but not significant different between neutral and bad condition, \emph{t} = -0.503, \emph{p} = 0.871, \emph{df} = 21. For other condition, there was no effect of valence, \(F(1.91, 40.04) = 1.75\), \(p = .188\), \(\hat{\eta}^2_G = .007\), 90\% CI \([.000, .051]\).
+
+\hypertarget{self-reported-personal-distance}{%
+\subsection{Self-reported personal distance}\label{self-reported-personal-distance}}
+
+\begin{figure}
+\centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-person-dist-1.pdf}
+\caption{\label{fig:plot-person-dist}Self-rated personal distance}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{Suppl_Materials_individual_Exp_files/figure-latex/plot-person-dist-net-1.pdf}
+\caption{\label{fig:plot-person-dist-net}Self-rated personal distance (Network view)}
+\end{figure}
+
+We explored the self-reported psychological distance between different person. Participants were presented a pair of two-person each time, and moved a slide to represent the distance between the pair of two persons. We found that, on average, participants rated self is closest to a neutral person, and then a good person. These two are not different from each other. However, both are closer than the distance between good person and neutral person. On average, participants rated themselves has furthest distance to bad person.
+
+Correlation analysis showed that most psychological distance ratings were positively correlated to each other, but the self-bad and self-good are negatively correlated.
+
+{[}use the network view to visualize the distance{]}
+
+See Figure \ref{fig:plot-person-dist} and Figure \ref{fig:plot-person-dist-net}.
 
 \newpage
 
@@ -993,39 +1127,44 @@ For the matched trials, the interaction between identity and valence, \(F(1.62, 
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Buxfcrkner_2017}{}%
-Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Journal Article. Retrieved from \url{https://www.jstatsoft.org/v080/i01\%0Ahttp://dx.doi.org/10.18637/jss.v080.i01}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Buxfcrkner_2017}{}}%
+Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan {[}Journal Article{]}. \emph{Journal of Statistical Software; Vol 1, Issue 1 (2017)}. Retrieved from \href{https://www.jstatsoft.org/v080/i01\%0Ahttp://dx.doi.org/10.18637/jss.v080.i01}{https://www.jstatsoft.org/v080/i01
+http://dx.doi.org/10.18637/jss.v080.i01}
 
-\leavevmode\hypertarget{ref-Carpenter_2017_stan}{}%
-Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A probabilistic programming language. \emph{Journal of Statistical Software}, \emph{76}(1). Journal Article. \url{https://doi.org/10.18637/jss.v076.i01}
+\leavevmode\vadjust pre{\hypertarget{ref-Carpenter_2017_stan}{}}%
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., \ldots{} Riddell, A. (2017). Stan: A probabilistic programming language {[}Journal Article{]}. \emph{Journal of Statistical Software}, \emph{76}(1). \url{https://doi.org/10.18637/jss.v076.i01}
 
-\leavevmode\hypertarget{ref-DeCarlo_1998}{}%
-DeCarlo, L. T. (1998). Signal detection theory and generalized linear models. \emph{Psychological Methods}, \emph{3}(2), 186--205. Journal Article. \url{https://doi.org/10.1037/1082-989X.3.2.186}
+\leavevmode\vadjust pre{\hypertarget{ref-DeCarlo_1998}{}}%
+DeCarlo, L. T. (1998). Signal detection theory and generalized linear models {[}Journal Article{]}. \emph{Psychological Methods}, \emph{3}(2), 186--205. \url{https://doi.org/10.1037/1082-989X.3.2.186}
 
-\leavevmode\hypertarget{ref-Goh_2016_mini}{}%
-Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own studies: Some arguments on why and a primer on how. \emph{Social and Personality Psychology Compass}, \emph{10}(10), 535--549. Journal Article. \url{https://doi.org/10.1111/spc3.12267}
+\leavevmode\vadjust pre{\hypertarget{ref-Goh_2016_mini}{}}%
+Goh, J. X., Hall, J. A., \& Rosenthal, R. (2016). Mini meta-analysis of your own studies: Some arguments on why and a primer on how {[}Journal Article{]}. \emph{Social and Personality Psychology Compass}, \emph{10}(10), 535--549. \url{https://doi.org/10.1111/spc3.12267}
 
-\leavevmode\hypertarget{ref-Hu_2020_GoodSelf}{}%
-Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? \emph{Collabra: Psychology}, \emph{6}(1), 20. Journal Article. \url{https://doi.org/10.1525/collabra.301}
+\leavevmode\vadjust pre{\hypertarget{ref-Hu_2020_GoodSelf}{}}%
+Hu, C.-P., Lan, Y., Macrae, C. N., \& Sui, J. (2020). Good me bad me: Does valence influence self-prioritization during perceptual decision-making? {[}Journal Article{]}. \emph{Collabra: Psychology}, \emph{6}(1), 20. \url{https://doi.org/10.1525/collabra.301}
 
-\leavevmode\hypertarget{ref-matzke_psychological_2009}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-matzke_psychological_2009}{}}%
 Matzke, D., \& Wagenmakers, E.-J. (2009). Psychological interpretation of the ex-gaussian and shifted wald parameters: A diffusion model analysis. \emph{Psychonomic Bulletin \& Review}, \emph{16}(5), 798--817. \url{https://doi.org/10.3758/PBR.16.5.798}
 
-\leavevmode\hypertarget{ref-Rouder_2005_BHM_SDT}{}%
-Rouder, J. N., \& Lu, J. (2005). An introduction to bayesian hierarchical models with an application in the theory of signal detection. \emph{Psychonomic Bulletin \& Review}, \emph{12}(4), 573--604. Journal Article. \url{https://doi.org/10.3758/bf03196750}
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder_2005_BHM_SDT}{}}%
+Rouder, J. N., \& Lu, J. (2005). An introduction to bayesian hierarchical models with an application in the theory of signal detection {[}Journal Article{]}. \emph{Psychonomic Bulletin \& Review}, \emph{12}(4), 573--604. \url{https://doi.org/10.3758/bf03196750}
 
-\leavevmode\hypertarget{ref-Rousselet_2019}{}%
-Rousselet, G. A., \& Wilcox, R. R. (2019). Reaction times and other skewed distributions: Problems with the mean and the median. \emph{Meta-Psychology}. preprint. \url{https://doi.org/10.1101/383935}
+\leavevmode\vadjust pre{\hypertarget{ref-Rousselet_2019}{}}%
+Rousselet, G. A., \& Wilcox, R. R. (2019). Reaction times and other skewed distributions: Problems with the mean and the median {[}Preprint{]}. \emph{Meta-Psychology}. \url{https://doi.org/10.1101/383935}
 
-\leavevmode\hypertarget{ref-Stanislaw_Todorov_1999}{}%
-Stanislaw, H., \& Todorov, N. (1999). Calculation of signal detection theory measures. \emph{Behavior Research Methods, Instruments, \& Computers}, \emph{31}(1), 137--149. Journal Article. \url{https://doi.org/10.3758/BF03207704}
+\leavevmode\vadjust pre{\hypertarget{ref-Stanislaw_Todorov_1999}{}}%
+Stanislaw, H., \& Todorov, N. (1999). Calculation of signal detection theory measures {[}Journal Article{]}. \emph{Behavior Research Methods, Instruments, \& Computers}, \emph{31}(1), 137--149. \url{https://doi.org/10.3758/BF03207704}
 
-\leavevmode\hypertarget{ref-Sui_2012_JEPHPP}{}%
-Sui, J., He, X., \& Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{38}(5), 1105--1117. Journal Article. \url{https://doi.org/10.1037/a0029792}
+\leavevmode\vadjust pre{\hypertarget{ref-Sui_2012_JEPHPP}{}}%
+Sui, J., He, X., \& Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching {[}Journal Article{]}. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{38}(5), 1105--1117. \url{https://doi.org/10.1037/a0029792}
 
-\leavevmode\hypertarget{ref-wiecki_hddm_2013}{}%
-Wiecki, T. V., Sofer, I., \& Frank, M. J. (2013). HDDM: Hierarchical bayesian estimation of the drift-diffusion model in python. \emph{Frontiers in Neuroinformatics}, \emph{7}. \url{https://doi.org/10.3389/fninf.2013.00014}
+\leavevmode\vadjust pre{\hypertarget{ref-wiecki_hddm_2013}{}}%
+Wiecki, T. V., Sofer, I., \& Frank, M. J. (2013). {HDDM}: Hierarchical bayesian estimation of the drift-diffusion model in python. \emph{Frontiers in Neuroinformatics}, \emph{7}. \url{https://doi.org/10.3389/fninf.2013.00014}
+
+\end{CSLReferences}
 
 \endgroup
+
 
 \end{document}

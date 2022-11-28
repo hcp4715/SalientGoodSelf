@@ -12,5 +12,10 @@ The cleaned data will be uploaded after I submitting this manuscript.
 
 # Basic info about the analysis:
 
-Notebook_Pos_Self_Salience_DDM_APA.rmd is the main r markdown file that include the latest analysis and results. 
-Notebook_Pos_Self_Salience_DDM_APA.pdf is the output from the above-mentioned r markdown file that presenting the latest results.
+`Notebook_Pos_Self_Salience_DDM_APA.rmd` is the main r markdown file that include the latest analysis and results. 
+
+`Notebook_Pos_Self_Salience_DDM_APA.pdf` is the output from the above-mentioned r markdown file that presenting the latest results.
+
+`Suppl_Materials_individual_Exp.rmd` is the supplementary RMarkdown file for individual studies.
+
+`Suppl_Materials_individual_Exp.pdf` is the output of the above supplementary RMarkdown file.

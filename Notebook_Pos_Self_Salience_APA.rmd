@@ -28,7 +28,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- Moral character is central to social perception and moral psychology, previous studies explain the salience effect of moral character in terms of valence effect, i.e., either negativity effect and positivity effect. In this study, we report 9 experiments (N = 4XX, trials = XXX) where we find (1) there is a robust good character prioritization effect in social associative learning task, i.e., when neutral geometric shapes were associated with good character, they were prioritized as compared to shapes associated with neutral or bad characters; (2) prioritization of good character was robust only when it is relevant to the self but weak or non-exist when it referred to a non-self label; (3) the binding between good character and self exist even when one of the label became task-irrelevant. Together, these results provided evidence for spontaneous self-referential processing as a novel mechanism of the prioritization effect of good character.
+ Morality is central to social perception and moral psychology, previous studies found that information related to moral character is prioritized information processing and explained the effect in terms of valence, i.e., either as a negativity or positivity effect. In this study, we report 9 experiments (N = 4XX, trials = XXX) where we find (1) there is a robust good character prioritization effect in perceptual matching task, i.e., when neutral geometric shapes were associated with good character, they were prioritized as compared to shapes associated with neutral or bad characters; (2) the prioritization of good character was robust only when the good character is referred to the self but weak or non-exist when it referred to a non-self label; (3) the binding between good character and self exist even when either the self or the moral character information was task-irrelevant. Together, these results provided evidence for spontaneous self-referential processing as a novel mechanism of the prioritization effect of good character.
   
  <!-- https://tinyurl.com/ybremelq -->
   
@@ -97,14 +97,9 @@ The positivity effect, i.e., good moral characters are prioritized, is also plau
 
 These two possibilities, however, ignore the agency of participants who is perceiving the information and making perceptual decisions. The external stimuli only contain subjective value if they are relevant to the self of the decision-maker []. When it comes to moral character, there are long-history of studies showing that moral character is central for people's self-concept and identity. A positive moral character is viewed as the core feature of identity [e.g., @strohminger_true_2017]. A lot of studies revealed that people distort their perception, memory, and change their actions to maintain a positive view of their moral self-view. Given this strong motivation, it is possible that participant has spontaneous self-referential for the perception tasks where no self-referential process were not explicitly excluded [citation related to spontaneous self-referential].
 
-Here, we report nine experiments where we found (1) there is a robust good character prioritization effect in social associative learning task, i.e., when neutral geometric shapes were associated with good character, they were prioritized as compared to shapes associated with neutral or bad characters; (2) prioritization of good character was robust only when it is relevant to the self but weak or non-exist when it referred to a non-self label; (3) the binding between good character and self exist even when one of the label became task-irrelevant. Together, these results provided evidence for spontaneous self-referential processing as a novel mechanism of the prioritization effect of good character.
+Here, we report nine experiments where we found (1) there is a robust good character prioritization effect in social associative learning task, i.e., when neutral geometric shapes were associated with good character, they were prioritized as compared to shapes associated with neutral or bad characters; (2) prioritization of good character was robust only when it is relevant to the self but weak or non-exist when it referred to a non-self label; (3) the binding between good character and self exist even when one of the label became task-irrelevant. Together, these results provided evidence for spontaneous self-referential processing as a novel mechanism of the prioritization effect of good character. In all experiments, a social associative learning task in which th effect of physical features are minimized — participants performed a perceptual matching task after associated different moral characters (good, neutral, and bad) with different geometric shapes. 
 
-## Prioritization of moral chararcter
-
-
-## Using soical associative task
-
-
+<!-- 
 we attempted to distinguish these two possibilities by a social associative learning task in which physical features had minimal influences — participants performed a perceptual matching task after associated different moral characters (good, neutral, and bad) with different geometric shapes. If there is a positivity effect, there should be an advantage for shapes associated with good character over shapes associated with neutral or bad shapes. If there is a negativity effect, the advantage should be occur on shapes associated with bad characters. The first four experiments and two additional follow-up experiments provided strong evidence for good character effect in the current paradigm.
 
 The positivity effect consistent with previous studies where positivity effect of social trait words were found [@anselmi_positive_2011; @bargh_generality_1992; @unkelbach_good_2010]. However, the effect could not be explained by the similarity hypothesis [@unkelbach_chapter_2020] because we only used three stimuli. There are two possibility explanations. The first one is the value-based attention account, which suggests that stimuli that are valuable to us are prioritized [@anderson_neurobiology_2019]. In our experiments, the good character label "good person" may represent an indirect but valuable stimuli because, in social life, a good other is usually more valuable than an bad other [@abele_agency_2007]. Another possibility is derived from social categorization theory, which suggested that we automatically categorize others as in-group or out-group [@turner_rediscovering_1987]. Moral character is an important criterion for social categorization [@mchugh_moral_2019; @descioli_side_taking_2016]. However, the above four experiments could not distinguish between these two possibilities, because "good person" could both be rewarding and be categorized as in-group member. Given that both rewarding stimuli [e.g., @Sui_2012_JEPHPP] and in-group information [@enock_overlap_2020] are prioritized when using social associative learning paradigm, we further tested these two possibilities in new experiments.
@@ -115,8 +110,10 @@ Although the introduction of self- and other-referential processing provided evi
 
 To test the moral true self view and the social-categorization account, we designed two complementary experiments. In experiment 4a, participants only learned the association between self and other, the words "good-person", "neutral person", and "bad person" were presented as task-irrelevant stimuli, while in experiment 4b, participants learned the associations between "good-person", "neutral-person", and "bad-person", and the "self" and "other" were presented as task-irrelevant stimuli. These two experiments can be used to distinguish the moral-self view and social categorization" account. If moral-self view is true, then, in both experiments, good-self will show advantage over all other stimuli, and there will be no other effects. More specifically, in experiment 4a, where only the self-referential processing is task-relevant, there will be advantage for good as task-irrelevant condition than when bad or neutral character as task-irrelevant for the self conditions, while there is no other effects; in experiment 4b, in the good condition, there will be an advantage for self as task-irrelevant condition over other as task-irrelevant condition, and no other effects. If social categorization is true, then, the prioritization effect will depends on whether the stimuli can be categorized as the same group of good-self. More specifically, in experiment 4a, there will be good effect in self conditions, this prediction is the same as the moral self-view; it predicts a reverse good effect in other condition because good and other a conflict in terms of social-categorization, this prediction is different from the "good-self" anchor account; however, for experiment 4b, it predicts no identity effect in the good-person condition because both self and other are in the good group.
 
+
 [Good self in self-reported data] 
 As an exploration, we also collected participants' self-reported psychological distance between self and good-person, bad-person, and neutral-person, moral identity, moral self-image, and self-esteem. All these data are available [see @Liu_2020_JOPD]. We explored the correlation between self-reported distance and these questionnaires as well as the questionnaires and behavioral data. However, given that the correlation between self-reported score and behavioral data has low correlation [@dang_why_2020], we didn't expect a high correlation between these self-reported measures and the behavioral data.
+-->
 
  <!-- 
 Key concepts and discussing points:
@@ -145,7 +142,7 @@ in experiment 4a and 4b, we didn't have a baseline condition where there is no w
 # Disclosures
 We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy lower than 60% were excluded from analysis. Also, the accurate responses with less than 200ms reaction times were excluded from the analysis. These excluded data can be found in the shared raw data files.
 
-All the experiments reported were not pre-registered. Most experiments (1a ~ 4b, except experiment 3b) reported in the current study were first finished between 2013 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017. To have a better estimation of the effect size, we included the data from unreported data in our three-level models (experiment 5, 6a, 6b) (See Table S1 for overview of these experiments). 
+All the experiments reported were not pre-registered. Most experiments (1a ~ 4b, except experiment 3b) reported in the current study were first finished between 2013 to 2016 in Tsinghua University, Beijing, China. Participants in these experiments were recruited in the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants in Wenzhou University, Wenzhou, China in 2017 for experiment 1a, 1b, 4a, and 4b. Experiment 3b was finished in Wenzhou University in 2017 (See Table S1 for overview of these experiments). 
 
 All participant received informed consent and compensated for their time. These experiments were approved by the ethic board in the Department of Psychology, Tsinghua University. 
 
@@ -274,7 +271,7 @@ fun_plot_sdt_val <- function(m_sdt) {
     p_sdt_d <- tmp_d %>%
       dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       tidybayes::compare_levels(sdt_d, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = stat(x > 0))) +
+      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = after_stat(x > 0))) +
       tidybayes::stat_halfeyeh() + 
       geom_vline(xintercept =0, linetype = "dashed") +
       scale_fill_manual(values = c("gray80", "skyblue")) +
@@ -284,7 +281,7 @@ fun_plot_sdt_val <- function(m_sdt) {
     p_sdt_c <- tmp_c %>%
       dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       tidybayes::compare_levels(sdt_c, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = stat(x > 0))) +
+      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = after_stat(x > 0))) +
       tidybayes::stat_halfeyeh() + 
       geom_vline(xintercept =0, linetype = "dashed") +
       scale_fill_manual(values = c("gray80", "skyblue")) +
@@ -357,7 +354,7 @@ fun_plot_rt_val <- function(m_rt) {
     p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       dplyr::filter(Matchness == 'Match') %>%
       tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
       tidybayes::stat_halfeyeh() + 
       geom_vline(xintercept =0, linetype = "dashed") +
       scale_fill_manual(values = c("gray80", "skyblue")) +
@@ -366,7 +363,7 @@ fun_plot_rt_val <- function(m_rt) {
     p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
       dplyr::filter(Matchness == 'Mismatch') %>%
       tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
+      ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
       tidybayes::stat_halfeyeh() + 
       geom_vline(xintercept =0, linetype = "dashed") +
       scale_fill_manual(values = c("gray80", "skyblue")) +
@@ -427,8 +424,8 @@ fun_rt_val_id <- function(exp_name) {
 ```
 
 # Results
-## Perceptual processing moral character related information
-In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situations. Therefore, we modeled them as independent samples.  These five experiments revealed a robust effect of moral character on perceptual matching task. 
+## Prioritization of good character related information
+In this part, we report results from five experiments that tested whether an associative learning task, including 192 participants. Note that for both experiment 1a and 1b, there were two independent samples with different equipment, trials numbers and testing situations. Therefore, we modeled them as independent samples. These five experiments revealed a robust effect of moral character on perceptual matching task. 
 
 ```{r remove non-meta data, eval = FALSE, echo=FALSE, results='hide', warning=FALSE}
 # remove all unnecessary variables
@@ -646,7 +643,7 @@ p_dprime1 <- df_m1_plot_sdt %>%
 p_dprime1_diff <- df_m1_plot_sdt_diff %>%
         dplyr::filter(str_detect(term_diff, '_dprm')) %>%
         dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
-        ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         # scale_fill_manual(values = c('gray80', 'skyblue')) +
@@ -873,7 +870,7 @@ df_m1_plot_rt_diff <- df_m1_plot_rt %>%
 # df_m1_plot_rt_diff  %>%
 #   dplyr::filter(str_detect(term_diff, '_NM')) %>%
 #   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
-#   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+#   ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x < 0))) +
 #   tidybayes::stat_halfeye() +
 #   geom_vline(xintercept = 0, linetype = "dashed") +
 #   scale_fill_manual(values = c('gray80', 'skyblue')) + 
@@ -1049,7 +1046,7 @@ df_m3_rt_mean <- df_m3_rt_plot %>%
 # plot the posterior of mismatch
 df_m3_rt_plot  %>%
   dplyr::filter(str_detect(term_diff, '_NM')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x < 0))) +
   tidybayes::stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
@@ -1060,7 +1057,7 @@ df_m3_rt_plot  %>%
 # plot the posterior of matching trials
 df_m3_rt_plot %>%
   dplyr::filter(str_detect(term_diff, '_M')) %>%
-  ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x < 0))) +
+  ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x < 0))) +
   tidybayes::stat_halfeyeh() +
   geom_vline(xintercept = 0, linetype = "dashed") +
   scale_fill_manual(values = c('gray80', 'skyblue')) + 
@@ -1069,11 +1066,11 @@ df_m3_rt_plot %>%
                labeller = label_parsed)
 ```
 
-## Self-referential process modulate prioritization of good character
+## Self-referential process modulates prioritization of good character
 
 In this part, we report results from three experiments (3a, 3b, and 6b) that aimed at testing whether the moral valence effect found in the previous experiments is modulated by self-referential processes. These three experiments included  data from 108 participants. 
 
-Because we have found that a facilitation effect of good character and slow-down effect of bad character in the first part, in this part, we will focus on the whether such effect interact with self-referential factor. In others words, we not only reported differences between good/bad character with neutral character for self-referential and other-referential separately, but also compare the differences between the difference.
+Because we have found that a facilitation effect of good character and slow-down effect of bad character in the first part, in this part, we will focus on the whether such effect interact with self-referential factor. In others words, we not only reported differences between good/bad character with neutral character for self-referential and other-referential separately, but also compare the differences between the difference. For details of individual studies, please see supplementary materials.
 
 ```{r prepare data for second meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
@@ -1285,7 +1282,7 @@ p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
                                                                'diff_GN_dprm_O', 'diff_BN_dprm_O'))) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(Experiments = condition) %>%
-        ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1319,7 +1316,7 @@ p_ms_dprime1_diff_id <- df_ms_sdt_m1_plot_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(Experiments = condition) %>%
-        ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1352,7 +1349,7 @@ df_ms_dprm1_diff_id <- df_ms_sdt_m1_plot_diff %>%
 #   dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
 #   tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
 #   dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
-#   ggplot2::ggplot(aes(y = condition, x = value, fill = stat(x > 0))) +
+#   ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x > 0))) +
 #   tidybayes::stat_halfeye() +
 #   geom_vline(xintercept = 0, linetype = "dashed") +
 #   scale_fill_manual(values = c('gray80', 'skyblue')) +
@@ -1545,7 +1542,7 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
                                                                'diff_GN_M_O', 'diff_BN_M_O'))) %>%
         dplyr::filter((value >= -200) & (value <= 200)) %>%
         dplyr::rename(Experiments = condition) %>%
-        ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x < 0))) +
+        ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1579,7 +1576,7 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
         dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_SO_G', 'diff_SO_N', 'diff_SO_B'))) %>%
         dplyr::filter((value >= -200) & (value <= 200)) %>%
         dplyr::rename(Experiments = condition) %>%
-        ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x < 0))) +
+        ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1613,14 +1610,14 @@ library(patchwork)
 # (p_rt1 | p_dprime1)
 p_ms_rt1 + p_ms_dprime1 +
         p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
-        p_ms_rt1_diff_id + p_ms_dprime1_diff_id +  plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
+        p_ms_rt1_diff_id + p_ms_dprime1_diff_id + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
 ```
 
 For the *d* prime, we found that an interaction between moral character effect and self-referential, the self- and other-referential difference was greater than zero for good vs. neutral character differences ($median_{diff}$ = `r df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']`; 95% HDI = [`r df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']` `r df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']`]) but not for bad vs. neutral differences ($median_{diff}$ = `r df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']`; 95% HDI = [`r df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']` `r df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']`]). Further analyses revealed that the good vs. neutral character effect only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self ($median_{diff}$ = `r df_ms_dprm1_diff_val$Median[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']`; 95% HDI = [`r df_ms_dprm1_diff_val$CI_low[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']` `r df_ms_dprm1_diff_val$CI_high[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']`]), *d* prime for good-self was also greater than good-other condition ($median_{diff}$ = `r df_ms_dprm1_diff_id$Median[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']`; 95% HDI = [`r df_ms_dprm1_diff_val$CI_low[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']` `r df_ms_dprm1_diff_val$CI_high[df_ms_dprm1_diff_val$Parameter == 'diff_SO_dprm_G']`]). The differences between bad-self and neutral-self, good-other and neutral-other, bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). 
 
 For the RTs part, we also found the interaction between moral character and self-referential, the self- and other-referential differences was below zero for the good vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_GN']`]) but not for the bad vs. neutral differences ($median_{diff}$ = `r df_ms_rt1_diff_diff$Median[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`; 95% HDI = [`r df_ms_rt1_diff_diff$CI_low[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']` `r df_ms_rt1_diff_diff$CI_high[df_ms_rt1_diff_diff$Parameter == 'diff_diff_BN']`]). Further analyses revealed a robust good-self prioritization effect as compared to neutral-self ($median_{diff}$ = `r df_ms_rt1_diff_val$Median[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`; 95% HDI = [`r df_ms_rt1_diff_val$CI_low[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']` `r df_ms_rt1_diff_val$CI_high[df_ms_rt1_diff_val$Parameter == 'diff_GN_M_S']`]) and good-other ($median_{diff}$ = `r df_ms_rt1_diff_id$Median[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`; 95% HDI = [`r df_ms_rt1_diff_id$CI_low[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']` `r df_ms_rt1_diff_id$CI_high[df_ms_rt1_diff_id$Parameter == 'diff_SO_G']`]) conditions. Also, we found that both good character and bad character were responded slower than neutral character when it was other-referential. See Figure \@ref(fig:plot-bayes2).
 
-## Binding the good and self
+## Spontaneous binding between the good character and the self
 
 In this part, we reported two studies in which the moral valence or the self-referential processing is not task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment. 
 
@@ -1775,7 +1772,7 @@ p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1814,7 +1811,7 @@ p_exp4a_dprime1_diff_id <- df_exp4a_sdt_m1_plot_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1835,7 +1832,7 @@ p_exp4a_dprime1_diff_diff <- df_exp4a_sdt_m1_plot_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -1995,7 +1992,7 @@ p_exp4a_rt_diff_val <- df_exp4a_m1_plot_rt_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x < 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2016,7 +2013,7 @@ p_exp4a_rt_diff_id <- df_exp4a_m1_plot_rt_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x < 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2036,7 +2033,7 @@ p_exp4a_rt1_diff_diff <- df_exp4a_m1_plot_rt_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2143,7 +2140,7 @@ p_exp4b_dprime1_diff_val <- df_exp4b_sdt_m1_plot_diff %>%
                       term_diff = factor(term_diff, levels = c("Good vs. Bad", "Good vs. Neutral", "Bad vs. Neutral"))) %>%
         #dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x > 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x > 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2164,7 +2161,7 @@ p_exp4b_dprime1_diff_id <- df_exp4b_sdt_m1_plot_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, fill = stat(x > 0))) + #y = fct_rev(conditions), 
+        ggplot2::ggplot(aes(x = value, fill = after_stat(x > 0))) + #y = fct_rev(conditions), 
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2277,7 +2274,7 @@ p_exp4b_rt_diff_val <- df_exp4b_m1_plot_rt_diff %>%
                       term_diff = factor(term_diff, levels = c("Good vs. Bad", "Good vs. Neutral", "Bad vs. Neutral"))) %>%
         # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = stat(x < 0))) +
+        ggplot2::ggplot(aes(x = value, y = fct_rev(conditions), fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2298,7 +2295,7 @@ p_exp4b_rt_diff_id <- df_exp4b_m1_plot_rt_diff %>%
         # tidyr::unite(term_diff, c('Identity', 'term_diff')) %>%
         # dplyr::filter((value >= -1.5) & (value <= 1.5)) %>%
         dplyr::rename(conditions = term_diff) %>%
-        ggplot2::ggplot(aes(x = value, fill = stat(x < 0))) + # , y = fct_rev(conditions)
+        ggplot2::ggplot(aes(x = value, fill = after_stat(x < 0))) + # , y = fct_rev(conditions)
         tidybayes::stat_halfeye() +
         geom_vline(xintercept = 0, linetype = "dashed") +
         scale_fill_manual(values = c('skyblue', 'gray80'),
@@ -2343,268 +2340,6 @@ In experiment 4b, moral character was the task-relevant factor, and we found tha
 Most importantly, we found evidence that task-irrelevant self-referential process also played an role. For shapes associated with good person, the *d* prime was greater when shapes had an "self" inside than with "other" inside ($mean_{diff}$ = 0.14, 95% credible intervals [-0.02, 0.31], BF = 12.07, p = 0.92), but this effect did not happen when the target shape where associated with "neutral" ($mean_{diff}$ = 0.04, 95% CI [-.11, .18]) or "bad" person ($mean_{diff}$ = -.05, 95% CI[-.18, .09]). 
 
 The same trend appeared for the RT data. For shapes associated with good person, with a "self" inside the shape reduced the reaction times as compared with when a "other" inside the shape ($mean_{diff}$ = -55 ms, 95%CI[-75, -35]), but this effect did not occur when the shapes were associated neutral ($mean_{diff}$ = 10, 95% CI [1, 20]) or bad ($mean_{diff}$ = 5, 95%CI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
-
-## Self-reported personal distance
-
-```{r personal distance, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# prepare questionnaire data
-df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4ID_clean.csv"), header = TRUE, sep = ",",
-                 stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
-  dplyr::mutate(expID = dplyr::case_when(
-                                    (expID == "exp1.0") ~ "Exp1a",
-                                    (expID == "exp1.1") ~ "Exp1b",
-                                    (expID == "exp3")   ~ "Exp3a",
-                                    (expID == "exp3.1") ~ "Exp3b",
-                                    (expID == "exp4.1") ~ "Exp4a",
-                                    (expID == "exp4.2") ~ "Exp4b",
-                                    (expID == "exp5.2") ~ "Exp5",
-                                    (expID == "exp6.2") ~ "Exp6b",
-                                    (expID == "exp7.1") ~ "Exp7a",
-                                    (expID == "exp7r")  ~ "Exp7b",
-                                    (expID == "exp6")   ~ "Exp_dpr"))
-
-## get the questionnaire names
-# Self-esteem
-SlfEstNames <- c("SES1","SES2","SES3","SES4","SES5","SES6","SES7","SES8","SES9","SES10")
-SlfEstNames_r <- c("SES1","SES2","SES3_r","SES4","SES5_r","SES6","SES7","SES8","SES9_r","SES10_r")
-
-# moral identity
-mrlIdNames <- c("morId_1","morId_2","morId_3","morId_4", "morId_5","morId_6",
-                "morId_7","morId_8","morId_9","morId_10","morId_11","morId_12",
-                "morId_13","morId_14","morId_15","morId_16")
-
-mrlIdIntNames <- c("morId_1","morId_2","morId_5","morId_8", "morId_10","morId_11",
-                   "morId_12","morId_13","morId_14")
-mrlIdIntNames_r <- c("morId_1","morId_2","morId_5_r","morId_8", "morId_10","morId_11",
-                   "morId_12","morId_13","morId_14")
-mrlIdExtNames <- c("morId_3","morId_4", "morId_6", "morId_7", "morId_9",
-                   "morId_15", "morId_16")
-
-# moral self images
-mrlslfImgNames <- c("morSlfImg_1","morSlfImg_2","morSlfImg_3","morSlfImg_4",
-                    "morSlfImg_5","morSlfImg_6","morSlfImg_7","morSlfImg_8","morSlfImg_9")
-
-# personal distance
-perDistNames <- c("SelfSelf", 
-                  "SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
-                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
-                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
-                  "SelfStra_1", "SelfStra_2", "SelfStra_3", "SelfStra_4",
-                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
-                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
-                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
-
-perDistNames2 <- c("SelfGood_1", "SelfGood_2", "SelfGood_3", "SelfGood_4",
-                  "SelfNeut_1", "SelfNeut_2", "SelfNeut_3", "SelfNeut_4",
-                  "SelfBad_1",  "SelfBad_2",  "SelfBad_3",  "SelfBad_4",
-                  "GoodNeut_1", "GoodNeut_2", "GoodNeut_3", "GoodNeut_4", 
-                  "GoodBad_1",  "GoodBad_2",  "GoodBad_3",  "GoodBad_4",
-                  "NeutBad_1",  "NeutBad_2",  "NeutBad_3",  "NeutBad_4")
-
-# Normalize the person distance by dividing the maximum value for each data point
-df.perdist <- df.scales %>%
-  dplyr::select(c(expID, subjID),perDistNames) %>%
-  dplyr::mutate(sd_raw = matrixStats::rowSds(as.matrix(.[perDistNames]))) %>%
-  dplyr::filter(sd_raw >=10) %>%                                # remove data with small variance
-  dplyr::mutate(maxDist = pmax(!!!rlang::syms(perDistNames)))   # find the maximum value of the row
-
-df.perdist[,3:31] <- df.perdist[,3:31]/df.perdist$maxDist       # dividing the maximum
-
-# Get the mean value of each distance
-df.perdist <- df.perdist %>%        
-    dplyr::mutate(# sumRaw = rowMeans(.[3:31], na.rm = T),
-                SelfGood = rowMeans(.[grep("SelfGood", names(.))], na.rm = T),
-                SelfNeut = rowMeans(.[grep("SelfNeut", names(.))], na.rm = T),
-                SelfBad  = rowMeans(.[grep("SelfBad", names(.))], na.rm = T),
-                GoodNeut = rowMeans(.[grep("GoodNeut", names(.))], na.rm = T),
-                GoodBad  = rowMeans(.[grep("GoodBad", names(.))], na.rm = T),
-                NeutBad  = rowMeans(.[grep("NeutBad", names(.))], na.rm = T)) %>%
-    dplyr::select(expID, subjID,
-                SelfGood, SelfNeut, SelfBad, GoodNeut, GoodBad, NeutBad) %>%
-  tidyr::drop_na()
-
-# calculate the factor score for moral identity, moral self image, self-esteem, and personal distance.
-
-df.scales <- df.scales %>%
-  dplyr::mutate(morId_5_r = 0 - morId_5, # reverse the items that need to be reversed.
-                SES3_r = 5 - SES3,
-                SES5_r = 5 - SES5,
-                SES9_r = 5 - SES9,
-                SES10_r = 5 - SES10) %>%
-  dplyr::mutate(SlfEst_sum = rowSums(.[SlfEstNames_r]),
-                mrlIdInt_sum = rowSums(.[mrlIdIntNames_r]),
-                mrlIdExt_sum = rowSums(.[mrlIdExtNames]),
-                mrlSlfImg_sum = rowSums(.[mrlslfImgNames]))
-
-df.scale.fs <- df.scales %>% dplyr::select(expID, subjID, SlfEst_sum, mrlIdInt_sum, mrlIdExt_sum, mrlSlfImg_sum)
-
-df.scale.fs <- df.scale.fs %>%
-  dplyr::left_join(., df.perdist)
-
-```
-
-```{r plot-person-dist, fig.cap="Self-rated personal distance", fig.width=8, warning=FALSE}
-# Boxplot
-p_dist_1 <- df.perdist %>% 
-  tidyr::pivot_longer(., cols = SelfGood:NeutBad,
-                      names_to = 'PerDist',
-                      values_to = 'value') %>%
-  dplyr::mutate(PerDist=factor(PerDist, levels = c('SelfNeut', 'SelfGood', 'GoodNeut', 'NeutBad', 'GoodBad', 'SelfBad'))) %>%
-  ggplot2::ggplot(.,aes(x=PerDist, y=value)) +
-  ggplot2::geom_boxplot() +
-  ggplot2::geom_point(position = position_jitter(),size = 1, shape = 20, alpha = 0.15) + 
-  scale_fill_brewer(palette = "Dark2") +
-    theme_bw() +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          text=element_text(family='Times'),
-          legend.title=element_blank(),
-          legend.text = element_text(size =12),
-          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 12, color = 'black'),
-          axis.title = element_text (size = 12),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(3, "lines")) 
-
-dist.cor <- df.perdist %>%
-  dplyr::select(-c(subjID, expID)) %>%
-  as.matrix() %>%
-  Hmisc::rcorr(., type = 'spearman')
-
-# dist.cor_par <- df.perdist %>%
-#         dplyr::select(-c(subjID, expID)) %>%
-#         qgraph::cor_auto(.)
-# 
-# dist.cor_par_net <- bootnet::estimateNetwork(dist.cor_par, default = "pcor", corMethod = 'spearman')
-# plot(dist.cor_par_net)
-
-p_dist_2 <- ggcorrplot::ggcorrplot(dist.cor$r, hc.order = TRUE, type = "lower",
-     outline.col = "white", colors = c('red', 'white', 'blue'),
-     lab = TRUE, p.mat = dist.cor$P) +
-  #theme_bw() +
-  scale_y_discrete(position='right') +
-  theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          text=element_text(family='Times'),
-          legend.title=element_blank(),
-          legend.text = element_text(size =12),
-          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 12, color = 'black'),
-          axis.title = element_text (size = 12),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-          #axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-          #axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(0, "lines")) 
-
-# correlation bewteen self-reported measures
-dist.cor2 <- df.scale.fs %>%
-  dplyr::select(-1, -2) %>%
-  as.matrix() %>%
-  Hmisc::rcorr(., type = 'spearman')
-
-p_dist_3 <- ggcorrplot::ggcorrplot(dist.cor2$r, hc.order = TRUE, type = "lower",
-     outline.col = "white", colors = c('red', 'white', 'blue'),  insig = "blank",
-     lab = TRUE, p.mat = dist.cor2$P) +
-  #theme_bw() +
-  scale_y_discrete(position='right') +
-  theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          text=element_text(family='Times'),
-          legend.title=element_blank(),
-          legend.text = element_text(size =12),
-          plot.title = element_text(lineheight=.8, face="bold", size = 16, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 12, color = 'black'),
-          axis.title = element_text (size = 12),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-          #axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-          #axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 12, color = 'black'), # size of text in strips, face = "bold"
-          panel.spacing = unit(0, "lines")) 
-
-library(patchwork)
-p_dist_1 + p_dist_2 + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = FALSE)
-```
-
-```{r plot-person-dist-net, fig.cap="Self-rated personal distance (Network view)", fig.width=8, warning=FALSE}
-df.perdist.sum_p <- df.perdist %>%
-        dplyr::rename(Self_Good = SelfGood,
-                      Self_Neut = SelfNeut,
-                      Self_Bad = SelfBad,
-                      Good_Neut = GoodNeut,
-                      Good_Bad = GoodBad,
-                      Neut_Bad = NeutBad) %>%
-  tidyr::pivot_longer(cols = Self_Good:Neut_Bad, 
-                      names_to = "condition",
-                      values_to = "distance") %>%
-  #dplyr::mutate(condition = factor(condition,
-  #                                 levels = c("GoodNeut", "NeutBad", "GoodBad",
-  #                                            "SelfNeut", "SelfGood", "SelfBad"))) %>%
-  dplyr::filter(!is.na(distance)) %>%
-  dplyr::group_by(condition) %>%
-  dplyr::summarise_each(funs(mean, sd, se=sd(.)/sqrt(n())), distance) %>%
-  dplyr::select(condition, mean) %>%
-  dplyr::add_row(condition = c("Self_Self", "Good_Good",
-                                "Neut_Neut","Bad_Bad")) %>%
-  tidyr::separate(condition, c('var1','var2'), sep = '_')
-
-# create a distance matrix
-df.dist.mat <- data.frame(matrix(ncol = 4, nrow = 4))
-colnames(df.dist.mat) <- unique(df.perdist.sum_p$var1)
-rownames(df.dist.mat) <- unique(df.perdist.sum_p$var1)
-
-for (i in 1:6){
-  rname = df.perdist.sum_p$var1[i]
-  cname = df.perdist.sum_p$var2[i]
-  value = df.perdist.sum_p$mean[i]
-  df.dist.mat[rname, cname] = value
-  df.dist.mat[cname, rname] = value
-}
-df.dist.mat[is.na(df.dist.mat)] <- 0
-
-df.dist.mat_t <- 1 - df.dist.mat
-
-library(qgraph)
-p_dist_4 <- qgraph(df.dist.mat_t, layout='spring', vsize=9, labels = colnames(df.dist.mat_t))
-
-# p_dist_5 <- qgraph(dist.cor$r, layout='spring', vsize=9, labels = colnames(dist.cor$r))
-
-# 
-# corrplot(dist.cor$r, type = "upper", order = "hclust", 
-#          tl.col = "black", tl.srt = 45,
-#          p.mat = dist.cor$P, sig.level = 0.01, insig = "blank")
-
-# col <- colorRampPalette(c( "red", "white", "blue"))(20)
-# p_dist_2 <- heatmap(x = dist.cor$r, col = col, symm = TRUE)
-# 
-# corrplot(dist.cor$r, type="upper", order="hclust", col=col)
-# legend(x="bottomright", legend=c("min", "ave", "max"), 
-#      fill=colorRampPalette(c( "red", "white", "blue"))(20))
-
-```
-
-We explored the self-reported psychological distance between different person. Participants were presented a pair of two-person each time, and moved a slide to represent the distance between the pair of two persons. We found that, on average, participants rated self is closest to a neutral person, and then a good person. These two are not different from each other. However, both are closer than the distance between good person and neutral person. On average, participants rated themselves has furthest distance to bad person.
-
-Correlation analysis showed that most psychological distance ratings were positively correlated to each other, but the self-bad and self-good are negatively correlated. 
-
-[use the network view to visualize the distance]
-
-See Figure \@ref(fig:plot-person-dist) and Figure \@ref(fig:plot-person-dist-net).
 
 # Discussion
 We human inevitably view other people and ourselves in a moral lens [citation is needed]. Yes how this moral lens will change our information processes is unknown. Across nine experiments, we studied the processing of moral character using a social associative learning task, we examined the effect of moral character on a matching task and explored the mechanisms underlying the effect. We found robust evidence that good character are prioritized in the matching task, regardless of the label used for moral characters or the way stimuli are presented. We documented that this positivity effect was driven by a self-referential processing: prioritization only occur when moral characters are self-referential but not other-referential. The prioritization effect occur when self and good character are combined, whether task-relevant or not. When good character were other-referential, even implicitly, the information process might be slowed down. Together, our findings highlight the importance of the self-referential in perceiving positive moral character. These findings contributed to a growing literature on the social nature of perception [@xiao_perceiving_2016; @freeman_chapter_2020] by supporting the idea that people can prioritized not just physically salient, or affective stimuli, but also socially salient stimuli, i.e., instantly acquired moral information.

@@ -109,13 +109,13 @@ $$\sigma_{jk} \sim Cauchy()$$
 $$\mu_{k} \sim N(\mu, \sigma)$$
 $$\theta_{k} \sim Cauchy()$$
 
-### Effect of moral character
+### Prioritization of good character
 We estimated the effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, and 6a for the effect of moral character. We reported fixed effect of three-level BHM that included all experiments that tested the valence effect. 
 
-### Interaction between moral character and self-referential process
+### Prioritization of good character is modulated by self-referential
 We also estimated the interaction between moral character and self-referential process, which included results from experiment 3a, 3b, and 6b. Using three-level models, we tested two possible explanations for the prioritization of good character: value-based or social categorization based prioritization. 
 
-### Implicit interaction between valence and self-relevance
+### Spontaenous binding between self and good character
 In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the good character (4b).
 
-For the questionnaire part, we are most interested in the self-rated distance between different person and self-evaluation related questionnaires: self-esteem, moral-self identity, and moral self-image. Other questionnaires (e.g., personality) were not planned to correlated with behavioral data were not included. Note that all questionnaire data were reported in [@Liu_2020_JOPD].
+We did not analyze the questionnaire data, which were described in [@Liu_2020_JOPD].
