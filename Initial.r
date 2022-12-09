@@ -14,35 +14,27 @@ options(digits=5)       # limit the number of reporting
 
 # rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
 
-pkgNeeded <- c('tidyverse', 'here', "readr", 'matrixStats', 'ggridges',
-               "afex", 'emmeans', 'lme4', "ggplot2", # "PupillometryR",  
+# use pacman to manage the packages
+if (!require(pacman)){
+        install.packages("pacman")
+        library(pacman)
+}
+
+# use pacman::p_load to load the packages
+pacman::p_load('tidyverse', 'here', "readr", 'matrixStats', 'ggridges',
+               "afex", 'emmeans', 'lme4', "ggplot2", 
                "metafor", "Hmisc", "papaja",
                "BayesFactor", 'brms', 'tidybayes', 'cmdstanr',
                "corrplot", 'patchwork',
                "psych", "lavaan", "semPlot", 'devtools')
 
-## Note, tried to use groundhog but found it did not work well for linux.
-pkgTest <- function(x){
-        if (!require(x, character.only = TRUE)){
-                install.packages(x, dep = TRUE)
-                if(!require(x, character.only = TRUE)) stop("Package not found")
-        }
-}
-lapply(pkgNeeded,pkgTest)
-
-rm('pkgNeeded') # remove the variable 'pkgNeeded';
 source("geom_flat_violin.R")
-
-# Install the stable development verions from GitHub
-# if(!"papaja" %in% rownames(installed.packages())) devtools::install_github("crsh/papaja@devel")
-# library(papaja)
 
 # set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # Save some time and store APA format-related code in an object so you can easily
 # use it in multiple plots
-# windowsFonts(Times=windowsFont("TT Times New Roman")) # explicit mapping to "times"
-apatheme = theme_bw() +
+apatheme <- theme_bw() +
         theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
               panel.background = element_blank(),
@@ -132,7 +124,7 @@ d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
 ## code for calculate the summary with sE, adopted from cook book for R
 summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
                       conf.interval=.95, .drop=TRUE) {
-  library(plyr)
+  pacman::p_load(plyr)
   
   # New version of length which can handle NA's : if na.rm == T, don't count the
   length2 <- function(x, na.rm=FALSE){
@@ -153,7 +145,7 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   )
   # Rename the "mean" column
   
-  datac <- plyr::rename(datac,c("mean" = measurevar))
+  datac <- plyr::rename(datac, c("mean" = measurevar))
   
   datac$se <- datac$sd /sqrt(datac$N)   # calculate standard error of the mean
   
@@ -279,7 +271,7 @@ CAplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', task = 
     p_dprime_match <- multiplot(P.rt,P.acc,cols = 2)
     dev.off()
     setwd(curDir)
-    return(multiplot(P.rt,P.acc,cols = 2))
+    return(multiplot(P.rt, P.acc,cols = 2))
 }
  
 #### For Match task
