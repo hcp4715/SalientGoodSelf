@@ -57,10 +57,8 @@ output            :
 #knitr::opts_chunk$set(echo = TRUE)
 source('Initial.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
-figDir = here::here('figures')
 
-if(!"qgraph" %in% rownames(installed.packages())) install.packages("qgraph")
-if(!"tidybayes" %in% rownames(installed.packages())) install.packages("tidybayes")
+pacman::p_load("qgraph")
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 afex_options(emmeans_model = "multivariate")
