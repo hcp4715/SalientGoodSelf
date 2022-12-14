@@ -18,38 +18,26 @@ We used the `tidyverse` of r (see script `Load_save_data.r`) to preprocess the d
 
 We used the Bayesian hierarchical model (BHM, or Bayesian generalized linear mixed models, Bayesian multilevel models) to model the reaction time and accuracy data, because BHM provided three advantages over the classic NHST approach (repeated measure ANOVA or *t*-tests). First, BHM estimates the posterior distributions of parameters for statistical inference, therefore provided uncertainty in estimation [@Rouder_2005_BHM_SDT]. Second, BHM, where generalized linear mixed models could be easily implemented, can use distributions that fit the distribution of real data instead of using normal distribution for all data. Using appropriate distributions for the data will avoid misleading results and provide better fitting of the data. For example, Reaction times are not normally distributed but right skewed, and the linear assumption in ANOVAs is not satisfied [@Rousselet_2019]. Third, BHM provides an unified framework to analyze data from different levels and different sources, avoid the information loss when we need to combine data from different levels. 
 
-We used the `r` package `BRMs` [@Bürkner_2017], which used Stan [@Carpenter_2017_stan] for the BHM analyses. We estimated the over-all effect across experiments with similar experimental design, instead of using a two-step approach where we first estimate parameters, e.g., $d'$ for each participant, and then use a random effect model meta-analysis to synthesize the effect [e.g., @Goh_2016_mini].  
+We used the `r` package `BRMs` [@Bürkner_2017], which used Stan [@Carpenter_2017_stan] as backend, for the BHM analyses. We estimated the over-all effect across experiments that aimed at testing the same effect, instead of a two-step approach where we reporting the value of parameters, e.g., $d'$, for each experiment, and then synthesizing the overall effect by random effect model meta-analyses [e.g., @Goh_2016_mini]. More specifically, a three-level model is used to estimate the overall effect of good-person on perceptual matching, which include data from five experiments: 1a, 1b, 1c, 2, 5, and 6a. Similarly, a three-level HBM model is used for all experiments that testing the modulation effect of self-referential on the prioritization of good person , including experiment 3a, 3b, and 6b. Results of individual experiment can be found in the supplementary results. For experiment 4a and 4b, which tested the spontaneous binding between self and good-person, we used HBM for each experiment separately. 
 
 ### Accuracy
-We followed previous studies [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and the non-match trials are noise. The sensitivity and criterion of signal detection theory by BHM [@Rouder_2005_BHM_SDT]. Because the BHM can model different level's data using a single unified model, we used a three-level HBM to model prioritization effect of good-person, which include data from five experiments: 1a, 1b, 1c, 2, 5, and 6a. Similarly, we modeled experiments with both self-referential and moral character with a three-level HBM model, which includes 3a, 3b, and 6b. For experiment 4a and 4b, we used two-level models for each separately. However, we could compare the posterior of parameters directly because we have full posterior distribution of parameters.
+We followed previous studies [@Hu_2020_GoodSelf; @Sui_2012_JEPHPP] and used signal detection theory approach to analyze the accuracy data. More specifically, the match trials are treated as signal and non-match trials are noise. The sensitivity and criterion of signal detection theory are modeled through BHM [@Rouder_2005_BHM_SDT]. 
 
-We used the Bernoulli distribution to model the accuracy data. For a single participant, we assume that the accuracy of $i$th trial is Bernoulli distributed (binomial with 1 trial), with probability $p_{i}$ that $y_{i} = 1$. 
-
-$$ y_{i} \sim Bernoulli(p_{i})$$
-and the probability of choosing "match" $p_{i}$ at the $i$th trial is a function of the trial type:
-
-$$ \Phi(p_{i}) =  \beta_{0} + \beta_{1}IsMatch_{i}$$
-therefore, the outcomes $y_{i}$ are 0 if the participant responded "nonmatch" on the $i$th trial, 1 if they responded "match". We then write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. $\Phi$ is the cumulative normal density function and maps $z$ scores to probabilities. In this way, the intercept of the model ($\beta_0$) is the standardized false alarm rate (probability of saying 1 when predictor is 0), which we take as our criterion $c$. The slope of the model ($\beta_1$) is the increased probability of responding "match" when the trial type is "match", in $z$-scores,  which is another expression of $d'$. Therefore, $c$ = -$z$HR = $-\beta_0$, and $d' = \beta_1$.
-
-In our experimental design, there are three conditions for both match and non-match trials, we can estimate the $d'$ and $c$ separately for each condition. In this case, the criterion $c$ is modeled as the main effect of valence, and the $d'$ can be modeled as the interaction between valence and match:
-
-$$ \Phi(p_{i}) = 0 + \beta_{0}Valence_{i} + \beta_{1}IsMatch_{i}  * Valence_{i} $$
-
-In each experiment, we had multiple participants. We can estimate the group-level parameters by extending the above model into a two-level model, where we can estimate parameters on individual level (varying effect) and the group level parameter simultaneously (fixed effect). The probability that the $j$th subject responded "match" ($y_{ij} = 1$) at the $i$th trial $p_{ij}$. In the same vein, we have
+We used the Bernoulli distribution for the signal detection theory. The probability that the $j$th subject responded "match" ($y_{ij} = 1$) at the $i$th trial $p_{ij}$ is distributed as a Bernoulli disitriubtion with parameter $p_{ij}$:
 
 $$ y_{ij} \sim Bernoulli(p_{ij})$$
-The the generalized linear model can be re-written to include two levels:
+The reparameterized value of $p_{ij}$ is a linear regression of the independent variables:
 $$ \Phi(p_{ij}) = 0 + \beta_{0j}Valence_{ij} + \beta_{1j}IsMatch_{ij} * Valence_{ij}$$
-We again can write the generalized linear model on the probits (z-scores; $\Phi$, "Phi") of $p$s. 
+where the probits (z-scores; $\Phi$, "Phi") of $p$s is used for the regression. 
 
-The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are describe by multivariate normal with means and a covariance matrix for the parameters.
+The subjective-specific intercepts ($\beta_{0} = -zFAR$) and slopes ($\beta_{1} = d'$) are described by multivariate normal with means and a covariance matrix for the parameters.
 $$ \begin{bmatrix}\beta_{0j}\\
 \beta_{1j}\\
 \end{bmatrix} \sim N(\begin{bmatrix}\theta_{0}\\
 \theta_{1}\\
 \end{bmatrix}, \sum) $$
 
-For experiments that had 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad), i.e., experiment 1a, 1b, 1c, 2, 5, and 6a, the formula for accuracy in `BRMs` is as follow:
+In `BRMs`, we used the following formula for the first set of experiments, which have a 2 (matching: match vs. non-match) by 3 (moral character: good vs. neutral vs. bad) within-subject design, i.e., experiment 1a, 1b, 1c, 2, 5, and 6a:
 
 `saymatch ~ 0 + Valence + Valence:ismatch + (0 + Valence + Valence:ismatch | Subject), family = bernoulli(link="probit")`
 
@@ -76,14 +64,11 @@ $$\begin{bmatrix}\theta_{0k}\\
 \end{bmatrix} \sim N(\begin{bmatrix}\mu_{0}\\
 \mu_{1}\\
 \end{bmatrix}, \sum)$$
-in which $mu_{0}$ and $mu_{1}$ means the population level parameter.
+in which $mu_{0}$ and $mu_{1}$ are the population level parameters.
 
 ##### Reaction times
-For the reaction time, we used the log normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. Although the log normal distribution can be extended to shifted log normal distribution, with one more parameter: shift, which is the earliest possible response, we found that the additional parameter didnt' improved the model fitting and therefore used the log nomral in our final analysis. 
-
-The reaction time of the $j$th subject on $i$th trial is a linear function of trial type: $$y_{ij} = \beta_{0j} + \beta_{1j}*IsMatch_{ij} * Valence_{ij}$$
-
-while the log of the reaction time is log-normal distributed:
+We used log-normal distribution (https://lindeloev.github.io/shiny-rt/#34_(shifted)_log-normal) to model the data. This means that we need to estimate the posterior of two parameters: $\mu$, $\sigma$. $\mu$ is the mean of the `logNormal` distribution, and $\sigma$ is the disperse of the distribution. 
+The reaction time of the $j$th subject on $i$th trial is log-normal distributed:
 $$ log(y_{ij}) \sim N(\mu_{j}, \sigma_{j})$$ 
 $y_{ij}$ is the RT of the $i$th trial of the $j$th participants.
 
@@ -95,14 +80,14 @@ $$ \begin{bmatrix}\beta_{0j}\\
 \end{bmatrix}, \sum) $$
 
 
-$$\sigma_{j} \sim HalfCauchy()$$
+$$\sigma_{j} \sim HalfNormal()$$
 Formula used for modeling the data as follow:
 
-`RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject), family = lognormal()`
+`RT_sec ~ 1 + Valence*ismatch + (Valence*ismatch | Subject), family = lognormal()`
 
 or 
 
-`RT_sec ~ ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = lognormal()`
+`RT_sec ~ 1 + ID*Valence*ismatch + (ID*Valence*ismatch | Subject), family = lognormal()`
 
 we expanded the RT model three-level model in which participants and experiments are two group level variable and participants were nested in the experiments.
 
@@ -111,7 +96,7 @@ $$ log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$
 $y_{ijk}$ is the RT of the $i$th trial of the $j$th participants in the $k$th experiment.
 
 $$\log(y_{ijk}) \sim N(\mu_{jk}, \sigma_{jk})$$
-$$\sigma_{jk} \sim HalfCauchy()$$
+$$\sigma_{jk} \sim HalfNormal()$$
 $$\mu_{jk} = \beta_{0jk} + \beta_{1jk}*IsMatch_{ijk} * Valence_{ijk} $$
 $$\beta_{jk} \sim N(\mu_{j}, \sigma_j)$$
 
@@ -124,7 +109,7 @@ We estimated the effect size of $d'$ and RT from experiment 1a, 1b, 1c, 2, 5, an
 ### Prioritization of good person is modulated by self-referential
 We also estimated the interaction between moral character and self-referential process, which included results from experiment 3a, 3b, and 6b. Using three-level models, we tested two possible explanations for the prioritization of good character: valence effect or self-referential based prioritization. 
 
-### Spontaenous binding between self and good person
+### Spontaneous binding between self and good person
 In the third part, we focused on experiment 4a and 4b, which were designed to examine two more nuanced explanation concerning the good-self. The design of experiment 4a and 4b are complementary. Together, they can test whether participants are more sensitive to the moral character of the Self (4a), or the identity of the good character (4b).
 
 We only reported the subjective distance between different persons, and did not analyze other questionnaire data, which were described in [@Liu_2020_JOPD].
