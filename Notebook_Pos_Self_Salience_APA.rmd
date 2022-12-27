@@ -1,5 +1,5 @@
 ---
-title             : "The good person is me: Spontaneous self-referential process prioritizes the good character"
+title             : "The good person is me: Spontaneous self-referential process prioritizes moral character in perceptual matching"
 shorttitle        : "Priorization of moral character"
 
 author: 
@@ -28,7 +28,7 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- Moral character is central to social evaluation and moral judgment. As such, information related to moral character is prioritized in human cognition. This effect is usually explained as a valence effect. Here we report 9 experiments (data from 404 unique participants) which reveal (1) there is a robust good character prioritization effect in a perceptual matching task, i.e., when neutral geometric shapes were associated with good character, they were prioritized as compared to shapes associated with neutral or bad characters; (2) the prioritization of good character was robust only when the good character referred to the self but weak or non-exist when it referred to others, suggesting a binding effect of the self; (3) the binding between the self and good character exist even when one of them was task-irrelevant. Together, these results provided evidence for spontaneous self-referential processing, i.e., binding the good character with self, as a novel mechanism of the prioritization effect of good character.
+ Moral character is central to social evaluation and moral judgment. However, whether moral character information is prioritized in perceptual decision-making was debated. Here we investigated the effect of moral character on perceptual decision-making through an associative learning task, where participants first learned associations between different geometric shapes and moral characters and then performed a simple perceptual matching task. With nine experiments (N = 404) we found that (1) there is a robust prioritization effect of good character-related information, i.e., participants responded faster and more accurately to geometric shapes that were associated with good characters than shapes that were associated with neutral or bad characters; (2) the prioritization of good character was not determined by the valence *per se* but modulated by a self-referential process, i.e., the prioritization effect of good character were robust only when the good character referred to the self but weak or non-exist when it referred to others; (3) the mutual facilitation effect between the moral character and self-referential information occurred even when one of them was task-irrelevant. Together, these results suggested a spontaneous moral-self referential process as a mechanism of the prioritization effect of good character.
   
  <!-- https://tinyurl.com/ybremelq -->
   
@@ -206,218 +206,6 @@ df6a.v_meta$ExpID <- 'Exp6a'
 df6b.v_meta$ExpID <- 'Exp6b'
 df7a.v_meta$ExpID <- 'Exp7a'
 df7b.v_meta$ExpID <- 'Exp7b'
-```
-
-```{r define_funs, echo=FALSE, results='hide'}
-# define a function to run the sdt GLMM for all exp with Matchness * Valence design
-# for 1a, 1b, 1c, 2, 6a
-fun_sdt_val <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  
-  m <- df %>%
-  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
-                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
-                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-  brms::brm(saymatch ~ 0 + Valence + ismatch:Valence + 
-              (0 + Valence + ismatch:Valence | Subject),
-            family = bernoulli(link="probit"),
-            data = .,
-            control = list(adapt_delta = .99),
-            iter = 4000,
-            thin = 2,
-            cores = parallel::detectCores(),
-            file = here::here(m_name))
-  return(m)
-}
-
-fun_plot_sdt_val <- function(m_sdt) {
-    # extract c
-    tmp_c <- m_sdt %>% 
-      tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood) %>%
-      dplyr::rename(Valence = .variable, sdt_c = .value) %>% dplyr::ungroup() %>%
-      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
-      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
-                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
-    
-    # dprime
-    tmp_d <- m_sdt %>% 
-      tidybayes::gather_draws(`b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                              `b_ValenceGood:ismatch`) %>%
-      dplyr::rename(Valence = .variable, sdt_d = .value) %>% dplyr::ungroup() %>%
-      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
-      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
-                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
-    
-    # plot summaries with densities
-    p_sdt_d_sum <- tmp_d %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      ggplot2::ggplot(aes(x = sdt_d, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "sensitivity (d')", y = 'Posterior') +
-      theme_classic()
-    
-    p_sdt_c_sum <- tmp_c %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      ggplot2::ggplot(aes(x = sdt_c, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "criteria (c)", y = 'Posterior') +
-      theme_classic()
-    
-    # plot comparison
-    p_sdt_d <- tmp_d %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      tidybayes::compare_levels(sdt_d, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = after_stat(x > 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(x = "sensitivity (d')", y = 'Comparison') +
-      theme_classic()
-    
-    p_sdt_c <- tmp_c %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      tidybayes::compare_levels(sdt_c, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = after_stat(x > 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(x = "criteria (c)", y = 'Comparison') +
-      theme_classic()
-    
-    return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
-}
-
-# define a function (shifted_lognormal) to run the RT GLMM for all exp with Matchness * Valence design
-fun_rt_val <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  m <- df %>%
-    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-    dplyr::filter(ACC == 1) %>%
-    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-    brms::brm(RT_sec ~ ismatch*Valence + (ismatch*Valence | Subject),
-              family = shifted_lognormal(),
-              data = ., control = list(adapt_delta = .99),
-              iter = 4000,
-              thin = 2,
-              cores = parallel::detectCores(),
-              file = here::here(m_name))
-  return(m)
-}
-
-fun_plot_rt_val <- function(m_rt) {
-    tmp_rt <- m_rt %>% 
-      tidybayes::spread_draws(b_Intercept, b_ValenceBad, b_ValenceGood, 
-                              b_ismatch,   `b_ValenceBad:ismatch`, `b_ValenceGood:ismatch`) %>%
-      dplyr::mutate(Neut_MM = b_Intercept,
-                    Bad_MM = Neut_MM + b_ValenceBad,
-                    Good_MM = Neut_MM + b_ValenceGood,
-                    Neut_M = Neut_MM + b_ismatch,
-                    Bad_M = Neut_MM + b_ismatch + `b_ValenceBad:ismatch`,
-                    Good_M = Neut_MM + b_ismatch + `b_ValenceGood:ismatch`) %>%
-      dplyr::select(-contains('b_')) %>%
-      tidyr::pivot_longer(cols = Neut_MM:Good_M,
-                          names_to = 'cond',
-                          values_to = 'logRT') %>%
-      dplyr::mutate(RT = exp(logRT)*1000,
-                    Matchness = dplyr::case_when(grepl("_MM$", cond) ~ "Mismatch",
-                                                 grepl("_M$", .variable) ~ "Match"),
-                    Valence = dplyr::case_when(grepl("Neut", cond) ~ "Neutral",
-                                               grepl("Bad", cond) ~ "Bad",
-                                               grepl("Good", cond) ~ "Good")
-                    # Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
-                    #                              cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
-                    # Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
-                    #                            cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
-                    #                            cond == 'Good_MM' | cond == 'Good_M' ~ 'Good')
-                    )
-    p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Match') %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "RTs (Matching, ms)", y = 'Posterior') +
-      theme_classic()
-    p_exp1b_rt_mm_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Mismatch') %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
-      theme_classic()
-    
-    # plot comparison
-    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Match') %>%
-      tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
-      theme_classic()
-    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Mismatch') %>%
-      tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
-      theme_classic()
-    return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
-}
-
-# function for SDT with Match by identity by valence design
-fun_sdt_val_id <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  
-  m <- df %>%
-  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
-                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
-                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
-                Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
-  brms::brm(saymatch ~ 0 + Identity:Valence + ismatch:Identity:Valence + 
-              (0 + Identity:Valence + ismatch:Identity:Valence | Subject),
-            family = bernoulli(link="probit"),
-            data = .,
-            control = list(adapt_delta = .99),
-            iter = 4000,
-            thin = 2,
-            cores = parallel::detectCores(),
-            file = here::here(m_name))
-  return(m)
-}
-
-# define a function (shifted_lognormal) to run the RT GLMM for all exp with Matchness * Identity * Valence design
-fun_rt_val_id <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  m <- df %>%
-    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-    dplyr::filter(ACC == 1) %>%
-    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good')),
-                  Identity = factor(Identity, levels=c('Self', 'Other'))) %>%
-    brms::brm(RT_sec ~ ismatch*Identity*Valence + (ismatch*Identity*Valence | Subject),
-              family = shifted_lognormal(),
-              data = ., control = list(adapt_delta = .99),
-              iter = 4000,
-              thin = 2,
-              cores = parallel::detectCores(),
-              file = here::here(m_name))
-  return(m)
-}
-
 ```
 
   <!-- A general method part describing experimental design and data analysis -->
@@ -957,124 +745,37 @@ RT_val_m2 <- df_moral %>%
             file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
 summary(RT_val_m2)
 
-# log normal distribution, with truncated distribution, , dummy coding
+RT_val_m1 <- add_criterion(RT_val_m1, "loo")
+RT_val_m2 <- add_criterion(RT_val_m2, "loo")
+
+loo_compare(RT_val_m1, RT_val_m2, criterion = "loo")
+bayes_factor(RT_val_m1,RT_val_m2)
+
+# log normal distribution, with truncated distribution, dummy coding
 RT_val_m3_trunc <- df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
-              (Valence*ismatch | ExpID_new) +   
-              (Valence*ismatch | ExpID_new:Subject),
-            family=lognormal(),
-            data = .,
-            iter = 3000,
-            control = list(adapt_delta = .98),
-            cores = parallel::detectCores(),
-            file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
+        dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+        dplyr::filter(ACC == 1) %>%
+        brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
+                          (Valence*ismatch | ExpID_new) + 
+                          (Valence*ismatch | ExpID_new:Subject),
+                  family=lognormal(),
+                  data = .,
+                  iter = 3000,
+                  control = list(adapt_delta = .98),
+                  cores = parallel::detectCores(),
+                  file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
 summary(RT_val_m3_trunc)
-pp_check(RT_val_m3_trunc)
-#plot(RT_val_m3_trunc, "b_")
+# pp_check(RT_val_m3_trunc)
+# plot(RT_val_m3_trunc, "b_")
 
 # compare three models
 loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc) # takes about XX mins
-bayes_factor(RT_val_m1,RT_val_m2)
-# Monte Carlo SE of elpd_loo is 0.4.
-
-#All Pareto k estimates are good (k < 0.5).
-#See help('pareto-k-diagnostic') for details.
+# bayes_factor(RT_val_m1,RT_val_m2)
 
 # Model comparisons:
-#                elpd_diff se_diff
-# RT_val_m1          0.0       0.0 
-# RT_val_m2         -5.6       3.3 
-# RT_val_m3_trunc -590.6      34.8 
-
-# Get the variables in the model 3
-RT_var_name_m3 <- tidybayes::get_variables(RT_val_m3_trunc)
-
-df_m3_post_rt_exp <- RT_val_m3_trunc %>% 
-        tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
-        dplyr::rename(value = r_ExpID_new)
-
-rt_pop_mean <- RT_val_m3_trunc %>%
-        tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch`, `b_ValenceBad:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
-        group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
-        tidybayes::mean_hdci(.value)  # get the high density continuous intervals
-
-# extract the population level parameters
-rt_pop_post <- RT_val_m3_trunc %>% 
-        tidybayes::gather_draws(b_Intercept, b_ValenceBad, b_ValenceGood,
-                          `b_ismatch`, `b_ValenceBad:ismatch`, 
-                          `b_ValenceGood:ismatch`) %>%
-        dplyr::rename(term = .variable,
-                pop_mean = .value) %>%
-        #tidyr::separate(term, c(NA, 'term'), "_") 
-        dplyr::ungroup() %>%
-        dplyr::mutate(term = gsub("b_", "", term))
-
-# Add the population mean to the experimental level and only keep the value after.
-rt_post_tmp <- merge(rt_pop_post, df_m3_post_rt_exp, 
-                     by = c('term','.chain','.iteration', '.draw'), all = T) %>%
-        dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
-        dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
-        dplyr::rename(value = mean_value)  # rename the value
-
-# Plot the difference between conditions 
-df_m3_rt_plot <- rt_pop_post %>%
-        dplyr::mutate(condition = 'Overall') %>%
-        dplyr::rename(value = pop_mean) %>%
-        dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
-        dplyr::bind_rows(., rt_post_tmp) %>%
-        dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
-                                                               "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
-                                                               "Exp5_THU",  "Exp6a_THU","Overall")),
-                condition = forcats::fct_rev(condition)#, # reverse the order b/c plot function auto reverse.
-                ) %>%
-        tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-        dplyr::mutate(diff_GB_NM = ValenceGood - ValenceBad,               # calculate the differences between coditions
-                diff_GN_NM = ValenceGood,
-                diff_BN_NM = ValenceBad,
-                diff_GN_M = ValenceGood + `ValenceGood:ismatch`,
-                diff_BN_M = ValenceBad + `ValenceBad:ismatch`,
-                diff_GB_M = diff_GN_M - diff_BN_M) %>%
-        dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GB_NM,diff_GN_NM, diff_BN_NM,
-               diff_GB_M, diff_GN_M, diff_BN_M) %>%
-        tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-        dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
-                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
-
-df_m3_rt_plot %>% 
-        dplyr::group_by(condition, term_diff, .chain) %>%
-        dplyr::tally()
-
-df_m3_rt_mean <- df_m3_rt_plot %>%
-        group_by(condition, term_diff) %>%       # this line not necessary (done automatically by spread_draws)
-        tidybayes::mean_hdci(value)  # get the high density continuous intervals
-
-
-# plot the posterior of mismatch
-df_m3_rt_plot  %>%
-        dplyr::filter(str_detect(term_diff, '_NM')) %>%
-        ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x < 0))) +
-        tidybayes::stat_halfeyeh() +
-        geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) + 
-        facet_wrap( ~ term_diff,
-                    scales = "free_y", nrow = 1,
-                    labeller = label_parsed)
-
-# plot the posterior of matching trials
-df_m3_rt_plot %>%
-        dplyr::filter(str_detect(term_diff, '_M')) %>%
-        ggplot2::ggplot(aes(y = condition, x = value, fill = after_stat(x < 0))) +
-        tidybayes::stat_halfeyeh() +
-        geom_vline(xintercept = 0, linetype = "dashed") +
-        scale_fill_manual(values = c('gray80', 'skyblue')) + 
-        facet_wrap( ~ term_diff,
-                    scales = "free_y", nrow = 1,
-                    labeller = label_parsed)
+#           elpd_diff se_diff
+# RT_val_m1  0.0       0.0   
+# RT_val_m2 -7.9       3.1 
 ```
 
 ## Self-referential process modulates prioritization of good character
@@ -1373,24 +1074,23 @@ df_ms_dprm1_diff_id <- df_ms_sdt_m1_plot_diff %>%
 ```
 
 ```{r second meta rt, echo=FALSE, results='hide', warning=FALSE}
-# fit a three-level hierarchical model for RT, didn't specify the prior, shifted_lognormal, effective coding
+# fit a three-level hierarchical model for RT, didn't specify the prior, lognormal, dummy coding
 RT_ms_m1 <- df_ms %>%
   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
   dplyr::filter(ACC == 1) %>%         # only correct trials
   brms::brm(RT_sec ~ ismatch*Identity*Valence + 
               (ismatch*Identity*Valence | ExpID_new) +   
               (ismatch*Identity*Valence | ExpID_new:Subject),
-            family=shifted_lognormal(),
+            family=lognormal(),
             data = .,
             chains = 6,
             control = list(adapt_delta = .90),
-            # iter = 4000,
-            # thin = 2,
+            iter = 4000,
+            thin = 2,
             cores = parallel::detectCores(),
             backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_ms_DummyCode_3_level"))
 
-# summary(RT_ms_m1)  # ndt = 0 there fore, we used lognormal.
 # pp_check(RT_val_m1)
 
 # Population-Level Effects: 
@@ -1633,7 +1333,7 @@ These results suggested that the prioritization of good character is not driven 
 
 ## Spontaneous binding between the good character and the self
 
-Two studies further tested whether the binding between self and good character happen even when two aspect of information are separated and only one of them is task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment. 
+Two studies further tested whether the binding between self and good character happen even when these two piece of information are separated and only one of them is task-relevant. We are interested in testing whether the task-relevance modulated the effect observed in previous experiment. 
 
 ```{r 4a_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp_name <- '4a'
@@ -2356,16 +2056,15 @@ Most importantly, we found evidence that task-irrelevant self-referential proces
 The same trend appeared for the RT data. For shapes associated with good person, with a "self" inside the shape reduced the reaction times as compared with when a "other" inside the shape ($mean_{diff}$ = -55 ms, 95% HDI [-75, -35]), but this effect did not occur when the shapes were associated neutral ($mean_{diff}$ = 10, 95% HDI [1, 20]) or bad ($mean_{diff}$ = 5, 95% HDI [-16, 27]) person. See Figure \@ref(fig:plot-exp4-all).
 
 # Discussion
-[Summary of results] Across nine experiments, we explored the prioritization effect of moral character and the underlying mechanism by a combination of social associative learning and perceptual matching task. We found robust effect that good character was prioritized in the shape-label matching task, regardless how good character was represented (single word or behavioral description). Moreover, the prioritization of good character was not driven by valence itself, i.e., "good" vs "bad". Instead, this effect was modulated by a self-referential processing: prioritization only occurred when moral characters are self-referential (experiments 3a, 3b, and 6b). Finally, the prioritization of good character was modulated by self-referential information even when either the self- or character- related information was irrelevant to experimental task (experiment 4a and 4b). In contrast, for other referential condition, explicitly or implicitly, the performance of good character was worse than neutral character. Together, these results highlighted the importance of the self in perceiving more character information, suggested a spontaneous self-referential process when moral character is involved in perceptual decision-making. These results contribute to a growing literature on the social and relational nature of perception [@xiao_perceiving_2016; @freeman_chapter_2020; hafri_perception_2021].
+[Summary of results] Across nine experiments, we explored the prioritization effect of moral character and the underlying mechanism by a combination of social associative learning and perceptual matching task. We found robust effect that good character was prioritized in the shape-label matching task, regardless how good character was represented (single word or behavioral description). Moreover, the prioritization of good character was not driven by valence itself, i.e., "good" vs "bad". Instead, this effect was modulated by a self-referential processing: prioritization only occurred when moral characters are self-referential (experiments 3a, 3b, and 6b). Finally, the prioritization of good character was modulated by self-referential information even when either the self- or character- related information was irrelevant to experimental task (experiment 4a and 4b). In contrast, for other referential condition, explicitly or implicitly, the performance of good character was worse than neutral character. Together, these results highlighted the importance of the self in perceiving more character information, suggested a spontaneous self-referential process when moral character is involved in perceptual decision-making. These results contribute to a growing literature on the social and relational nature of perception [@xiao_perceiving_2016; @freeman_chapter_2020; ＠hafri_perception_2021].
 
-[Effect of good character] The evidence for the effect of moral character on perceptual decision-making is robust in our study. Previous studies reported the effect of morality on perception but the results and the mechanisms were disputed. For example, [@anderson_visual_2011] reported that faces associated with bad social behavior capture attention more rapidly, however, an independent team failed to replicate the effect [@stein_no_2017]. Another studies by @gantman_moral_2014 found that moral words are more likely to be judged as words when it was presented subliminally, however, this effect may caused by semantic priming instead of morality [@firestone_cognition_2015; @jussim_interpretations_2016]. In the current study, the associative learning task allowed us to eliminate the semantic priming. First, only a few pairs of stimuli was used and different stimuli were different in many dimensions, makes it impossible for priming between them. Second, stimuli that used to represent moral character are neutral stimuli before the associative learning. Moreover, in experiment 1c where participants first associate moral behaviors with neutral names and then paired names with neutral shapes, we still found that effect of moral character. The effect was replicated in eight different samples in the first experiments further confirmed that the prioritization effect of good character found in our paradigm is robust.
+[Effect of good character] The evidence for the effect of moral character on perceptual decision-making is robust in our study. Previous studies reported the effect of morality on perception but the results and the mechanisms were disputed. For example, [@anderson_visual_2011] reported that faces associated with bad social behavior capture attention more rapidly, however, an independent team failed to replicate the effect [@stein_no_2017]. Another studies by @gantman_moral_2014 found that moral words are more likely to be judged as words when it was presented subliminally, however, this effect may caused by semantic priming instead of morality [@firestone_cognition_2015; @jussim_interpretations_2016]. In the current study, the associative learning task allowed us to eliminate the semantic priming. First, only a few pairs of stimuli was used and different stimuli were different in many dimensions, makes it impossible for priming between them. Second, stimuli that used to represent moral character are neutral stimuli before the associative learning. Moreover, in experiment 1c where participants first associate moral behaviors with neutral names and then paired names with neutral shapes, we still found that effect of moral character, suggesting that it is the moral content instead of other features of labels/names that drives the prioritization effect. Finally, consistent effect across all eight different samples in the first set of experiments further confirmed that the prioritization effect of good character found in our paradigm is robust.
 
 Previous moral perception studies usually reported a negativity effect, i.e., information related to bad moral character are processed better [@anderson_visual_2011; @eiserbeck_visual_2020]. For instance, @anderson_visual_2011 reported the faces associated with negative social behaviors dominated the awareness for longer time than those associated with neutral or positive behaviors. This discrepancy between previous results and the current study may resulted from differences in the task: while in many previous moral perception studies, the participants were asked to detect the existence of a stimuli, the current task asked participants to recognize a pattern. In other words, previous studies targeted early stages of perception while the current task focus more on the decision-making at relative later stage of information processing. This discrepancy is consistent with the pattern found in studies with emotional stimuli [@pool_attentional_2016].
 
 [Self-binding as a novel explanation] We expanded previous moral perception studies by examining two possible explanations of the prioritization of good character: valence effect or self-referential process. Our results revealed that prioritization of good character is modulated by self-relatedness of the character information: when the good character was prioritized when it was related to self, even when the self-relatedness was task irrelevant. By contrast, when good character information was no longer prioritized when it was associated with non-self. The modulation effect of self-referential process was large when the relationship between moral character and the self was explicit. More importantly, the effect persisted when the relationship between moral character and the self information was implicit, suggesting a spontaneous self-referential when both information were presented. An possible explanation for this spontaneous self-referential of good character is that moral-self is central to our identity [@freitas_origins_2017; @strohminger_true_2017] and the motivation to maintain a moral-self view also influenced the perceptual decision-making. 
 
-[Beyond the debate about penetration of perception] 
-Although the results here revealed prioritization of good character in perceptual decision-making, we did not claim that the moral-self motivation *penetrates* perception. Perceptual decision-making process include processes more than just encoding the sensory inputs, we need more computational models that can account the nuance of behavioral data and/or related data collected from other modules. For example, sequential sampling models suggest that, when making a perceptual decision, the agent is continuously accumulate evidence until the amount of evidence passed a threshold, then a decision is made [@ratcliff_tics_2016; @forstmann_ann_rev_2016; @Hu_hitchhikers_2022]. In these models, the evidence, or decision variable, can accumulate from both sensory information but also memory [@shadlen_decision_2016]. Recently, applications of sequential sample model to perceptual matching tasks also suggest that different processes may contributed to the prioritization effect of self [@golubickis_self-prioritization_2017] or good self [@Hu_2020_GoodSelf]. Similarly, reinforcement learning models also revealed that the key difference between self- and other-referential learning lies in the learning rate [@lockwood_nat_comm_2018]. These studies suggest that computational models are need to disentangle the cognitive processes underlying the prioritization of good character.
+[Beyond the debate about penetration of perception] Although the results here revealed prioritization of good character in perceptual decision-making, we did not claim that the moral-self motivation *penetrates* perception. Perceptual decision-making process include processes more than just encoding the sensory inputs, we need more computational models that can account the nuance of behavioral data and/or related data collected from other modules. For example, sequential sampling models suggest that, when making a perceptual decision, the agent is continuously accumulate evidence until the amount of evidence passed a threshold, then a decision is made [@ratcliff_tics_2016; @forstmann_ann_rev_2016; @Hu_hitchhikers_2022]. In these models, the evidence, or decision variable, can accumulate from both sensory information but also memory [@shadlen_decision_2016]. Recently, applications of sequential sample model to perceptual matching tasks also suggest that different processes may contributed to the prioritization effect of self [@golubickis_self-prioritization_2017] or good self [@Hu_2020_GoodSelf]. Similarly, reinforcement learning models also revealed that the key difference between self- and other-referential learning lies in the learning rate [@lockwood_nat_comm_2018]. These studies suggest that computational models are need to disentangle the cognitive processes underlying the prioritization of good character.
 
 # References
 ```{r create_r-references, echo=FALSE,results='hide'}
