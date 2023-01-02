@@ -35,23 +35,33 @@ if (!require(pacman)){
 # use pacman::p_load to load the packages
 pacman::p_load('here',              # for choosing directory
                'tidyverse',         # for data wrangling
-               "readr",             # import data? need to reconsider
-               'matrixStats', 
-               'brms', 'tidybayes',        # for Bayesian stats, main text
-               'cmdstanr',                 # using cmdstanr as backend, need to installed properly
-               "ggplot2",                  # plot general
-               'ggridges',                 # plot ridges
-               'patchwork',                # plot patch plots together
-               "afex", 'emmeans', 'lme4',  # for frequentists' stats analysis, in suppl
-               "metafor",                  # for frequentists' meta-analysis, in suppl
-               "Hmisc", 
-               "papaja",                   # core for reproduce the APA format of the manuscript
-               "BayesFactor", 
-               "corrplot", 'patchwork',
-               "psych", "lavaan", "semPlot", 'devtools')
+               'brms',              # for Bayesian stats, main text
+               'tidybayes',         # for Bayesian stats, main text
+               "BayesFactor",       # for Bayes factor 
+               "ggplot2",           # plot general
+               'ggridges',          # plot ridges
+               'patchwork',         # plot patch plots together
+               "papaja",            # core for reproduce the APA format of the manuscript
+               # "Hmisc", 
+               # 'matrixStats', 
+               # "afex",           # for frequentists' ANOVA, in suppl
+               # 'lme4',           # for frequentists' hierarchical model, in suppl
+               # 'emmeans',        # for frequentists' hierarchical model, in suppl
+               # "metafor",        # for frequentists' meta-analysis, in suppl
+               # "corrplot",       # for questionnaire analysis, in suppl
+               # "psych",          # for questionnaire analysis, in suppl
+               # "lavaan",         # for questionnaire analysis, in suppl
+               # "semPlot",        # for questionnaire analysis, in suppl
+               # 'devtools'
+               )
 
 source("geom_flat_violin.R")       # for plotting the violin plots
 
+# using cmdstanr as backend, need to installed properly
+if (!require(cmdstanr)){
+        install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+        library(cmdstanr)
+}
 # set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # Save some time and store APA format-related code in an object so you can easily
