@@ -1105,6 +1105,7 @@ RT_ms_m1 <- df_ms %>%
 summary(RT_ms_m1) # R-hat still has problem
 # pp_check(RT_val_m1)
 
+# only matched trials
 RT_ms_m1_match <- df_ms %>%
         dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
         dplyr::filter(ACC == 1) %>%         # only correct trials
