@@ -61,7 +61,7 @@ header-includes:
  <!-- This documents -->
  
 ```{r setup, include = FALSE}
-#rm(list = ls())
+# rm(list = ls())
 source('Initial.r')
 
 curDir = here::here()              # Get the current directory
@@ -158,7 +158,7 @@ All participants received informed consent and compensated for their time. These
 ```{r loadingData,echo=FALSE,results='hide'}
 load("AllData.RData")
 
-### expclude the repeated subj from the raw data
+### exclude the repeated subj from the raw data
 
 # No repeating subj
 df1a.v_meta <- df1a.v
@@ -227,7 +227,8 @@ In this part, we report results from five experiments that tested whether an ass
 # remove all unnecessary variables
 var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
               'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
-              'apatheme','exp_table', 'curDir', 'figDir')
+              
+              'exp_table', 'curDir', 'figDir')
 rm(list=ls()[! ls() %in% var_list]) # removed all functions ?
 ```
 
@@ -846,7 +847,7 @@ sdt_ms_m1 <- df_ms %>%
                   family = bernoulli(link="probit"),
                   data = .,
                   chains = 4,
-                  iter = 4000,
+                  iter = 6000,
                   thin = 2,
                   control = list(adapt_delta = .90),
                   cores = parallel::detectCores(),
@@ -1087,22 +1088,23 @@ df_ms_dprm1_diff_id <- df_ms_sdt_m1_plot_diff %>%
 
 ```{r second meta rt, echo=FALSE, results='hide', warning=FALSE}
 # fit a three-level hierarchical model for RT, didn't specify the prior, lognormal, dummy coding, both match and nonmatch trials
-RT_ms_m1 <- df_ms %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%         # only correct trials
-  brms::brm(RT_sec ~ ismatch*Identity*Valence + 
-              (ismatch*Identity*Valence | ExpID_new) +   
-              (ismatch*Identity*Valence | ExpID_new:Subject),
-            family=lognormal(),
-            data = .,
-            chains = 4,
-            control = list(adapt_delta = .90),
-            iter = 4000,
-            thin = 2,
-            cores = parallel::detectCores(),
-            backend = 'cmdstanr',  # with cmdstanr
-            file = here::here("glmmModels/RT_ms_DummyCode_3_level"))
-summary(RT_ms_m1) # R-hat still has problem
+# may not converge event after 10000 samples
+# RT_ms_m1 <- df_ms %>%
+#   dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#   dplyr::filter(ACC == 1) %>%         # only correct trials
+#   brms::brm(RT_sec ~ ismatch*Identity*Valence + 
+#               (ismatch*Identity*Valence | ExpID_new) +   
+#               (ismatch*Identity*Valence | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             chains = 4,
+#             control = list(adapt_delta = .90),
+#             iter = 4000,
+#             thin = 2,
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_ms_DummyCode_3_level"))
+# summary(RT_ms_m1) # R-hat still has problem
 # pp_check(RT_val_m1)
 
 # only matched trials
@@ -1122,50 +1124,39 @@ RT_ms_m1_match <- df_ms %>%
             cores = parallel::detectCores(),
             backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_ms_DummyCode_3_level_match"))
-summary(RT_ms_m1_match) # R-hat still has problem
+# summary(RT_ms_m1_match) # R-hat still has problem
 
 # Population-Level Effects: 
-#                                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-# Intercept                            -0.21      0.41    -0.97     0.80 1.02      118      307
-# ismatch                              -0.08      0.06    -0.21     0.04 1.06       92      252
-# IdentityOther                        -0.04      0.10    -0.29     0.13 1.07       84      134
-# ValenceBad                            0.00      0.02    -0.05     0.05 1.05       87       29
-# ValenceGood                          -0.04      0.17    -0.55     0.11 1.07       57       37
-# ismatch:IdentityOther                -0.09      0.39    -0.95     0.73 1.07       88       28
-# ismatch:ValenceBad                    0.01      0.08    -0.17     0.17 1.04      279      274
-# ismatch:ValenceGood                  -0.07      0.03    -0.13     0.01 1.06       71       96
-# IdentityOther:ValenceBad             -0.00      0.05    -0.09     0.13 1.10       48      140
-# IdentityOther:ValenceGood             0.01      0.29    -0.64     0.79 1.14       80       55
-# ismatch:IdentityOther:ValenceBad      0.03      0.06    -0.09     0.20 1.05      115       87
-# ismatch:IdentityOther:ValenceGood     0.07      0.23    -0.47     0.46 1.03      237      189
+#                           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+# Intercept                    -0.36      0.43    -1.30     0.57 1.00     1547     1685
+# IdentityOther                -0.07      0.30    -0.72     0.58 1.01     1277     1161
+# ValenceBad                    0.01      0.14    -0.22     0.25 1.00     1050      895
+# ValenceGood                  -0.09      0.08    -0.25     0.07 1.00     1707     1459
+# IdentityOther:ValenceBad      0.02      0.09    -0.12     0.18 1.00      764      336
+# IdentityOther:ValenceGood     0.07      0.09    -0.10     0.23 1.00     1672     1863
 
-# Mismatch:Neutral:Self  - Intercept = -0.21
-# Mismatch:Bad:Self      - Intercept  + ValenceBad    = -0.21 + 0.00 = -0.21
-# Mismatch:Good:Self     - Intercept  + ValenceGood   = -0.21 - 0.04 = -0.25
-# Mismatch:Neutral:Other - Intercept  + IdentityOther = -0.21 - 0.04 = -0.25
-# Mismatch:Bad:Other     - Intercept  + ValenceBad  + IdentityOther:ValenceBad  = -0.21 + 0.00 + 0.00 = -0.21
-# Mismatch:Good:Other    - Intercept  + ValenceGood + IdentityOther:ValenceGood = -0.21 - 0.04 + 0.01 = -0.24
-# Match: Neutral:Self    - Intercept  + ismatch = -0.19 - 0.08 = -0.27
-# Match: Bad:Self        - Intercept  + ismatch + ismatch:ValenceBad    = -0.19 - 0.08 + 0.01 = -0.26 
-# Match: Good:Self       - Intercept  + ismatch + ismatch:ValenceGood   = -0.19 - 0.08 - 0.07 = -0.34
-# Match: Neutral:Other   - Intercept  + ismatch + ismatch:IdentityOther = -0.19 - 0.08 - 0.09 = -0.36
-# Match: Bad:Other       - Intercept  + ismatch + ismatch:IdentityOther + ismatch:IdentityOther:ValenceBad  = -0.19 - 0.08 - 0.09 + 0.03 = -0.33 
-# Match: Good:Other      - Intercept  + ismatch + ismatch:IdentityOther + ismatch:IdentityOther:ValenceGood = -0.19 - 0.08 - 0.09 + 0.07 = -0.29
+
+# Match: Neutral:Self    - Intercept = -0.36
+# Match: Bad:Self        - Intercept  + ValenceBad    = -0.36 + 0.01 = -0.35 
+# Match: Good:Self       - Intercept  + ValenceGood   = -0.36 - 0.09 = -0.45
+# Match: Neutral:Other   - Intercept  + IdentityOther = -0.36 - 0.07 = -0.43
+# Match: Bad:Other       - Intercept  + IdentityOther:ValenceBad  = -0.36 + 0.02 = -0.34 
+# Match: Good:Other      - Intercept  + IdentityOther:ValenceGood = -0.36 + 0.07 = -0.29
 
 # Get the variables in the model 1
 # RT_var_name_m1 <- tidybayes::get_variables(RT_val_m1)
 
-df_ms_m1_post_rt_exp <- RT_ms_m1 %>% 
+df_ms_m1_post_rt_exp <- RT_ms_m1_match %>% 
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
-df_ms_m1_rt_pop_mean <- RT_ms_m1 %>%
+df_ms_m1_rt_pop_mean <- RT_ms_m1_match %>%
   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
-df_ms_m1_rt_pop <- RT_ms_m1 %>% 
+df_ms_m1_rt_pop <- RT_ms_m1_match %>% 
   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   dplyr::rename(term = .variable,
                 pop_mean = .value) %>%
@@ -1194,24 +1185,16 @@ df_ms_m1_plot_rt <- df_ms_m1_rt_pop %>%
   #                                                        "Exp5_THU",  "Exp6a_THU","Overall")),
                       condition = forcats::fct_rev(condition)) %>%
         tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
-        dplyr::mutate(NM_Self_Neutral = Intercept,               # calculate the differences between conditions
-                      NM_Self_Bad = Intercept  + ValenceBad,
-                      NM_Self_Good = Intercept  + ValenceGood ,
-                      NM_Other_Neutral = Intercept  + IdentityOther,               # calculate the differences between conditions
-                      NM_Other_Bad = Intercept  + ValenceBad  + `IdentityOther:ValenceBad`,
-                      NM_Other_Good = Intercept  + ValenceGood + `IdentityOther:ValenceGood`,
-                      M_Self_Neutral = Intercept  + ismatch,
-                      M_Self_Bad = Intercept  + ismatch + `ismatch:ValenceBad`,
-                      M_Self_Good = Intercept  + ismatch + `ismatch:ValenceGood`,
-                      M_Other_Neutral = Intercept  + ismatch + `ismatch:IdentityOther`,
-                      M_Other_Bad = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:IdentityOther:ValenceBad`,
-                      M_Other_Good = Intercept  + ismatch + `ismatch:IdentityOther` + `ismatch:IdentityOther:ValenceGood`) %>%
+        dplyr::mutate(M_Self_Neutral = Intercept,
+                      M_Self_Bad = Intercept + ValenceBad,
+                      M_Self_Good = Intercept  + ValenceGood,
+                      M_Other_Neutral = Intercept  + IdentityOther,
+                      M_Other_Bad = Intercept  + `IdentityOther:ValenceBad`,
+                      M_Other_Good = Intercept + `IdentityOther:ValenceGood`) %>%
         dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
                contains('M_')) %>%
-  tidyr::pivot_longer(cols = NM_Self_Neutral:M_Other_Good, names_to = "term", values_to =  "value") %>%  # wide to long
-  dplyr::mutate(term = factor(term, levels = c('NM_Self_Neutral', 'NM_Self_Bad', 'NM_Self_Good',
-                                               'NM_Other_Neutral', 'NM_Other_Bad', 'NM_Other_Good',
-                                               'M_Self_Neutral', 'M_Self_Bad', 'M_Self_Good',
+  tidyr::pivot_longer(cols = M_Self_Neutral:M_Other_Good, names_to = "term", values_to =  "value") %>%  # wide to long
+  dplyr::mutate(term = factor(term, levels = c('M_Self_Neutral', 'M_Self_Bad', 'M_Self_Good',
                                                'M_Other_Neutral', 'M_Other_Bad', 'M_Other_Good')),
                 value = exp(value),
                 value = value * 1000) 
@@ -1283,7 +1266,7 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         dplyr::filter(str_detect(term_diff, '_M_')) %>%
         dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GN_M_S','diff_BN_M_S', 
                                                                'diff_GN_M_O', 'diff_BN_M_O'))) %>%
-        dplyr::filter((value >= -200) & (value <= 200)) %>%
+        dplyr::filter((value >= -200) & (value <= 300)) %>%
         dplyr::rename(Experiments = condition) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
@@ -1317,7 +1300,7 @@ p_ms_rt1_diff_id <- df_ms_m1_plot_rt_diff %>%
         tidyr::pivot_longer(cols = diff_GN_M_S:diff_SO_B, names_to = "term_diff", values_to =  "value")  %>%  # wide to long
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
         dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_SO_G', 'diff_SO_N', 'diff_SO_B'))) %>%
-        dplyr::filter((value >= -200) & (value <= 200)) %>%
+        dplyr::filter((value >= -250) & (value <= 250)) %>%
         dplyr::rename(Experiments = condition) %>%
         ggplot2::ggplot(aes(y = Experiments, x = value, fill = after_stat(x < 0))) +
         tidybayes::stat_halfeye() +
