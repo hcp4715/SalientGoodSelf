@@ -41,7 +41,7 @@ pacman::p_load('here',              # for choosing directory
                "ggplot2",           # plot general
                'ggridges',          # plot ridges
                'patchwork',         # plot patch plots together
-               "papaja",            # core for reproduce the APA format of the manuscript
+               "papaja"            # core for reproduce the APA format of the manuscript
                )
 
 source("geom_flat_violin.R")       # for plotting the violin plots

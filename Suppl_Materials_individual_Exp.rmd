@@ -55,7 +55,7 @@ output            :
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
-source('Initial.r')
+source('Initial_suppl.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 
 pacman::p_load("qgraph")
