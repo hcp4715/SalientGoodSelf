@@ -7,33 +7,33 @@
 
 \caption{\label{tab:Table_1_exp_info}Information about all experiments.}
 
-\begin{tabular}{llllllllll}
+\begin{tabular}{llllllll}
 \toprule
-ExpID & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Month} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{DV} & \multicolumn{1}{c}{Design} & \multicolumn{1}{c}{Trials.Condition} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Valence} & \multicolumn{1}{c}{Presenting}\\
+ExpID & \multicolumn{1}{c}{Time} & \multicolumn{1}{c}{Location} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{No..Trials.per.Cond.} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Stim.for.Morality} & \multicolumn{1}{c}{Presenting.order}\\
 \midrule
-Exp\_1a\_1 & 2014 & 4 & 38 (35) & behav & 3 * 2 & 60 & explicit & words & Simultaneously\\
-Exp\_1a\_2 & 2017 & 4 & 18 (16) & behav & 3 * 2 & 60 & explicit & words & Simultaneously\\
-Exp\_1b\_1 & 2014 & 10 & 39 (27) & behav & 3 * 2 & NA & explicit & words & Simultaneously\\
-Exp\_1b\_2 & 2017 & 4 & 33 (25) & behav & 3 * 2 & NA & explicit & words & Simultaneously\\
-Exp\_1c & 2014 & 10 & 23 (23) & behav & 3 * 2 & NA & explicit & descriptions & Simultaneously\\
-Exp\_2 & 2014 & 5 & 35 (34) & behav & 3 * 2 & NA & explicit & words & Sequentially\\
-Exp\_3a & 2014 & 11 & 38 (35) & behav & 3 * 2 * 2 & NA & explicit & words & Simultaneously\\
-Exp\_3b & 2017 & 4 & 61 (56) & behav & 3 * 2 * 2 & NA & explicit & words & Simultaneously\\
-Exp\_4a\_1 & 2015 & 6 & 32 (29) & behav & 3 * 2 * 2 & NA & implicit & words & Simultaneously\\
-Exp\_4a\_2 & 2017 & 4 & 32 (30) & behav & 3 * 2 * 2 & NA & implicit & words & Simultaneously\\
-Exp\_4b\_1 & 2015 & 10 & 34 (32) & behav & 3 * 2 * 2 & NA & implicit & words & Simultaneously\\
-Exp\_4b\_2 & 2017 & 4 & 19 (13) & behav & 3 * 2 * 2 & NA & implicit & words & Simultaneously\\
-Exp\_5 & 2016 & 1 & 43 (38) & behav & 3 * 2 * 4 & NA & explicit & words & Simultaneously\\
-Exp\_6a & 2014 & 12 & 24 (24) & behav/EEG & 3 * 2 & NA & explicit & words & Sequentially\\
-Exp\_6b & 2016 & 1 & 23 (22) & behav/EEG & 3 * 2 * 2 & NA & explicit & words & Sequentially\\
-Exp\_7a & 2016 & 7 & 35 (29) & behav & 2 * 2 * 2 & NA & explicit & words & Simultaneously\\
-Exp\_7b & 2018 & 5 & 46 (42) & behav & 2 * 2 * 2 & NA & explicit & words & Simultaneously\\
+Exp\_1a\_1 & 2014-04 & Beijing & 38 (35) & 60 & NA & words & Simultaneously\\
+Exp\_1a\_2 & 2017-04 & Wenzhou & 18 (16) & 60 & NA & words & Simultaneously\\
+Exp\_1b\_1 & 2014-10 & Beijing & 39 (27) & NA & NA & words & Simultaneously\\
+Exp\_1b\_2 & 2017-04 & Wenzhou & 33 (25) & NA & NA & words & Simultaneously\\
+Exp\_1c & 2014-10 & Beijing & 23 (23) & NA & NA & descriptions & Simultaneously\\
+Exp\_2 & 2014-05 & Beijing & 35 (34) & NA & NA & words & Sequentially\\
+Exp\_3a & 2014-11 & Beijing & 38 (35) & NA & explicit & words & Simultaneously\\
+Exp\_3b & 2017-04 & Wenzhou & 61 (56) & NA & explicit & words & Simultaneously\\
+Exp\_4a\_1 & 2015-06 & Beijing & 32 (29) & NA & implicit & words & Simultaneously\\
+Exp\_4a\_2 & 2017-04 & Wenzhou & 32 (30) & NA & implicit & words & Simultaneously\\
+Exp\_4b\_1 & 2015-10 & Beijing & 34 (32) & NA & implicit & words & Simultaneously\\
+Exp\_4b\_2 & 2017-04 & Wenzhou & 19 (13) & NA & implicit & words & Simultaneously\\
+Exp\_5 & 2016-01 & Beijing & 43 (38) & NA & NA & words & Simultaneously\\
+Exp\_6a & 2014-12 & Beijing & 24 (24) & NA & NA & words & Sequentially\\
+Exp\_6b & 2016-01 & Beijing & 23 (22) & NA & explicit & words & Sequentially\\
+Exp\_7a & 2016-07 & Beijing & 35 (29) & NA & explicit & words & Simultaneously\\
+Exp\_7b & 2018-05 & Beijing & 46 (42) & NA & explicit & words & Simultaneously\\
 \bottomrule
 \addlinespace
 \end{tabular}
 
 \begin{tablenotes}[para]
-\normalsize{\textit{Note.} DV = dependent variables; Valence = how valence was manipulated; Shape \& Label = how shapes \& labels were presented.}
+\normalsize{\textit{Note.} Stim of Morality = How moral character was manipulated; Presenting order = how shapes \& labels were presented. The data from experiments 7a \& 7b, which were reported in Hu et al (2020), are only included in the meta-analysis in supplementary materials.}
 \end{tablenotes}
 
 \end{threeparttable}
