@@ -9,7 +9,7 @@
 
 \begin{tabular}{llllllll}
 \toprule
-ExpID & \multicolumn{1}{c}{Time} & \multicolumn{1}{c}{Location} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{No..Trials.per.Cond.} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Stim.for.Morality} & \multicolumn{1}{c}{Presenting.order}\\
+ExpID & \multicolumn{1}{c}{Time} & \multicolumn{1}{c}{Location} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{n.of.trials} & \multicolumn{1}{c}{Self.ref} & \multicolumn{1}{c}{Stim.for.Morality} & \multicolumn{1}{c}{Presenting.order}\\
 \midrule
 Exp\_1a\_1 & 2014-04 & Beijing & 38 (35) & 60 & NA & words & Simultaneously\\
 Exp\_1a\_2 & 2017-04 & Wenzhou & 18 (16) & 60 & NA & words & Simultaneously\\
