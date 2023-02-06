@@ -74,17 +74,6 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 load("AllData.RData")
 ```
 
-```{r 'Table_s1_exp_info', ehco = FALSE, results = 'asis'}
-exp_table <- read.csv('Exp_info_all.csv') %>%
-  dplyr::rename(ExpID = 1)
-# knitr::kable(exp_table, caption = "Information about all experiments")
-apa_table(
-  exp_table
-  , caption = "Information about all experiments."
-  , note = "DV = dependent variables; Valence = how valence was manipulated; Shape & Label = how shapes & labels were presented."
-  , escape = TRUE
-)
-```
 
 ```{r define_funs,echo=FALSE,results='hide'}
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
