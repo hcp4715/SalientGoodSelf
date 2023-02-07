@@ -51,7 +51,7 @@ output            :
 ---
 
 ```{r setup, include=FALSE}
-#rm(list = ls())
+rm(list = ls())
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
@@ -61,7 +61,7 @@ curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 pacman::p_load("qgraph")
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
-afex_options(emmeans_model = "multivariate")
+# afex_options(emmeans_model = "multivariate")
 options(tinytex.verbose = F) # debug the tex
 knitr::opts_chunk$set(message = FALSE)
 
@@ -75,7 +75,7 @@ load("AllData.RData")
 ```
 
 
-```{r define_funs,echo=FALSE,results='hide'}
+```{r define_funs, echo=FALSE, results='hide'}
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
 # for 1a, 1b, 1c, 2, 6a
 fun_sdt_val <- function(exp_name) {
@@ -274,61 +274,6 @@ As in the main text, we used Bayesian hierarchical models (BHMs) to model the da
 Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
 ```
 
-### Classic analytical approach
-#### *d* prime
-Figure \@ref(fig:ex1a-dprime-rt) shows *d* prime and reaction times during the perceptual matching task. We conducted a single factor (valence: good, neutral, bad) repeated measure ANOVA. 
-```{r 1a_dprime_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime with 2*2 design
-df1a_dprime_anova <- afex::aov_ez('Subject','dprime',df1a.v.dprime_l, within = c('Valence'))
-df1a_dprime_anova_apa <- df1a_dprime_anova %>% apa_print()
-
-posthoc_1a_d <- emmeans::emmeans(df1a_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_1a_d)
-```
-```{r results='asis', echo = F, eval=F}
-# knitr::kable(nice(df4b_dprime_anova), caption = "ANOVA of d prime")
-papaja::apa_table(df1a_dprime_anova_apa$table
-  , caption = "Repeated measure ANOVA of *d* prime from Experiment 1a"
-  , note = "*d* prime was calculated in a signal detection way.")
-
-```
-
-We found the effect of Valence (`r df1a_dprime_anova_apa$full$Valence`). The post-hoc comparison with multiple comparison correction revealed that the shapes associated with Good-person (2.11, SE = 0.14) has greater *d* prime than shapes associated with Bad-person (1.75, SE = 0.14), *t*(50) = 3.304, *p* = 0.0049. The Good-person condition was also greater than the Neutral-person condition (1.95, SE = 0.16), but didn't reach statistical significant, *t*(50) = 1.54, *p* = 0.28. Neither the Neutral-person condition is significantly greater than the Bad-person condition, *t*(50) = 2.109, *p* = .098.
-
-#### Reaction times
-```{r 1a_RT_NHST, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1a_RT_anova <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m, within = c('Matchness','Valence')) # using afex's function
-
-df1a_RT_anova_apa <- df1a_RT_anova %>% apa_print()
-
-df1a.v.rt_m1 <- df1a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df1a_RT_anova_m <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m1, within = c('Valence'))
-df1a_RT_anova_m_apa <- df1a_RT_anova_m %>% apa_print()
-
-df1a.v.rt_m2 <- df1a.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df1a_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1a.v.rt_m2, within = c('Valence'))
-df1a_RT_anova_nm_apa <- df1a_RT_anova_nm %>% apa_print()
-
-posthoc_1a_rt <- emmeans::emmeans(df1a_RT_anova_m, "Valence") # compare each valence for both self and other condition
-# pairs(posthoc_1a_rt)
-```
-We conducted 2 (Matchness: match v. nonmatch) by 3 (Valence: good, neutral, bad) repeated measure ANOVA. We found the main effect of Matchness (`r df1a_RT_anova_apa$full$Matchness`), main effect of valence (`r df1a_RT_anova_apa$full$Valence`), and interaction between Matchness and Valence (`r df1a_RT_anova_apa$full$Matchness_Valence`).
-
-We then carried out two separate ANOVA for Match and Mismatched trials. For matched trials, we found the effect of valence `r df1a_RT_anova_m$full$Valence`. We further examined the effect of valence for both self and other for matched trials. We found that shapes associated with Good Person (684 ms, SE = 11.5) responded faster than Neutral (709 ms, SE = 11.5), *t*(50) = -2.265, *p* = 0.0702) and Bad Person (728 ms, SE = 11.7), *t*(50) = -4.41, *p* = 0.0002), and the Neutral condition was faster than the Bad condition, *t*(50) = -2.495, *p* = 0.0415). For non-matched trials, there was no significant effect of Valence (`r df1a_RT_anova_nm$full$Valence`).
-
 ### Bayesian hierarchical GLM
 #### d prime
 ```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
@@ -402,68 +347,6 @@ For participants from both Tsinghua community and Wenzhou community, the procedu
 Data was analyzed as in experiment 1a. 
 
 ## Results
-### NHST
-
-```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
-# rtdata <- df1b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-# Mplots(expName = 'exp1b', df1b.v.dprime_l,rtdata)
-
-Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
-```
-
-Figure \@ref(fig:ex1b-dprime-rt) shows *d* prime and reaction times of experiment 1b. 
-
-#### *d* prime
-
-```{r 1b_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime
-df1b_dprime_anova <- afex::aov_ez('Subject','dprime',df1b.v.dprime_l, within = c('Valence'))
-df1b_dprime_anova_apa <- df1b_dprime_anova %>% apa_print()
-
-posthoc_1b_d <- emmeans::emmeans(df1b_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_1b_d)
-```
-Repeated measures ANOVA revealed main effect of valence, `r df1b_dprime_anova_apa$full$Valence`. Paired t test showed that the Good-Person condition (1.87 $\pm$ 0.102) was with greater *d* prime than Neutral condition (1.44 $\pm$ 0.101, *t*(51) = 5.945, *p* < 0.001). We also found that the Bad-Person condition (1.67 $\pm$ 0.11) has also greater *d* prime than neutral condition , *t*(51) = 3.132, *p* = 0.008). There Good-person condition was also slightly greater than the bad condition, *t*(51) = 2.265, *p* = 0.0701.
-
-#### Reaction time
-
-```{r 1b_RT, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-df1b_RT_anova <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m, within = c('Matchness','Valence'))
-df1b_RT_anova_apa <- df1b_RT_anova %>% apa_print()
-
-df1b.v.rt_m1 <- df1b.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")))
-
-df1b.v.rt_m %>%
-  dplyr::group_by(Matchness, Valence) %>%
-  dplyr::summarise(mean = mean(RT_m),
-                   sd = sd(RT_m))
-
-df1b_RT_anova_m <- afex::aov_ez('Subject','RT_m', df1b.v.rt_m1,     # using afex's function 
-                                  within = c('Valence'))
-df1b_RT_anova_m_apa <- df1b_RT_anova_m %>% apa_print()
-
-df1b.v.rt_m2 <- df1b.v %>%
-  dplyr::filter(ACC == 1 & Matchness == "Mismatch") %>%
-  dplyr::group_by(Site,Subject,Matchness, Valence) %>%
-  dplyr::summarise(RT_m = mean(RT),
-                   Ntrial = length(RT)) %>%
-  dplyr::ungroup()
-
-df1b_RT_anova_nm <- afex::aov_ez('Subject','RT_m',df1b.v.rt_m2,     # using afex's function 
-                                  within = c('Valence'))
-df1b_RT_anova_nm_apa <- df1b_RT_anova_nm %>% apa_print()
-posthoc_1b_rt <- emmeans::emmeans(df1b_RT_anova_m, "Valence") # compare each valence for both self and other condition
-# pairs(posthoc_1b_rt)
-```
-We found interaction between Matchness and Valence (`r df1b_RT_anova_apa$full$Matchness_Valence`) and then analyzed the matched trials and mismatched trials separately, as in experiment 1a. For matched trials, we found the effect of valence `r df1b_RT_anova_m_apa$full$Valence`. Post-hoc *t*-tests revealed that shapes associated with Good Person (684 $\pm$ 8.77) were responded faster than Neutral-Person (740 $\pm$ 9.84), (*t*(51) = -8.167, *p* < 0.001) and Bad Person (728 $\pm$ 9.15), *t*(51) = -5.724, *p* < 0.0001). While there was no significant differences between Neutral and Bad-Person condition (*t*(51) = 1.686, *p* = 0.221). For non-matched trials, there was no significant effect of Valence (`r df1b_RT_anova_nm_apa$full$Valence`).
-
 ### BGLM
 #### Signal detection theory analysis of accuracy
 We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
@@ -551,29 +434,6 @@ Data was analyzed as in experiment 1a.
 
 Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
 ```
-
-```{r 1c_rt_dprime, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# anova for d prime
-df1c_dprime_anova <- afex::aov_ez('Subject','dprime',df1c.v.dprime_l,  # using afex's function 
-                                  within = c('Valence'))
-
-df1c_dprime_anova_apa <- df1c_dprime_anova %>% apa_print()
-
-posthoc_1c_d <- emmeans::emmeans(df1c_dprime_anova, "Valence") # compare each valence for both self and other condition
-#pairs(posthoc_1c_d)
-
-df1c_RT_anova <- afex::aov_ez('Subject','RT_m',df1c.v.rt_m,     # using afex's function 
-                                  within = c('Matchness','Valence'))
-df1c_RT_anova_apa <- df1c_RT_anova %>% apa_print()
-
-```
-
-Figure \@ref(fig:ex1c-dprime-rt) shows *d* prime and reaction times of experiment 1c. We conducted same analysis as in Experiment 1a. Our analysis didn't should effect of valence on *d* prime, `r df1c_dprime_anova_apa$full$Valence`. Neither the effect of valence on RT (`r df1c_RT_anova_apa$full$Valence`) or interaction between valence and matchness on RT (`r df1c_RT_anova_apa$full$Matchness_Valence`).
-
-#### Signal detection theory analysis of accuracy
-We fitted a Bayesian hierarchical GLM for SDT. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influenced. For the $d'$, we found that the shapes tagged with morally good person (2.30, 95% CI[1.93 2.70]) is greater than shapes tagged with moral bad (2.11, 95% CI[1.83 2.42]), $P_{PosteriorComparison} = 0.8$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.16, 95% CI[1.88 2.45]), $P_{PosteriorComparison} = 0.75$. 
-
-Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-0.97, [-1.12 -0.82]), followed by shapes tagged with neutral person(-0.96, [-1.09 -0.83]), and then the shapes tagged with bad person(-1.03, [-1.22 -0.84]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
 
 ```{r 1c_BGLMM_sdt, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 exp1c_sdt_m1 <- fun_sdt_val('1c')

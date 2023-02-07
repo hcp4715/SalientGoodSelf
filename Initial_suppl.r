@@ -717,8 +717,10 @@ fun_plot_sdt_val <- function(m_sdt) {
                 scale_fill_manual(values = c("gray80", "skyblue")) +
                 labs(x = "criteria (c)", y = 'Comparison') +
                 theme_classic()
+        p <- (p_sdt_d_sum + p_sdt_c_sum)/
+                (p_sdt_d + p_sdt_c) + plot_annotation(tag_levels = 'A') + plot_layout( byrow = TRUE, guides = "collect")
         
-        return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
+        return(p)
 }
 
 # define a function (shifted_lognormal) to run the RT GLMM for all exp with Matchness * Valence design
@@ -742,6 +744,7 @@ fun_rt_val <- function(exp_name) {
 }
 
 fun_plot_rt_val <- function(m_rt) {
+        library(patchwork)
         tmp_rt <- m_rt %>% 
                 tidybayes::spread_draws(b_Intercept, b_ValenceBad, b_ValenceGood, 
                                         b_ismatch,   `b_ValenceBad:ismatch`, `b_ValenceGood:ismatch`) %>%
@@ -757,7 +760,7 @@ fun_plot_rt_val <- function(m_rt) {
                                     values_to = 'logRT') %>%
                 dplyr::mutate(RT = exp(logRT)*1000,
                               Matchness = dplyr::case_when(grepl("_MM$", cond) ~ "Mismatch",
-                                                           grepl("_M$", .variable) ~ "Match"),
+                                                           grepl("_M$", cond) ~ "Match"),
                               Valence = dplyr::case_when(grepl("Neut", cond) ~ "Neutral",
                                                          grepl("Bad", cond) ~ "Bad",
                                                          grepl("Good", cond) ~ "Good")
@@ -770,14 +773,14 @@ fun_plot_rt_val <- function(m_rt) {
         p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
                 dplyr::filter(Matchness == 'Match') %>%
                 ggplot2::ggplot(aes(x = RT, y = Valence)) +
-                tidybayes::stat_halfeyeh() + 
+                tidybayes::stat_halfeye() + 
                 labs(x = "RTs (Matching, ms)", y = 'Posterior') +
                 theme_classic()
         p_exp1b_rt_mm_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
                 dplyr::filter(Matchness == 'Mismatch') %>%
                 ggplot2::ggplot(aes(x = RT, y = Valence)) +
-                tidybayes::stat_halfeyeh() + 
-                labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
+                tidybayes::stat_halfeye() + 
+                labs(tag = 'D', x = "RTs (Nonmatching, ms)", y = 'Posterior') +
                 theme_classic()
         
         # plot comparison
@@ -785,7 +788,7 @@ fun_plot_rt_val <- function(m_rt) {
                 dplyr::filter(Matchness == 'Match') %>%
                 tidybayes::compare_levels(RT, by = Valence) %>%
                 ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
-                tidybayes::stat_halfeyeh() + 
+                tidybayes::stat_halfeye() + 
                 geom_vline(xintercept =0, linetype = "dashed") +
                 scale_fill_manual(values = c("gray80", "skyblue")) +
                 labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
@@ -794,12 +797,14 @@ fun_plot_rt_val <- function(m_rt) {
                 dplyr::filter(Matchness == 'Mismatch') %>%
                 tidybayes::compare_levels(RT, by = Valence) %>%
                 ggplot2::ggplot(aes(x = RT, y = Valence, fill = after_stat(x < 0))) +
-                tidybayes::stat_halfeyeh() + 
+                tidybayes::stat_halfeye() + 
                 geom_vline(xintercept =0, linetype = "dashed") +
                 scale_fill_manual(values = c("gray80", "skyblue")) +
                 labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
                 theme_classic()
-        return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
+        p <- (p_exp1b_rt_m_sum + p_exp1b_rt_mm_sum)/
+                (p_exp1b_rt_m + p_exp1b_rt_mm) + plot_annotation(tag_levels = 'A') + plot_layout( byrow = TRUE, guides = "collect")
+        return(p)
 }
 
 # function for SDT with Match by identity by valence design
