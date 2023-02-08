@@ -42,6 +42,7 @@ pacman::p_load('here',              # for choosing directory
                'ggridges',          # plot ridges
                'patchwork',         # plot patch plots together
                "papaja",            # core for reproduce the APA format of the manuscript
+               "easystats"
                # "Hmisc", 
                # 'matrixStats', 
                # "afex",           # for frequentists' ANOVA, in suppl
@@ -717,10 +718,7 @@ fun_plot_sdt_val <- function(m_sdt) {
                 scale_fill_manual(values = c("gray80", "skyblue")) +
                 labs(x = "criteria (c)", y = 'Comparison') +
                 theme_classic()
-        p <- (p_sdt_d_sum + p_sdt_c_sum)/
-                (p_sdt_d + p_sdt_c) + plot_annotation(tag_levels = 'A') + plot_layout( byrow = TRUE, guides = "collect")
-        
-        return(p)
+        return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
 }
 
 # define a function (shifted_lognormal) to run the RT GLMM for all exp with Matchness * Valence design
@@ -802,9 +800,7 @@ fun_plot_rt_val <- function(m_rt) {
                 scale_fill_manual(values = c("gray80", "skyblue")) +
                 labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
                 theme_classic()
-        p <- (p_exp1b_rt_m_sum + p_exp1b_rt_mm_sum)/
-                (p_exp1b_rt_m + p_exp1b_rt_mm) + plot_annotation(tag_levels = 'A') + plot_layout( byrow = TRUE, guides = "collect")
-        return(p)
+        return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
 }
 
 # function for SDT with Match by identity by valence design
