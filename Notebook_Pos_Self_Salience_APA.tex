@@ -366,15 +366,17 @@ Note that for experiments 3a, 3b, and 6b, the three-level model for reaction tim
 \hypertarget{testing-hypotheses}{%
 \subsubsection{Testing hypotheses}\label{testing-hypotheses}}
 
+To test hypotheses, we used the Sequential Effect eXistence and sIgnificance Testing (SEXIT) approach suggested by Makowski, Ben-Shachar, Chen, and Lüdecke (2019). In this approach, we directly use the posterior distributions of model parameters or other effect that can derived from posterior distributions. The SEXIT approach reports centrality, uncertainty, existence, significance, and size of the input posterior, which is intuitive for making statistical inference. We used \texttt{bayestestR} for implementing this approach (Makowski, Ben-Shachar, \& Lüdecke, 2019).
+
 \hypertarget{prioritization-of-moral-character}{%
 \paragraph{Prioritization of moral character}\label{prioritization-of-moral-character}}
 
-We tested whether moral characters are prioritized by examining the population-level effects (also called fixed effect) of the three-level Bayesian hierarchical model of experiments 1a, 1b, 1c, 2, 5, and 6a. More specifically, we calculated the difference between the posterior distribution of the good/bad character and the neutral character and tested whether the 95\% highest density intervals (HDIs) of the difference include zero. If the 95\% highest density intervals do not include zero, we infer that there is a population-level difference between the conditions in the test, otherwise, we will infer that there is no evidence for such a difference. Note that for reaction times, we focused on the matched trials as in previous studies.
+We tested whether moral characters are prioritized by examining the population-level effects (also called fixed effect) of the three-level Bayesian hierarchical model of experiments 1a, 1b, 1c, 2, 5, and 6a. More specifically, we calculated the difference between the posterior distributions of the good/bad character and the neutral character and tested with SEXIT approach.
 
 \hypertarget{modulation-of-self-referential-processing}{%
 \paragraph{Modulation of self-referential processing}\label{modulation-of-self-referential-processing}}
 
-We tested the modulation effect of self-referential processing by examining the interaction between moral character and self-referential process for the three-level Bayesian hierarchical model of experiments 3a, 3b, and 6b. More specifically, we tested two possible explanations for the prioritization of good character: the valence effect alone or an interaction between the valence effect and the self-referential process. If the former is correct, then there will be no interaction between moral character and self-referential processing, i.e., the prioritization effect exhibits a similar pattern for both self- and other-referential conditions. On the other hand, if the spontaneous self-referential processing account is true, then there will be an interaction between the two factors, i.e., the prioritization effect exhibits different patterns for self- and other-referential conditions.
+We tested the modulation effect of self-referential processing by examining the interaction between moral character and self-referential process for the three-level Bayesian hierarchical model of experiments 3a, 3b, and 6b. More specifically, we tested two possible explanations for the prioritization of good character: the valence effect alone or an interaction between the valence effect and the self-referential process. If the former is correct, then there will be no interaction between moral character and self-referential processing, i.e., the prioritization effect exhibits a similar pattern for both self- and other-referential conditions. On the other hand, if the spontaneous self-referential processing account is true, then there will be an interaction between the two factors, i.e., the prioritization effect exhibits different patterns for self- and other-referential conditions. To test the interaction, we calculated the difference of difference: \((good - neutral)_{self}\) vs.~\((good - neutral)_{other}\). We then tested the difference of difference with SEXIT approach.
 
 \hypertarget{spontaneous-binding-between-the-self-and-good-character}{%
 \paragraph{Spontaneous binding between the self and good character}\label{spontaneous-binding-between-the-self-and-good-character}}
@@ -431,7 +433,7 @@ A similar pattern was found for RTs in matched trials. For the ``self'' conditio
 
 In experiment 4b, where moral characters were task-relevant and ``self'' vs ``other'' were task-irrelevant, we found a main effect of moral character: performance for shapes associated with good characters was better than other-related conditions on both \emph{d'} and reaction times. This pattern, again, shows a robust prioritization effect of good character.
 
-Most importantly, we found evidence that task-irrelevant labels, ``self'' or ``other'', also played a role. For shapes associated with good character, the \emph{d} prime was greater when shapes had a ``self'' inside than with ``other'' inside (\(mean_{diff}\) = 0.14, 95\% credible intervals {[}-0.07 0.32{]}), but this effect did not occur when the target shape where associated with ``neutral'' (\(mean_{diff}\) = 0.04, 95\% HDI {[}-0.13, 0.21{]}) or ``bad'' person (\(mean_{diff}\) = -0.05, 95\% HDI{[}-0.20, 0.13{]}).
+Most importantly, we found evidence that task-irrelevant labels, ``self'' or ``other'', also played a role. For shapes associated with good character, the \emph{d} prime was greater when shapes had a ``self'' inside than with ``other'' inside (\(mean_{diff}\) = 0.14, 95\% HDI {[}-0.07 0.32{]}), but this effect did not occur when the target shape where associated with ``neutral'' (\(mean_{diff}\) = 0.04, 95\% HDI {[}-0.13, 0.21{]}) or ``bad'' person (\(mean_{diff}\) = -0.05, 95\% HDI{[}-0.20, 0.13{]}).
 
 \begin{figure}
 \centering
@@ -556,6 +558,12 @@ Lockwood, P. L., Wittmann, M. K., Apps, M. A. J., Klein-FlÃŒgge, M. C., Crocke
 
 \leavevmode\vadjust pre{\hypertarget{ref-Ma_JEPHPP_2010}{}}%
 Ma, Y., \& Han, S. (2010). Why we respond faster to the self than to others? {An} implicit positive association theory of self-advantage during implicit face recognition. \emph{Journal of Experimental Psychology: Human Perception and Performance}, \emph{36}, 619--633. \url{https://doi.org/10.1037/a0015797}
+
+\leavevmode\vadjust pre{\hypertarget{ref-makowski_indices_2019}{}}%
+Makowski, D., Ben-Shachar, M. S., Chen, S. H. A., \& Lüdecke, D. (2019). Indices of {Effect} {Existence} and {Significance} in the {Bayesian} {Framework}. \emph{Frontiers in Psychology}, \emph{10}. \url{https://doi.org/10.3389/fpsyg.2019.02767}
+
+\leavevmode\vadjust pre{\hypertarget{ref-makowski_bayestestr_2019}{}}%
+Makowski, D., Ben-Shachar, M. S., \& Lüdecke, D. (2019). {bayestestR}: {Describing} {Effects} and their {Uncertainty}, {Existence} and {Significance} within the {Bayesian} {Framework}. \emph{Journal of Open Source Software}, \emph{4}(40), 1541. \url{https://doi.org/10.21105/joss.01541}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ohman_face_2001}{}}%
 Ohman, A., Lundqvist, D., \& Esteves, F. (2001). The face in the crowd revisited: A threat advantage with schematic stimuli. \emph{Journal of Personality and Social Psychology}, \emph{80}(3), 381--396. \url{https://doi.org/10.1037/0022-3514.80.3.381}

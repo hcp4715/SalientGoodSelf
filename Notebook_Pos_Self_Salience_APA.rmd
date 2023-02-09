@@ -1522,27 +1522,7 @@ rep_ul_d_exp4a_bad_o <- df_exp4a_sdt_hdi %>% dplyr::filter(Parameter == "Bad_Oth
         dplyr::pull() %>%
         round(., digits = 3)
 
-# exp4a_sdt_p <- exp4a_sdt_m1 %>%
-#   emmeans::emmeans( ~ ismatch | Identity| Valence) %>%
-#   tidybayes::gather_emmeans_draws() %>%
-#   dplyr::mutate(ismatch = ifelse(ismatch == 0, 'criterion', 'd prime'),
-#                 ismatch = factor(ismatch, levels = c('d prime', 'criterion')),
-#                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad')),
-#                 Identity = factor(Identity, levels = c('Self', 'Other'))) %>%
-#   ggplot2::ggplot(aes(x = Valence, y = .value, group = Identity, color = Identity)) +
-#   #ggplot2::ggplot(aes(x = Valence, y = .value, group = .draw)) +
-#   #geom_line(alpha = .01) +
-#   scale_colour_brewer(palette = "Dark2") +
-#   scale_fill_brewer(palette = "Dark2") +
-#   tidybayes::stat_halfeye() + # position=position_dodge(width = 0.1)
-#   stat_summary(aes(group = Identity, color = Identity), fun.y = mean, geom = "line"
-#                #,position=position_dodge(width = 0.1)
-#                ) +
-#   #scale_fill_brewer() +
-#   facet_grid(~ ismatch) +
-#   theme_classic()
-
-df_exp4a_sdt_m1_plot_diff <- df_exp4a_sdt_m1_plot %>%
+df_exp4a_sdt_m1_plot_diff_wide <- df_exp4a_sdt_m1_plot %>%
         tidyr::unite(term, c('params', 'Identity', 'Valence')) %>%
         dplyr::ungroup() %>%
         dplyr::select(term, `.chain`, `.iteration`, `.draw`, `.value`) %>%
@@ -1562,12 +1542,17 @@ df_exp4a_sdt_m1_plot_diff <- df_exp4a_sdt_m1_plot %>%
                 diff_diff_BN_SO = diff_BN_dprm_S - diff_BN_dprm_O
                 ) %>%
   dplyr::select(`.chain`, `.iteration`, `.draw`,
-               diff_GN_dprm_S:diff_diff_BN_SO) %>%
+               diff_GN_dprm_S:diff_diff_BN_SO) 
+
+bayestestR::sexit(df_exp4a_sdt_m1_plot_diff_wide[, 4:15])
+
+df_exp4a_sdt_m1_plot_diff <- df_exp4a_sdt_m1_plot_diff_wide %>%
   tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN_SO, names_to = "term_diff", values_to =  "value") %>%  # wide to long
   dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_dprm_S', 'diff_GN_dprm_S', 'diff_BN_dprm_S', 
                                                          'diff_GB_dprm_O', 'diff_GN_dprm_O', 'diff_BN_dprm_O', 
                                                          'diff_SO_dprm_G', 'diff_SO_dprm_N', 'diff_SO_dprm_B',
                                                          'diff_diff_GN_SO', 'diff_diff_GB_SO', 'diff_diff_BN_SO')))
+
 p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
         dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
         dplyr::mutate(Identity = dplyr::case_when(grepl("_S", term_diff) ~ "Self",

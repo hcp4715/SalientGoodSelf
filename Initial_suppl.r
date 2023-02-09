@@ -523,13 +523,13 @@ Val_plot_NHST <- function(df.rt, df.d){
           legend.text = element_blank(),
           legend.position = 'none',
           plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-          axis.text = element_text (size = 8, color = 'black'),
-          axis.title = element_text (size = 8),
+          axis.text = element_text (size = 18, color = 'black'),
+          axis.title = element_text (size = 18),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.line.x = element_line(color='black', size = 1),    # increase the size of font
           axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-          strip.text = element_text (size = 6, color = 'black'), # size of text in strips, face = "bold"
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
           panel.spacing = unit(1.5, "lines")
     ) +
     facet_wrap( ~ DVs,
