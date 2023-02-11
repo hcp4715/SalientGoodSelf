@@ -391,6 +391,10 @@ p_dprime1 <- df_m1_plot_sdt %>%
         scale_fill_brewer(palette = "Dark2") +
         theme_apa()
 
+# define facet titles
+contrast_names_m_sdt <- c(`diff_GN_dprm` = "Good vs Neutral", 
+                           `diff_BN_dprm` = "Bad vs Neutral"
+                           )
 # plot the posterior of the difference between d prime
 p_dprime1_diff <- df_m1_plot_sdt_diff %>%
         dplyr::filter(str_detect(term_diff, '_dprm')) %>%
@@ -405,7 +409,9 @@ p_dprime1_diff <- df_m1_plot_sdt_diff %>%
         xlab(expression(paste("Effect of valence on ", italic("d"), " prime", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                     nrow = 1,
-                    labeller = label_parsed)
+                    labeller = as_labeller(contrast_names_m_sdt)) + # label_parsed
+        theme_apa() + 
+        theme(strip.text.x = element_text(size = 8)) # colour = "orange", angle = 90))
 
 df_dprime1_diff_hdi <- df_m1_plot_sdt_diff %>%
         dplyr::filter(str_detect(term_diff, '_dprm')) %>%
@@ -630,6 +636,11 @@ df_m1_plot_rt_diff <- df_m1_plot_rt %>%
                                                          'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
 
 # plot the posterior of matching trials
+# define face titles
+contrast_names_m_rt <- c(`diff_GN_M` = "Good vs Neutral", 
+                         `diff_BN_M` = "Bad vs Neutral"
+                           )
+
 p_rt1_diff <- df_m1_plot_rt_diff %>%
         dplyr::filter(str_detect(term_diff, '_M')) %>%
         dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
@@ -644,7 +655,9 @@ p_rt1_diff <- df_m1_plot_rt_diff %>%
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
               nrow = 1,
-              labeller = label_parsed)
+              labeller = as_labeller(contrast_names_m_rt))  + # label_parsed
+        theme_apa() + 
+        theme(strip.text.x = element_text(size = 8)) # colour = "orange", angle = 90))
 
 df_rt1_diff_hdi <- df_m1_plot_rt_diff %>%
         # dplyr::filter(str_detect(term_diff, '_M')) %>%
@@ -857,37 +870,37 @@ sdt_ms_m1 <- df_ms %>%
 # summary(sdt_ms_m1)
 
 # # Get the variables in the model
-var_name_m1 <- tidybayes::get_variables(sdt_ms_m1)
+# var_name_m1 <- tidybayes::get_variables(sdt_ms_m1)
 
 # # get the variable names start with 'b_', i.e., the population level parameters
-pop_param_names <- grep('^b_.', var_name_m1, value = TRUE)
+# pop_param_names <- grep('^b_.', var_name_m1, value = TRUE)
 
 # plot the population level parameter (d prime)
-sdt_ms_m1_p <- sdt_ms_m1 %>%
-  # get the traces of population level parameters
-  tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
-  # create two columns for two independent factors.
-  dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
-                                           grepl("Bad", .variable) ~"Bad",
-                                           grepl("Good", .variable) ~"Good"),
-                Identity = dplyr::case_when(grepl("Self", .variable) ~ "Self",
-                                           grepl("Other", .variable) ~"Other"),
-                params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
-                                           !grepl("ismatch", .variable) ~"criterion"),
-                params = factor(params, levels = c('d prime', 'criterion')),
-                Identity = factor(Identity, levels = c("Self", "Other")),
-                Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
-  # select only d prime
-  dplyr::filter(params == 'd prime') %>%
-  ggplot2::ggplot(aes(x = Valence, y = .value)) +
-  tidybayes::stat_halfeye(aes(fill = Identity), alpha = 0.7) + # position=position_dodge(width = 0.1)
-  geom_slabinterval(ymin = 0, ymax = 4) +
-  stat_summary(aes(group = Identity, color = Identity), fun = mean, geom = "line") +
-  ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
-  # ylim(0, 4) +
-  # xlab("Valence") +
-  #facet_grid(cols = vars(Identity)) + # , scales = "free_y"
-  theme_classic() # + 
+# sdt_ms_m1_p <- sdt_ms_m1 %>%
+#   # get the traces of population level parameters
+#   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+#   # create two columns for two independent factors.
+#   dplyr::mutate(Valence = dplyr::case_when(grepl("Neutral", .variable) ~ "Neutral",
+#                                            grepl("Bad", .variable) ~"Bad",
+#                                            grepl("Good", .variable) ~"Good"),
+#                 Identity = dplyr::case_when(grepl("Self", .variable) ~ "Self",
+#                                            grepl("Other", .variable) ~"Other"),
+#                 params = dplyr::case_when(grepl("ismatch", .variable) ~ "d prime",
+#                                            !grepl("ismatch", .variable) ~"criterion"),
+#                 params = factor(params, levels = c('d prime', 'criterion')),
+#                 Identity = factor(Identity, levels = c("Self", "Other")),
+#                 Valence = factor(Valence, levels = c('Good', 'Neutral',  'Bad'))) %>%
+#   # select only d prime
+#   dplyr::filter(params == 'd prime') %>%
+#   ggplot2::ggplot(aes(x = Valence, y = .value)) +
+#   tidybayes::stat_halfeye(aes(fill = Identity), alpha = 0.7) + # position=position_dodge(width = 0.1)
+#   geom_slabinterval(ymin = 0, ymax = 4) +
+#   stat_summary(aes(group = Identity, color = Identity), fun = mean, geom = "line") +
+#   ylab(expression(paste("Sensitivity ", italic("d'"), sep = ' '))) +
+#   # ylim(0, 4) +
+#   # xlab("Valence") +
+#   #facet_grid(cols = vars(Identity)) + # , scales = "free_y"
+#   theme_classic() # + 
   # theme(axis.title.x = element_blank())
 
 #### plot both overall parameters and experimental levels.
@@ -968,10 +981,6 @@ df_ms_sdt_m1_plot_diff <- df_ms_sdt_m1_plot %>%
         tidyr::unite(term, c('params', 'Identity', 'Valence')) %>%
         tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
         dplyr::mutate(
-                # diff_GN_c_S = c_Self_Good - c_Self_Neutral,
-                # diff_BN_c_S = c_Self_Bad - c_Self_Neutral,
-                # diff_GN_c_O = c_Other_Good - c_Other_Neutral,
-                # diff_BN_c_O = c_Other_Bad - c_Other_Neutral,
                 diff_GN_dprm_S = dprime_Self_Good - dprime_Self_Neutral,
                 diff_BN_dprm_S = dprime_Self_Bad - dprime_Self_Neutral,
                 diff_GN_dprm_O = dprime_Other_Good - dprime_Other_Neutral,
@@ -982,24 +991,16 @@ df_ms_sdt_m1_plot_diff <- df_ms_sdt_m1_plot %>%
                 diff_diff_GN = diff_GN_dprm_S - diff_GN_dprm_O,
                 diff_diff_BN = diff_BN_dprm_S - diff_BN_dprm_O
                 ) %>%
-  dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
-               diff_GN_dprm_S, diff_BN_dprm_S, diff_GN_dprm_O, diff_BN_dprm_O,
-               diff_SO_dprm_G, diff_SO_dprm_N, diff_SO_dprm_B, diff_diff_GN, diff_diff_BN) 
+        dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+                      diff_GN_dprm_S, diff_BN_dprm_S, diff_GN_dprm_O, diff_BN_dprm_O,
+                      diff_SO_dprm_G, diff_SO_dprm_N, diff_SO_dprm_B, diff_diff_GN, diff_diff_BN) 
 
-df_ms_dprm1_diff_diff <- df_ms_sdt_m1_plot_diff %>%
-        tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-        dplyr::filter(str_detect(term_diff, 'diff_diff')) %>%
-        dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_diff_GN', 'diff_diff_BN'))) %>% 
-        dplyr::filter(condition == "Overall") %>%
-        tidyr::pivot_wider(.,
-                           id_cols = c('.chain', '.iteration', '.draw'),
-                           names_from = term_diff) %>%
-        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
-        bayestestR::describe_posterior(.,
-                                       ci = 0.95,
-                                       ci_method = 'hdi',
-                                       test = c("p_direction", "p_significance"),
-                                       centrality = "median")
+# define face titles
+contrast_names_ms_sdt <- c(`diff_GN_dprm_S` = "Self: Good vs Neutral", 
+                           `diff_BN_dprm_S` = "Self: Bad vs Neutral", 
+                           `diff_GN_dprm_O` = "Other: Good vs Neutral", 
+                           `diff_BN_dprm_O` = "Other: Bad vs Neutral"
+                           )
 
 p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
         tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN, names_to = "term_diff", values_to =  "value") %>%  # wide to long
@@ -1018,22 +1019,11 @@ p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
         xlab(expression(paste("Valence effect on ", italic("d"), " prime", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
-               labeller = label_parsed)
+               labeller = as_labeller(contrast_names_ms_sdt)) + # label_parsed
+        theme_apa() + 
+        theme(strip.text.x = element_text(size = 8)) # colour = "orange", angle = 90))
 
-df_ms_dprm1_diff_val <- df_ms_sdt_m1_plot_diff %>%
-        tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-        dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
-        dplyr::filter(condition == "Overall") %>%
-        tidyr::pivot_wider(.,
-                           id_cols = c('.chain', '.iteration', '.draw'),
-                           names_from = term_diff) %>%
-        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
-        bayestestR::describe_posterior(.,
-                                       ci = 0.95,
-                                       ci_method = 'hdi',
-                                       test = c("p_direction", "p_significance"),
-                                       centrality = "median")
-
+# another way to present the results, not presented in the manuscript
 p_ms_dprime1_diff_id <- df_ms_sdt_m1_plot_diff %>%
         tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN, names_to = "term_diff", values_to =  "value") %>%  # wide to long
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
@@ -1054,40 +1044,11 @@ p_ms_dprime1_diff_id <- df_ms_sdt_m1_plot_diff %>%
                nrow = 1,
                labeller = label_parsed)
 
-df_ms_dprm1_diff_id <- df_ms_sdt_m1_plot_diff %>%
-        tidyr::pivot_longer(cols = diff_GN_dprm_S:diff_diff_BN, names_to = "term_diff", values_to =  "value") %>%  # wide to long
-        dplyr::filter(str_detect(term_diff, '_SO_')) %>%
-#        dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
-        dplyr::filter(condition == "Overall") %>%
-        tidyr::pivot_wider(.,
-                           id_cols = c('.chain', '.iteration', '.draw'),
-                           names_from = term_diff) %>%
-        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
-        bayestestR::describe_posterior(.,
-                                       ci = 0.95,
-                                       ci_method = 'hdi',
-                                       test = c("p_direction", "p_significance"),
-                                       centrality = "median")
-
-### get results that will be reported in the text
-med_diff_d_ms_GN <- df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']
-ll_diff_d_ms_GN <- df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']
-ul_diff_d_ms_GN <- df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_GN']
-
-med_diff_d_ms_BN <- df_ms_dprm1_diff_diff$Median[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']
-ll_diff_d_ms_BN <- df_ms_dprm1_diff_diff$CI_low[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']
-ul_diff_d_ms_BN <- df_ms_dprm1_diff_diff$CI_high[df_ms_dprm1_diff_diff$Parameter == 'diff_diff_BN']
-
-med_diff_d_ms_GN_S <- df_ms_dprm1_diff_val$Median[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']
-ll_diff_d_ms_GN_S <- df_ms_dprm1_diff_val$CI_low[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']
-ul_diff_d_ms_GN_S <- df_ms_dprm1_diff_val$CI_high[df_ms_dprm1_diff_val$Parameter == 'diff_GN_dprm_S']
-
-med_diff_d_ms_G_SO <- df_ms_dprm1_diff_id$Median[df_ms_dprm1_diff_id$Parameter == 'diff_SO_dprm_G']
-ll_diff_d_ms_G_SO <- df_ms_dprm1_diff_id$CI_low[df_ms_dprm1_diff_id$Parameter == 'diff_SO_dprm_G']
-ul_diff_d_ms_G_SO <- df_ms_dprm1_diff_id$CI_high[df_ms_dprm1_diff_id$Parameter == 'diff_SO_dprm_G']
+test_res_sdt_ms <- bayestestR::sexit(df_ms_sdt_m1_plot_diff[5:13])
+test_res_sdt_ms
 ```
 
-For the *d* prime, we found an interaction between the moral valence and self-referential processing: the good-neutral differences are larger for the self-referential condition than for the other-referential condition ($median_{diff}$ = `r med_diff_d_ms_GN`; 95% HDI = [`r ll_diff_d_ms_GN` `r ul_diff_d_ms_GN`]). However, this is not the case for the bad-neutral differences ($median_{diff}$ = `r med_diff_d_ms_BN`; 95% HDI = [`r ll_diff_d_ms_BN` `r ul_diff_d_ms_BN`]). Further analyses revealed that the prioritization effect of good character (as compared to neutral) only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self ($median_{diff}$ = `r med_diff_d_ms_GN_S`; 95% HDI = [`r ll_diff_d_ms_GN_S` `r ul_diff_d_ms_GN_S`]), *d* prime for good-self was also greater than good-other condition ($median_{diff}$ = `r med_diff_d_ms_G_SO`; 95% HDI = [`r ll_diff_d_ms_G_SO` `r ul_diff_d_ms_G_SO`]). The differences between bad-self and neutral-self, good-other and neutral-other, and bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). 
+For the *d* prime, we found an interaction between the moral valence and self-referential processing: the good-neutral differences are larger for the self-referential condition than for the other-referential condition: The difference ($median_{diff}$ = 0.48, 95% HDI [-0.62, 1.65]) has a 93.04% probability of being positive (> 0), 91.92% of being significant (> 0.05). However, the bad-neutral differences ($median_{diff}$ = 0.0087, 95% CI [-0.96, 1.00]) only has a 51.85% probability of being positive (> 0), 41.29% of being significant (> 0.05). Further analyses revealed that the prioritization effect of good character (as compared to neutral) only appeared for self-referential conditions but not other-referential conditions. The estimated *d* prime for good-self was greater than neutral-self ($median_{diff}$ = 0.54, 95% CI [-0.30, 1.41]), with a 95.99% probability of being positive (> 0), 95.36% of being significant (> 0.05). The differences between bad-self and neutral-self, good-other and neutral-other, and bad-other and neutral-other are all centered around zero (see Figure \@ref(fig:plot-bayes2), B, D). 
 
 ```{r second meta rt, echo=FALSE, results='hide', warning=FALSE}
 # fit a three-level hierarchical model for RT, didn't specify the prior, lognormal, dummy coding, both match and nonmatch trials
@@ -1128,7 +1089,44 @@ RT_ms_m1_match <- df_ms %>%
             backend = 'cmdstanr',  # with cmdstanr
             file = here::here("glmmModels/RT_ms_DummyCode_3_level_match"))
 # summary(RT_ms_m1_match) # R-hat still has problem
-
+# 
+# RT_ms_m3_match_s <- df_ms %>%
+#         dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#         dplyr::filter(ACC == 1) %>%         # only correct trials
+#         dplyr::filter(Matchness == "Match" & Identity == "Self") %>%
+#         brms::brm(RT_sec ~ Valence + 
+#               (Valence | ExpID_new) +   
+#               (Valence | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             chains = 4,
+#             control = list(adapt_delta = .90),
+#             iter = 10000,
+#             thin = 1,
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_ms_3_level_match_m3_s.rds"))
+# 
+# summary(RT_ms_m3_match_s)
+# 
+# RT_ms_m3_match_o <- df_ms %>%
+#         dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
+#         dplyr::filter(ACC == 1) %>%         # only correct trials
+#         dplyr::filter(Matchness == "Match" & Identity == "Other") %>%
+#         brms::brm(RT_sec ~ Valence + 
+#               (Valence | ExpID_new) +   
+#               (Valence | ExpID_new:Subject),
+#             family=lognormal(),
+#             data = .,
+#             chains = 4,
+#             control = list(adapt_delta = .90),
+#             iter = 10000,
+#             thin = 1,
+#             cores = parallel::detectCores(),
+#             backend = 'cmdstanr',  # with cmdstanr
+#             file = here::here("glmmModels/RT_ms_3_level_match_m3_o.rds"))
+# 
+# summary(RT_ms_m3_match_o)
 # Population-Level Effects: 
 #                           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
 # Intercept                    -0.36      0.43    -1.30     0.57 1.00     1547     1685
@@ -1153,10 +1151,19 @@ df_ms_m1_post_rt_exp <- RT_ms_m1_match %>%
   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
   dplyr::rename(value = r_ExpID_new)
 
+# df_ms_m3_s_post_rt_exp <- RT_ms_m3_match_s %>% 
+#   tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+#   dplyr::rename(value = r_ExpID_new)
+
 df_ms_m1_rt_pop_mean <- RT_ms_m1_match %>%
   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# df_ms_m3_s_rt_pop_mean <- RT_ms_m3_match_s %>%
+#   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+#   group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+#   tidybayes::mean_hdci(.value)  # get the high density continuous intervals
 
 # extract the population level parameters
 df_ms_m1_rt_pop <- RT_ms_m1_match %>% 
@@ -1167,6 +1174,14 @@ df_ms_m1_rt_pop <- RT_ms_m1_match %>%
   dplyr::ungroup() %>%
   dplyr::mutate(term = gsub("b_", "", term))
 
+# df_ms_m3_s_rt_pop <- RT_ms_m3_match_s %>% 
+#   tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+#   dplyr::rename(term = .variable,
+#                 pop_mean = .value) %>%
+#   #tidyr::separate(term, c(NA, 'term'), "_") 
+#   dplyr::ungroup() %>%
+#   dplyr::mutate(term = gsub("b_", "", term))
+
 # Add the population mean to the experimental level and only keep the value after.
 df_ms_m1_rt_exp_update <- merge(df_ms_m1_rt_pop, df_ms_m1_post_rt_exp, 
 # rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
@@ -1174,6 +1189,13 @@ df_ms_m1_rt_exp_update <- merge(df_ms_m1_rt_pop, df_ms_m1_post_rt_exp,
   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
   dplyr::rename(value = mean_value)  # rename the value
+
+# df_ms_m3_s_rt_exp_update <- merge(df_ms_m3_s_rt_pop, df_ms_m3_s_post_rt_exp, 
+# # rt_post_tmp <- merge(rt_pop_post, df_m1_post_rt_exp, 
+#                      by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+#   dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+#   dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+#   dplyr::rename(value = mean_value)  # rename the value
 
 # Plot the difference between conditions 
 df_ms_m1_plot_rt <- df_ms_m1_rt_pop %>%
@@ -1202,6 +1224,27 @@ df_ms_m1_plot_rt <- df_ms_m1_rt_pop %>%
                 value = exp(value),
                 value = value * 1000) 
 
+# df_ms_m3_s_plot_rt <- df_ms_m3_s_rt_pop %>%
+#         dplyr::mutate(condition = 'Overall') %>%
+#         dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
+#         dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+#         dplyr::bind_rows(., df_ms_m3_s_rt_exp_update) %>%
+#         dplyr::mutate(condition = factor(condition, levels = c("Exp3a_THU", "Exp3b_WZU", "Exp6b_THU",
+#                                                                "Overall")),
+#                       condition = forcats::fct_rev(condition)) %>%
+#         tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+#         dplyr::rename(Self_Neutral = Intercept) %>%
+#         dplyr::mutate(#Self_Neutral = Intercept,
+#                       Self_Bad = Self_Neutral + ValenceBad,
+#                       Self_Good = Self_Neutral  + ValenceGood) %>%
+#         dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+#                contains('Self_'),
+#                ) %>%
+#   tidyr::pivot_longer(cols = Self_Neutral:Self_Good, names_to = "term", values_to =  "value") %>%  # wide to long
+#   dplyr::mutate(term = factor(term, levels = c('Self_Neutral', 'Self_Bad', 'Self_Good')),
+#                 value = exp(value),
+#                 value = value * 1000) 
+
 # plot the posterior of the d prime
 # use the overall mean values as the vlines
 p_ms_rt1_vlines <- df_ms_m1_plot_rt %>% 
@@ -1215,6 +1258,16 @@ p_ms_rt1_vlines <- df_ms_m1_plot_rt %>%
         tidybayes::median_hdci(value)
         #dplyr::summarize(Mean = mean(value)) # %>%
         # dplyr::arrange(Mean)
+# p_ms_rt3_s_vlines <- df_ms_m3_s_plot_rt %>% 
+#         tidyr::separate(term, c('Identity', 'Valence')) %>% 
+#         dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+#                       #Identity = factor(Identity, levels = c("Self", "Other")),
+#                       ) %>%
+#         #dplyr::filter(Match == 'M') %>%
+#         dplyr::filter(condition == "Overall") %>%
+#         dplyr::filter((value >=200) & (value <=1200)) %>%
+#         dplyr::group_by(Identity, Valence) %>% 
+#         tidybayes::median_hdci(value)
 
 # THIS is the one which the final plot will based on!!!
 p_ms_rt1 <- df_ms_m1_plot_rt %>%
@@ -1230,6 +1283,22 @@ p_ms_rt1 <- df_ms_m1_plot_rt %>%
         labs(x=expression('Posteior distribution of RTs')) + 
         facet_wrap(~Identity) + 
         theme_apa()
+
+# model self data separately get the same diffused posterior
+# p_ms_rt3_s <- df_ms_m3_s_plot_rt %>%
+#         tidyr::separate(term, c('Identity', 'Valence')) %>% 
+#         dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')),
+#                       #Identity = factor(Identity, levels = c("Self", "Other")),
+#                       ) %>%
+#         # dplyr::filter(Match == 'M') %>%
+#         dplyr::rename(Experiments = condition) %>%
+#         dplyr::filter((value >=200) & (value <=1200)) %>%
+#         ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+#         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+#         geom_vline(data = p_ms_rt3_s_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
+#         labs(x=expression('Posteior distribution of RTs')) + 
+#         # facet_wrap(~Identity) + 
+#         theme_apa()
 
 df_ms_m1_plot_rt_diff <- df_ms_m1_plot_rt %>%
         tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
@@ -1263,6 +1332,12 @@ df_ms_rt1_diff_diff <- df_ms_m1_plot_rt_diff %>%
                                        test = c("p_direction", "p_significance"),
                                        centrality = "median")
 
+# define face titles
+contrast_names_ms_rt <- c(`diff_GN_M_S` = "Self: Good vs Neutral", 
+                           `diff_BN_M_S` = "Self: Bad vs Neutral", 
+                           `diff_GN_M_O` = "Other: Good vs Neutral", 
+                           `diff_BN_M_O` = "Other: Bad vs Neutral"
+                           )
 # plot the posterior of matching trials of valence
 p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         tidyr::pivot_longer(cols = diff_GN_M_S:diff_SO_B, names_to = "term_diff", values_to =  "value")  %>%  # wide to long
@@ -1279,10 +1354,13 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) + 
         xlab("Valence effect on RTs (Match trials)") +
+        scale_x_continuous(breaks=seq(-200, 300, 200))+  
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
               nrow = 1,
-              labeller = label_parsed)
+              labeller = as_labeller(contrast_names_ms_rt)) + # label_parsed
+        theme_apa() + 
+        theme(strip.text.x = element_text(size = 8)) 
 
 df_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         tidyr::pivot_longer(cols = diff_GN_M_S:diff_SO_B, names_to = "term_diff", values_to =  "value")  %>%  # wide to long
@@ -1355,8 +1433,8 @@ ul_diff_rt_ms_G_SO <- df_ms_rt1_diff_id$CI_high[df_ms_rt1_diff_id$Parameter == '
 library(patchwork)
 # (p_rt1 | p_dprime1)
 p_ms_rt1 + p_ms_dprime1 +
-        p_ms_rt1_diff_val + p_ms_dprime1_diff_val + 
-        p_ms_rt1_diff_id + p_ms_dprime1_diff_id + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect")
+        p_ms_rt1_diff_val + p_ms_dprime1_diff_val + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 3, byrow = TRUE, guides = "collect") 
+        # p_ms_rt1_diff_id + p_ms_dprime1_diff_id + 
 ```
 
 For the RTs of matched trials, we also found an interaction between moral valence and self-referential processing: the good-neutral differences were different for the self- and other-referential conditions ($median_{diff}$ = `r med_diff_rt_ms_GN`; 95% HDI = [`r ll_diff_rt_ms_GN` `r ul_diff_rt_ms_GN`]). However, this was not the case for bad-neutral differences ($median_{diff}$ = `r med_diff_rt_ms_BN`; 95% HDI = [`r ll_diff_rt_ms_BN` `r ul_diff_rt_ms_BN`]). Further analyses revealed a robust good-self prioritization effect as compared to neutral-self ($median_{diff}$ = `r med_diff_rt_ms_GN_S`; 95% HDI = [`r ll_diff_rt_ms_GN_S` `r ul_diff_rt_ms_GN_S`]) and good-other ($median_{diff}$ = `r med_diff_rt_ms_G_SO`; 95% HDI = [`r ll_diff_rt_ms_G_SO` `r ul_diff_rt_ms_G_SO`]) conditions. Similar to the results of *d'*, we found that participants responded slower for both good character and bad character than for the neutral character when they referred to others. See Figure \@ref(fig:plot-bayes2).
