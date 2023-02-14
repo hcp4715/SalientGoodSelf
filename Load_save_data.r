@@ -2,10 +2,16 @@
 ###### Script for loading and preparing data ######
 rm(list = ls())
 
-if(!"tidyverse" %in% rownames(installed.packages())) install.packages("tidyverse")
-if(!"here" %in% rownames(installed.packages())) install.packages("here")
-library(tidyverse)
-library(here)
+# use pacman to manage the packages
+if (!require(pacman)){
+        install.packages("pacman")
+        library(pacman)
+}
+
+# use pacman::p_load to load the packages
+pacman::p_load('here',              # for choosing directory
+               'tidyverse'         # for data wrangling
+)
 
 set.seed(42)
 CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Identity", "Valence", "dprime")
@@ -82,8 +88,8 @@ df1a.invalid_trial_rate   <- df1a %>%
 
 df1a.v   <- df1a %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df1a.excld.sub$Subject)) # %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df1a.v.basic <- df1a.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -100,6 +106,7 @@ df1a.v.basic <- df1a.v %>%
 
 # calculate d prime
 df1a.v.dprime_l <- df1a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::mutate(
                 sdt = dplyr::case_when(
                         (ACC == 1 & Matchness == 'Match') ~ "hit",
@@ -127,6 +134,7 @@ df1a.v.dprime_l <- df1a.v %>%
 
 # get the mean RT for each particpant and each condition for ANOVA
 df1a.v.rt_m <- df1a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -219,8 +227,8 @@ df1b.invalid_trial_rate   <- df1b %>%
 
 df1b.v   <- df1b %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df1b.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df1b.excld.sub$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df1b.v.basic     <- df1b.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -235,6 +243,7 @@ df1b.v.basic     <- df1b.v %>%
 
 # calculate d prime
 df1b.v.dprime_l <- df1b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -254,6 +263,7 @@ df1b.v.dprime_l <- df1b.v %>%
 
 # calculate the mean RT of each condition for each participants for ANOVA
 df1b.v.rt_m <- df1b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -338,8 +348,8 @@ df1c.invalid_trial_rate   <- df1c %>%
 
 df1c.v   <- df1c %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df1c.excld.sub$Subject)) # %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df1c.v.basic     <- df1c.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -354,6 +364,7 @@ df1c.v.basic     <- df1c.v %>%
 
 # calculate d prime
 df1c.v.dprime_l <- df1c.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -373,6 +384,7 @@ df1c.v.dprime_l <- df1c.v %>%
 
 # calculate mean RT for anova
 df1c.v.rt_m <- df1c.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -448,8 +460,8 @@ df2.invalid_trial_rate   <- df2 %>%
 
 df2.v   <- df2 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df2.excld.sub$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df2.v.basic     <- df2.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -464,6 +476,7 @@ df2.v.basic     <- df2.v %>%
 
 # calculate d prime
 df2.v.dprime_l <- df2.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -483,6 +496,7 @@ df2.v.dprime_l <- df2.v %>%
 
 # calculated means RT for ANOVA
 df2.v.rt_m <- df2.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site, Subject, Age, Sex, Matchness, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -566,8 +580,8 @@ df3a.invalid_trial_rate   <- df3a %>%
 
 df3a.v   <- df3a %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df3a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df3a.excld.sub$Subject)) # %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df3a.v.basic     <- df3a.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -582,6 +596,7 @@ df3a.v.basic     <- df3a.v %>%
 
 # calculate d prime
 df3a.v.dprime_l <- df3a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -602,6 +617,7 @@ df3a.v.dprime_l <- df3a.v %>%
 
 # calculate the mean RT for each condition of each participant
 df3a.v.rt_m <- df3a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -681,8 +697,8 @@ df3b.invalid_trial_rate   <- df3b %>%
 
 df3b.v   <- df3b %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df3b.excld.sub2$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df3b.excld.sub2$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df3b.v.basic     <- df3b.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -697,6 +713,7 @@ df3b.v.basic     <- df3b.v %>%
 
 # calculate d prime
 df3b.v.dprime_l <- df3b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -717,6 +734,7 @@ df3b.v.dprime_l <- df3b.v %>%
 
 # calculate mean RT for each condition of each participant
 df3b.v.rt_m <- df3b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site, Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -802,8 +820,8 @@ df4a.invalid_trial_rate   <- df4a %>%
 
 df4a.v   <- df4a %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df4a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df4a.excld.sub$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df4a.v.basic     <- df4a.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -818,6 +836,7 @@ df4a.v.basic     <- df4a.v %>%
 
 # calculating the dprime 
 df4a.v.dprime_l <- df4a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -837,6 +856,7 @@ df4a.v.dprime_l <- df4a.v %>%
                       Identity = factor(Identity, levels = c('Self', 'Other')))
 
 df4a.v.rt_m <- df4a.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -924,8 +944,8 @@ df4b.invalid_trial_rate   <- df4b %>%
 
 df4b.v   <- df4b %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df4b.excld.sub$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df4b.v.basic     <- df4b.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -940,6 +960,7 @@ df4b.v.basic     <- df4b.v %>%
 
 # calculating the dprime 
 df4b.v.dprime_l <- df4b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -959,6 +980,7 @@ df4b.v.dprime_l <- df4b.v %>%
                       Identity = factor(Identity, levels = c('Self', 'Other')))
 
 df4b.v.rt_m <- df4b.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -996,9 +1018,10 @@ df5 <- read.csv(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export20
                                               "Bad" = (Label == "bad"  | Label == "sad"   | Label == "uglyP"    | Label == "uglyS"),
                                               "Neutral" = (Label == "ordinary" | Label == "neutral" | Label == "normalP" | Label == "normalS"),
                                               .method ="first", .default = NA)) %>%
-        tidyr::replace_na(list(PracListE="",    PracListM="",    PracListP="",    PracListS="")) %>%          # replace NA with "" for later unite
+        dplyr::mutate_at(c('PracListE', 'PracListM', 'PracListP', 'PracListS'), as.character) %>%
+        tidyr::replace_na(list(PracListE="",    PracListM="",    PracListP="",    PracListS="")) %>%    # replace NA with "" for later unite
         tidyr::unite("PracList", PracListE,PracListM,PracListP,PracListS, sep = "")  %>%                # unite all praclist
-        dplyr::mutate_at(c('TargetE.ACC',  'TargetM.ACC',  'TargetP.ACC',  'TargetS.ACC'), as.integer) %>%
+        # dplyr::mutate_at(c('TargetE.ACC',  'TargetM.ACC',  'TargetP.ACC',  'TargetS.ACC'), as.integer) %>%
         dplyr::mutate(Site = "THU", 
                       ExpID = "Exp5",
                       RESP = dplyr::coalesce(TargetE.RESP,  TargetM.RESP,  TargetP.RESP,  TargetS.RESP),
@@ -1029,7 +1052,7 @@ df5.T.basic     <- df5 %>%
 # find the participants who practiced but not finish experiment
 subjPrac <- df5 %>% dplyr::filter(is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
 subjFinish <- df5 %>% dplyr::filter(!is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
-df5.nQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
+subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
 
 # participants should be excluded
 df5.excld.sub <-  df5 %>%
@@ -1052,8 +1075,8 @@ df5.invalid_trial_rate   <- df5 %>%
 df5.v   <- df5 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
         dplyr::filter(!(Subject %in% df5.nQuit)) %>%                 # exclude the invalid subjects
-        dplyr::filter(!(Subject %in% df5.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df5.excld.sub$Subject))  %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1)) %>%                      # exclude < 200 trials
         dplyr::arrange(Subject)
 
 df5.v.basic     <- df5.v %>%
@@ -1069,6 +1092,7 @@ df5.v.basic     <- df5.v %>%
 
 # calculating the dprime 
 df5.v.dprime_l <- df5.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>% 
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -1088,6 +1112,7 @@ df5.v.dprime_l <- df5.v %>%
                       taskType = factor(taskType, levels = c('Morality', 'Emotion',"Person", "Scene")))
 # anova for RT with 2*2 design
 df5.v.rt_m <- df5.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>% 
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness,taskType,Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -1164,8 +1189,8 @@ df6a.invalid_trial_rate   <- df6a %>%
 
 df6a.v   <- df6a %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df6a.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df6a.excld.sub$Subject)) #%>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df6a.v.basic     <- df6a.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1321,8 +1346,8 @@ df6b_d1.invalid_trial_rate   <- df6b_d1 %>%
 
 df6b_d1.v   <- df6b_d1 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df6b_d1.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df6b_d1.excld.sub$Subject)) # %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
 df6b_d1.v.basic     <- df6b_d1.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1348,8 +1373,10 @@ df6b_d2.excld.sub <-  df6b_d2 %>%
 
 df6b_d2.v   <- df6b_d2 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df6b_d2.excld.sub$Subject)) %>%   # exclude the invalid subjects
-        dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+        dplyr::filter(!(Subject %in% df6b_d2.excld.sub$Subject)) # %>%   # exclude the invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
+
+df6a.v_meta %>% dplyr::group_by(Subject, Matchness, Valence) %>% dplyr::summarize(n = n())
 
 df6b_d2.v.basic     <- df6b_d2.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1364,6 +1391,7 @@ df6b_d2.v.basic     <- df6b_d2.v %>%
 
 # calculate d prime
 df6b_d1.v.dprime_l <- df6b_d1.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -1384,6 +1412,7 @@ df6b_d1.v.dprime_l <- df6b_d1.v %>%
 
 #  prepare the mean RT for each participant
 df6b_d1.v.rt_m <- df6b_d1.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT),
@@ -1410,7 +1439,7 @@ df7a_m <- read.csv(here::here('exp7', 'rawdata_behav_exp7a_2016.csv'),header = T
         #dplyr::filter(!is.na(BlockList.Sample)) %>%                                                   # select only form exp
         dplyr::rename(Subject = SubjectID, 
                       Sex = Gender,
-                      Matchness = Match,s
+                      Matchness = Match,
                       Valence = Morality,
                       ACC = Accuracy, 
                       RESP = ResponseKey) %>%    #
@@ -1451,11 +1480,12 @@ df7a_m.excldSub2.M <- df7a_m.M.acc.g %>% dplyr::filter(ACC < 0.5) %>%
 
 df7a_m.v <- df7a_m %>%
         dplyr::filter(!Subject %in% df7a_m.excldSub2.M) %>% # exclude the invalid subjects
-        dplyr::mutate(RT = RT * 1000, Site = "THU") %>%
-        dplyr::filter(RT > 200) 
+        dplyr::mutate(RT = RT * 1000, Site = "THU") #%>%
+        # dplyr::filter(RT > 200) 
 
 # calculate d prime
 df7a_m.v.dprime_l <- df7a_m.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -1476,6 +1506,7 @@ df7a_m.v.dprime_l <- df7a_m.v %>%
 
 #  prepare the mean RT for each participant
 df7a_m.v.rt_m <- df7a_m.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
         dplyr::summarise(RT_m = mean(RT), RT_SD = sd(RT), Ntrial = length(RT)) %>%
@@ -1541,12 +1572,14 @@ df7b_m.v <- df7b_m %>%
                       Valence = Morality) %>%
         dplyr::mutate(ACC = ifelse(ACC == 1, 1, 0),                  # no response as wrong
                       Site = "THU",
-                      Matchness = ifelse(Matchness == 'match', 'Match', 'Mismatch'))  %>% 
+                      Matchness = ifelse(Matchness == 'match', 'Match', 'Mismatch'),
+                      RT = RT*1000)  %>%                # second to ms 
         dplyr::filter(!Subject %in% df7b.excldSub_M)    # exclude the invalid subjects
 
 
 # calculate d prime
 df7b_m.v.dprime_l <- df7b_m.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::mutate(sdt = dplyr::case_when((ACC == 1 & Matchness == 'Match') ~ "hit",
                                              (ACC == 1 & Matchness == 'Mismatch') ~ "CR",
                                              (ACC == 0 & Matchness == 'Match') ~ "miss",
@@ -1567,10 +1600,11 @@ df7b_m.v.dprime_l <- df7b_m.v %>%
 
 #  prepare the mean RT for each participant
 df7b_m.v.rt_m <- df7b_m.v %>%
+        dplyr::filter(!(RT <= 200 & ACC == 1)) %>%
         dplyr::filter(ACC == 1) %>%
         dplyr::group_by(Site,Subject, Age, Sex, Matchness, Identity, Valence) %>%
-        dplyr::summarise(RT_m = mean(RT)*1000,
-                         RT_SD = sd(RT)*1000,
+        dplyr::summarise(RT_m = mean(RT),
+                         RT_SD = sd(RT),
                          Ntrial = length(RT)) %>%
         dplyr::ungroup()
 

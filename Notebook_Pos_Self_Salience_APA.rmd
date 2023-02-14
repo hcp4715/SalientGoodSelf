@@ -185,20 +185,20 @@ df4a.v_meta <- df4a.v
 df4b.v_meta <- df4b.v %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   
 
 # exclude participants from ex1b, 1c, and 2
-df5.v_meta <- df5.v %>% dplyr::filter(!Subject %in% c(5201))   
+df5.v_meta <- df5.v %>% dplyr::filter(!Subject %in% c(5201))  %>% dplyr::filter(taskType == "Morality") 
 
 # exclude participants from ex1b, 1c, and 2
 df6a.v_meta <- df6a.v %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131))   
 
 # exclude participants from ex1b, 1c, and 2
 df6b.v_meta <- df6b_d1.v %>% dplyr::filter(!Subject %in% c(6217))   
+# Note: subject 6129 finished 10 blocks, making the number of trials per condition to 200
 
 # exclude participants from ex1b, 1c, and 2
 df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
 
 # No repeating subj
 df7b.v_meta <- df7b_m.v
-
 
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
@@ -247,13 +247,13 @@ df_moral <- dplyr::bind_rows(df1a.v_meta[selected_columns],
 df_moral_subj <- df_moral %>%
   dplyr::group_by(ExpID_new, Site) %>%
   dplyr::summarize(N = n_distinct(Subject),
-                   N_trial = length(Subject),
+                   N_trial = n(),
                    Exp_conds = 6,
                    trial_per_cond = round((length(Subject)/6)/N, 0))
 
 df_moral <- df_moral %>%
         dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-        dplyr::filter(RT > 200) %>%     # filter trials with RT <= 200 ms
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%     # filter trials with RT <= 200 ms
         dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
                       saymatch = ifelse((Matchness == 'Match' & ACC == 1) |
                                                 (Matchness == 'Mismatch' & ACC == 0), 1, 0)) %>%
