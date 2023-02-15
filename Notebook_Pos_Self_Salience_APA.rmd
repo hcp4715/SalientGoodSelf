@@ -147,7 +147,7 @@ The perceptual decision-making will show certain pattern under certain task dema
 in experiment 4a and 4b, we didn't have a baseline condition where there is no word inside the shape? -->
 
 # Disclosures
-We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy was lower than 60% were excluded from analyses. Also, accurate responses with less than 200ms reaction times were excluded from the analysis. These excluded data can be found in the shared raw data files.
+We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy was lower than 60% were excluded from analyses. Also, accurate responses with less than 200ms reaction times were excluded from the analysis. Because there were a few participants participated multiple experiments, we only included their data from first participation in the three-level hierarchical model (see Methods for details). All excluded data can be found in the shared raw data files.
 
 All the experiments reported were not pre-registered. Most experiments (1a ~ 4b, except experiment 3b) reported in the current study were first finished between 2013 to 2016 at Tsinghua University, Beijing, China. Participants in these experiments were recruited from the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants from Wenzhou University, Wenzhou, China, in 2017 for experiments 1a, 1b, 4a, and 4b. Experiment 3b was finished at Wenzhou University in 2017 (See Table 1 for an overview of these experiments). 
 
@@ -156,7 +156,7 @@ All participants received informed consent and were compensated for their time. 
  <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
 
 ```{r loadingData,echo=FALSE,results='hide'}
-load("AllData.RData")
+load("Data4manu.RData")
 
 ### exclude the repeated subj from the raw data
 
@@ -184,7 +184,7 @@ df4a.v_meta <- df4a.v
 # exclude participants from ex1b, 1c, and 2
 df4b.v_meta <- df4b.v %>% dplyr::filter(!Subject %in% c(4210, 4202, 4201))   
 
-# exclude participants from ex1b, 1c, and 2
+# exclude participants from ex1b, 1c, and 2 and only use the data from morality
 df5.v_meta <- df5.v %>% dplyr::filter(!Subject %in% c(5201))  %>% dplyr::filter(taskType == "Morality") 
 
 # exclude participants from ex1b, 1c, and 2
@@ -194,11 +194,11 @@ df6a.v_meta <- df6a.v %>% dplyr::filter(!Subject %in% c(6118,6119,6122,6123,6131
 df6b.v_meta <- df6b_d1.v %>% dplyr::filter(!Subject %in% c(6217))   
 # Note: subject 6129 finished 10 blocks, making the number of trials per condition to 200
 
-# exclude participants from ex1b, 1c, and 2
-df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
-
-# No repeating subj
-df7b.v_meta <- df7b_m.v
+# # exclude participants from ex1b, 1c, and 2
+# df7a.v_meta <- df7a_m.v %>% dplyr::filter(!Subject %in% c(7020))   
+# 
+# # No repeating subj
+# df7b.v_meta <- df7b_m.v
 
 df1a.v_meta$ExpID <- 'Exp1a'
 df1b.v_meta$ExpID <- 'Exp1b'
@@ -211,8 +211,6 @@ df4b.v_meta$ExpID <- 'Exp4b'
 df5.v_meta$ExpID  <- 'Exp5'
 df6a.v_meta$ExpID <- 'Exp6a'
 df6b.v_meta$ExpID <- 'Exp6b'
-df7a.v_meta$ExpID <- 'Exp7a'
-df7b.v_meta$ExpID <- 'Exp7b'
 ```
 
   <!-- A general method part describing experimental design and data analysis -->
@@ -222,15 +220,6 @@ df7b.v_meta$ExpID <- 'Exp7b'
 # Results
 ## Prioritization of good character
 To test whether moral characters are prioritized, we modeled data from experiments 1a, 1b, 1c, 2, 5, and 6a with three-level Bayesian hierarchical models. All these experiments shared similar designs and can be used for testing the prioritization effect of moral character. The valid and unique sample size is 192. Note that for both experiments 1a and 1b, two datasets were collected at different time points and locations, thus we treated them as independent samples. Here we only reported the population-level results of three-level Bayesian models, the detailed results of each experiment can be found in supplementary materials.
-
-```{r remove non-meta data, eval = FALSE, echo=FALSE, results='hide', warning=FALSE}
-# remove all unnecessary variables
-var_list <- c('df1a.v_meta', 'df1b.v_meta', 'df1c.v_meta', 'df2.v_meta', 'df3a.v_meta', 'df3b.v_meta',
-              'df4a.v_meta', 'df4b.v_meta', 'df5.v_meta', 'df6a.v_meta', 'df6b.v_meta', 'df7a.v_meta', 'df7b.v_meta',
-              
-              'exp_table', 'curDir', 'figDir')
-rm(list=ls()[! ls() %in% var_list]) # removed all functions ?
-```
 
 ```{r prepare data for first meta, echo=FALSE, results='hide', warning=FALSE}
 ### try meta-analysis 1a, 1b, 1c, 2, 5 and 6a
@@ -252,7 +241,7 @@ df_moral_subj <- df_moral %>%
                    trial_per_cond = round((length(Subject)/6)/N, 0))
 
 df_moral <- df_moral %>%
-        dplyr::filter(!is.na(RESP)) %>% # filter trials without response
+        dplyr::filter(!is.na(RESP)) %>%                 # filter trials without response
         dplyr::filter(!(RT <= 200 & ACC == 1))  %>%     # filter trials with RT <= 200 ms
         dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
                       saymatch = ifelse((Matchness == 'Match' & ACC == 1) |
@@ -675,64 +664,6 @@ The results from reaction times data also found a robust effect of moral charact
 
 For the nonmatch trials, we found a similar pattern but a much smaller effect size. Shapes associated with good characters (median = `r med_rt_nm_m1_good` ms, 95% HDI = [`r ll_rt_nm_m1_good` `r ul_rt_nm_m1_good`]) were faster than shapes associated with neutral characters (median = `r med_rt_nm_m1_neut` ms, 95% HDI = [`r ll_rt_nm_m1_neut` `r ul_rt_nm_m1_neut`]), the difference ($median_{diff}$ = -18, 95% HDI  [-27, -8]) has a 99.91% probability of being negative (< 0), 99.91% of being significant (< -0.05). In contrast, the shapes associated with bad characters (median = `r med_rt_nm_m1_bad` ms, 95% HDI = [`r ll_rt_nm_m1_bad` `r ul_rt_nm_m1_bad`]) were slower than shapes associated with neutral characters, the effect ($median_{diff}$ = 5, 95% HDI  [-3, 13]) has a 92.43% probability of being positive (> 0), 92.31% of being significant (> 0.05).
 
-```{r model comp for rt, eval = FALSE, echo=FALSE, results='hide' }
-#### model comparison etc, will be in supplementary materials
-#### Here we tried three models for RT data
-#### M1: lognormal
-#### M2: shift_lognormal
-#### M3: truncated lognormal
-
-#### Morde comparison was presented in the supplementary
-# 
-# log normal distribution, dummy coding
-RT_val_m2 <- df_moral %>%
-  dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-  dplyr::filter(ACC == 1) %>%
-  brms::brm(RT_sec ~ Valence*ismatch + 
-              (Valence*ismatch | ExpID_new) +   
-              (Valence*ismatch | ExpID_new:Subject),
-            family=shifted_lognormal(),
-            data = .,
-            iter = 3000,
-            control = list(adapt_delta = .98),
-            cores = parallel::detectCores(),
-            backend = 'cmdstanr',  # with cmdstanr
-            file = here::here("glmmModels/RT_val_EffectCode_3_level_m2"))
-summary(RT_val_m2)
-
-RT_val_m1 <- add_criterion(RT_val_m1, "loo")
-RT_val_m2 <- add_criterion(RT_val_m2, "loo")
-
-loo_compare(RT_val_m1, RT_val_m2, criterion = "loo")
-bayes_factor(RT_val_m1,RT_val_m2)
-
-# log normal distribution, with truncated distribution, dummy coding
-RT_val_m3_trunc <- df_moral %>%
-        dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-        dplyr::filter(ACC == 1) %>%
-        brms::brm(RT_sec|trunc(lb = 0.2, ub = 1.1) ~ Valence*ismatch + 
-                          (Valence*ismatch | ExpID_new) + 
-                          (Valence*ismatch | ExpID_new:Subject),
-                  family=lognormal(),
-                  data = .,
-                  iter = 3000,
-                  control = list(adapt_delta = .98),
-                  cores = parallel::detectCores(),
-                  file = here::here("glmmModels/RT_val_EffectCode_3_level_m3_trunc"))
-summary(RT_val_m3_trunc)
-# pp_check(RT_val_m3_trunc)
-# plot(RT_val_m3_trunc, "b_")
-
-# compare three models
-loo(RT_val_m1, RT_val_m2, RT_val_m3_trunc) # takes about XX mins
-# bayes_factor(RT_val_m1,RT_val_m2)
-
-# Model comparisons:
-#           elpd_diff se_diff
-# RT_val_m1  0.0       0.0   
-# RT_val_m2 -7.9       3.1 
-```
-
 ## Modulation effect self-referential processing
 
 To test the modulation effect of self-referential processing, we also modeled data from three experiments (3a, 3b, and 6b) with three-level Bayesian models. These three experiments included 108 unique participants. We focused on the population-level effect of the interaction between self-referential processing and moral valence. Also, we examined the differences of differences, i.e., how the differences between good/bad characters and the neutral character under the self-referential conditions differ from that under other-referential conditions. The detailed results of each experiment can be found in supplementary materials.
@@ -750,12 +681,12 @@ df_ms_subj <- df_ms %>%
   dplyr::group_by(ExpID_new, Site) %>%
   dplyr::summarize(N = n_distinct(Subject),
                    N_trial = length(Subject),
-                   Exp_conds = 6,
-                   trial_per_cond = round((length(Subject)/6)/N, 0))
+                   Exp_conds = 12,
+                   trial_per_cond = round((length(Subject)/12)/N, 0))
 
 df_ms <- df_ms %>%
         dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-        dplyr::filter(RT >= 200) %>% # filter trials without response
+        dplyr::filter(!(RT <= 200 & ACC == 1))  %>%     # filter trials with RT <= 200 ms
         dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
                       saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
                                                 (Matchness == 'Mismatch' & ACC == 0), 1, 0),
@@ -1982,7 +1913,7 @@ design <- "
   1234
   5678
 "
-p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_annotation(tag_levels = 'A') + plot_layout(design = design, guides = "collect")
+p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_annotation(tag_levels = 'A') + plot_layout(design = design, guides = "collect", heights = c(1, 0.45))
 
 # ((p1 +plot_layout(guides = "collect")) + p3 + plot_layout(guides = "collect")) + plot_layout(ncol = 3, widths = c(1, 1, 4), guides = 'keep')
 # 

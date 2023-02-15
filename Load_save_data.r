@@ -1058,25 +1058,28 @@ subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)]
 df5.excld.sub <-  df5 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
         dplyr::group_by(Subject) %>%
-        dplyr::summarise(N = length(ACC),                   # caculate the overall accuracy for each subject
+        dplyr::summarise(N = length(ACC),                   # calculate the overall accuracy for each subject
                          N_crrct = sum(ACC),
                          ACC = sum(ACC)/length(ACC)) %>%
-        dplyr::filter(ACC < 0.6) %>%                        # exlucde the participants with less than 60% overall accuracy
-        dplyr::select(Subject)
+        dplyr::filter(ACC < 0.6) %>%                        # exclude the participants with less than 60% overall accuracy
+        dplyr::select(Subject) %>% 
+        dplyr::pull(Subject)
+
+df5.excld.sub <- c(df5.excld.sub, subjQuit)                # create a vector for all invalid participants
 
 # The rate of excluded trials in valid data
 df5.invalid_trial_rate   <- df5 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% subjQuit)) %>%                 # exclude the invalid subjects
-        dplyr::filter(!(Subject %in% df5.excld.sub$Subject)) %>%    # exclude the invalid subjects
+        # dplyr::filter(!(Subject %in% subjQuit)) %>%       # exclude the invalid subjects
+        dplyr::filter(!(Subject %in% df5.excld.sub)) %>%    # exclude the invalid subjects
         dplyr::summarize(rate = length(RT[RT <= 200 & ACC == 1])/length(RT)) %>%
         dplyr::pull()
 
 df5.v   <- df5 %>%
         dplyr::filter(!is.na(BlockNo)) %>%
-        dplyr::filter(!(Subject %in% df5.nQuit)) %>%                 # exclude the invalid subjects
-        dplyr::filter(!(Subject %in% df5.excld.sub$Subject))  %>%   # exclude the invalid subjects
-        # dplyr::filter(!(RT <= 200 & ACC == 1)) %>%                      # exclude < 200 trials
+        # dplyr::filter(!(Subject %in% df5.nQuit)) %>%      # exclude the invalid subjects
+        dplyr::filter(!(Subject %in% df5.excld.sub))  %>%   # exclude all invalid subjects
+        # dplyr::filter(!(RT <= 200 & ACC == 1)) %>%         # exclude < 200 trials
         dplyr::arrange(Subject)
 
 df5.v.basic     <- df5.v %>%
@@ -1376,7 +1379,7 @@ df6b_d2.v   <- df6b_d2 %>%
         dplyr::filter(!(Subject %in% df6b_d2.excld.sub$Subject)) # %>%   # exclude the invalid subjects
         # dplyr::filter(!(RT <= 200 & ACC == 1))                      # exclude < 200 trials
 
-df6a.v_meta %>% dplyr::group_by(Subject, Matchness, Valence) %>% dplyr::summarize(n = n())
+# df6a.v_meta %>% dplyr::group_by(Subject, Matchness, Valence) %>% dplyr::summarize(n = n())
 
 df6b_d2.v.basic     <- df6b_d2.v %>%
         dplyr::select(Site, Subject, Age, Sex) %>%
@@ -1643,6 +1646,10 @@ df.scales <- read.csv(here::here("Scale_data", "FADGS_dataset4_1_clean.csv"), he
 #dfs <- Filter(function(x) is.data.frame(get(x)) , ls())
 rdata_save <- Filter(function(x) length(get(x)) !=0 , ls())
 save(list=rdata_save, file="AllData.RData")
+
+# save only those valid data for analysis in main manuscript.
+rdata_main_analysis <- rdata_save[grep(".v$", rdata_save)]
+save(list=rdata_main_analysis, file="Data4manu.RData")
 
 # Prepare the data for hddm ----
 

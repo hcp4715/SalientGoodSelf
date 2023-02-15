@@ -58,7 +58,7 @@ rm(list = ls())
 
 #output: pdf_document
 #knitr::opts_chunk$set(echo = TRUE)
-source('Initial_suppl.r')
+#source('Initial_suppl.r')
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 
 pacman::p_load("qgraph")
@@ -250,75 +250,13 @@ As we describe in general method part, this experiment had two phases. First, th
 In the experimental task, participants judged whether shape–label pairs, which were subsequently presented, were correct. Each trial started with the presentation of a central fixation cross for 500 ms. Subsequently, a pairing of a shape and label (good person, bad person, and neutral person) was presented for 100 ms. The pair presented could confirm to the verbal instruction for each pairing given in the training stage, or it could be a recombination of a shape with a different label, with the shape–label pairings being generated at random. The next frame showed a blank for 1100ms. Participants were expected to judge whether the shape was correctly assigned to the person by pressing one of the two response buttons as quickly and accurately as possible within this timeframe (to encourage immediate responding). Feedback (correct or incorrect) was given on the screen for 500 ms at the end of each trial, if no response detected, “too slow” was presented to remind participants to accelerate. Participants were informed of their overall accuracy at the end of each block. The practice phase finished and the experimental task began after the overall performance of accuracy during practice phase achieved 60%. 
 For participants from the Tsinghua community, they completed 6 experimental blocks of 60 trials. Thus, there were 60 trials in each condition (bad-person match, bad-person nonmatch, good-person match, good-person nonmatch, neutral-person match, and neutral-person nonmatch). For the participants from Wenzhou University, they finished 6 blocks of 120 trials, therefore, 120 trials for each condition.
 
-### Data analysis
-As we describe in the general method section, we presented Bayesian hierarchical model (BHM).
-
-We analyzed accuracy performance using a signal detection theory approach. The performance in each match condition was combined with that in the nonmatch condition with the same shape to form a measure of $d'$, the match trials were regarded as signal while the nonmatch trials were regarded as noise [@Sui_2012_JEPHPP]. Given that the match and nonmatch trials are presented in the same way and had same number of trials across all studies, we assume that participants' inner distribution of these two types of trials had equal variance but may had different means. That is, we used the equal variance Gaussian SDT model (EVSDT) here [@Rouder_2005_BHM_SDT]. **Trials without response were excluded from the analysis.** 
-
-As in the main text, we used Bayesian hierarchical models (BHMs) to model the data and estimate the *d* prime for signal detection theory approach and the reaction times data. We used BRMs [@Bürkner_2017; @Carpenter_2017_stan] in R to implement Bayesian hierarchical models. 
-
- <!-- Shall I write more about HDDM here, or just refer the interested reader to the paper? -->
-
-## Results
+## Descriptive results
 
 ```{r 'exp1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
 # rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
 ```
-
-### *d* prime
-```{r 1a_dprime_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-exp1a_sdt_m1 <- fun_sdt_val('1a')
-
-summary(exp1a_sdt_m1)    # check summary
-# pp_check(exp1a_sdt_m1)  # posterior predictive check
-
-hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceNeutral:ismatch")  # 0.97
-hypothesis(exp1a_sdt_m1, "ValenceGood:ismatch > ValenceBad:ismatch")      # 1
-hypothesis(exp1a_sdt_m1, "ValenceNeutral:ismatch > ValenceBad:ismatch")   # 0.91
-hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceNeutral")  # 0.82
-hypothesis(exp1a_sdt_m1, "ValenceGood > ValenceBad")      # .95
-hypothesis(exp1a_sdt_m1, "ValenceNeutral > ValenceBad")   # 0.81
-
-# bayestestR::sexit(exp1a_sdt_m1)
-exp1a_sdt_p <- fun_plot_sdt_val(exp1a_sdt_m1)
-```
-We fitted a Bayesian hierarchical GLM for signal detection theory approach. The results showed that when the shapes were tagged with labels with different moral valence, the sensitivity ($d'$) and criteria ($c$) were both influence. For the $d'$, we found that the shapes tagged with morally good person (2.46, 95% CI[2.21 2.72]) is greater than shapes tagged with moral bad (2.07, 95% CI[1.83 2.32]), $P_{PosteriorComparison} = 1$. Shape tagged with morally good person is also greater than shapes tagged with neutral person (2.23, 95% CI[1.95 2.49]), $P_{PosteriorComparison} = 0.97$. Also, the shapes tagged with neutral person is greater than shapes tagged with morally bad person, $P_{PosteriorComparison} = 0.92$. 
-
-Interesting, we also found the criteria for three conditions also differ, the shapes tagged with good person has the highest criteria (-1.01, [-1.14 -0.88]), followed by shapes tagged with neutral person(-1.06, [-1.21 -0.92]), and then the shapes tagged with bad person(-1.11, [-1.25 -0.97]). However, pair-wise comparison showed that only showed strong evidence for the difference between good and bad conditions.
-
-### Reaction times
-```{r 1a_rt_BGLM, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
-# fit a three-level hierarchical model for RT, didn't specify the prior
-exp1a_rt_m1 <- fun_rt_val('1a')
-#plot(exp1a_rt_m1, "b_")
-summary(exp1a_rt_m1)  # n
-# pp_check(exp1a_rt_m1)
-
-# Population-Level Effects: 
-#                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-# Intercept              -0.30      0.02    -0.33    -0.26 1.02      288      642  # baseline: mismatch:neutral = -.3
-# ValenceBad              0.00      0.01    -0.01     0.01 1.00     3611     3116  # mismatch:neutral + mismatch:bad  = -.3
-# ValenceGood             0.00      0.01    -0.01     0.01 1.00     2749     2691  # mismatch:neutral + mismatch:Good = -.3
-# ismatch                -0.07      0.01    -0.09    -0.06 1.00     2203     2371  # mismatch:neutral + ismatch = (-0.30) + (-0.07) = -0.37
-# ValenceBad:ismatch      0.02      0.01     0.00     0.05 1.00     2451     2495  # mismatch:neutral + ismatch + match:bad  = (-0.30) + (-0.07) + 0.02 = -0.35
-# ValenceGood:ismatch    -0.04      0.02    -0.07    -0.01 1.00     1911     2326  # mismatch:neutral + ismatch + match:good = (-0.30) + (-0.07) +-0.04 = -0.41
-
-hypothesis(exp1a_rt_m1, "ismatch < 0")  # Effect of matchness: Match < mis-match, p = 1
-hypothesis(exp1a_rt_m1, "ValenceGood:ismatch < 0")  # Match good < Match Neutral, p = 0.99
-hypothesis(exp1a_rt_m1, "ValenceBad:ismatch > 0")   # Match Bad > Match Neutral, p = 0.99
-hypothesis(exp1a_rt_m1, "(ValenceGood:ismatch - ValenceBad:ismatch) < 0")   # Match Good < Match Bad, p = 1
-
-exp1a_rt_p <- fun_plot_rt_val(exp1a_rt_m1)
-```
-
-```{r plot-exp1a-BGLM, fig.cap="Exp1a: Results of Bayesian GLM analysis.", fig.height=8, fig.width=8, warning=FALSE}
-library(patchwork)
-exp1a_sdt_p/exp1a_rt_p + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 4, byrow = FALSE)
-```
-
-We fitted a Bayesian hierarchical GLM for RTs, with a log-normal distribution as the link function. We used the posterior distribution of the regression coefficient to make statistical inferences. As in previous studies, the matched conditions are much faster than the mismatched trials ($P_{PosteriorComparison} = 1$). We focused on matched trials only, and compared different conditions: Good is faster than the neutral, $P_{PosteriorComparison} = .99$, it was also faster than the Bad condition, $P_{PosteriorComparison} = 1$. And the neutral condition is faster than the bad condition, $P_{PosteriorComparison} = .99$. However, the mismatched trials are largely overlapped. See Figure \@ref(fig:plot-exp1a-BGLM).
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
@@ -334,6 +272,14 @@ Three labels used in this experiment is selected based on the rating results fro
 
 ### Procedure
 For participants from both Tsinghua community and Wenzhou community, the procedure in the current study was exactly same as in experiment 1a.
+
+## Descriptive results
+
+```{r 'exp1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
+# rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
+Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1a.v.dprime_l)
+```
 
 # Experiment 1c
 In this study, we further control the valence of words using in our experiment. Instead of using label with moral valence, we used valence-neutral names in China. Participant first learn behaviors of the different person, then, they associate the names and shapes. And then they perform a name-shape matching task.
@@ -353,6 +299,17 @@ In the social memory task, the descriptions of three person were presented witho
 The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing until they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
 
 
+
+## Descriptive results
+
+Here we show the **mean* RT and *d'* of each condition. 
+```{r 'ex1c-dprime-rt', fig.cap="RT and *d* prime of Experiment 1c.", fig.height=6, fig.width=10, warning=FALSE}
+#rtdata <- df1c.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# Mplots(expName = 'exp1c', df1c.v.dprime_l,rtdata)
+
+Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
+```
+
 # Experiment 2: Sequential presenting
 Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the association between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of positive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect occurred because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
 
@@ -369,7 +326,14 @@ In the final procedure, the label (good person, bad person, or neutral person) w
 ### Analysis
 Data was analyzed as in study 1a. 
 
+## Descriptive results
 
+```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
+rtdata <- df2.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp2', df2.v.dprime_l,rtdata)
+
+```
 # Experiment 3a
 To examine the modulation effect of positive valence was an intrinsic, self-referential process, we designed study 3. In this study, moral valence was assigned to both self and a stranger. We hypothesized that the modulation effect of moral valence will be stronger for the self than for a stranger.
 
@@ -390,7 +354,14 @@ After being fully explained and signed the informed consent, participants were i
 ### Data Analysis
 Data analysis followed strategies described in the general method section. Reaction times and *d* prime data were analyzed as in study 1 and study 2, except that one more within-subject variable (i.e., self-relevance) was included in the repeated measures ANOVA. 
 
+## Descriptive results
 
+```{r 'ex3a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
+rtdata <- df3a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
+
+```
 
 # Experiment 3b
 In study 3a, participants had to remember 6 pairs of association, which cause high cognitive load during the whole experiment. To eliminate the influence of cognitive load, we conducted study 3b, in which participant learn three aspect of self and stranger separately in to consecutive task. We hypothesize that we will replicate the pattern of study 3a, i.e., the effect of moral valence only occurs for self-relevant conditions.
@@ -398,7 +369,7 @@ In study 3a, participants had to remember 6 pairs of association, which cause hi
 ## Method
 
 ### Participants
-Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s $d$) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effec size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
+Study 3b were finished in 2017, at that time we have calculated that the effect size (Cohen’s $d$) of good-person (or good-self) vs. bad-person (or bad-other) was between 0.47 ~ 0.53, based on study 1a, 1b, 2, 3a, 4a, and 4b. Based on this effect size, we estimated that 54 participants would allow we to detect the effect size of Cohen’s = 0.5 with 95% power and alpha = 0.05, using G*power 3.192 (Faul, Erdfelder, Buchner, & Lang, 2009; Faul, Erdfelder, Lang, & Buchner, 2007). Therefore, we planned to stop after we arrived this number. During the data collected at Wenzhou University, `r df3b.T.basic$N` participants (`r df3b.T.basic$Nf` females; 19 to 25 years of age, age = `r df3b.T.basic$Age_mean` $\pm$ `r df3b.T.basic$Age_sd`) came to the testing room and we tested all of them during a single day. All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. `r nrow(df3b.excld.sub)` participants’ data were excluded from analysis because their over all accuracy was lower than 60%, 1 more participant waw excluded because of zero hit rate for one condition, leaving `r df3b.v.basic$N` participants (`r df3b.v.basic$Nf`  females; 19 to 25 years old, age = `r df3b.v.basic$Age_mean` $\pm$ `r df3b.v.basic$Age_sd`). 
 
 
 ### Design
@@ -412,6 +383,15 @@ As in study 3a, before each task, the instruction showed the meaning of each lab
 
 ### Data Analysis
 Data analysis is the same as study 3a.
+
+## Results
+
+```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
+rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
+
+```
 
 
 # Experiment 4a
@@ -437,6 +417,15 @@ The procedure was similar to Experiment 1. There were 6 blocks of trial, each wi
 The data were analyzed in the same way as in experiment 3a and 3b.
 
 
+## Descriptive results
+```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
+
+rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
+
+```
+
 
 # Experiment 4b
 
@@ -457,6 +446,15 @@ The procedure was similar to Experiment 4 a. Both samples of participants finish
 ### Data analysis
 The data were analyzed as in experiment 4a.
 
+## Descriptive results
+
+```{r 'ex4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
+rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp4b', df4a.v.dprime_l,rtdata)
+```
+
+Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
 
 # Experiment 5: Generalization of positive effect
 So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of different attractivness, and emotional words with different valence). In this study, participants finished 4 session of association task, each with different categories of stimuli.
@@ -474,6 +472,50 @@ A 4 × 3 × 2 within-subject design was used. The first independent variable was
 
 ### Procedure
 Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
+
+## Descriptive results
+
+```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 5.", fig.height=6, fig.width=15, warning=FALSE}
+
+P.dprime <- ggplot(df5.v.dprime_l,aes(x = taskType, y = dprime, fill = Valence)) +
+                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
+                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
+                geom_dotplot(aes(x = taskType, y = dprime, color = Valence), 
+                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 5.5,
+                             position = position_dodge(0.2)) +
+                geom_boxplot(aes(x = taskType,  y = dprime, fill = Valence), 
+                             outlier.shape = NA, alpha = 0.5, width = 0.1,  color = 'black',
+                             position = position_dodge(0.2)) + 
+                scale_color_brewer(palette = "Dark2") +
+                scale_fill_brewer(palette = "Dark2") +
+                ylab(expression(paste(italic("d"), " prime"))) +
+               # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
+                scale_y_continuous(expand = c(0, 0), limits = c(-1,5)) +
+                apatheme
+          
+          
+P.rt <- ggplot(df5.v.rt_m,aes(x = taskType , y = RT_m, fill = Valence))+
+      geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
+                       adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
+      #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
+      #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
+      geom_dotplot(aes(x = taskType,y = RT_m, color = Valence), 
+                   binaxis='y', binwidth = 0.8, stackdir='center', dotsize= 8,
+                   position = position_dodge(0.2)) + 
+      geom_boxplot(aes(x = taskType,  y = RT_m,fill = Valence),outlier.shape = NA,
+                   alpha = 0.5, width = 0.1,  color = "black",
+                   position = position_dodge(0.2))+ 
+      scale_color_brewer(palette = "Dark2")+
+      scale_fill_brewer(palette = "Dark2")+
+      ylab("Reaction Times")+
+      #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
+      scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
+      apatheme
+multiplot(P.rt,P.dprime,cols = 2)
+
+```
+
+Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment 5.
 
 
 # Experiment 6a: EEG study 1
@@ -498,6 +540,15 @@ As in experiment 2 (Sui, He, & Humphreys, 2012), subjects first learned the asso
 
 All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-primed 2.0 was used to present stimuli and collect behavioral results. Data were collected and analyzed when accuracy performance in total reached 60%. 
 
+## Descriptive results
+
+```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
+rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
+
+```
+Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt) shows *d* prime and reaction times of experiment 6a.
 
 # Experiment 6b: EEG study 2
 Experiment 6b was conducted to study the neural correlates of the prioritization effect of positive self, i.e., the neural underlying of the behavioral effect found int experiment 3a. However, as in experiment 5a, the procedure of this experiment was modified to adopted to ERP experiment. 
@@ -522,6 +573,62 @@ Because learning 6 associations was more difficult than 3 associations and parti
 
 Participants came back to lab at the second day and finish the same task again, with EEG recorded. Before the EEG experiment, each participant finished a practice session again, if their accuracy is equal or higher than 85%, they start the experiment (one participant used lower threshold 75%). Each participant finished 18 blocks, each has 90 trials. One participant finished additional 6 blocks because of high error rate at the beginning, another two participant finished addition 3 blocks because of the technique failure in recording the EEG data. To increase the number of trials that can be used for EEG data analysis, matched trials has twice number as mismatched trials, therefore, for matched trials each participants finished 180 trials for each condition, for mismatched trials, each conditions has 90 trials.
 
+## Results
+
+```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
+
+rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp6b_d1', df6b_d1.v.dprime_l,rtdata)
+
+```
+
+Only the behavioral results were reported here.
+
+### Day one
+
+Figure \@ref(fig:ex6b-d1-dprime-rt) shows *d* prime and reaction times from day 1 of the experiment 6b. 
+
+```{r 'ex6b-d2-dprime-rt', fig.cap="RT and *d* prime of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
+# calculate d prime
+df6b_d2.v.dprime_l <- df6b_d2.v %>%
+  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
+                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
+                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
+                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
+                                    .method ="first",  .default = NA)) %>% 
+  dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
+  dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
+  dplyr::ungroup() %>%
+  tidyr::spread(key = sdt, value = N,fill = 0) %>%                          # long-to-wide format
+  dplyr::mutate(hitR = hit/(hit + miss),                                    # hit rate
+                FAR  = FA/(FA+CR)) %>%                                      # fa rate
+  dplyr::mutate(hitR = ifelse(hitR == 1, 1 - 1/(2*(hit + miss)), hitR),     # if hit rate is 1, standardize it
+                FAR  = ifelse(FAR == 0, 1/(2*(hit + miss)), FAR)) %>%       # if FA rate is 0, standardize it
+  dplyr::mutate(dprime = qnorm(hitR) - qnorm(FAR)) %>%
+  dplyr::select(Site, Subject, Age, Sex, Valence, Identity, dprime) %>%     # select relevant columns
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+# Day2: match trials
+df6b_d2.v.rt_m1 <- df6b_d2.v %>%
+  dplyr::filter(ACC == 1 & Matchness == "Match") %>%
+  dplyr::group_by(Site, Subject, Matchness, Identity, Valence) %>%
+  dplyr::summarise(RT_m = mean(RT),
+                   Ntrial = length(RT)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
+                Identity = factor(Identity, levels = c('Self', 'Other')))
+
+rtdata <- df6b_d2.v.rt_m1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+
+Mplots(expName = 'exp6b_d2', df6b_d2.v.dprime_l,rtdata)
+
+```
+
+### Day two
+
+Figure \@ref(fig:ex6b-d2-dprime-rt) shows *d* prime and reaction times from day 2 of the experiment 6b. 
 
 # Self-reported personal distance
 
