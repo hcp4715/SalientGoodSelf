@@ -1052,7 +1052,7 @@ df5.T.basic     <- df5 %>%
 # find the participants who practiced but not finish experiment
 subjPrac <- df5 %>% dplyr::filter(is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
 subjFinish <- df5 %>% dplyr::filter(!is.na(df5$BlockNo)) %>% dplyr::distinct(Subject)
-subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
+df5.subjQuit <- subjPrac$Subject[which(!subjPrac$Subject %in% subjFinish$Subject)] 
 
 # participants should be excluded
 df5.excld.sub <-  df5 %>%
@@ -1065,7 +1065,7 @@ df5.excld.sub <-  df5 %>%
         dplyr::select(Subject) %>% 
         dplyr::pull(Subject)
 
-df5.excld.sub <- c(df5.excld.sub, subjQuit)                # create a vector for all invalid participants
+df5.excld.sub <- c(df5.excld.sub, df5.subjQuit)                # create a vector for all invalid participants
 
 # The rate of excluded trials in valid data
 df5.invalid_trial_rate   <- df5 %>%

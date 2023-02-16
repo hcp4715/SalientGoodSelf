@@ -2,68 +2,22 @@
 ## This script is used for initializing the analysis
 #############################################################################
 
-## Function of this script:
-# 1. choose the feedback language
-# 2. load or prepare packages
-# 3. define functions for other scripts
+## Preparation in this script:
+# 1. Load or prepare packages and APA themes for plotting
+# 2. Define functions for other scripts
+#    2.1. dprime, a function for calculating Cohen's d
+#    2.2. d.sgpp, a function for calculating Cohen's d
+#    2.3. SummarySE, SE for within subject design data
+#    2.4. multiplot, 
+#    2.5. CAplot, plotting categorization task data, half violin
+#    2.6. Mplots, plotting matching task data, half violin
+#    2.7. Val_plot_NHST, plotting valence effect of matchign, points & lines
+#    2.8. Val_id_plot_NHST, plotting valence and id effect of matching, points & lines
+#    2.9. fun_sdt_val, fun_plot_sdt_val, ... BHM and plottings
 
 #############################################
-############ 1. choose the feedback language
+##### 1. Prepare themes for plotting
 #############################################
-# set local encoding to English
-if (.Platform$OS.type == 'windows') {
-  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
-} else {
-  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-}
-
-Sys.setenv(LANG = "en") # set the feedback language to English
-options(scipen = 999)   # force R to output in decimal instead of scientific notion
-options(digits=5)       # limit the number of reporting
-
-# rm(list = setdiff(ls(), lsf.str()))  # remove all data but keep functions
-
-#############################################
-##### 2. load or prepare packages
-#############################################
-# use pacman to manage the packages
-if (!require(pacman)){
-        install.packages("pacman")
-        library(pacman)
-}
-
-# use pacman::p_load to load the packages
-pacman::p_load('here',              # for choosing directory
-               'tidyverse',         # for data wrangling
-               'brms',              # for Bayesian stats, main text
-               'tidybayes',         # for Bayesian stats, main text
-               "BayesFactor",       # for Bayes factor 
-               "ggplot2",           # plot general
-               'ggridges',          # plot ridges
-               'patchwork',         # plot patch plots together
-               "papaja",            # core for reproduce the APA format of the manuscript
-               "easystats"
-               # "Hmisc", 
-               # 'matrixStats', 
-               # "afex",           # for frequentists' ANOVA, in suppl
-               # 'lme4',           # for frequentists' hierarchical model, in suppl
-               # 'emmeans',        # for frequentists' hierarchical model, in suppl
-               # "metafor",        # for frequentists' meta-analysis, in suppl
-               # "corrplot",       # for questionnaire analysis, in suppl
-               # "psych",          # for questionnaire analysis, in suppl
-               # "lavaan",         # for questionnaire analysis, in suppl
-               # "semPlot",        # for questionnaire analysis, in suppl
-               # 'devtools'
-               )
-
-source("geom_flat_violin.R")       # for plotting the violin plots
-
-# using cmdstanr as backend, need to installed properly
-if (!require(cmdstanr)){
-        install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-        library(cmdstanr)
-}
-# set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # Save some time and store APA format-related code in an object so you can easily
 # use it in multiple plots
@@ -138,7 +92,6 @@ dprime <- function(hit,fa) {
   qnorm(hit) - qnorm(fa)
 }
 
-
 ## below is the code from blog, and adapted from A C Del Re from email
 d.sgpp <- function(m.1,m.2,sd.1,sd.2,n,r=.5){
         # m.1 = mean at time 1
@@ -168,10 +121,10 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   # this does the summary. For each group's data frame, return a vector with
   # N, mean, and sd
   datac <- plyr::ddply(data, groupvars, .drop=.drop,
-                 .fun = function(xx,col){
-                   c(N    = length2(xx[[col]],na.rm=na.rm),
-                     mean = mean(xx[[col]],na.rm=na.rm),
-                     sd   = sd  (xx[[col]],na.rm=na.rm)
+                 .fun = function(xx, col){
+                   c(N    = length2(xx[[col]], na.rm=na.rm),
+                     mean = mean(xx[[col]], na.rm=na.rm),
+                     sd   = sd  (xx[[col]], na.rm=na.rm)
                    )
                  },
                  measurevar
@@ -229,8 +182,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 #
 
-########### define a function for the plots ##########
-#### For categorization task
+########### define function for the plots ##########
+#### For categorization task (for categorization task only), half violin plot
 CAplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', task = 'id', inData){
       inData$Identity <- factor(inData$Identity,levels = c("Self","Other"))
       inData$Morality <- factor(inData$Morality,levels = c("Good","Bad"))
@@ -307,16 +260,19 @@ CAplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', task = 
     return(multiplot(P.rt, P.acc,cols = 2))
 }
  
-#### For Match task
+#### For Matching task, half violin plot
 #Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp1', dData,rtData){
 Mplots <- function(expName = 'exp1', dData, rtData){
       #dData <- dData %>% dplyr::rename(Valence=Val_sh)
       #rtData <- rtData %>% dplyr::rename(Valence=Val_sh)
       dData$Valence <- factor(dData$Valence,levels = c("Good",'Neutral',"Bad"))
       rtData$Valence <- factor(rtData$Valence,levels = c("Good",'Neutral',"Bad"))
+      
+      ## If include the variable Identity:
       if ('Identity' %in% colnames(dData)){
           dData$Identity <- factor(dData$Identity,levels = c("Self","Other"))
           rtData$Identity <- factor(rtData$Identity,levels = c("Self","Other"))
+          
           P.dprime <- ggplot(dData,aes(x = Identity, y = dprime, fill = Valence)) +
                 geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
                                  adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
@@ -332,10 +288,9 @@ Mplots <- function(expName = 'exp1', dData, rtData){
                # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
                 scale_y_continuous(expand = c(0, 0), limits = c(-1,5)) +
                 apatheme
-          
-          
+
           P.rt <- ggplot(rtData,aes(x = Identity , y = RT, fill = Valence))+
-                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
+                geom_flat_violin(aes(fill = Valence), position = position_nudge(x = 0.1, y = 0),
                                  adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
                 #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
                 #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
@@ -441,7 +396,8 @@ make_table <- function(df, ali = "left", aw = 0.5){
   return(t)
 }
 
-# new plot for valence effect
+# new plot for valence effect, linking individual's data points across condition
+# jittered 
 Val_plot_NHST <- function(df.rt, df.d){
   df.plot <- df.rt %>%
     dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
@@ -462,7 +418,7 @@ Val_plot_NHST <- function(df.rt, df.d){
                   # Conds = as.numeric(as.character(Conds)),
     ) 
   
-  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add gitter to x
+  df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add jitter to x
   
   # New facet label names for panel variable
   # https://stackoverflow.com/questions/34040376/cannot-italicize-facet-labels-with-labeller-label-parsed

@@ -56,12 +56,58 @@ Here we described the details of each experiment, without the results. For demon
 ```{r setup, include=FALSE}
 rm(list = ls())
 
-#output: pdf_document
-#knitr::opts_chunk$set(echo = TRUE)
-#source('Initial_suppl.r')
+# set local encoding to English
+if (.Platform$OS.type == 'windows') {
+  Sys.setlocale(category = 'LC_ALL','English_United States.1250')
+} else {
+  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+}
+
+Sys.setenv(LANG = "en") # set the feedback language to English
+options(scipen = 999)   # force R to output in decimal instead of scientific notion
+options(digits=5)       # limit the number of reporting
+
 curDir = here::here() #dirname(rstudioapi::getActiveDocumentContext()$path)
 
-pacman::p_load("qgraph")
+# use pacman to manage the packages
+if (!require(pacman)){
+        install.packages("pacman")
+        library(pacman)
+}
+
+# use pacman::p_load to load the packages
+pacman::p_load('here',              # for choosing directory
+               'tidyverse',         # for data wrangling
+               'brms',              # for Bayesian stats, main text
+               'tidybayes',         # for Bayesian stats, main text
+               "BayesFactor",       # for Bayes factor 
+               "ggplot2",           # plot general
+               'ggridges',          # plot ridges
+               'patchwork',         # plot patch plots together
+               "papaja",            # core for reproduce the APA format of the manuscript
+               "easystats",
+               "qgraph"
+               # "Hmisc", 
+               # 'matrixStats', 
+               # "afex",           # for frequentists' ANOVA, in suppl
+               # 'lme4',           # for frequentists' hierarchical model, in suppl
+               # 'emmeans',        # for frequentists' hierarchical model, in suppl
+               # "metafor",        # for frequentists' meta-analysis, in suppl
+               # "corrplot",       # for questionnaire analysis, in suppl
+               # "psych",          # for questionnaire analysis, in suppl
+               # "lavaan",         # for questionnaire analysis, in suppl
+               # "semPlot",        # for questionnaire analysis, in suppl
+               # 'devtools'
+               )
+
+source("geom_flat_violin.R")       # for plotting the violin plots
+source('Initial_suppl_simple.r')
+# # using cmdstanr as backend, need to installed properly
+# if (!require(cmdstanr)){
+#         install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+#         library(cmdstanr)
+# }
+# set_cmdstan_path('/home/hcp4715/cmdstan')
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 options(tinytex.verbose = F) # debug the tex
@@ -74,166 +120,6 @@ CommonColnames_d  <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Iden
 CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matchness", "Identity", "Valence", "RT")
 
 load("AllData.RData")
-```
-
-```{r define_funs, echo=FALSE, results='hide'}
-# define a function to run the sdt GLMM for all exp with Matchness * Valence design
-# for 1a, 1b, 1c, 2, 6a
-fun_sdt_val <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_sdt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  
-  m <- df %>%
-  dplyr::filter(!is.na(RESP)) %>% # filter trials without response
-  dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                saymatch = ifelse((Matchness == 'Match' & ACC == 1) | 
-                                    (Matchness == 'Mismatch' & ACC == 0), 1, 0),
-                Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-  brms::brm(saymatch ~ 0 + Valence + Valence:ismatch + 
-              (0 + Valence + Valence:ismatch | Subject),
-            family = bernoulli(link="probit"),
-            data = .,
-            control = list(adapt_delta = .99),
-            iter = 4000,
-            thin = 2,
-            cores = parallel::detectCores(),
-            file = here::here(m_name))
-  return(m)
-}
-
-fun_plot_sdt_val <- function(m_sdt) {
-    # extract c
-    tmp_c <- m_sdt %>% 
-      tidybayes::gather_draws(b_ValenceBad, b_ValenceNeutral, b_ValenceGood) %>%
-      dplyr::rename(Valence = .variable, sdt_c = .value) %>% dplyr::ungroup() %>%
-      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
-      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
-                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
-    
-    # dprime
-    tmp_d <- m_sdt %>% 
-      tidybayes::gather_draws(`b_ValenceBad:ismatch`, `b_ValenceNeutral:ismatch`, 
-                              `b_ValenceGood:ismatch`) %>%
-      dplyr::rename(Valence = .variable, sdt_d = .value) %>% dplyr::ungroup() %>%
-      dplyr::mutate(Valence = gsub("b_", "", Valence)) %>%
-      dplyr::mutate(Valence = ifelse(stringr::str_detect(Valence, 'Bad'), 'Bad',
-                                     ifelse(stringr::str_detect(Valence, 'Good'), 'Good', 'Neutral')))
-    
-    # plot summaries with densities
-    p_sdt_d_sum <- tmp_d %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      ggplot2::ggplot(aes(x = sdt_d, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "sensitivity (d')", y = 'Posterior') +
-      theme_classic()
-    
-    p_sdt_c_sum <- tmp_c %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      ggplot2::ggplot(aes(x = sdt_c, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "criteria (c)", y = 'Posterior') +
-      theme_classic()
-    
-    # plot comparison
-    p_sdt_d <- tmp_d %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      tidybayes::compare_levels(sdt_d, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_d, y = Valence, fill = stat(x > 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(x = "sensitivity (d')", y = 'Comparison') +
-      theme_classic()
-    
-    p_sdt_c <- tmp_c %>%
-      dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      tidybayes::compare_levels(sdt_c, by = Valence) %>%
-      ggplot2::ggplot(aes(x = sdt_c, y = Valence, fill = stat(x > 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(x = "criteria (c)", y = 'Comparison') +
-      theme_classic()
-    
-    return(list(p_sdt_d_sum, p_sdt_c_sum, p_sdt_d, p_sdt_c))
-}
-
-# define a function to run the RT GLMM for all exp with Matchness * Valence design
-fun_rt_val <- function(exp_name) {
-  df_name <- paste('df', exp_name, '.v', sep = '')
-  m_name <- paste("glmmModels/exp", exp_name, "_rt_m1_DummyCode", sep = '')
-  df <- get(df_name)  # get the data by string
-  m <- df %>%
-    dplyr::mutate(RT_sec = RT/1000) %>% # log RT in seconds
-    dplyr::filter(ACC == 1) %>%
-    dplyr::mutate(ismatch = ifelse(Matchness == 'Match', 1, 0),
-                  Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-    brms::brm(RT_sec ~ Valence*ismatch + (Valence*ismatch | Subject),
-              family = shifted_lognormal(),
-              data = ., control = list(adapt_delta = .99),
-              iter = 4000,
-              thin = 2,
-              cores = parallel::detectCores(),
-              file = here::here(m_name))
-  return(m)
-}
-
-fun_plot_rt_val <- function(m_rt) {
-    tmp_rt <- m_rt %>% 
-      tidybayes::spread_draws(b_Intercept, b_ValenceBad, b_ValenceGood, 
-                              b_ismatch,   `b_ValenceBad:ismatch`, `b_ValenceGood:ismatch`) %>%
-      dplyr::mutate(Neut_MM = b_Intercept,
-                    Bad_MM = Neut_MM + b_ValenceBad,
-                    Good_MM = Neut_MM + b_ValenceGood,
-                    Neut_M = Neut_MM + b_ismatch,
-                    Bad_M = Neut_MM + b_ismatch + `b_ValenceBad:ismatch`,
-                    Good_M = Neut_MM + b_ismatch + `b_ValenceGood:ismatch`) %>%
-      dplyr::select(-contains('b_')) %>%
-      tidyr::pivot_longer(cols = Neut_MM:Good_M,
-                          names_to = 'cond',
-                          values_to = 'logRT') %>%
-      dplyr::mutate(RT = exp(logRT)*1000,
-                    Matchness = dplyr::case_when(cond == 'Neut_MM' | cond == 'Bad_MM' | cond == 'Good_MM' ~ 'Mismatch',
-                                                 cond == 'Neut_M'  | cond == 'Bad_M'  | cond == 'Good_M' ~ 'Match'),
-                    Valence = dplyr::case_when(cond == 'Neut_MM' | cond == 'Neut_M' ~ 'Neutral',
-                                               cond == 'Bad_MM'  | cond == 'Bad_M'  ~ 'Bad', 
-                                               cond == 'Good_MM' | cond == 'Good_M' ~ 'Good'))
-    p_exp1b_rt_m_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Match') %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(x = "RTs (Matching, ms)", y = 'Posterior') +
-      theme_classic()
-    p_exp1b_rt_mm_sum <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Bad', 'Neutral', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Mismatch') %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence)) +
-      tidybayes::stat_halfeyeh() + 
-      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Posterior') +
-      theme_classic()
-    
-    # plot comparison
-    p_exp1b_rt_m <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Match') %>%
-      tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(tag = 'C', x = "RTs (Matching, ms)", y = 'Comparison') +
-      theme_classic()
-    p_exp1b_rt_mm <- tmp_rt %>% dplyr::mutate(Valence = factor(Valence, levels = c('Neutral', 'Bad', 'Good'))) %>%
-      dplyr::filter(Matchness == 'Mismatch') %>%
-      tidybayes::compare_levels(RT, by = Valence) %>%
-      ggplot2::ggplot(aes(x = RT, y = Valence, fill = stat(x < 0))) +
-      tidybayes::stat_halfeyeh() + 
-      geom_vline(xintercept =0, linetype = "dashed") +
-      scale_fill_manual(values = c("gray80", "skyblue")) +
-      labs(tag = 'D', x = "RTs (Mismatching, ms)", y = 'Comparison') +
-      theme_classic()
-    return(list(p_exp1b_rt_m_sum, p_exp1b_rt_mm_sum, p_exp1b_rt_m, p_exp1b_rt_mm))
-}
-
 ```
 
 # Experiment 1a
@@ -416,7 +302,6 @@ The procedure was similar to Experiment 1. There were 6 blocks of trial, each wi
 ### Data analysis
 The data were analyzed in the same way as in experiment 3a and 3b.
 
-
 ## Descriptive results
 ```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 
@@ -462,7 +347,7 @@ So far, we have considered the modulation effect of morality and found that the 
 ## Method
 
 ### Participants
-`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.nQuit)` participant did not finished the experiment, and the other `r nrow(df5.excld.sub)` were excluded because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
+`r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.subjQuit)` participant did not finished the experiment, and the other `r nrow(df5.excld.sub)` were excluded because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
 
 ### Experimental design
 A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, attractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
