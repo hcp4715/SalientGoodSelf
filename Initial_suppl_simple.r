@@ -31,9 +31,9 @@ apatheme <- theme_bw() +
               legend.text = element_text(size =12),
               #legend.position='top',
               plot.title = element_text(lineheight=.8, face="bold", size = 16),
-#              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
+              #              plot.title = element_text(lineheight=.8, face="bold", size = 16, hjust = 0.5),
               axis.text = element_text (size = 14, color = 'black'),
-#              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
+              #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
               axis.title = element_text (size = 14),
               axis.line.x = element_line(color='black', size = 1),   # increase the size of font
               axis.line.y = element_line(color='black', size = 1),   # increase the size of font
@@ -182,209 +182,6 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 #
 
-########### define function for the plots ##########
-#### For categorization task (for categorization task only), half violin plot
-CAplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp7', task = 'id', inData){
-      inData$Identity <- factor(inData$Identity,levels = c("Self","Other"))
-      inData$Morality <- factor(inData$Morality,levels = c("Good","Bad"))
-      #inData$Morality[inData$Morality == "Good"] <- 1
-      #inData$Morality[inData$Morality == "Bad"]  <- 2
-      if(task == 'val'){              # valence-based categorization
-            ACCdata <- inData %>%
-                  select(Subject,Task,Morality,Identity,ACC) %>% 
-                  filter(Task == "Val")
-            rtData <- inData %>%
-                  select(Subject,Task,Morality,Identity,RT) %>% 
-                  filter(Task == "Val")
-            
-          } else if (task == 'id'){   # id-based categorization
-            ACCdata <- inData %>%
-                  select(Subject,Task,Morality,Identity,ACC) %>% 
-                  filter(Task == "Id")
-            rtData <- inData %>%
-                  select(Subject,Task,Morality,Identity,RT) %>% 
-                  filter(Task == "Id")
-          }else{                         #  combined for experiment 1
-            ACCdata <- inData %>%
-                  select(Subject,Morality,Identity,ACC)
-            rtData <- inData %>%
-                  select(Subject,Morality,Identity,RT)
-            
-      }
-
-    P.acc <- ggplot(ACCdata,aes(x = Morality, 
-                                y = ACC, fill = Identity))+
-          geom_flat_violin(aes(fill = Identity),position = position_nudge(x = 0.1, y = 0),
-                           adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-          geom_dotplot(aes(x = Morality,y = ACC, color = Identity), 
-                       binaxis='y', binwidth = 0.0125, stackdir='center', dotsize= 0.5,position = position_dodge(0.15)) +
-          geom_boxplot(aes(x = Morality,  y = ACC,fill = Identity),outlier.shape = NA,
-                       alpha = 0.5, width = 0.1,  color = "black",
-                       position = position_dodge(0.15))+ 
-          scale_color_brewer(palette = "Dark2")+
-          scale_fill_brewer(palette = "Dark2")+
-          ylab("Accuracy")+
-          #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-          scale_y_continuous(expand = c(0, 0), limits = c(0,1))+
-          apatheme
-    
-    fileName = paste0('p_',expName,'_',task,'_ACC','.pdf')
-    ggsave(fileName, P.acc, scale = 1,height = 6, width = 6, dpi = 300, family = "Times",path = saveDir)
-    
-    P.rt <- ggplot(rtData,aes(x = Morality, y = RT, fill = Identity))+
-          geom_flat_violin(aes(fill = Identity),position = position_nudge(x = 0.1, y = 0),
-                           adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-          #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
-          #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
-          geom_dotplot(aes(x = Morality,y = RT, color = Identity), 
-                       binaxis='y', binwidth = 8, stackdir='center', dotsize= 0.5,position = position_dodge(0.15)) + 
-          geom_boxplot(aes(x = Morality,  y = RT,fill = Identity),outlier.shape = NA,
-                       alpha = 0.5, width = 0.1,  color = "black",
-                       position = position_dodge(0.15))+ 
-          scale_color_brewer(palette = "Dark2")+
-          scale_fill_brewer(palette = "Dark2")+
-          ylab("Reaction Times")+
-          #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-          scale_y_continuous(expand = c(0, 0),limits = c(200,1000))+
-          apatheme
-    
-    fileName = paste0('p_',expName,'_',task,'_RT','.pdf')
-    ggsave(fileName, P.rt, scale = 1,height = 6, width = 6, dpi = 300, family = "Times",path = saveDir)
-    
-    fileName = paste0('p_',expName,'_',task,'.tiff')
-    setwd(saveDir)
-    tiff(fileName, width = 9, height = 6, units = 'in', res = 300)
-    p_dprime_match <- multiplot(P.rt,P.acc,cols = 2)
-    dev.off()
-    setwd(curDir)
-    return(multiplot(P.rt, P.acc,cols = 2))
-}
- 
-#### For Matching task, half violin plot
-#Mplots <- function(saveDir = traDir, curDir = curDir, expName = 'exp1', dData,rtData){
-Mplots <- function(expName = 'exp1', dData, rtData){
-      #dData <- dData %>% dplyr::rename(Valence=Val_sh)
-      #rtData <- rtData %>% dplyr::rename(Valence=Val_sh)
-      dData$Valence <- factor(dData$Valence,levels = c("Good",'Neutral',"Bad"))
-      rtData$Valence <- factor(rtData$Valence,levels = c("Good",'Neutral',"Bad"))
-      
-      ## If include the variable Identity:
-      if ('Identity' %in% colnames(dData)){
-          dData$Identity <- factor(dData$Identity,levels = c("Self","Other"))
-          rtData$Identity <- factor(rtData$Identity,levels = c("Self","Other"))
-          
-          P.dprime <- ggplot(dData,aes(x = Identity, y = dprime, fill = Valence)) +
-                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
-                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                geom_dotplot(aes(x = Identity, y = dprime, color = Valence), 
-                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 5.5,
-                             position = position_dodge(0.2)) +
-                geom_boxplot(aes(x = Identity,  y = dprime, fill = Valence), 
-                             outlier.shape = NA, alpha = 0.5, width = 0.1,  color = 'black',
-                             position = position_dodge(0.2)) + 
-                scale_color_brewer(palette = "Dark2") +
-                scale_fill_brewer(palette = "Dark2") +
-                ylab(expression(paste(italic("d"), " prime"))) +
-               # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                scale_y_continuous(expand = c(0, 0), limits = c(-1,5)) +
-                apatheme
-
-          P.rt <- ggplot(rtData,aes(x = Identity , y = RT, fill = Valence))+
-                geom_flat_violin(aes(fill = Valence), position = position_nudge(x = 0.1, y = 0),
-                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
-                #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
-                geom_dotplot(aes(x = Identity,y = RT, color = Valence), 
-                             binaxis='y', binwidth = 0.8, stackdir='center', dotsize= 8,
-                             position = position_dodge(0.2)) + 
-                geom_boxplot(aes(x = Identity,  y = RT,fill = Valence),outlier.shape = NA,
-                             alpha = 0.5, width = 0.1,  color = "black",
-                             position = position_dodge(0.2))+ 
-                scale_color_brewer(palette = "Dark2")+
-                scale_fill_brewer(palette = "Dark2")+
-                ylab("Reaction Times")+
-                #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
-                apatheme
-          return(multiplot(P.rt,P.dprime,cols = 2))
-      } else {
-              #
-              #dData$Identity <- "Valence"
-              #rtData$Identity <- "Valence"
-              P.dprime <- ggplot(dData,aes(x = Valence, y = dprime, fill = Valence)) +
-                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
-                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                geom_dotplot(aes(x = Valence,y = dprime, color = Valence), 
-                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 8,
-                             position = position_dodge(0.2)) +
-                geom_boxplot(aes(x = Valence,  y = dprime,fill = Valence),outlier.shape = NA,
-                             alpha = 0.5, width = 0.1,  color = "black",
-                             position = position_dodge(0.2)) + 
-                scale_color_brewer(palette = "Dark2") +
-                scale_fill_brewer(palette = "Dark2") +
-                  #xlab("Valence")+
-                ylab(expression(paste(italic("d"), " prime"))) +
-                  #scale_x_discrete(breaks = c(1,2,3),labels = c("Good","Neutral","Bad")) +
-                scale_y_continuous(expand = c(0, 0), limits = c(-2,6)) +
-                theme_bw()+
-                theme(panel.grid.major = element_blank(),
-                      panel.grid.minor = element_blank(),
-                      panel.background = element_blank(),
-                      panel.border = element_blank(),
-                      text=element_text(family='Times'),
-                      legend.title =element_blank(),
-                      legend.text  = element_text(size =12),
-                      #legend.position='top',
-                      plot.title = element_text(lineheight=.8, face="bold", size = 16),
-                      axis.text = element_text (size = 14, color = 'black'),
-                      #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
-                      axis.title = element_text (size = 14),
-                      axis.line.x = element_line(color='black', size = 1),   # increase the size of font
-                      axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-                      axis.title.x = element_blank(),
-                      #axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-                      axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
-                
-              P.rt <- ggplot(rtData,aes(x = Valence , y = RT, fill = Valence))+
-                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
-                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                  #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
-                  #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
-                geom_dotplot(aes(x = Valence,y = RT, color = Valence), 
-                             binaxis='y', binwidth = 0.4, stackdir='center', dotsize= 16,
-                             position = position_dodge(0.2)) + 
-                geom_boxplot(aes(x = Valence,  y = RT,fill = Valence),outlier.shape = NA,
-                             alpha = 0.5, width = 0.1,  color = "black",
-                             position = position_dodge(0.2))+ 
-                scale_color_brewer(palette = "Dark2")+
-                scale_fill_brewer(palette = "Dark2")+
-                ylab("Reaction Times")+
-                  #scale_x_discrete(breaks = 'Morality',label = 'Morality') +
-                  #xlab("Valence") +
-                scale_y_continuous(expand = c(0, 0),limits = c(200,1000))+
-                theme_bw()+
-                theme(panel.grid.major = element_blank(),
-                      panel.grid.minor = element_blank(),
-                      panel.background = element_blank(),
-                      panel.border = element_blank(),
-                      text=element_text(family='Times'),
-                      legend.title =element_blank(),
-                      legend.text  = element_text(size =12),
-                      #legend.position='top',
-                      plot.title = element_text(lineheight=.8, face="bold", size = 16),
-                      axis.text = element_text (size = 14, color = 'black'),
-                      #              axis.text.x = element_text(angle = 45, vjust = 0.5),   # x-axis's label font
-                      axis.title = element_text (size = 14),
-                      axis.line.x = element_line(color='black', size = 1),   # increase the size of font
-                      axis.line.y = element_line(color='black', size = 1),   # increase the size of font
-                      axis.title.x = element_blank(),
-                      #axis.title.x = element_text(margin=margin(10,0,0,0)),  # increase the sapce betwen title and x axis
-                      axis.title.y = element_text(margin=margin(0,12,0,0)))  # increase the space between title and y axis
-              return(multiplot(P.rt,P.dprime,cols = 2))
-      }
-}
-
-
 make_table <- function(df, ali = "left", aw = 0.5){
   t <- regulartable(data = df)
   t <- fontsize(t, size = 18, part = "all")
@@ -395,6 +192,8 @@ make_table <- function(df, ali = "left", aw = 0.5){
   t <- border(t, border = fp_border(), part = "all") 
   return(t)
 }
+
+########### define function for the plots ##########
 
 # new plot for valence effect, linking individual's data points across condition
 # jittered 
@@ -417,6 +216,8 @@ Val_plot_NHST <- function(df.rt, df.d){
                   #                               method ="first", .default = NA),
                   # Conds = as.numeric(as.character(Conds)),
     ) 
+
+
   
   df.plot$Conds_j <- jitter(df.plot$Conds, amount=.09) # add jitter to x
   
@@ -426,10 +227,9 @@ Val_plot_NHST <- function(df.rt, df.d){
                             "dprime"=expression(paste(italic("d"), ' prime')))
   levels(df.plot$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
                             "dprime"=expression(paste(italic("d"), ' prime')))
-  
   df.plot.sum_p <- summarySE(df.plot, measurevar = "value", groupvars = c('Valence',"DVs")) %>%
-    dplyr::mutate(Val_num = ifelse(Valence == 'Good', 1,
-                                   ifelse(Valence == 'Neutral', 2, 3)))
+          dplyr::mutate(Val_num = ifelse(Valence == 'Good', 1,
+                                         ifelse(Valence == 'Neutral', 2, 3)))
   
   pd1 <- position_dodge(0.5)
   scaleFUN <- function(x) sprintf("%.2f", x)
@@ -438,60 +238,57 @@ Val_plot_NHST <- function(df.rt, df.d){
     dprime = scale_y_continuous(labels=scaleFUN)
   )
   
-  p_df_sum <- df.plot  %>% # dplyr::filter(DVs== 'RT') %>%
-          ggplot(., aes(x = Valence, y = value, colour = as.factor(Valence))) +
-          # link individual's points by transparent grey lines
-          geom_line(aes(x = Conds_j, y = value, group = Subject),         
-                    linetype = 1, size = 0.8, colour = "#000000", alpha = 0.06) + 
-          geom_point(aes(x = Conds_j, y = value, group = Subject),   # plot individual points
+  p_df_sum <- df.plot  %>%  #dplyr::filter(DVs== 'RT') %>%
+    ggplot(., aes(x = Valence, y = value, colour = as.factor(Valence))) +
+    geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+              linetype = 1, size = 0.8, colour = "#000000", alpha = 0.06) + 
+    geom_point(aes(x = Conds_j, y = value, group = Subject),   # plot individual points
                colour = "#000000",
                size = 3, shape = 20, alpha = 0.1) +
-          geom_line(data = df.plot.sum_p, aes(x = Val_num, # plot the group means
-                                              y = value,
-                                              # group = Valence,
-                                              # colour = as.factor(Valence),
-                                              group = 1, # This is important!
-                                              ),
-                    linetype = 1, position = pd1, size = 2, color="dimgray") +
-          geom_point(data = df.plot.sum_p, aes(x = as.numeric(Valence), # group mean
-                                               y = value, 
-                                               colour = as.factor(Valence),
-                                               ), 
-                     shape = 18, position = pd1, size = 5) +
-          geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(Valence),  # group error bar.
-                                                  y = value, # group = Identity, 
-                                                  colour = as.factor(Valence),
-                                                  ymin = value- 1.96*se, 
-                                                  ymax = value+ 1.96*se), 
-                        width = .05, position = pd1, size = 2, alpha = 0.75) +
-          scale_colour_brewer(palette = "Dark2") +
-          scale_x_continuous(breaks=c(1, 2, 3),
-                             labels=c("Good", "Neutral", "Bad")) +
-          scale_fill_brewer(palette = "Dark2") +
-          #ggtitle("A. Matching task") +
-          theme_bw()+
-          theme(panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                  panel.background = element_blank(),
-                  panel.border = element_blank(),
-                  text=element_text(family='Times'),
-                  legend.title=element_blank(),
-                  #legend.text = element_text(size =6),
-                  legend.text = element_blank(),
-                  legend.position = 'none',
-                  plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
-                  axis.text = element_text (size = 18, color = 'black'),
-                  axis.title = element_text (size = 18),
-                  axis.title.x = element_blank(),
-                  axis.title.y = element_blank(),
-                  axis.line.x = element_line(color='black', size = 1),    # increase the size of font
-                  axis.line.y = element_line(color='black', size = 1),    # increase the size of font
-                  strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
-                  panel.spacing = unit(1.5, "lines")
-                ) +
-          facet_wrap( ~ DVs,
-                      scales = "free_y", nrow = 1,
-                      labeller = label_parsed)
+    geom_line(data = df.plot.sum_p, aes(x = Val_num, # plot the group means
+                                        y = value,
+                                        group = 1, # This is important!
+    ),
+    linetype = 1, position = pd1, size = 2, color="dimgray") +
+    geom_point(data = df.plot.sum_p, aes(x = as.numeric(Valence), # group mean
+                                         y = value,
+                                         colour = as.factor(Valence),
+    ),
+    shape = 18, position = pd1, size = 5) +
+    geom_errorbar(data = df.plot.sum_p, aes(x = as.numeric(Valence),  # group error bar.
+                                            y = value, # group = Identity, 
+                                            colour = as.factor(Valence),
+                                            ymin = value- 1.96*se, 
+                                            ymax = value+ 1.96*se), 
+                  width = .05, position = pd1, size = 2, alpha = 0.75) +
+    scale_colour_brewer(palette = "Dark2") +
+    scale_x_continuous(breaks=c(1, 2, 3),
+                       labels=c("Good", "Neutral", "Bad")) +
+    scale_fill_brewer(palette = "Dark2") +
+    #ggtitle("A. Matching task") +
+    theme_bw()+
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          text=element_text(family='Times'),
+          legend.title=element_blank(),
+          #legend.text = element_text(size =6),
+          legend.text = element_blank(),
+          legend.position = 'none',
+          plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+          axis.text = element_text (size = 18, color = 'black'),
+          axis.title = element_text (size = 18),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+          axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+          strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+          panel.spacing = unit(1.5, "lines")
+    ) +
+    facet_wrap( ~ DVs,
+                scales = "free_y", nrow = 1,
+                labeller = label_parsed)
   return(p_df_sum)
 }
 

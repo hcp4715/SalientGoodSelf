@@ -164,7 +164,7 @@ For participants from both Tsinghua community and Wenzhou community, the procedu
 ```{r 'exp1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
 # rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
-Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1a.v.dprime_l)
+Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
 ```
 
 # Experiment 1c
@@ -217,7 +217,9 @@ Data was analyzed as in study 1a.
 ```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df2.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
-Mplots(expName = 'exp2', df2.v.dprime_l,rtdata)
+# Mplots(expName = 'exp2', df2.v.dprime_l, rtdata)
+
+Val_plot_NHST(df.rt = df2.v.rt_m, df.d = df2.v.dprime_l)
 
 ```
 # Experiment 3a
@@ -243,10 +245,11 @@ Data analysis followed strategies described in the general method section. React
 ## Descriptive results
 
 ```{r 'ex3a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
-rtdata <- df3a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df3a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
-Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
+# Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
 
+Val_id_plot_NHST(df.rt = df3a.v.rt_m, df.d = df3a.v.dprime_l)
 ```
 
 # Experiment 3b
@@ -273,10 +276,11 @@ Data analysis is the same as study 3a.
 ## Results
 
 ```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
-rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
 
-Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
-
+Val_id_plot_NHST(df.rt = df3b.v.rt_m, df.d = df3b.v.dprime_l)
 ```
 
 
@@ -294,7 +298,7 @@ As in Experiment 3, a 2× 3× 2 within-subject design was used. The first variab
 However, in this the task, participants only learn the association between two geometric shapes and two labels (self and other), i.e., only self-relevance were related to the task. The moral valence manipulation was achieved by embeding the personal label of the labels in the geometric shapes, see below. For simplicity, the trials where shapes where paired with self and with a word of “good person” inside were shorted as good-self condition, similarly, the trials where shapes paired with the self and with a word of “bad person” inside were shorted as bad-self condition. Hence, we also have six conditions: good-self, neutral-self, bad-self, good-other, neutral-other, and bad-other.
 
 ### Stimuli
-2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou.
+2 shapes were included (circle, square) and each appeared above a central fixation cross with the personal label appearing below.  However, the shapes were not empty but with a two-Chinese-character word in the middle, the word was one of three labels with different moral valence: “good person”, “bad person” and “neutral person”. Before the experiment, participants learned the self/other association, and were informed to only response to the association between shapes’ configure and the labels below the fixation, but ignore the words within shapes. Besides the behavioral experiments, participants from Tsinghua community also finished questionnaires as Experiments 3, and participants from Wenzhou community finished a series of questionnaire as the other experiment finished in Wenzhou, Zhejiang Province, China.
 
 ### Procedure
 The procedure was similar to Experiment 1. There were 6 blocks of trial, each with 120 trials for 2017 data. Due to procedure error, the data collected in 2015 in Tsinghua community only have 60 trials for each block, i.e., 30 trials per condition. 
@@ -304,10 +308,12 @@ The data were analyzed in the same way as in experiment 3a and 3b.
 
 ## Descriptive results
 ```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
+# 
+# rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
 
-rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
+Val_id_plot_NHST(df.rt = df4a.v.rt_m, df.d = df4a.v.dprime_l)
 
 ```
 
@@ -334,9 +340,12 @@ The data were analyzed as in experiment 4a.
 ## Descriptive results
 
 ```{r 'ex4b-dprime-rt', fig.cap="RT and *d* prime of Experiment 4b.", fig.height=6, fig.width=10, warning=FALSE}
-rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df4b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp4b', df4a.v.dprime_l,rtdata)
+# 
 
-Mplots(expName = 'exp4b', df4a.v.dprime_l,rtdata)
+Val_id_plot_NHST(df.rt = df4b.v.rt_m, df.d = df4b.v.dprime_l)
 ```
 
 Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
@@ -378,7 +387,6 @@ P.dprime <- ggplot(df5.v.dprime_l,aes(x = taskType, y = dprime, fill = Valence))
                 scale_y_continuous(expand = c(0, 0), limits = c(-1,5)) +
                 apatheme
           
-          
 P.rt <- ggplot(df5.v.rt_m,aes(x = taskType , y = RT_m, fill = Valence))+
       geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
                        adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
@@ -396,12 +404,12 @@ P.rt <- ggplot(df5.v.rt_m,aes(x = taskType , y = RT_m, fill = Valence))+
       #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
       scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
       apatheme
-multiplot(P.rt,P.dprime,cols = 2)
+
+multiplot(P.rt, P.dprime, cols = 2)
 
 ```
 
 Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment 5.
-
 
 # Experiment 6a: EEG study 1
 Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
@@ -428,10 +436,11 @@ All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-prim
 ## Descriptive results
 
 ```{r 'ex6a-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
-rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df6a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
 
-Mplots(expName = 'exp6a', df6a.v.dprime_l,rtdata)
-
+Val_plot_NHST(df.rt = df6a.v.rt_m, df.d = df6a.v.dprime_l)
 ```
 Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt) shows *d* prime and reaction times of experiment 6a.
 
@@ -462,10 +471,11 @@ Participants came back to lab at the second day and finish the same task again, 
 
 ```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
 
-rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp6b_d1', df6b_d1.v.dprime_l,rtdata)
 
-Mplots(expName = 'exp6b_d1', df6b_d1.v.dprime_l,rtdata)
-
+Val_id_plot_NHST(df.rt=df6b_d1.v.rt_m, df.d=df6b_d1.v.dprime_l)
 ```
 
 Only the behavioral results were reported here.
@@ -505,10 +515,11 @@ df6b_d2.v.rt_m1 <- df6b_d2.v %>%
   dplyr::mutate(Valence = factor(Valence, levels = c("Good","Neutral","Bad")),
                 Identity = factor(Identity, levels = c('Self', 'Other')))
 
-rtdata <- df6b_d2.v.rt_m1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# rtdata <- df6b_d2.v.rt_m1 %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
+# 
+# Mplots(expName = 'exp6b_d2', df6b_d2.v.dprime_l,rtdata)
 
-Mplots(expName = 'exp6b_d2', df6b_d2.v.dprime_l,rtdata)
-
+Val_id_plot_NHST(df.rt=df6b_d2.v.rt_m1, df.d=df6b_d2.v.dprime_l)
 ```
 
 ### Day two
