@@ -292,7 +292,6 @@ Val_plot_NHST <- function(df.rt, df.d){
   return(p_df_sum)
 }
 
-
 Val_id_plot_NHST <- function(df.rt, df.d){
   df.plot <- df.rt %>%
     dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
@@ -392,7 +391,6 @@ Val_id_plot_NHST <- function(df.rt, df.d){
                 labeller = label_parsed)
   return(p_df_sum)
 }
-
 
 # define a function to run the sdt GLMM for all exp with Matchness * Valence design
 # for 1a, 1b, 1c, 2, 6a

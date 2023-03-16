@@ -87,27 +87,11 @@ pacman::p_load('here',              # for choosing directory
                "papaja",            # core for reproduce the APA format of the manuscript
                "easystats",
                "qgraph"
-               # "Hmisc", 
-               # 'matrixStats', 
-               # "afex",           # for frequentists' ANOVA, in suppl
-               # 'lme4',           # for frequentists' hierarchical model, in suppl
-               # 'emmeans',        # for frequentists' hierarchical model, in suppl
-               # "metafor",        # for frequentists' meta-analysis, in suppl
-               # "corrplot",       # for questionnaire analysis, in suppl
-               # "psych",          # for questionnaire analysis, in suppl
-               # "lavaan",         # for questionnaire analysis, in suppl
-               # "semPlot",        # for questionnaire analysis, in suppl
-               # 'devtools'
                )
 
 source("geom_flat_violin.R")       # for plotting the violin plots
 source('Initial_suppl_simple.r')
-# # using cmdstanr as backend, need to installed properly
-# if (!require(cmdstanr)){
-#         install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-#         library(cmdstanr)
-# }
-# set_cmdstan_path('/home/hcp4715/cmdstan')
+
 
 # using afex and emmeans to do the ANOVA and emmeans for post-hoc comparison
 options(tinytex.verbose = F) # debug the tex
@@ -351,7 +335,7 @@ Val_id_plot_NHST(df.rt = df4b.v.rt_m, df.d = df4b.v.dprime_l)
 Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
 
 # Experiment 5: Generalization of positive effect
-So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of different attractivness, and emotional words with different valence). In this study, participants finished 4 session of association task, each with different categories of stimuli.
+So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of different attractiveness, and emotional words with different valence). In this study, participants finished 4 sessions of association task, each with different categories of stimuli.
 
 ## Method
 
@@ -359,54 +343,116 @@ So far, we have considered the modulation effect of morality and found that the 
 `r df5.T.basic$N` participant recruited from Tsinghua University university community (`r df5.T.basic$Nf` females; age = `r df5.T.basic$Age_mean` $\pm$ `r df5.T.basic$Age_sd`). All participants were right-handed, and all had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to the experiment according to procedures approved by the local ethics committee. The data from 5 participants were excluded from analysis, `r length(df5.subjQuit)` participant did not finished the experiment, and the other `r nrow(df5.excld.sub)` were excluded because of the overall accuracy was less than 60%. The results for the remaining `r df5.v.basic$N` subjects (`r df5.v.basic$Nf` female, age = `r df5.v.basic$Age_mean` $\pm$ `r df5.v.basic$Age_sd`) were included in data analyses.
 
 ### Experimental design
-A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, attractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). The task was to learn  the association between each geometric shape and the self/other label.
+A 4 × 3 × 2 within-subject design was used. The first independent variable was stimuli categories (morality, attractiveness of people, attractiveness of scene, and emotional words); the second independent variables is valence (positive, neutral, and negative); the third variable was the matching between shape and label (match vs. mismatch for the association). Same as previous experiment, participants learn the associations between labels and shape and then perform matching tasks.
 
 ### Stimuli
-4 sets of shapes were included (three circle, three rectangle, three kind of triangle, and three kinds of  quadrangle), each set of shape were paired with one category of label, counter-balanced across subjects. Besides the behavioral experiments, participants also finished questionnaires.
+4 sets of shapes were included (three circles, three rectangles, three triangles, and three quadrangles), each set of shape were paired with one category of label, counter-balanced across subjects. 
 
 ### Procedure
 Participants finish 4 session of experiment, and each include one experiment as in experiment 1. And the order of each category was randomized for each participants. Each session started with a practice, and proceed to formal experiment when reached over 60% accuracy. Each session included 6 blocks of trial, each with 120 trials. 
+
+Participants also finished questionnaires after finished the behavioral tasks.
 
 ## Descriptive results
 
 ```{r 'ex5-dprime-rt', fig.cap="RT and *d* prime of Experiment 5.", fig.height=6, fig.width=15, warning=FALSE}
 
-P.dprime <- ggplot(df5.v.dprime_l,aes(x = taskType, y = dprime, fill = Valence)) +
-                geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
-                                 adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-                geom_dotplot(aes(x = taskType, y = dprime, color = Valence), 
-                             binaxis='y', binwidth = 0.01, stackdir='center', dotsize= 5.5,
-                             position = position_dodge(0.2)) +
-                geom_boxplot(aes(x = taskType,  y = dprime, fill = Valence), 
-                             outlier.shape = NA, alpha = 0.5, width = 0.1,  color = 'black',
-                             position = position_dodge(0.2)) + 
-                scale_color_brewer(palette = "Dark2") +
-                scale_fill_brewer(palette = "Dark2") +
-                ylab(expression(paste(italic("d"), " prime"))) +
-               # scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-                scale_y_continuous(expand = c(0, 0), limits = c(-1,5)) +
-                apatheme
-          
-P.rt <- ggplot(df5.v.rt_m,aes(x = taskType , y = RT_m, fill = Valence))+
-      geom_flat_violin(aes(fill = Valence),position = position_nudge(x = 0.1, y = 0),
-                       adjust = 1.5, trim = FALSE, alpha = 0.5,color = NA) +
-      #geom_point(aes(x = as.numeric(Morality)-0.15,y = RT, color = Identity), 
-      #           position = position_jitter(width = 0.02),size = 1, shape = 20)+
-      geom_dotplot(aes(x = taskType,y = RT_m, color = Valence), 
-                   binaxis='y', binwidth = 0.8, stackdir='center', dotsize= 8,
-                   position = position_dodge(0.2)) + 
-      geom_boxplot(aes(x = taskType,  y = RT_m,fill = Valence),outlier.shape = NA,
-                   alpha = 0.5, width = 0.1,  color = "black",
-                   position = position_dodge(0.2))+ 
-      scale_color_brewer(palette = "Dark2")+
-      scale_fill_brewer(palette = "Dark2")+
-      ylab("Reaction Times")+
-      #scale_x_discrete(breaks = c(1,2),labels = c("Good","Bad")) +
-      scale_y_continuous(expand = c(0, 0),limits = c(300,1000))+
-      apatheme
+df.plot5 <- df5.v.rt_m %>%
+        dplyr::filter(Matchness == 'Match') %>%  # select matching data for plotting only.
+        dplyr::rename(RT = RT_m) %>%
+        dplyr::full_join(., df5.v.dprime_l) %>%  
+        tidyr::pivot_longer(., cols = c(RT, dprime), 
+                            names_to = 'DVs', 
+                            values_to = "value") %>% # to longer format
+        dplyr::mutate(Valence =factor(Valence, levels = c('Good','Neutral', 'Bad')),
+                      taskType = factor(taskType, levels = c('Morality', 'Emotion', 'Person', 'Scene')),
+                      DVs = factor(DVs, levels = c('RT', 'dprime')),
+                      Conds = dplyr::case_when(
+                            (Valence == 'Good' & taskType == 'Morality') ~ "0.8",
+                            (Valence == 'Neutral' & taskType == 'Morality') ~ "1.0",
+                            (Valence == 'Bad' & taskType == 'Morality') ~ "1.2",
+                            (Valence == 'Good' & taskType == 'Emotion') ~ "1.8",
+                            (Valence == 'Neutral' & taskType == 'Emotion') ~ "2.0",
+                            (Valence == 'Bad' & taskType == 'Emotion') ~ "2.2",
+                            (Valence == 'Good' & taskType == 'Person') ~ "2.8",
+                            (Valence == 'Neutral' & taskType == 'Person') ~ "3.0",
+                            (Valence == 'Bad' & taskType == 'Person') ~ "3.2",
+                            (Valence == 'Good' & taskType == 'Scene') ~ "3.8",
+                            (Valence == 'Neutral' & taskType == 'Scene') ~ "4.0",
+                            (Valence == 'Bad' & taskType == 'Scene') ~ "4.2"),
+                      Conds = as.numeric(Conds),
+                      )
 
-multiplot(P.rt, P.dprime, cols = 2)
+df.plot5$Conds_j <- jitter(df.plot5$Conds, amount=.05) # add gitter to x
 
+levels(df.plot5$DVs ) <- c("RT"=expression(paste("Reaction ", "times (ms)")),
+                    "dprime"=expression(paste(italic("d"), ' prime')))
+
+df.plot5.sum_p <- summarySE(df.plot5, measurevar = "value", groupvars = c('Valence', 'taskType',"DVs")) %>%
+        dplyr::mutate(taskType_num = ifelse(taskType == 'Morality', 1,
+                                       ifelse(taskType == 'Emotion', 2, 
+                                              ifelse(taskType == "Person", 3, 4))))
+
+pd1 <- position_dodge(0.6)
+scaleFUN <- function(x) sprintf("%.2f", x)
+scales_y <- list(
+RT = scale_y_continuous(limits = c(400, 900)),
+dprime = scale_y_continuous(labels=scaleFUN)
+)
+
+p_df5_sum <- df.plot5  %>% # dplyr::filter(DVs== 'RT') %>%
+        ggplot(., aes(x = taskType, y = value)) +
+        geom_line(aes(x = Conds_j, y = value, group = Subject),         # link individual's points by transparent grey lines
+                  linetype = 1, size = 0.8, colour = "#000000", alpha = 0.03) + 
+        geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(Valence)),   # plot individual points
+                   #colour = "#000000",
+                   size = 3, shape = 20, alpha = 0.15) +
+        # geom_line(data = df.plot5.sum_p, aes(x = taskType_num, # plot the group means  
+        #                                      y = value, 
+        #                                      group = Valence,
+        #                                      colour = as.factor(Valence),
+        #                                      ),
+        #           linetype = 1, position = pd1, size = 2) +
+        geom_point(data = df.plot5.sum_p, aes(x = taskType_num, # group mean
+                                             y = value, 
+                                             group = Valence, 
+                                             colour = as.factor(Valence),
+                                             ), 
+                   shape = 18, position = pd1, size = 6) +
+        geom_errorbar(data = df.plot5.sum_p, aes(x = taskType_num,  # group error bar.
+                                                 y = value, 
+                                                 group = Valence, 
+                                                 colour = as.factor(Valence),
+                                                 ymin = value- 1.96*se, 
+                                                 ymax = value+ 1.96*se), 
+                      width = .05, position = pd1, size = 2, alpha = 0.75) +
+        scale_colour_brewer(palette = "Dark2") +
+        scale_x_continuous(breaks=c(1, 2, 3, 4),
+                           labels=c("Morality", "Emotion", "Person", "Scene")) +
+        scale_fill_brewer(palette = "Dark2") +
+        #ggtitle("A. Matching task") +
+        theme_bw() +
+        theme(panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              panel.border = element_blank(),
+              text=element_text(family='Times'),
+              legend.title=element_blank(),
+              legend.text = element_text(size =16),
+              plot.title = element_text(lineheight=.8, face="bold", size = 18, margin=margin(0,0,20,0)),
+              axis.text = element_text (size = 16, color = 'black'),
+              axis.title = element_text (size = 16),
+              axis.title.x = element_blank(),
+              axis.title.y = element_blank(),
+              axis.line.x = element_line(color='black', size = 1),    # increase the size of font
+              axis.line.y = element_line(color='black', size = 1),    # increase the size of font
+              strip.text = element_text (size = 16, color = 'black'), # size of text in strips, face = "bold"
+              panel.spacing = unit(3, "lines")
+              ) +
+        facet_wrap( ~ DVs,
+                    scales = "free_y", nrow = 1,
+                    labeller = label_parsed)
+p_df5_sum
 ```
 
 Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment 5.
@@ -442,6 +488,7 @@ All the stimuli were presented on a gray background (RGB: 127, 127, 127). E-prim
 
 Val_plot_NHST(df.rt = df6a.v.rt_m, df.d = df6a.v.dprime_l)
 ```
+
 Only the behavioral results were reported here. Figure \@ref(fig:ex6a-dprime-rt) shows *d* prime and reaction times of experiment 6a.
 
 # Experiment 6b: EEG study 2
