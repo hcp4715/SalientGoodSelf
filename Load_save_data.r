@@ -1626,7 +1626,7 @@ df7b_m.meta.rt <- df7b_m.v.rt_m %>%
 
 # ---- for questionnaire data -----
 # prepare questionnare data
-df.scales <- read.csv(here::here("scales", "FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
+df.scales <- read.csv(here::here("FADGS_dataset4_1_clean.csv"), header = TRUE, sep = ",",
                       stringsAsFactors=FALSE,na.strings=c("","NA")) %>%
         dplyr::mutate(expID = mosaic::derivedFactor("Exp1a" = (expID == "exp1.0"), 
                                                     "Exp1b" = (expID == "exp1.1"),

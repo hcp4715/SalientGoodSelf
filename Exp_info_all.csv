@@ -1,0 +1,16 @@
+ExpID,Time,Location,N,n of trials,Self-ref,Stim for Morality,Presenting order
+Exp_1a_1,2014-04,Beijing,38 (35),60,NA,words,Simultaneously
+Exp_1a_2,2017-04,Wenzhou,18 (16),120,NA,words,Simultaneously
+Exp_1b_1,2014-10,Beijing,39 (27),60,NA,words,Simultaneously
+Exp_1b_2,2017-04,Wenzhou,33 (25),120,NA,words,Simultaneously
+Exp_1c,2014-10,Beijing,23 (23),60,NA,descriptions,Simultaneously
+Exp_2,2014-05,Beijing,35 (34),60,NA,words,Sequentially
+Exp_3a,2014-11,Beijing,38 (35),60,explicit,words,Simultaneously
+Exp_3b,2017-04,Wenzhou,61 (56),60,explicit,words,Simultaneously
+Exp_4a_1,2015-06,Beijing,32 (29),30,implicit,words,Simultaneously
+Exp_4a_2,2017-04,Wenzhou,32 (30),60,implicit,words,Simultaneously
+Exp_4b_1,2015-10,Beijing,34 (32),60,implicit,words,Simultaneously
+Exp_4b_2,2017-04,Wenzhou,19 (13),60,implicit,words,Simultaneously
+Exp_5,2016-01,Beijing,43 (38),60,NA,words,Simultaneously
+Exp_6a,2014-12,Beijing,24 (24),180,NA,words,Sequentially
+Exp_6b,2016-01,Beijing,23 (22),90,explicit,words,Sequentially

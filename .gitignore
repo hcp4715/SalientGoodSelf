@@ -1,13 +1,13 @@
 
 # all data files
-*.csv
+# *.csv
 *.rds
 *.emrg2
 *_chain_*
 *.db
 *.zip
 *.out
-*.xlsx
+# *.xlsx
 *.xls
 *.txt
 *.pptx
@@ -36,6 +36,7 @@
 
 # temp files
 explore_files/
+scales/
 
 # data files that will be open
 !AllData.RData
@@ -49,12 +50,12 @@ exp3b/*
 exp4a/*
 exp4b/*
 exp5_specificity/*
-!exp5_specificity/rawdata_behav_exp5_2016_export_2019.csv
+
 exp6a_erp1/*
 exp6b_erp2/*
 exp7/*
-scales/*
 !*/rawdata*_export_2019.csv
+!exp5_specificity/rawdata_behav_exp5_2016_export_2019.csv
 !exp7/rawdata_behav_exp7a_2016.csv  # data from Hu et al 2020, collabra: psychology
 !exp7/rawdata_behav_exp7b_2018.csv  # data from Hu et al 2020, collabra: psychology
-!scales/FADGS_dataset4_1_clean.csv  # data from Liu et al 2020, J Open Psych Data
+!FADGS_dataset4_1_clean.csv  # data from Liu et al 2020, J Open Psych Data
