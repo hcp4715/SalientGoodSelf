@@ -34,6 +34,9 @@
 # file sync related
 *.sync.ffs*
 
+# temp files
+explore_files/
+
 # data files that will be open
 !AllData.RData
 !Data4manu.RData
