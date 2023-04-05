@@ -25,10 +25,10 @@ root_dir
 │   README.md
 │   Initial.r
 │   Initial_suppl_simple.r
-│   Load_save_data.r
-│   AllData.RData
-│   Data4manu.RData
-│   Exp_info_all.csv
+│   Load_save_data.r            # load data from each exp, exclude invalid participants' data and save
+│   AllData.RData               # all data
+│   Data4manu.RData             # all data for the current manuscript
+│   Exp_info_all.csv            # information about all exp included in the current manuscript
 │   general_method.rmd
 │   Notebook_Pos_Self_Salience_DDM_APA.rmd
 │   Notebook_Pos_Self_Salience_DDM_APA.pdf
@@ -78,8 +78,8 @@ root_dir
 │   │   rawdata_behav_exp7a_2016.csv  # data from Hu et al 2020, collabra: psychology
 │   │   rawdata_behav_exp7b_2018.csv  # data from Hu et al 2020, collabra: psychology
 │
-└───Scale_data
-    │   FADGS_dataset4_1_clean.csv    # data from Liu et al 2020, J Open Psych Data
+└───scales
+    │   FADGS_dataset4_1_clean.csv  # questionnaire data, see Liu et al 2020, J Open Psych Data
 ```
 
 ### Key scripts
