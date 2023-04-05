@@ -19,7 +19,7 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 
 # Exp 1a ----
 # data from THU
-df1a_1 <- read.csv(here::here('exp1a','rawdata_behav_exp1a_201404_2019_export.csv'), header = TRUE,
+df1a_1 <- read.csv(here::here('exp1a','rawdata_behav_exp1a_201404_export_2019.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%  # using 'fileEncoding="UTF-8-BOM"' can solve the 1st column issue but make other issues
         dplyr::mutate(Site = "THU", Subject = Subject + 1000,
@@ -27,7 +27,7 @@ df1a_1 <- read.csv(here::here('exp1a','rawdata_behav_exp1a_201404_2019_export.cs
                                        ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1a_2 <- read.csv(here::here('exp1a', 'rawdata_behav_exp1a_201704_2019_export.csv'),header = TRUE,
+df1a_2 <- read.csv(here::here('exp1a', 'rawdata_behav_exp1a_201704_export_2019.csv'),header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "WZU",
@@ -160,7 +160,7 @@ df1a.meta.rt <- df1a.v.rt_m %>%
 
 # Exp 1b ====
 # data collected in Tsinghua U
-df1b_1 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201410_2019_export.csv'), header = TRUE,
+df1b_1 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201410_export_2019.csv'), header = TRUE,
                    sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "THU", Subject = Subject + 1100,
@@ -168,7 +168,7 @@ df1b_1 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201410_2019_export.c
                                        ifelse(Label == "常人", "Neutral", "Bad")))
 
 # data collected in Wenzhou U
-df1b_2 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201705_2019_export.csv'),header = TRUE,
+df1b_2 <- read.csv(here::here('exp1b', 'rawdata_behav_exp1b_201705_export_2019.csv'),header = TRUE,
                    sep = ",",stringsAsFactors=FALSE,na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "WZU", Subject = Subject,
@@ -286,7 +286,7 @@ df1b.meta.rt <- df1b.v.rt_m %>%
         dplyr::select(all_of(CommonColnames_rt))
 
 # Exp 1c ====
-df1c <- read.csv(here::here('exp1c', 'rawdata_behav_exp1c_export2019.csv'), header = TRUE,
+df1c <- read.csv(here::here('exp1c', 'rawdata_behav_exp1c_export_2019.csv'), header = TRUE,
                  sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::mutate(Site = "THU", Subject = Subject + 1200,
@@ -408,7 +408,7 @@ df1c.meta.rt <- df1c.v.rt_m %>%
 
 # Exp 2 ----
 # data collected in Tsinghua U
-df2 <- read.csv(here::here('exp2', 'rawdata_behav_exp2_201405_2019_export.csv'), header = TRUE,
+df2 <- read.csv(here::here('exp2', 'rawdata_behav_exp2_201405_export_2019.csv'), header = TRUE,
                 sep = ",", stringsAsFactors=FALSE, na.strings=c("","NA"), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
         dplyr::rename(ACC = Target.ACC,           # rename columns
@@ -1002,7 +1002,7 @@ df4b.meta.rt <- df4b.v.rt_m %>%
 
 # Exp 5 ----
 #df5 <- xlsx::read.xlsx(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export2019.xlsx'), 1)
-df5 <- read.csv(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export2019_2.csv'), header = TRUE, 
+df5 <- read.csv(here::here('exp5_specificity', 'rawdata_behav_exp5_2016_export_2019.csv'), header = TRUE, 
                 sep = ",",
                 stringsAsFactors=FALSE, na.strings=c(""), encoding="UTF-8") %>%
         dplyr::rename(Subject = 1) %>%
