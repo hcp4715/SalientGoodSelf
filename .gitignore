@@ -53,8 +53,8 @@ exp5_specificity/*
 exp6a_erp1/*
 exp6b_erp2/*
 exp7/*
-Scale_data/*
+scales/*
 !*/rawdata*_export_2019.csv
 !exp7/rawdata_behav_exp7a_2016.csv  # data from Hu et al 2020, collabra: psychology
 !exp7/rawdata_behav_exp7b_2018.csv  # data from Hu et al 2020, collabra: psychology
-!Scale_data/FADGS_dataset4_1_clean.csv    # data from Liu et al 2020, J Open Psych Data
+!scales/FADGS_dataset4_1_clean.csv  # data from Liu et al 2020, J Open Psych Data
