@@ -40,6 +40,19 @@ explore_files/
 # data files that will be open
 !AllData.RData
 !Data4manu.RData
+exp1a/
+exp1b/
+exp1c/
+exp2/
+exp3a/
+exp3b/
+exp4a/
+exp4b/
+exp5_specificity/
+exp6a_erp1/
+exp6b_erp2/
+exp7/
+Scale_data/
 !*/rawdata*_export_2019.csv
 !exp5_specificity/rawdata_behav_exp5_2016_export_2019.csv
 !exp7/rawdata_behav_exp7a_2016.csv  # data from Hu et al 2020, collabra: psychology
