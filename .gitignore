@@ -17,6 +17,8 @@
 *.eps
 *.pdf
 *.tiff
+*.fff
+*.tex
 
 # R related 
 *.RData
