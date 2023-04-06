@@ -30,10 +30,10 @@ root_dir
 │   Data4manu.RData             # all data for the current manuscript
 │   Exp_info_all.csv            # information about all exp included in the current manuscript
 │   general_method.rmd
-│   Notebook_Pos_Self_Salience_DDM_APA.rmd
-│   Notebook_Pos_Self_Salience_DDM_APA.pdf
-│   Suppl_Materials_individual_Exp.rmd
-│   Suppl_Materials_individual_Exp.pdf
+│   Notebook_Pos_Self_Salience_APA.rmd
+│   Notebook_Pos_Self_Salience_APA.pdf
+│   Suppl_Materials_individual_Exp_simple.rmd
+│   Suppl_Materials_individual_Exp_simple.pdf
 │   endnote.bib
 │   r-reference.bib
 │

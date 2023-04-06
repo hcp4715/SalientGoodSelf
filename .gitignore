@@ -19,6 +19,7 @@
 *.tiff
 *.fff
 *.tex
+*.ttt
 
 # R related 
 *.RData
@@ -55,6 +56,8 @@ exp6a_erp1/*
 exp6b_erp2/*
 exp7/*
 scales/*
+!Suppl_Materials_individual_Exp_simple.pdf
+!Notebook_Pos_Self_Salience_APA.pdf
 !Exp_info_all.csv
 !*/rawdata*_export_2019.csv
 !exp5_specificity/rawdata_behav_exp5_2016_export_2019.csv
