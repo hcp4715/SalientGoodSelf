@@ -90,9 +90,11 @@ root_dir
 
 `Load_save_data.r`: I used this script to read raw data (`.csv` files) of each experiment.
 
-`Notebook_Pos_Self_Salience_DDM_APA.rmd` is the main r markdown file that include the latest analysis and results.
+`Notebook_Pos_Self_Salience_APA.rmd` is the main r markdown file that include the latest analysis and results.
 
-`Notebook_Pos_Self_Salience_DDM_APA.pdf` is the output from the above-mentioned r markdown file that presenting the latest results.
+`Notebook_Pos_Self_Salience_APA.pdf` is the output from the above-mentioned r markdown file that presenting the latest results.
+
+`general_method.rmd` is a section of the above rmd file.
 
 `Suppl_Materials_individual_Exp.rmd` is the supplementary RMarkdown file for individual studies.
 
