@@ -34,6 +34,9 @@
 */.ipynb_checkpoints/
 */.vscode/
 
+# system related
+._*
+
 # file sync related
 *.sync.ffs*
 
