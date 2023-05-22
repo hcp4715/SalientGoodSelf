@@ -15,6 +15,16 @@
 #    2.8. Val_id_plot_NHST, plotting valence and id effect of matching, points & lines
 #    2.9. fun_sdt_val, fun_plot_sdt_val, ... BHM and plottings
 
+# use pacman to manage the packages
+if (!require(pacman)){
+        install.packages("pacman")
+        library(pacman)
+}
+
+# use pacman::p_load to load the packages
+pacman::p_load('ggcorrplot'              # for choosing directory
+)
+
 #############################################
 ##### 1. Prepare themes for plotting
 #############################################

@@ -534,11 +534,11 @@ Figure \@ref(fig:ex6b-d1-dprime-rt) shows *d* prime and reaction times from day 
 ```{r 'ex6b-d2-dprime-rt', fig.cap="RT and *d* prime of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
 # calculate d prime
 df6b_d2.v.dprime_l <- df6b_d2.v %>%
-  dplyr::mutate(sdt = mosaic::derivedFactor("hit" = (ACC ==1 & Matchness == "Match"), # code as hit
-                                    "CR" = (ACC ==1  & Matchness == "Mismatch"),      # correct reject
-                                    "miss" = (ACC == 0 & Matchness == "Match"),       # miss
-                                    "FA" = (ACC == 0 & Matchness == "Mismatch"),      # false alarm
-                                    .method ="first",  .default = NA)) %>% 
+  dplyr::mutate(sdt = dplyr::case_when(ACC ==1 & Matchness == "Match" ~ "hit" ,    # code as hit
+                                    ACC ==1  & Matchness == "Mismatch" ~"CR",      # correct reject
+                                    ACC == 0 & Matchness == "Match" ~ "miss",      # miss
+                                    ACC == 0 & Matchness == "Mismatch" ~ "FA",     # false alarm
+                                    .default = NA)) %>% 
   dplyr::group_by(Site, Subject, Age, Sex, Valence,Identity, sdt) %>%
   dplyr::summarise(N = length(sdt)) %>%                                    # calculate the counts for each 
   dplyr::ungroup() %>%
