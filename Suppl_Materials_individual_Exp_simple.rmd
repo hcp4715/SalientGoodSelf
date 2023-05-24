@@ -51,7 +51,7 @@ output            :
 ---
 
 # About the Supplementary
-Here we described the details of each experiment, without the results. For demonstrating purpose, we plot the results for each experiment. As the de-identified raw data are open, interested readers can easily get the results without much difficult.
+Here we described the details of each experiment and summary results. Also, we visualized the summary results for each experiment. As the de-identified raw data are open, interested readers can easily get the results without much difficult.
 
 ```{r setup, include=FALSE}
 rm(list = ls())
@@ -78,9 +78,6 @@ if (!require(pacman)){
 # use pacman::p_load to load the packages
 pacman::p_load('here',              # for choosing directory
                'tidyverse',         # for data wrangling
-               'brms',              # for Bayesian stats, main text
-               'tidybayes',         # for Bayesian stats, main text
-               "BayesFactor",       # for Bayes factor 
                "ggplot2",           # plot general
                'ggridges',          # plot ridges
                'patchwork',         # plot patch plots together
@@ -122,11 +119,13 @@ For participants from the Tsinghua community, they completed 6 experimental bloc
 
 ## Descriptive results
 
-```{r 'exp1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
+```{r 'ex1a-dprime-rt', fig.cap="RT and *d* prime of Experiment 1a.", fig.height=4.5, fig.width=9, warning=FALSE}
 # rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 Val_plot_NHST(df.rt = df1a.v.rt_m, df.d = df1a.v.dprime_l)
 ```
+
+See figure \@ref(fig:ex1a-dprime-rt) for *d* prime and reaction times of experiment 1a.
 
 # Experiment 1b
 In this study, we aimed at excluding the potential confounding factor of the familiarity of words we used in experiment 1a, by matching the familiarity of the words.
@@ -145,11 +144,13 @@ For participants from both Tsinghua community and Wenzhou community, the procedu
 
 ## Descriptive results
 
-```{r 'exp1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
+```{r 'ex1b-dprime-rt', fig.cap="RT and *d* prime of Experiment 1b.", fig.height=4.5, fig.width=9, warning=FALSE}
 # rtdata <- df1a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # Mplots(expName = 'exp1a', df1a.v.dprime_l, rtdata)
 Val_plot_NHST(df.rt = df1b.v.rt_m, df.d = df1b.v.dprime_l)
 ```
+
+See figure \@ref(fig:ex1b-dprime-rt) for *d* prime and reaction times of experiment 1b.
 
 # Experiment 1c
 In this study, we further control the valence of words using in our experiment. Instead of using label with moral valence, we used valence-neutral names in China. Participant first learn behaviors of the different person, then, they associate the names and shapes. And then they perform a name-shape matching task.
@@ -168,19 +169,16 @@ After arriving the lab, participants were informed to complete two experimental 
 In the social memory task, the descriptions of three person were presented without time limitation. Participant self-paced to memorized the behaviors of each person. After they memorizing, a recognition task was used to test their memory effect. Each participant was required to have over 95% accuracy before preceding to matching task.
 The perceptual learning task was followed, three names were randomly paired with geometric shapes. Participants were required to learn the association and perform a practicing task before they start the formal experimental blocks. They kept practicing until they reached 70% accuracy. Then, they would start the perceptual matching task as in experiment 1a. They finished 6 blocks of perceptual matching trials, each have 120 trials. 
 
-
-
 ## Descriptive results
 
-Here we show the **mean* RT and *d'* of each condition. 
 ```{r 'ex1c-dprime-rt', fig.cap="RT and *d* prime of Experiment 1c.", fig.height=6, fig.width=10, warning=FALSE}
-#rtdata <- df1c.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-# Mplots(expName = 'exp1c', df1c.v.dprime_l,rtdata)
-
 Val_plot_NHST(df.rt = df1c.v.rt_m, df.d = df1c.v.dprime_l)
 ```
 
+See figure \@ref(fig:ex1c-dprime-rt) for *d* prime and reaction times of experiment 1c.
+
 # Experiment 2: Sequential presenting
+
 Experiment 2 was conducted for two purpose: (1) to further confirm the facilitation effect of positive moral associations; (2) to test the effect of expectation of occurrence of each pair. In this experiment, after participant learned the association between labels and shapes, they were presented a label first and then a shape, they then asked to judge whether the shape matched the label or not (see  (Sui, Sun, Peng, & Humphreys, 2014). Previous studies showed that when the labels presented before the shapes, participants formed expectations about the shape, and therefore a top-down process were introduced into the perceptual matching processing. If the facilitation effect of positive moral valence we found in experiment 1 was mainly drive by top-down processes, this sequential presenting paradigm may eliminate or attenuate this effect; if, however, the facilitation effect occurred because of button-up processes, then, similar facilitation effect will appear even with sequential presenting paradigm.
 
 ## Method
@@ -201,12 +199,14 @@ Data was analyzed as in study 1a.
 ```{r 'ex2-dprime-rt', fig.cap="RT and *d* prime of Experiment 2.", fig.height=6, fig.width=10, warning=FALSE}
 rtdata <- df2.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 
-# Mplots(expName = 'exp2', df2.v.dprime_l, rtdata)
-
 Val_plot_NHST(df.rt = df2.v.rt_m, df.d = df2.v.dprime_l)
 
 ```
+
+See figure \@ref(fig:ex2-dprime-rt) for *d* prime and reaction times of experiment 2.
+
 # Experiment 3a
+
 To examine the modulation effect of positive valence was an intrinsic, self-referential process, we designed study 3. In this study, moral valence was assigned to both self and a stranger. We hypothesized that the modulation effect of moral valence will be stronger for the self than for a stranger.
 
 ## Method
@@ -229,12 +229,10 @@ Data analysis followed strategies described in the general method section. React
 ## Descriptive results
 
 ```{r 'ex3a-dprime-rt', fig.cap="RT and *d* prime of Experiment 3a.", fig.height=6, fig.width=10, warning=FALSE}
-# rtdata <- df3a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-
-# Mplots(expName = 'exp3a', df3a.v.dprime_l,rtdata)
-
 Val_id_plot_NHST(df.rt = df3a.v.rt_m, df.d = df3a.v.dprime_l)
 ```
+
+See figure \@ref(fig:ex3a-dprime-rt) for *d* prime and reaction times of experiment 3a.
 
 # Experiment 3b
 In study 3a, participants had to remember 6 pairs of association, which cause high cognitive load during the whole experiment. To eliminate the influence of cognitive load, we conducted study 3b, in which participant learn three aspect of self and stranger separately in to consecutive task. We hypothesize that we will replicate the pattern of study 3a, i.e., the effect of moral valence only occurs for self-relevant conditions.
@@ -260,13 +258,10 @@ Data analysis is the same as study 3a.
 ## Results
 
 ```{r 'ex3b-dprime-rt', fig.cap="RT and *d* prime of Experiment 3b.", fig.height=6, fig.width=10, warning=FALSE}
-# rtdata <- df3b.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
-# 
-# Mplots(expName = 'exp3b', df3b.v.dprime_l,rtdata)
-
 Val_id_plot_NHST(df.rt = df3b.v.rt_m, df.d = df3b.v.dprime_l)
 ```
 
+See figure \@ref(fig:ex3b-dprime-rt) for *d* prime and reaction times of experiment 3b.
 
 # Experiment 4a
 In study 1-3 participants made explicit judgments about moral associations. In Experiment 4, we examined whether the interaction between moral valence and identity occur even when one of the variable was irrelevant to the task. In experiment 4a, participants learnt associations between shapes and self/other labels, then made perceptual match judgments only about the self or other conditions labels and shapes (cf. Sui et al., 2012). However, we presented labels of different moral valence in the shapes, which means that the moral valence factor become task irrelevant. If the binding between moral good and self is intrinsic and automatic, then we will observe that facilitating effect of moral good for self conditions, but not for other conditions.
@@ -291,6 +286,7 @@ The procedure was similar to Experiment 1. There were 6 blocks of trial, each wi
 The data were analyzed in the same way as in experiment 3a and 3b.
 
 ## Descriptive results
+
 ```{r 'ex4a-dprime-rt', fig.cap="RT and *d* prime of Experiment 4a.", fig.height=6, fig.width=10, warning=FALSE}
 # 
 # rtdata <- df4a.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
@@ -298,9 +294,9 @@ The data were analyzed in the same way as in experiment 3a and 3b.
 # Mplots(expName = 'exp4a', df4a.v.dprime_l,rtdata)
 
 Val_id_plot_NHST(df.rt = df4a.v.rt_m, df.d = df4a.v.dprime_l)
-
 ```
 
+See figure \@ref(fig:ex4a-dprime-rt) for *d* prime and reaction times of experiment 4a.
 
 # Experiment 4b
 
@@ -332,7 +328,7 @@ The data were analyzed as in experiment 4a.
 Val_id_plot_NHST(df.rt = df4b.v.rt_m, df.d = df4b.v.dprime_l)
 ```
 
-Figure \@ref(fig:ex4b-dprime-rt) shows *d* prime and reaction times of experiment 4b.
+See figure \@ref(fig:ex4b-dprime-rt) for *d* prime and reaction times of experiment 4b.
 
 # Experiment 5: Generalization of positive effect
 So far, we have considered the modulation effect of morality and found that the positive moral valence could enhance the perception. However, we still not sure whether this effect was moral specific or reflecting a more general mechanism of effect of positive valence. To test the specificity of morality, we conducted experiment 5, in which three more categories of stimuli were used (people of different attractiveness, scene of different attractiveness, and emotional words with different valence). In this study, participants finished 4 sessions of association task, each with different categories of stimuli.
@@ -407,12 +403,6 @@ p_df5_sum <- df.plot5  %>% # dplyr::filter(DVs== 'RT') %>%
         geom_point(aes(x = Conds_j, y = value, group = Subject, colour = as.factor(Valence)),   # plot individual points
                    #colour = "#000000",
                    size = 3, shape = 20, alpha = 0.15) +
-        # geom_line(data = df.plot5.sum_p, aes(x = taskType_num, # plot the group means  
-        #                                      y = value, 
-        #                                      group = Valence,
-        #                                      colour = as.factor(Valence),
-        #                                      ),
-        #           linetype = 1, position = pd1, size = 2) +
         geom_point(data = df.plot5.sum_p, aes(x = taskType_num, # group mean
                                              y = value, 
                                              group = Valence, 
@@ -455,7 +445,7 @@ p_df5_sum <- df.plot5  %>% # dplyr::filter(DVs== 'RT') %>%
 p_df5_sum
 ```
 
-Figure \@ref(fig:ex5-dprime-rt) shows *d* prime and reaction times of experiment 5.
+See figure \@ref(fig:ex5-dprime-rt) for *d* prime and mean reaction times of experiment 5.
 
 # Experiment 6a: EEG study 1
 Experiment 6a was conducted to study the neural correlates of the positive prioritization effect. The behavioral paradigm is same as experiment 2. 
@@ -466,7 +456,7 @@ Experiment 6a was conducted to study the neural correlates of the positive prior
 `r df6a.T.basic$N` college students (`r df6a.T.basic$Nf` female, age = `r df6a.T.basic$Age_mean` $\pm$ `r df6a.T.basic$Age_sd`) participated the current study, all of them were from Tsinghua University in 2014. Informed consent was obtained from all participants prior to the experiment according to procedures approved by a local ethics committee. No participant was excluded from behavioral analysis.
 
 ### Experimental design
-The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matchness between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
+The experimental design of this experiment is same as experiment 2:  a 3 × 2 within-subject design with moral valence (good, neutral and bad associations) and matching between shape and label (match vs. mismatch for the personal association) as within-subject variables. 
 
 ### Stimuli
 Three geometric shapes (triangle, square and circle, each 4.6º × 4.6º of visual angle) were presented at the center of screen for 50 ms after 500ms of fixation (0.8º × 0.8º of visual angle). The association of the three shapes to bad person (“坏人, HuaiRen”), good person (“好人, HaoRen”) or ordinary  person (“常人, ChangRen”) was counterbalanced across participants. The words bad person, good person or ordinary  person (3.6º × 1.6º) was also displayed at the center fo the screen. Participants had to judge whether the pairings of label and shape matched (e.g., Does the circle represent a bad person?). The experiment was run on a PC using E-prime software (version 2.0). These stimuli were displayed on a 22-in CRT monitor (1024×768 at 100Hz).
@@ -516,7 +506,7 @@ Participants came back to lab at the second day and finish the same task again, 
 
 ## Results
 
-```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime of Experiment 6a.", fig.height=6, fig.width=15, warning=FALSE}
+```{r 'ex6b-d1-dprime-rt', fig.cap="RT and *d* prime for the first day of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
 
 # rtdata <- df6b_d1.v.rt_m %>% dplyr::filter(Matchness == "Match") %>% dplyr::rename(RT = RT_m)
 # 
@@ -531,7 +521,7 @@ Only the behavioral results were reported here.
 
 Figure \@ref(fig:ex6b-d1-dprime-rt) shows *d* prime and reaction times from day 1 of the experiment 6b. 
 
-```{r 'ex6b-d2-dprime-rt', fig.cap="RT and *d* prime of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
+```{r 'ex6b-d2-dprime-rt', fig.cap="RT and *d* prime for the second day of Experiment 6b.", fig.height=6, fig.width=15, warning=FALSE}
 # calculate d prime
 df6b_d2.v.dprime_l <- df6b_d2.v %>%
   dplyr::mutate(sdt = dplyr::case_when(ACC ==1 & Matchness == "Match" ~ "hit" ,    # code as hit
