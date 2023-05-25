@@ -4,11 +4,9 @@ Authors: Hu Chuan-Peng, Kaiping Peng, Jie Sui
 
 ## Purpose
 
-This repository is an on-going notebook that analyze the results from a series of experiments on perceptual salience of positive self.
+This repository is an on-going notebook that analyzes results from a series of experiments on prioritization of good person in perceptual matching task. In total, ten experiements were included (total N = 404).
 
-The scripts were made public to increasing the transparency and reproducibility of this study.
-
-The cleaned data will be uploaded after I submitting this manuscript.
+The scripts were made public to increasing the transparency and reproducibility of this study, all de-identified raw data were uploaded.
 
 ## Links:
 
@@ -16,7 +14,7 @@ OSF: <https://osf.io/83dyj/>
 
 ## Scripts & their functions:
 
-This repo included scripts from raw data pre-processing to manuscript generating.
+This repo included scripts from raw data pre-processing to manuscript generating (using `papaja`).
 
 ### Folder structure
 
