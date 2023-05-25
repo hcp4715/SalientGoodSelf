@@ -1,4 +1,4 @@
-# Notebook for perceptual salience of positive-self
+# Notebook for "Spontaneous self-referential processes prioritize moral character in perceptual matching"
 
 Authors: Hu Chuan-Peng, Kaiping Peng, Jie Sui
 
