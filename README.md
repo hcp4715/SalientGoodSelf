@@ -4,7 +4,7 @@ Authors: Hu Chuan-Peng, Kaiping Peng, Jie Sui
 
 ## Purpose
 
-This repository is an on-going notebook that analyzes results from a series of experiments on prioritization of good person in perceptual matching task. In total, ten experiements were included (total N = 404).
+This repository is an on-going notebook that analyzes results from a series of experiments on prioritization of good person in perceptual matching task. In total, ten experiments were included (total N = 404).
 
 The scripts were made public to increasing the transparency and reproducibility of this study, all de-identified raw data were uploaded.
 
