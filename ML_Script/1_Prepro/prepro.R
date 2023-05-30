@@ -75,7 +75,6 @@ df4b.v.ml_basic <- df4b.v.ml %>%
 
 df5.v.ml <- df5.v %>%
   dplyr::mutate(Identity = NA) %>% 
-  dplyr::filter(taskType == "Morality") %>% #only filter the morality condition
   dplyr::select(Subject, BlockNo, TrialNo, Valence, Matchness, ACC, RT, Identity) %>%
   dplyr::mutate(ExpNo = "Exp5", 
                 Self_ref = "None")
