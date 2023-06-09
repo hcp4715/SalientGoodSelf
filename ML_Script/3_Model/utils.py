@@ -11,8 +11,10 @@ from sklearn.metrics import make_scorer, roc_auc_score
 def score_func(y, y_pred):
     score = roc_auc_score(y, y_pred, multi_class="ovr")# use one vs rest
     return score
+
 #for calculating roc_auc score in permutation importance testing
 my_scores = make_scorer(score_func=score_func, greater_is_better=True, needs_proba=True, needs_threshold=False)
+
 
 def lr_within_task(X, y, group, source):
     '''

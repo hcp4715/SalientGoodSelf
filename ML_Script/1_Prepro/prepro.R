@@ -75,7 +75,7 @@ df4b.v.ml_basic <- df4b.v.ml %>%
 
 df5.v.ml <- df5.v %>%
   dplyr::mutate(Identity = NA) %>% 
-  dplyr::select(Subject, BlockNo, TrialNo, Valence, Matchness, ACC, RT, Identity) %>%
+  dplyr::select(Subject, BlockNo, TrialNo, Valence, Matchness, ACC, RT, Identity, taskType) %>%
   dplyr::mutate(ExpNo = "Exp5", 
                 Self_ref = "None")
 
@@ -83,10 +83,18 @@ df5.v.ml_basic <- df5.v.ml %>%
   dplyr::group_by(Subject, BlockNo) %>% 
   dplyr::summarise(n = n())
 ######### Combine datasets
+df_Exp5 <- df5.v.ml %>% 
+  dplyr::filter(!(RT <= 200)) %>% 
+  dplyr::mutate(Valence = case_when(
+    Valence == "Good" ~ 0,
+    Valence == "Neutral" ~ 1,
+    Valence == "Bad" ~ 2
+  ), 
+  Matchness = if_else(Matchness == "Match", 1, 0))
+
 df.No_self <- rbind(df1a.v.ml, 
                     df1b.v.ml, 
-                    df1c.v.ml, 
-                    df5.v.ml) %>% 
+                    df1c.v.ml) %>% 
   dplyr::filter(!(RT <= 200)) %>% 
   dplyr::mutate(Valence = case_when(
     Valence == "Good" ~ 0,
@@ -123,5 +131,5 @@ path <- here::here("ML_script", "2_Data")
 write_csv(df.No_self, paste(path, "No_self.csv", sep = "/"))
 write_csv(df.explicit_self, paste(path, "Explicit_self.csv", sep = "/"))
 write_csv(df.implicit_self, paste(path, "Implicit_self.csv", sep = "/"))
-
+write_csv(df_Exp5, paste(path, "Exp5_all.csv", sep = "/"))
 
