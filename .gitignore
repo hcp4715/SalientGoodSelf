@@ -75,4 +75,4 @@ scales/*
 !ML_Script/**/*.csv
 !ML_Script/**/*.png
 #.idea
-.idea/*		
+*.idea		
