@@ -53,6 +53,29 @@ def lr_within_task(X, y, group, source):
     return pd.DataFrame(df_result), feature_importance, feature_coef
 
 
+def dummy_within_task(X, y, group, source):
+    df_result = dict(subID=[], score=[], source=[], target=[])# source拟合的，target预测的condition
+    logo = LeaveOneGroupOut()
+    for train, test in logo.split(X, y, groups=group):
+        test_sub = np.unique(group[test])[0]
+        df_result["subID"].append(test_sub)
+        preprocessing_steps = make_pipeline(MinMaxScaler(),PolynomialFeatures(degree=3, interaction_only=True)).fit(X[train])
+        X_train_pre = preprocessing_steps.transform(X[train])
+        X_test_pre = preprocessing_steps.transform(X[test])
+
+        dummy_clf = DummyClassifier(strategy="uniform", random_state=123)
+        
+        dummy_clf.fit(X= X_train_pre, y=y[train])
+
+        y_pred = dummy_clf.predict_proba(X_test_pre)
+        score = roc_auc_score(y[test], y_pred, multi_class='ovr')
+
+        df_result['score'].append(score)
+        df_result['source'].append(source)
+        df_result['target'].append(source)
+
+    return pd.DataFrame(df_result)
+
 
 def lr_cross_task(X_source, y_source, X_target, y_target, target_group, source_name, target_name):
     '''
@@ -93,29 +116,31 @@ def lr_cross_task(X_source, y_source, X_target, y_target, target_group, source_n
     return pd.DataFrame(df_result), feature_importance, feature_coef
 
 
-
-def dummy_within_task(X, y, group, source):
+def dummy_cross_task(X_source, y_source, X_target, y_target, target_group, source_name, target_name):
     df_result = dict(subID=[], score=[], source=[], target=[])# source拟合的，target预测的condition
-    logo = LeaveOneGroupOut()
-    for train, test in logo.split(X, y, groups=group):
-        test_sub = np.unique(group[test])[0]
-        df_result["subID"].append(test_sub)
-        preprocessing_steps = make_pipeline(MinMaxScaler(),PolynomialFeatures(degree=3, interaction_only=True)).fit(X[train])
-        X_train_pre = preprocessing_steps.transform(X[train])
-        X_test_pre = preprocessing_steps.transform(X[test])
+    preprocessing_steps = make_pipeline(MinMaxScaler(), PolynomialFeatures(degree=3, interaction_only=True)).fit(X_source)
+    X_train_pre = preprocessing_steps.transform(X_source)
 
-        dummy_clf = DummyClassifier(strategy="uniform", random_state=123)
-        
-        dummy_clf.fit(X= X_train_pre, y=y[train])
+    dummy_clf = DummyClassifier(strategy="uniform", random_state=123)
 
-        y_pred = dummy_clf.predict_proba(X_test_pre)
-        score = roc_auc_score(y[test], y_pred, multi_class='ovr')
+    dummy_clf.fit(X=X_train_pre, y=y_source)
 
-        df_result['score'].append(score)
-        df_result['source'].append(source)
-        df_result['target'].append(source)
 
-    return pd.DataFrame(df_result).groupby(["source", "target"]).mean().reset_index()
+    for sub in np.unique(target_group):
+        idx_sub = target_group == sub
+        feature_sub = X_target[idx_sub]
+        label_sub = y_target[idx_sub]
+        X_test = preprocessing_steps.transform(feature_sub)
+        y_pred = dummy_clf.predict_proba(X_test)
+        score = roc_auc_score(label_sub, y_pred, multi_class="ovr")
+
+        df_result['subID'].append(sub)
+        df_result["score"].append(score)
+        df_result["source"].append(source_name)
+        df_result["target"].append(target_name)
+
+
+    return pd.DataFrame(df_result)
 
 def lr_cross_task2(X_source, y_source, X_target, y_target, source_group, target_group, source_name, target_name):
     
@@ -160,31 +185,6 @@ def lr_cross_task2(X_source, y_source, X_target, y_target, source_group, target_
     return pd.DataFrame(df_result), feature_importance, feature_coef
 
 
-def dummy_cross_task(X_source, y_source, X_target, y_target, target_group, source_name, target_name):
-    df_result = dict(subID=[], score=[], source=[], target=[])# source拟合的，target预测的condition
-    preprocessing_steps = make_pipeline(MinMaxScaler(), PolynomialFeatures(degree=3, interaction_only=True)).fit(X_source)
-    X_train_pre = preprocessing_steps.transform(X_source)
-
-    dummy_clf = DummyClassifier(strategy="uniform", random_state=123)
-
-    dummy_clf.fit(X=X_train_pre, y=y_source)
-
-
-    for sub in np.unique(target_group):
-        idx_sub = target_group == sub
-        feature_sub = X_target[idx_sub]
-        label_sub = y_target[idx_sub]
-        X_test = preprocessing_steps.transform(feature_sub)
-        y_pred = dummy_clf.predict_proba(X_test)
-        score = roc_auc_score(label_sub, y_pred, multi_class="ovr")
-
-        df_result['subID'].append(sub)
-        df_result["score"].append(score)
-        df_result["source"].append(source_name)
-        df_result["target"].append(target_name)
-
-
-    return pd.DataFrame(df_result).groupby(["source", "target"]).mean().reset_index()
 
 def dummy_cross_task2(X_source, y_source, X_target, y_target, source_group, target_group, source_name, target_name):
     df_result = dict(subID=[], score=[], source=[], target=[])# source拟合的，target预测的condition
@@ -215,4 +215,4 @@ def dummy_cross_task2(X_source, y_source, X_target, y_target, source_group, targ
                 df_result["target"].append(target_name)
 
 
-    return pd.DataFrame(df_result).groupby(["source", "target"]).mean().reset_index()
+    return pd.DataFrame(df_result)
