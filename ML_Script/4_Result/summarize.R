@@ -1,5 +1,5 @@
 library(tidyverse)
-score_within <- read_csv("/Users/zhengyuanrui/Desktop/ML_Script/4_Result/within_score.csv")
+score_within <- read_csv("/Users/zhengyuanrui/SalientGoodSelf/ML_Script/4_Result/within_score.csv")
 within_plot <- score_within %>% 
   unite("direct", c("source", "target"), sep = "→") %>% 
   ggplot(aes(x = direct, y = score, fill = direct)) +
@@ -13,7 +13,7 @@ within_plot <- score_within %>%
 ggsave("withinplot.png", width = 10, height = 7, dpi = 300)
 
 
-score_cross <- read_csv("/Users/zhengyuanrui/Desktop/ML_Script/4_Result/cross_score.csv")
+score_cross <- read_csv("/Users/zhengyuanrui/SalientGoodSelf/ML_Script/4_Result/cross_score.csv")
 cross_plot <- score_cross %>% 
   unite("direct", c("source", "target"), sep = "→") %>% 
   ggplot(aes(x = direct, y = score, fill = direct)) +
@@ -43,3 +43,4 @@ df_sum <- df_all %>%
             SD = sd(score)) %>% 
   arrange(ROC_AUC)
 write_csv(df_sum, "summarize.csv")
+dummy_cross <- read_csv("/Users/zhengyuanrui/SalientGoodSelf/ML_Script/4_Result/dummycross_score.csv")
