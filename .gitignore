@@ -71,3 +71,6 @@ scales/*
 .DS_Store
 **/.DS_Store
 .DS_Store?
+# csv png
+!ML_Script/**/*.csv
+!ML_Script/**/*.png
