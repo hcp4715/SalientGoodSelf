@@ -14,7 +14,26 @@ OSF: <https://osf.io/83dyj/>
 
 ## Scripts & their functions:
 
-This repo included scripts from raw data pre-processing to manuscript generating (using `papaja`).
+This repo included scripts from raw data pre-processing to manuscript generating (using [`papaja`](https://github.com/crsh/papaja)).
+
+### Key scripts
+
+`Initial.r`: The r script for initialization, using in `Notebook_Pos_Self_Salience_APA.rmd`.
+
+`Initial_suppl_simple`: The r script for initialization, using in `Suppl_Materials_individual_Exp.rmd`.
+
+`Load_save_data.r`: I used this script to read raw data (`.csv` files) of each experiment.
+
+`Notebook_Pos_Self_Salience_APA.rmd`: the main Rmarkdown file that include the latest analysis and results.
+
+`Notebook_Pos_Self_Salience_APA.pdf`: the output from the above-mentioned r markdown file that presenting the latest results.
+
+`general_method.rmd`: the method section of the above rmd file.
+
+`Suppl_Materials_individual_Exp.rmd`: the supplementary RMarkdown file for individual studies.
+
+`Suppl_Materials_individual_Exp.pdf`: the output of the above supplementary RMarkdown file.
+
 
 ### Folder structure
 
@@ -79,21 +98,3 @@ root_dir
 └───scales
     │   FADGS_dataset4_1_clean.csv  # questionnaire data, see Liu et al 2020, J Open Psych Data
 ```
-
-### Key scripts
-
-`Initial.r`: The r script for initialization, using in `Notebook_Pos_Self_Salience_DDM_APA.rmd`.
-
-`Initial_suppl_simple`: The r script for initialization, using in `Suppl_Materials_individual_Exp.rmd`.
-
-`Load_save_data.r`: I used this script to read raw data (`.csv` files) of each experiment.
-
-`Notebook_Pos_Self_Salience_APA.rmd` is the main r markdown file that include the latest analysis and results.
-
-`Notebook_Pos_Self_Salience_APA.pdf` is the output from the above-mentioned r markdown file that presenting the latest results.
-
-`general_method.rmd` is a section of the above rmd file.
-
-`Suppl_Materials_individual_Exp.rmd` is the supplementary RMarkdown file for individual studies.
-
-`Suppl_Materials_individual_Exp.pdf` is the output of the above supplementary RMarkdown file.
