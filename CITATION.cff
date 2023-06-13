@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Code and data for 'Spontaneous self-referential processes
+  prioritize moral character in perceptual matching'
+message: >-
+  If you use this dataset, please cite it using the metadata
+  from this file.
+type: dataset
+authors:
+  - given-names: Hu
+    family-names: Chuan-Peng
+    email: hcp4715@hotmail.com
+    affiliation: 'School of Psychology, Nanjing Normal University'
+    orcid: 'https://orcid.org/0000-0002-7503-5131'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.8031074
+    description: doi by zenodo
+repository-code: 'https://github.com/hcp4715/SalientGoodSelf'
+abstract: Here is the code and data.
+keywords:
+  - perceptual matching
+  - self-prioritization
+  - moral character
+  - open data
+  - open code
+license: CC-BY-4.0
+version: v0.0.2
