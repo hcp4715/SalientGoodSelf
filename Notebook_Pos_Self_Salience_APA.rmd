@@ -1,5 +1,5 @@
 ---
-title             : "Spontaneous self-referential processes prioritize moral character in perceptual matching"
+title             : "Self-referential processes prioritize moral character in perceptual matching"
 shorttitle        : "Self-referential  moral character"
 
 author: 
@@ -28,23 +28,23 @@ authornote: |
   Authors contriubtion: HCP, JS, & KP design the study, HCP collected the data, HCP analyzed the data and drafted the manuscript. All authors read and agreed upon the current version of the manuscripts.
 
 abstract: |
- Studies in social psychology claim the primacy of morality in person perception and that moral information is prioritized in cognitive processing. However, available evidence for the prioritization effect of moral information in cognitive processing is mixed, these effects were either irreplicable or explained by alternative factors other than morality. Here we examined whether moral information is prioritized using a well-controlled matching task where participants first acquired the moral meaning of different geometric shapes (counter-balanced between participants) and then performed a simple perceptual matching task. Across five experiments (N = 192), participants consistently responded faster and more accurately to shapes associated with good characters than shapes associated with neutral or bad characters. To further understand this prioritization effect of good character, we examined two competing explanations: valence account and self-binding account. The former predicts a main effect of moral valence while the latter predicts an exclusive prioritization effect of self-referential good character. Across three experiments (N = 108) where moral characters of different valence were referring to the self or others, we found evidence for the self-binding account but not the valence account: good characters associated with the self were prioritized but not when associated with others. Two additional experiments (N = 104) were conducted in which either self-referential labels or moral labels were task-irrelevant, and results revealed a spontaneous self-binding effect: performance for the combinations of self and good characters was better than other combinations. Together, these results suggested a robust prioritization effect of good character and that the spontaneous self-referential process is the key to such a prioritization effect.
+ Evidence for the prioritization of moral information in cognitive processes is mixed. Here we examined this question using a series of well-controlled matching experiments where participants acquired associations between moral character and geometric shapes and then performed a simple perceptual matching task. Across five experiments, we found a robust prioritization of good characters. We then tested two competing explanations for this effect: the valence account, which predicts positive bias in general, and the self-binding account, which predicts a self-specific positive bias. We found evidence for the self-binding account across three experiments: good characters associated with the self were prioritized but not when associated with others across three experiments. Two additional experiments revealed that merely presenting self and good character information simultaneously facilitated the performance. Together, these results suggested a robust prioritization effect of good character and that the self-referential process is the key to such a prioritization effect.
   
  <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "Perceptual matching, self positivity bias, moral character, Bayesian hierarchical models"
+keywords          : "Perceptual matching, self positivity bias, primacy of morality, Bayesian hierarchical models"
 wordcount         : "X"
 
 bibliography      : 
   - r-references.bib
   - endnote.bib
 
-floatsintext      : no
+floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
 linenumbers       : yes
-mask              : no
+mask              : yes
 draft             : no
 figsintext        : no
 

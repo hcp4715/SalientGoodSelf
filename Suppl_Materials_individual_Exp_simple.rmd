@@ -35,12 +35,12 @@ bibliography      :
   - r-references.bib
   - endnote.bib
 
-floatsintext      : no
+floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
 linenumbers       : yes
-mask              : no
+mask              : yes
 draft             : no
 
 documentclass     : "apa6"
