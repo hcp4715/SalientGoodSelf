@@ -12,6 +12,8 @@ The scripts were made public to increasing the transparency and reproducibility 
 
 OSF: <https://osf.io/83dyj/>
 
+Zenodo: [https://doi.org/10.5281/zenodo.8031086](https://doi.org/10.5281/zenodo.8031086)
+
 ## Scripts & their functions:
 
 This repo included scripts from raw data pre-processing to manuscript generating (using [`papaja`](https://github.com/crsh/papaja)).
