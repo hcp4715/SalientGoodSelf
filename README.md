@@ -12,7 +12,7 @@ The scripts were made public to increasing the transparency and reproducibility 
 
 OSF: <https://osf.io/83dyj/>
 
-Zenodo: [https://doi.org/10.5281/zenodo.8031086](https://doi.org/10.5281/zenodo.8031086)
+Zenodo: [https://doi.org/10.5281/zenodo.8031073](https://doi.org/10.5281/zenodo.8031073)
 
 ## Scripts & their functions:
 
