@@ -1,6 +1,6 @@
 ---
 title             : "Self-referencing prioritizes moral character on perceptual matching"
-shorttitle        : "Self-referencing moral character"
+shorttitle        : "Prioritization of good self"
 
 author: 
   - name          : "Hu Chuan-Peng"
@@ -151,7 +151,7 @@ The perceptual decision-making will show certain pattern under certain task dema
 in experiment 4a and 4b, we didn't have a baseline condition where there is no word inside the shape? -->
 
 # Disclosures
-We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy was lower than 60% were excluded from analyses. Also, accurate responses with less than 200ms reaction times were excluded from the analysis. These excluded data can be found in the shared raw data files (see https://doi.org/10.5281/zenodo.8031086).
+We reported all the measurements, analyses, and results in all the experiments in the current study. Participants whose overall accuracy was lower than 60% were excluded from analyses. Also, accurate responses with less than 200ms reaction times were excluded from the analysis. These excluded data can be found in the shared raw data files (see https://doi.org/10.5281/zenodo.8031086). This manuscript is prepared with r pakcage `papaja` [@Aust_2022_papaja].
 
 All the experiments reported were not pre-registered. Most experiments (1a ~ 4b, except experiment 3b) reported in the current study were first finished between 2013 to 2016 at Tsinghua University, Beijing, China. Participants in these experiments were recruited from the local community. To increase the sample size of experiments to 50 or more [@Simmons_2013_life], we recruited additional participants from Wenzhou University, Wenzhou, China, in 2017 for experiments 1a, 1b, 4a, and 4b. Experiment 3b was finished at Wenzhou University in 2017 (See Table 1 for an overview of these experiments). 
 
@@ -799,8 +799,8 @@ p_ms_dprime1 <- df_ms_sdt_m1_plot %>%
         tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
         facet_wrap(~Identity) + 
         geom_vline(data = p_ms_sdt_vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
-        labs(x=expression('Posteior distribution of '~italic(d)~' prime')) + 
-        theme_apa()
+        labs(x=expression("Posteior distribution of "~italic(d)~"'")) + 
+        theme_apa(base_size = 20)
 
 # plot the posterior of the difference between d prime
 df_ms_sdt_m1_plot_diff <- df_ms_sdt_m1_plot %>%
@@ -822,10 +822,10 @@ df_ms_sdt_m1_plot_diff <- df_ms_sdt_m1_plot %>%
                       diff_SO_dprm_G, diff_SO_dprm_N, diff_SO_dprm_B, diff_diff_GN, diff_diff_BN) 
 
 # define face titles
-contrast_names_ms_sdt <- c(`diff_GN_dprm_S` = "Self: Good vs Neutral", 
-                           `diff_BN_dprm_S` = "Self: Bad vs Neutral", 
-                           `diff_GN_dprm_O` = "Other: Good vs Neutral", 
-                           `diff_BN_dprm_O` = "Other: Bad vs Neutral"
+contrast_names_ms_sdt <- c(`diff_GN_dprm_S` = "Self:\nGood - Neutral", 
+                           `diff_BN_dprm_S` = "Self:\nBad - Neutral", 
+                           `diff_GN_dprm_O` = "Other:\nGood - Neutral", 
+                           `diff_BN_dprm_O` = "Other:\nBad - Neutral"
                            )
 
 p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
@@ -842,12 +842,12 @@ p_ms_dprime1_diff_val <- df_ms_sdt_m1_plot_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) +
-        xlab(expression(paste("Valence effect on ", italic("d"), " prime", sep = ' '))) + 
+        xlab(expression(paste("Valence effect on", italic("d"), "'", sep = ' '))) + 
         facet_wrap( ~ term_diff, # scales = "free_y",
                nrow = 1,
                labeller = as_labeller(contrast_names_ms_sdt)) + # label_parsed
-        theme_apa() + 
-        theme(strip.text.x = element_text(size = 8)) # colour = "orange", angle = 90))
+        theme_apa(base_size = 20)  + 
+        theme(strip.text.x = element_text(size = 16)) # colour = "orange", angle = 90))
 
 # another way to present the results, not presented in the manuscript
 p_ms_dprime1_diff_id <- df_ms_sdt_m1_plot_diff %>%
@@ -973,7 +973,7 @@ p_ms_rt1 <- df_ms_m1_plot_rt %>%
         geom_vline(data = p_ms_rt1_vlines, aes(xintercept = value, colour = Valence), linetype = "dashed") +
         labs(x=expression('Posteior distribution of RTs')) + 
         facet_wrap(~Identity) + 
-        theme_apa()
+        theme_apa(base_size = 20)
 
 df_ms_m1_plot_rt_diff <- df_ms_m1_plot_rt %>%
         tidyr::pivot_wider(names_from = c(term), values_from = value) %>%       # long to wide
@@ -1008,10 +1008,10 @@ df_ms_rt1_diff_diff <- df_ms_m1_plot_rt_diff %>%
                                        centrality = "median")
 
 # define face titles
-contrast_names_ms_rt <- c(`diff_GN_M_S` = "Self: Good vs Neutral", 
-                           `diff_BN_M_S` = "Self: Bad vs Neutral", 
-                           `diff_GN_M_O` = "Other: Good vs Neutral", 
-                           `diff_BN_M_O` = "Other: Bad vs Neutral"
+contrast_names_ms_rt <- c(`diff_GN_M_S` = "Self:\nGood - Neutral", 
+                           `diff_BN_M_S` = "Self:\nBad - Neutral", 
+                           `diff_GN_M_O` = "Other:\nGood - Neutral", 
+                           `diff_BN_M_O` = "Other:\nBad - Neutral"
                            )
 # plot the posterior of matching trials of valence
 p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
@@ -1028,14 +1028,14 @@ p_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) + 
-        xlab("Valence effect on RTs (Match trials)") +
+        xlab("Valence effect on RTs (matching trials)") +
         scale_x_continuous(breaks=seq(-200, 300, 200)) +  
         facet_wrap( ~ term_diff,
               # scales = "free_y", 
               nrow = 1,
               labeller = as_labeller(contrast_names_ms_rt)) + # label_parsed
-        theme_apa() + 
-        theme(strip.text.x = element_text(size = 8)) 
+        theme_apa(base_size = 20) + 
+        theme(strip.text.x = element_text(size = 16)) 
 
 df_ms_rt1_diff_val <- df_ms_m1_plot_rt_diff %>%
         tidyr::pivot_longer(cols = diff_GN_M_S:diff_SO_B, names_to = "term_diff", values_to =  "value")  %>%  # wide to long
@@ -1093,7 +1093,7 @@ test_res_rt_ms
 
 (ref:fig2-caption) Interaction between moral character and self-referential. (A) Experimental level (three experiments) and population level posterior distributions of RT under different conditions; (B) Experimental level and population level posterior distributions of *d*-prime under different conditions; (C) Experimental level and population level posterior distributions of the RT differences between conditions, from left to right: Good-self vs. Neutral-self, Bad-self vs. Neutral-self, Good-other vs. Neutral-other, Bad-other vs. Neutral-other; (D) Experimental level and population level posterior distributions of the *d*-prime differences between conditions, from left to right: Good-self vs. Neutral-self, Bad-self vs. Neutral-self, Good-other vs. Neutral-other, Bad-other vs. Neutral-other.
 
-```{r plot-bayes2, fig.cap="(ref:fig2-caption)", fig.height=12, fig.width=18, warning=FALSE}
+```{r plot-bayes2, fig.cap="(ref:fig2-caption)", fig.height=12, fig.width=20, warning=FALSE}
 library(patchwork)
 # (p_rt1 | p_dprime1)
 p_ms_rt1 + p_ms_dprime1 +
@@ -1154,7 +1154,7 @@ exp4a_sdt_p <- df_exp4a_sdt_m1_plot %>%
   scale_colour_brewer(palette = "Dark2") +
   scale_fill_brewer(palette = "Dark2") +
   # facet_grid(~ params , scales = "free_y") +
-  theme_apa() 
+  theme_apa(base_size = 20) 
 
 df_exp4a_sdt_hdi <- df_exp4a_sdt_m1_plot %>%
         dplyr::ungroup() %>%
@@ -1290,11 +1290,11 @@ p_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) +
-        labs(x = expression(paste("Valence effect on ", italic("d"), " prime", sep = ' ')),
+        labs(x = expression(paste("Effect of Valence (", italic("d"), "')", sep = ' ')),
              y = expression("Good vs. Neutral")) + 
         scale_x_continuous(breaks=seq(-0.25, 0.75, 0.5)) +
         facet_wrap( ~ Identity, nrow = 1) +
-        theme_apa()
+        theme_apa(base_size = 18)
 
 df_exp4a_dprime1_diff_val <- df_exp4a_sdt_m1_plot_diff %>%
         dplyr::filter(str_detect(term_diff, '_dprm_S|_dprm_O')) %>%
@@ -1421,9 +1421,9 @@ p_exp4a_rt1 <- df_exp4a_m1_plot_rt %>%
         scale_colour_brewer(palette = "Dark2") +
         scale_fill_brewer(palette = "Dark2") +
         # facet_grid(~ params , scales = "free_y") +
-        theme_apa()
+        theme_apa(base_size = 20)
         # facet_wrap(~Identity) + 
-        #theme_apa()
+        #theme_apa(base_size = 20)
 
 df_exp4a_rt1_hdi <- df_exp4a_m1_plot_rt %>%
         tidyr::separate(term, c('Match', 'Identity', 'Valence')) %>% 
@@ -1563,11 +1563,11 @@ p_exp4a_rt_diff_val <- df_exp4a_m1_plot_rt_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) +
-        labs(x = expression("Valence effect on RTs "),
+        labs(x = expression("Valence effect (RTs)"),
              y = expression("Good vs. Neutral")) + 
         scale_x_continuous(breaks=seq(-25, 50, 50)) +
         facet_wrap( ~ Identity, nrow = 1) + 
-        theme_apa()
+        theme_apa(base_size = 18)
 
 p_exp4a_rt_diff_id <- df_exp4a_m1_plot_rt_diff %>%
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
@@ -1586,8 +1586,8 @@ p_exp4a_rt_diff_id <- df_exp4a_m1_plot_rt_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
-        labs(x = expression("Self-referential effect on RTs "),
-             y = expression("Contrasts (Self vs. Other)"))
+        labs(x = expression("Effect of Self-relevance (RT)"),
+             y = expression("Self vs. Other"))
 
 p_exp4a_rt1_diff_diff <- df_exp4a_m1_plot_rt_diff %>%
         dplyr::filter(str_detect(term_diff, '_diff_')) %>%
@@ -1608,7 +1608,7 @@ p_exp4a_rt1_diff_diff <- df_exp4a_m1_plot_rt_diff %>%
         # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
         labs(x = expression("Interaction effect on RT"),
              y = expression("Difference (Self vs. Other) of difference (Valence)")) +
-        theme_apa()
+        theme_apa(base_size = 18)
 
 test_res_rt_4a <- bayestestR::sexit(df_exp4a_m1_plot_rt_diff_wide[, c(4, 7, 13)])
 test_res_rt_4a
@@ -1658,7 +1658,7 @@ exp4b_sdt_p <- df_exp4b_sdt_m1_plot %>%
       y = expression(paste("Posteior of sensitivity ", italic("d'"), sep = ' '))) +
   #scale_colour_brewer(palette = "Dark2") +
   #scale_fill_brewer(palette = "Dark2") +
-  theme_apa() 
+  theme_apa(base_size = 18) 
 
 df_exp4b_sdt_hdi <- df_exp4b_sdt_m1_plot %>%
         dplyr::ungroup() %>%
@@ -1743,7 +1743,7 @@ p_exp4b_dprime1_diff_val <- df_exp4b_sdt_m1_plot_diff %>%
         labs(x = expression(paste("Valence effect on ", italic("d"), " prime", sep = ' ')),
              y = expression("Contrasts")) + 
         facet_wrap( ~ Identity, nrow = 1) +
-        theme_apa()
+        theme_apa(base_size = 20)
 
 p_exp4b_dprime1_diff_id <- df_exp4b_sdt_m1_plot_diff %>%
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
@@ -1763,11 +1763,11 @@ p_exp4b_dprime1_diff_id <- df_exp4b_sdt_m1_plot_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) +
         # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
-        labs(x = expression(paste("Self-referential effect on ", italic("d"), " prime", sep = ' ')),
-             y = expression("Contrasts (Self vs. Other)"))+ 
+        labs(x = expression(paste("Effect of self-relevance (", italic("d"), "')", sep = ' ')),
+             y = expression("Self vs. Other"))+ 
         scale_x_continuous(breaks=seq(-0.25, 0.75, 0.5)) +
         facet_wrap( ~ conditions, nrow = 1) +
-        theme_apa()
+        theme_apa(base_size = 18)
 
 test_res_sdt_4b <- bayestestR::sexit(df_exp4b_sdt_m1_plot_diff_wide[, c(10, 11, 12)])
 test_res_sdt_4b
@@ -1819,7 +1819,7 @@ p_exp4b_rt1 <- df_exp4b_m1_plot_rt %>%
              y = expression('Posteior of reaction times')) +
         #scale_colour_brewer(palette = "Dark2") +
         #scale_fill_brewer(palette = "Dark2")  +
-        theme_apa()
+        theme_apa(base_size = 18)
 
 df_exp4b_m1_plot_rt_diff_wide <- df_exp4b_m1_plot_rt %>%
         # tidyr::unite(term, c('params', 'Identity', 'Valence')) %>%
@@ -1875,10 +1875,10 @@ p_exp4b_rt_diff_val <- df_exp4b_m1_plot_rt_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('gray80', 'skyblue')) +
-        labs(x = expression("Valence effect on RTs "),
+        labs(x = expression("Valence effect (RTs)"),
              y = expression("Contrasts")) + 
         facet_wrap( ~ Identity, nrow = 1) +
-        theme_apa()
+        theme_apa(base_size = 20)
 
 p_exp4b_rt_diff_id <- df_exp4b_m1_plot_rt_diff %>%
         dplyr::filter(str_detect(term_diff, '_SO_')) %>%
@@ -1898,11 +1898,11 @@ p_exp4b_rt_diff_id <- df_exp4b_m1_plot_rt_diff %>%
                     breaks = c(TRUE, FALSE),
                     name = "Effect" , labels = c("Yes", "No")) + 
         # scale_fill_manual(values = c('skyblue')) +   # note: only one value here, used blue here
-        labs(x = expression("Self-referential effect on RTs "),
-             y = expression("Contrasts (Self vs. Other)")) +
+        labs(x = expression("Effect of self-relevance (RTs)"),
+             y = expression("Self vs. Other")) +
         scale_x_continuous(breaks=seq(-75, 50, 50)) +
         facet_wrap( ~ conditions, nrow = 1) +
-        theme_apa()
+        theme_apa(base_size = 18)
 
 test_res_rt_4b <- bayestestR::sexit(df_exp4b_m1_plot_rt_diff_wide[, c(10, 11, 12)])
 test_res_rt_4b
@@ -1917,14 +1917,14 @@ p4 <- (p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id) + plot_layout(nrow = 1, byr
 
 (ref:fig3-caption) Implicit binding between self and good characters. (A) Posterior distributions of RT under different conditions of Experiment 4a; (B) Posterior distributions of *d*-prime under different conditions of Experiment 4a; (C) Posterior distributions of RT under different conditions of Experiment 4b; (D) Posterior distributions of *d*-prime under different conditions of Experiment 4b; (E) Posterior distributions of the RT differences between good character and neutral character when self (left) and other (right) were presented inside the shapes; (F) Posterior distributions of the *d*-prime differences between good character and neutral character when self (left) and other (right) were presented inside the shapes; (G) Posterior distributions of the RT differences between self- and other-referencing conditions when good character (left) and neutral character (right) were presented inside the shapes; (H) Posterior distributions of the *d*-prime differences between self- and other-referencing conditions when good character (left) and neutral character (right) were presented inside the shapes.
 
-```{r plot-exp4-all, fig.cap="(ref:fig3-caption)",  fig.height=9, fig.width=15, warning=FALSE}
+```{r plot-exp4-all, fig.cap="(ref:fig3-caption)",  fig.height=10, fig.width=20, warning=FALSE}
 library(patchwork)
 
 design <- "
   1234
   5678
 "
-p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_annotation(tag_levels = 'A') + plot_layout(design = design, guides = "collect", heights = c(1, 0.45))
+p_exp4a_rt1 + exp4a_sdt_p + p_exp4b_rt1 + exp4b_sdt_p + p_exp4a_rt_diff_val + p_exp4a_dprime1_diff_val + p_exp4b_rt_diff_id + p_exp4b_dprime1_diff_id + plot_annotation(tag_levels = 'A') + plot_layout(design = design, guides = "collect", heights = c(1, 1))
 
 # ((p1 +plot_layout(guides = "collect")) + p3 + plot_layout(guides = "collect")) + plot_layout(ncol = 3, widths = c(1, 1, 4), guides = 'keep')
 # 

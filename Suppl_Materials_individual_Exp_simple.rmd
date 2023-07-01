@@ -83,7 +83,8 @@ pacman::p_load('here',              # for choosing directory
                'patchwork',         # plot patch plots together
                "papaja",            # core for reproduce the APA format of the manuscript
                "easystats",
-               "qgraph"
+               "qgraph",
+               "brms"
                )
 
 # source("geom_flat_violin.R")       # for plotting the violin plots
@@ -102,6 +103,159 @@ CommonColnames_rt <- c("ExpID", "Site", "Subject", "Age", "Sex", 'Domain', "Matc
 
 load("AllData.RData")
 ```
+
+# Supplementary Figure for mismatching trials
+
+
+```{r plot rt for mismatching, warning=FALSE}
+
+RT_val_m1 <- brm(file = here::here("glmmModels/RT_val_EffectCode_3_level"))
+
+df_m1_post_rt_exp <- RT_val_m1 %>% 
+        tidybayes::spread_draws(r_ExpID_new[condition, term]) %>%
+        dplyr::rename(value = r_ExpID_new)
+
+df_rt_m1_pop_mean <- RT_val_m1 %>%
+        tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+        group_by(.variable) %>%       # this line not necessary (done automatically by spread_draws)
+        tidybayes::mean_hdci(.value)  # get the high density continuous intervals
+
+# extract the population level parameters
+df_rt_m1_pop <- RT_val_m1 %>% 
+        tidybayes::gather_draws(`b_.*`, regex = TRUE) %>%
+        dplyr::rename(term = .variable,
+                      pop_mean = .value) %>%
+        #tidyr::separate(term, c(NA, 'term'), "_") 
+        dplyr::ungroup() %>%
+        dplyr::mutate(term = gsub("b_", "", term))
+
+# Add the population mean to the experimental level and only keep the value after.
+df_m1_post_rt_exp_update <- merge(df_rt_m1_pop, df_m1_post_rt_exp, 
+                                  by = c('term','.chain','.iteration', '.draw'), all = T) %>%
+        dplyr::mutate(mean_value = pop_mean + value) %>%  # add the population leve value to each experiment
+        dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, mean_value) %>% # select the added value
+        dplyr::rename(value = mean_value)  # rename the value
+
+# Plot the difference between conditions 
+df_m1_plot_rt <- df_rt_m1_pop %>%
+        dplyr::mutate(condition = 'Overall') %>%
+        dplyr::rename(value = pop_mean) %>% # chagne the `pop_mean` as `value` for data frame merge
+        dplyr::select(condition, term, `.chain`, `.iteration`, `.draw`, value) %>%
+        dplyr::bind_rows(., df_m1_post_rt_exp_update) %>%
+        dplyr::mutate(condition = factor(condition, levels = c("Exp1a_THU", "Exp1a_WZU", "Exp1b_THU", 
+                                                         "Exp1b_WZU", "Exp1c_THU", "Exp2_THU" , 
+                                                         "Exp5_THU",  "Exp6a_THU","Overall")),
+                      condition = forcats::fct_rev(condition)) %>%
+        tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+        dplyr::mutate(Neutral_NM = Intercept,               # calculate the differences between coditions
+                Bad_NM = Intercept  + ValenceBad,
+                Good_NM = Intercept  + ValenceGood ,
+                Neutral_M = Intercept  + ismatch_num,
+                Bad_M = Intercept  + ismatch_num + ValenceBad + `ValenceBad:ismatch_num`,
+                Good_M = Intercept  + ismatch_num + ValenceGood+ `ValenceGood:ismatch_num`) %>%
+        dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+                      Neutral_NM, Bad_NM, Good_NM,
+                      Neutral_M, Bad_M, Good_M) %>%
+        tidyr::pivot_longer(cols = Neutral_NM:Good_M, names_to = "term", values_to =  "value") %>%  # wide to long
+        dplyr::mutate(term = factor(term, levels = c('Good_NM', 'Neutral_NM', 'Bad_NM',
+                                                     'Good_M',  'Neutral_M',  'Bad_M')),
+                      value = exp(value),
+                      value = value * 1000) 
+
+# plot the posterior of the d prime
+# use the overall mean values as the vlines
+vlines <- df_m1_plot_rt %>% 
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'NM') %>%
+        dplyr::filter(condition == "Overall") %>%
+        dplyr::group_by(Valence) %>% 
+        dplyr::summarize(Mean = mean(value)) # %>%
+        # dplyr::arrange(Mean)
+
+df_m1_rt_fixed_effect <- df_m1_plot_rt %>%
+        dplyr::filter(condition == "Overall") %>%
+        tidyr::pivot_wider(.,
+                           id_cols = c('.chain', '.iteration', '.draw'),
+                           names_from = term ) %>% 
+        dplyr::select(-c('.chain', '.iteration', '.draw')) %>%
+        bayestestR::describe_posterior(.,
+                                       ci = 0.95,
+                                       ci_method = 'hdi',
+                                       test = c("p_direction", "p_significance"),
+                                       centrality = "median") %>%
+        tidyr::separate(Parameter, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad')))
+
+# THIS is the one which the final plot will based on!!!
+p_rt1_nm <- df_m1_plot_rt %>%
+        tidyr::separate(term, c('Valence', 'Match')) %>% 
+        dplyr::mutate(Valence = factor(Valence, levels = c('Good', 'Neutral', 'Bad'))) %>%
+        dplyr::filter(Match == 'NM') %>%
+        dplyr::rename(Experiments = condition) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, color = Valence)) +
+        tidybayes::stat_halfeye(aes(fill = Valence), alpha = 0.7) +
+        geom_vline(data = vlines, aes(xintercept = Mean,colour = Valence), linetype = "dashed") +
+        labs(x=expression('Posteior distribution of reaction times')) + 
+        scale_colour_brewer(palette = "Dark2") +
+        scale_fill_brewer(palette = "Dark2") +
+        theme_apa(base_size = 20)
+
+df_m1_plot_rt_diff_wide <- df_m1_plot_rt %>%
+        tidyr::pivot_wider(names_from = c(term), values_from = value) %>%   # long to wide
+        dplyr::mutate(diff_GB_NM = Good_NM - Bad_NM,               # calculate the differences between conditions
+                diff_GN_NM = Good_NM - Neutral_NM,
+                diff_BN_NM = Bad_NM - Neutral_NM,
+                diff_GB_M = Good_M - Bad_M, 
+                diff_GN_M = Good_M - Neutral_M,
+                diff_BN_M = Bad_M - Neutral_M,) %>%
+        dplyr::select(condition, `.chain`, `.iteration`, `.draw`,
+               diff_GB_NM,diff_GN_NM, diff_BN_NM,
+               diff_GB_M, diff_GN_M, diff_BN_M) 
+
+df_m1_plot_rt_diff <- df_m1_plot_rt_diff_wide%>%
+        tidyr::pivot_longer(cols = diff_GB_NM:diff_BN_M, names_to = "term_diff", values_to =  "value") %>%  # wide to long
+        dplyr::mutate(term_diff = factor(term_diff, levels = c('diff_GB_NM','diff_GN_NM', 'diff_BN_NM',
+                                                         'diff_GB_M', 'diff_GN_M', 'diff_BN_M')))
+
+# plot the posterior of matching trials
+# define face titles
+contrast_names_nm_rt <- c(`diff_GN_NM` = "Good vs Neutral", 
+                         `diff_BN_NM` = "Bad vs Neutral"
+                           )
+
+p_rt1_diff_NM <- df_m1_plot_rt_diff %>%
+        dplyr::filter(str_detect(term_diff, '_NM')) %>%
+        dplyr::filter(!str_detect(term_diff, '_GB_')) %>%
+        dplyr::rename(Experiments = condition) %>%
+        ggplot2::ggplot(aes(y = Experiments, x = value, fill = stat(x < 0))) +
+        tidybayes::stat_halfeye() +
+        geom_vline(xintercept = 0, linetype = "dashed") +
+        # scale_fill_manual(values = c('gray80', 'skyblue')) +
+        scale_fill_manual(values = c('skyblue', 'gray80'),
+                    breaks = c(TRUE, FALSE),
+                    name = "Effect" , labels = c("Yes", "No")) + 
+        xlab("Effect of valence on RT (mismatch trials)") +
+        facet_wrap( ~ term_diff,
+              # scales = "free_y", 
+              nrow = 1,
+              labeller = as_labeller(contrast_names_nm_rt))  + # label_parsed
+        theme_apa(base_size = 20) #+ 
+#        theme(strip.text.x = element_text(size = 8)) # colour = "orange", angle = 90))
+
+```
+
+(ref:figs1-caption) Effect of moral character on perceptual matching for mismatching trials. (A) Experimental level (six experiments, with eight independent samples) and population level posterior distributions of RT under different valence conditions; (B) Experimental level and population level posterior distributions of the RT differences between conditions (left, Good vs. Neutral; right, Bad vs. Neutral).
+
+```{r plot-bayes-meta-s1, fig.cap="(ref:figs1-caption)", fig.height=9, fig.width=18, warning=FALSE}
+library(patchwork)
+p_rt1_nm + p_rt1_diff_NM + plot_annotation(tag_levels = 'A')  + plot_layout(nrow = 1, byrow = TRUE, guides = 'collect')
+
+# p <- p_rt1 + p_dprime1 + plot_annotation(tag_levels = 'A') + plot_layout(guides = "collect") 
+
+#  ggsave('part1_plot_posterior.png', p, width = 15, height = 7.5)
+```
+
 
 # Experiment 1a
 
