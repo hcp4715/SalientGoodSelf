@@ -44,7 +44,7 @@ figurelist        : no
 tablelist         : no
 footnotelist      : no
 linenumbers       : yes
-mask              : yes
+mask              : no
 draft             : no
 figsintext        : no
 

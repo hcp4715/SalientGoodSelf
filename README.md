@@ -1,6 +1,8 @@
-# Notebook for "Spontaneous self-referential processes prioritize moral character in perceptual matching"
+# Notebook for "Self-referencing prioritizes moral character on perceptual matching"
 
 Authors: Hu Chuan-Peng, Kaiping Peng, Jie Sui
+
+Corresponding email address: hcp4715@hotmail.com
 
 ## Purpose
 
@@ -10,7 +12,9 @@ The scripts were made public to increasing the transparency and reproducibility 
 
 ## Links:
 
-OSF: <https://osf.io/83dyj/>
+Preprint: https://psyarxiv.com/39zgf/
+
+OSF Project: <https://osf.io/83dyj/>
 
 Zenodo: [https://doi.org/10.5281/zenodo.8031073](https://doi.org/10.5281/zenodo.8031073)
 
