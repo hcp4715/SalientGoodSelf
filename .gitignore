@@ -67,3 +67,12 @@ scales/*
 !exp7/rawdata_behav_exp7a_2016.csv
 !exp7/rawdata_behav_exp7b_2018.csv
 !scales/FADGS_dataset4_1_clean.csv
+# ignore DS_Store
+.DS_Store
+**/.DS_Store
+.DS_Store?
+# csv png
+!ML_Script/**/*.csv
+!ML_Script/**/*.png
+#.idea
+*.idea		
